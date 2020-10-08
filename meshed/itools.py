@@ -1,4 +1,4 @@
-"""Functions that provide iterators of graph elements where graph is any Mapping adjency representation.
+"""Functions that provide iterators of graph elements where graph is any adjacency Mapping representation.
 
 """
 from collections.abc import Mapping
