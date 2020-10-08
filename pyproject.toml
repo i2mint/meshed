@@ -7,6 +7,6 @@ module = "meshed"
 author = "OtoSense"
 home-page = "https://github.com/i2mint/meshed"
 classifiers = ["License :: OSI Approved :: MIT License"]
-description = "Tools for documentation and packaging"
+description-file = "README.rst"
 
 
