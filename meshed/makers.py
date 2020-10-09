@@ -1,7 +1,9 @@
-from typing import Mapping, Any, Sized, Callable
+from typing import Mapping, Iterable, TypeVar, Callable
 from itertools import product
 from collections import defaultdict
 from numpy.random import randint, choice
+
+T = TypeVar('T')
 
 
 def random_graph(n_nodes=7):
@@ -17,17 +19,25 @@ def random_graph(n_nodes=7):
     return dict(gen())
 
 
-def edge_reversed_graph(g: Mapping[Any, Sized]):
+def edge_reversed_graph(g: Mapping[T, Iterable[T]],
+                        dst_nodes_factory: Callable[[], Iterable[T]] = list,
+                        dst_nodes_append: Callable[[Iterable[T], T], None] = list.append
+                        ) -> Mapping[T, Iterable[T]]:
     """
     >>> g = dict(a='c', b='cd', c='abd', e='')
-    >>> assert edge_reversed_graph(g) == {'c': {'a', 'b'}, 'd': {'c', 'b'}, 'a': {'c'}, 'b': {'c'}, 'e': set()}
+    >>> assert edge_reversed_graph(g) == {'c': ['a', 'b'], 'd': ['b', 'c'], 'a': ['c'], 'b': ['c'], 'e': []}
+    >>> reverse_g_with_sets = edge_reversed_graph(g, set, set.add)
+    >>> assert reverse_g_with_sets == {'c': {'a', 'b'}, 'd': {'b', 'c'}, 'a': {'c'}, 'b': {'c'}, 'e': set([])}
+
+    Testing border cases
+    >>> assert edge_reversed_graph(dict(e='', a='e')) == {'e': ['a'], 'a': []}
+    >>> assert edge_reversed_graph(dict(a='e', e='')) == {'e': ['a'], 'a': []}
     """
     # Pattern: Groupby logic
-    d = defaultdict(set)
+
+    d = defaultdict(dst_nodes_factory)
     for src, dst_nodes in g.items():
-        if len(dst_nodes):
-            for dst in dst_nodes:
-                d[dst].add(src)
-        else:
-            d[src] = set()
+        d.setdefault(src, dst_nodes_factory())  # add node if not present
+        for dst in dst_nodes:  # empty iterable does nothing
+            dst_nodes_append(d[dst], src)
     return d

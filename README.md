@@ -41,6 +41,8 @@ you can easily create one using one of the many tools of `py2store` meant exactl
 >>>
 >>> from meshed.makers import edge_reversed_graph
 >>> g = dict(a='c', b='cd', c='abd', e='')
->>> assert edge_reversed_graph(g) == {'c': {'a', 'b'}, 'd': {'c', 'b'}, 'a': {'c'}, 'b': {'c'}, 'e': set()}
+>>> assert edge_reversed_graph(g) == {'c': ['a', 'b'], 'd': ['b', 'c'], 'a': ['c'], 'b': ['c'], 'e': []}
+>>> reverse_g_with_sets = edge_reversed_graph(g, set, set.add)
+>>> assert reverse_g_with_sets == {'c': {'a', 'b'}, 'd': {'b', 'c'}, 'a': {'c'}, 'b': {'c'}, 'e': set([])}
 ```
 
