@@ -1,8 +1,9 @@
 """Functions that provide iterators of g elements where g is any adjacency Mapping representation.
 
 """
-from collections.abc import Mapping
-from itertools import chain
+from typing import Any, Mapping, Sized
+from itertools import product
+from meshed.makers import edge_reversed_graph
 
 
 def edges(g: Mapping):
@@ -99,3 +100,27 @@ def find_path(g: Mapping, src, dst, path=None):
             if extended_path:
                 return extended_path
     return None
+
+
+def reverse_edges(g: Mapping):
+    for src, dst_nodes in g.items():
+        yield from product(dst_nodes, src)
+
+
+def out_degrees(g: Mapping[Any, Sized]):
+    """
+    >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
+    >>> dict(out_degrees(g))
+    {'a': 1, 'b': 2, 'c': 4, 'd': 1, 'e': 2, 'f': 0}
+    """
+    for src, dst_nodes in g.items():
+        yield src, len(dst_nodes)
+
+
+def in_degrees(g: Mapping):
+    """
+    >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
+    >>> dict(in_degrees(g))
+    {'a': 1, 'b': 2, 'c': 4, 'd': 1, 'e': 2, 'f': 0}
+    """
+    return out_degrees(edge_reversed_graph(g))
