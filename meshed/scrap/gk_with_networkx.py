@@ -1,8 +1,4 @@
 """
-gk without networkx
-"""
-
-"""
 seriously modified version of yahoo/graphkit
 """
 
@@ -236,9 +232,7 @@ class optional(str):
 
 import time
 import os
-
 import networkx as nx
-from meshed import itools as gr
 
 from io import StringIO
 
@@ -277,7 +271,7 @@ class Network(object):
         """
 
         # directed graph of layer instances and data-names defining the net.
-        self.graph = dict()
+        self.graph = nx.DiGraph()
         self._debug = kwargs.get('debug', False)
 
         # this holds the timing information for eache layer
@@ -310,16 +304,16 @@ class Network(object):
 
         # assert layer is only added once to graph
         assert (
-            operation not in gr.nodes(self.graph)
+            operation not in self.graph.nodes()
         ), 'Operation may only be added once'
 
         # add nodes and edges to graph describing the data needs for this layer
         for n in operation.needs:
-            gr.add_edge(self.graph, DataPlaceholderNode(n), operation)
+            self.graph.add_edge(DataPlaceholderNode(n), operation)
 
         # add nodes and edges to graph describing what this layer provides
         for p in operation.provides:
-            gr.add_edge(self.graph, operation, DataPlaceholderNode(p))
+            self.graph.add_edge(operation, DataPlaceholderNode(p))
 
         # clear compiled steps (must recompile after adding new layers)
         self.steps = []
