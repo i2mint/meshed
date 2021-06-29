@@ -9,6 +9,7 @@ from collections import Counter
 from i2 import Sig
 
 from meshed.util import name_of_obj
+from meshed.itools import topological_sort, add_edge, leaf_nodes, root_nodes
 
 
 def find_first_free_name(prefix, exclude_names=(), start_at=2):
@@ -168,6 +169,7 @@ def _mapped_extraction(extract_from: dict, key_map: dict):
             yield v, extract_from[v]
 
 
+# TODO: Think of the hash more carefully.
 @dataclass
 class FuncNode:
     """
@@ -219,6 +221,13 @@ class FuncNode:
             scope[self.return_name] = output
         return output
 
+    def _hash_str(self):
+        ",".join(self.src_names) + " -> " + self.return_name
+
+    # TODO: Find a better one
+    def __hash__(self):
+        return id(self)
+
     def __call__(self, scope):
         """Deprecated: Don't use. Might be a normal function with a signature"""
         return self.call_on_scope(scope)
@@ -262,6 +271,30 @@ def _mk_func_nodes(func_nodes):
         else:
             raise TypeError(f"Can't convert this to a FuncNode: {func_node}")
 
+
+def _func_nodes_to_graph_dict(func_nodes):
+    g = dict()
+
+    for f in func_nodes:
+        for src_name in f.src_names.values():
+            add_edge(g, src_name, f)
+        add_edge(g, f, f.return_name)
+    return g
+
+
+def _is_func_node(obj) -> bool:
+    return isinstance(obj, FuncNode)
+
+
+def _is_not_func_node(obj) -> bool:
+    return not _is_func_node(obj)
+
+
+def _extract_keys(d: dict, keys: Iterable):
+    for k in keys:
+        yield d[k]
+
+
 # TODO: Make a __getitem__that returns a function with specific args and return vals
 #   f = dag['a', 'b'] would be a callable (still a dag?) with args a and b in that order
 #   f['x', 'y'] would be like f, except returning the tuple (x, y) instead of the
@@ -272,6 +305,26 @@ class DAG:
 
     def __post_init__(self):
         self.func_nodes = tuple(_mk_func_nodes(self.func_nodes))
+        self.graph = _func_nodes_to_graph_dict(self.func_nodes)
+        self.nodes = topological_sort(self.graph)
+        # reorder the nodes to fit topplogical order
+        self.func_nodes = tuple(filter(_is_func_node, self.nodes))
+        # figure out the roots and leaves
+        self.roots = set(root_nodes(self.graph))
+        self.leafs = set(leaf_nodes(self.graph))
+        self.sig = Sig(self.roots)  # TODO: add defaults
+        self.sig(self)  # to put the signature on the callable DAG
+
+    def __call__(self, *args, **kwargs):
+        scope = self.sig.kwargs_from_args_and_kwargs(args, kwargs)
+        self.call_on_scope(scope)
+        tup = tuple(_extract_keys(scope, self.leafs))
+        if len(tup) > 1:
+            return tup
+        elif len(tup) == 1:
+            return tup[0]
+        else:
+            return None
 
     def call_on_scope(self, scope=None):
         if scope is None:

@@ -3,7 +3,7 @@ adjacency Mapping representation.
 
 """
 from typing import Any, Mapping, Sized, MutableMapping, Iterable
-from itertools import product
+from itertools import product, chain
 from functools import wraps
 
 from i2.signatures import Sig
@@ -15,22 +15,18 @@ def _handle_exclude_nodes(func):
 
     @wraps(func)
     def _func(*args, **kwargs):
-        kwargs = sig.kwargs_from_args_and_kwargs(
-            args, kwargs, apply_defaults=True
-        )
+        kwargs = sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
         try:
-            _exclude_nodes = kwargs['_exclude_nodes']
+            _exclude_nodes = kwargs["_exclude_nodes"]
         except KeyError:
-            raise RuntimeError(
-                f"{func} doesn't have a _exclude_nodes argument"
-            )
+            raise RuntimeError(f"{func} doesn't have a _exclude_nodes argument")
 
         if _exclude_nodes is None:
             _exclude_nodes = set()
         elif not isinstance(_exclude_nodes, set):
             _exclude_nodes = set(_exclude_nodes)
 
-        kwargs['_exclude_nodes'] = _exclude_nodes
+        kwargs["_exclude_nodes"] = _exclude_nodes
         args, kwargs = sig.args_and_kwargs_from_kwargs(kwargs)
         return func(*args, **kwargs)
 
@@ -244,28 +240,31 @@ def descendants(g: Mapping, source: Iterable, _exclude_nodes=None):
     return ancestors(edge_reversed_graph(g), source, _exclude_nodes)
 
 
+# TODO: Can serious be optimized, and hasn't been tested much: Revise
 def root_nodes(g: Mapping):
     """
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> sorted(root_nodes(g))
-    ['a', 'b', 'c', 'd', 'e', 'f']
+    ['f']
 
     Note that `f` is present: Isolated nodes are considered both as
     root and leaf nodes both.
     """
-    yield from g
+    nodes_having_parents = set(chain.from_iterable(g.values()))
+    return set(g) - set(nodes_having_parents)
 
 
+# TODO: Can serious be optimized, and hasn't been tested much: Revise
 def leaf_nodes(g: Mapping):
     """
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> sorted(leaf_nodes(g))
-    ['a', 'b', 'c', 'd', 'e', 'f', 'z']
+    ['f', 'z']
 
     Note that `f` is present: Isolated nodes are considered both as
     root and leaf nodes both.
     """
-    return set(root_nodes(edge_reversed_graph(g)))
+    return root_nodes(edge_reversed_graph(g))
 
 
 def isolated_nodes(g: Mapping):
@@ -282,7 +281,7 @@ def isolated_nodes(g: Mapping):
 
 
 def find_path(g: Mapping, src, dst, path=None):
-    """ find a path from src to dst nodes in graph
+    """find a path from src to dst nodes in graph
 
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> find_path(g, 'a', 'c')
