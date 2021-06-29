@@ -211,7 +211,7 @@ class FuncNode:
 
     def call_on_scope(self, scope: dict):
         relevant_kwargs = dict(self.extractor(scope))
-        print(scope, relevant_kwargs)
+        # print(scope, relevant_kwargs)
         output = call_somewhat_forgivingly(
             self.func, (), relevant_kwargs, enforce_sig=self.func_sig
         )
