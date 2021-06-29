@@ -1,5 +1,6 @@
 """
-seriously modified version of yahoo/graphkit
+This module was based on yahoo/graphkit
+Made to without networkx, amongst other things
 """
 
 # ---------- base --------------------------------------------------------------
@@ -232,7 +233,9 @@ class optional(str):
 
 import time
 import os
-import networkx as nx
+
+# import networkx as nx
+from meshed import itools as gr
 
 from io import StringIO
 
@@ -271,7 +274,7 @@ class Network(object):
         """
 
         # directed graph of layer instances and data-names defining the net.
-        self.graph = nx.DiGraph()
+        self.graph = dict()
         self._debug = kwargs.get('debug', False)
 
         # this holds the timing information for eache layer
@@ -303,17 +306,17 @@ class Network(object):
         ), "Operation's 'provides' must be named"
 
         # assert layer is only added once to graph
-        assert (
-            operation not in self.graph.nodes()
+        assert operation not in gr.nodes(
+            self.graph
         ), 'Operation may only be added once'
 
         # add nodes and edges to graph describing the data needs for this layer
         for n in operation.needs:
-            self.graph.add_edge(DataPlaceholderNode(n), operation)
+            gr.add_edge(self.graph, DataPlaceholderNode(n), operation)
 
         # add nodes and edges to graph describing what this layer provides
         for p in operation.provides:
-            self.graph.add_edge(operation, DataPlaceholderNode(p))
+            gr.add_edge(self.graph, operation, DataPlaceholderNode(p))
 
         # clear compiled steps (must recompile after adding new layers)
         self.steps = []
@@ -338,7 +341,7 @@ class Network(object):
         self.steps = []
 
         # create an execution order such that each layer's needs are provided.
-        ordered_nodes = list(nx.dag.topological_sort(self.graph))
+        ordered_nodes = list(gr.topological_sort(self.graph))
 
         # add Operations evaluation steps, and instructions to free data.
         for i, node in enumerate(ordered_nodes):
@@ -354,7 +357,7 @@ class Network(object):
                 # Add instructions to delete predecessors as possible.  A
                 # predecessor may be deleted if it is a data placeholder that
                 # is no longer needed by future Operations.
-                for predecessor in self.graph.predecessors(node):
+                for predecessor in gr.predecessors(self.graph, node):
                     if self._debug:
                         print(
                             'checking if node %s can be deleted' % predecessor
@@ -416,8 +419,8 @@ class Network(object):
             # names that aren't in the graph.
             necessary_nodes = set()
             for input_name in iter(inputs):
-                if graph.has_node(input_name):
-                    necessary_nodes |= nx.descendants(graph, input_name)
+                if gr.has_node(graph, input_name):
+                    necessary_nodes |= gr.descendants(graph, input_name)
 
         else:
 
@@ -427,20 +430,20 @@ class Network(object):
             # in the graph.
             unnecessary_nodes = set()
             for input_name in iter(inputs):
-                if graph.has_node(input_name):
-                    unnecessary_nodes |= nx.ancestors(graph, input_name)
+                if gr.has_node(graph, input_name):
+                    unnecessary_nodes |= gr.ancestors(graph, input_name)
 
             # Find the nodes we need to be able to compute the requested
             # outputs.  Raise an exception if a requested output doesn't
             # exist in the graph.
             necessary_nodes = set()
             for output_name in outputs:
-                if not graph.has_node(output_name):
+                if not gr.has_node(graph, output_name):
                     raise ValueError(
                         'graphkit graph does not have an output '
                         'node named %s' % output_name
                     )
-                necessary_nodes |= nx.ancestors(graph, output_name)
+                necessary_nodes |= gr.ancestors(graph, output_name)
 
             # Get rid of the unnecessary nodes from the set of necessary ones.
             necessary_nodes -= unnecessary_nodes
@@ -650,7 +653,7 @@ class Network(object):
             g = pydot.Dot(graph_type='digraph')
 
             # draw nodes
-            for nx_node in self.graph.nodes():
+            for nx_node in gr.nodes(self.graph):
                 if isinstance(nx_node, DataPlaceholderNode):
                     node = pydot.Node(name=nx_node, shape='rect')
                 else:
@@ -658,7 +661,7 @@ class Network(object):
                 g.add_node(node)
 
             # draw edges
-            for src, dst in self.graph.edges():
+            for src, dst in gr.edges(self.graph):
                 src_name = get_node_name(src)
                 dst_name = get_node_name(dst)
                 edge = pydot.Edge(src=src_name, dst=dst_name)
@@ -711,7 +714,7 @@ def ready_to_schedule_operation(op, has_executed, graph):
         execution based on what has already been executed.
     """
     dependencies = set(
-        filter(lambda v: isinstance(v, Operation), nx.ancestors(graph, op))
+        filter(lambda v: isinstance(v, Operation), gr.ancestors(graph, op))
     )
     return dependencies.issubset(has_executed)
 
@@ -732,20 +735,20 @@ def ready_to_delete_data_node(name, has_executed, graph):
         A boolean indicating whether the data node can be deleted or not.
     """
     data_node = get_data_node(name, graph)
-    return set(graph.successors(data_node)).issubset(has_executed)
+    return set(gr.successors(graph, data_node)).issubset(has_executed)
 
 
 def get_data_node(name, graph):
     """
     Gets a data node from a graph using its name
     """
-    for node in graph.nodes():
+    for node in gr.nodes(graph):
         if node == name and isinstance(node, DataPlaceholderNode):
             return node
     return None
 
 
-# ------------ functional ------------------------------------------------------
+# ------------ functional ---------------------------------------------------------------
 
 # Copyright 2016, Yahoo Inc.
 # Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.

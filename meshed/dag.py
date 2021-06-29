@@ -1,4 +1,47 @@
+"""
+Making DAGs
+"""
+
+from contextlib import suppress
+from typing import Callable
 from functools import partial, wraps
+from collections import Counter
+from i2 import Sig
+
+from meshed.util import name_of_obj
+
+
+def find_first_free_name(prefix, exclude_names=(), start_at=2):
+    if prefix not in exclude_names:
+        return prefix
+    else:
+        i = start_at
+        while True:
+            name = f"{prefix}__{i}"
+            if name not in exclude_names:
+                return name
+            i += 1
+
+
+def func_name(func, exclude_names=()):
+    name = getattr(func, "__name__", "")
+    return find_first_free_name(name, exclude_names)
+
+
+def arg_names(func, func_name, exclude_names=()):
+    names = Sig(func).names
+
+    def gen():
+        _exclude_names = exclude_names
+        for name in names:
+            if name not in _exclude_names:
+                yield name
+            else:
+                found_name = find_first_free_name(f"{func_name}__{name}", _exclude_names)
+                yield found_name
+                _exclude_names = _exclude_names + (found_name,)
+
+    return list(gen())
 
 
 def named_partial(func, *args, __name__=None, **keywords):
@@ -18,7 +61,7 @@ def named_partial(func, *args, __name__=None, **keywords):
 from dataclasses import dataclass, field
 from typing import Callable, MutableMapping, Mapping, Optional, Iterable
 
-from i2.signatures import call_forgivingly
+from i2.signatures import call_forgivingly, call_somewhat_forgivingly
 from i2.deco import ch_func_to_all_pk
 
 
@@ -57,9 +100,7 @@ def hook_up(func, variables: MutableMapping, output_name=None):
     9
 
     """
-    _func = ch_func_to_all_pk(
-        func
-    )  # makes a position-keyword copy of func
+    _func = ch_func_to_all_pk(func)  # makes a position-keyword copy of func
     output_key = output_name
     if output_name is None:
         output_key = _func.__name__
@@ -68,7 +109,6 @@ def hook_up(func, variables: MutableMapping, output_name=None):
         variables[output_key] = call_forgivingly(_func, **variables)
 
     return source_from_decorated
-
 
 
 # replaced by call_forgivingly
@@ -81,58 +121,373 @@ def hook_up(func, variables: MutableMapping, output_name=None):
 #     return func(*args, **kwargs)
 
 
+def _complete_dict_with_iterable_of_required_keys(
+    to_complete: dict, complete_with: Iterable
+):
+    """Complete `to_complete` (in place) with `complete_with`
+    `complete_with` contains values that must be covered by `to_complete`
+    Those values that are not covered will be inserted in to_complete,
+    with key=val
+
+    >>> d = {'a': 'A', 'c': 'C'}
+    >>> _complete_dict_with_iterable_when_values_missing(d, 'ABC')
+    >>> d
+    {'a': 'A', 'c': 'C', 'B': 'B'}
+
+    """
+    keys_already_covered = set(to_complete)
+    for required_key in complete_with:
+        if required_key not in keys_already_covered:
+            to_complete[required_key] = required_key
+
+
+def _inverse_dict_asserting_losslessness(d: dict):
+    inv_d = {v: k for k, v in d.items()}
+    assert len(inv_d) == len(d), (
+        f"can't invert: You have some duplicate values in this dict: " f"{d}"
+    )
+    return inv_d
+
+
+def _mapped_extraction(extract_from: dict, key_map: dict):
+    """for every (k, v) of key_map whose v is a key of extract_from, yields
+    (v, extract_from[v])
+
+    Meant to be curried into an extractor, and wrapped in dict.
+
+    >>> extracted = _mapped_extraction(
+    ...     {'a': 1, 'b': 2, 'c': 3}, # extract_from
+    ...     {'A': 'a', 'C': 'c', 'D': 'd'}  # note that there's no 'd' in extract_from
+    ... )
+    >>> dict(extracted)
+    {'a': 1, 'c': 3}
+
+    """
+    for k, v in key_map.items():
+        if v in extract_from:
+            yield v, extract_from[v]
+
+
 @dataclass
 class FuncNode:
+    """
+    :param func: Function to wrap
+    :src_names: The {func_argname: external_name,...} mapping that defines where
+        the node will source the data to call the function.
+        This only has to be used if the external names are different from the names
+        of the arguments of the function.
+
+
+    """
+
     func: Callable
+    name: str = field(default=None)
     src_names: dict = field(default_factory=dict)
     return_name: str = field(default=None)
-    _return_name_suffix: str = field(
-        default='__output', init=False, repr=False
-    )
+    write_output_into_src_kwargs = (True,)
+    _name_prefix: str = field(default="_", init=False, repr=False)
+    _return_name_suffix: str = field(default="", init=False, repr=False)
 
     def __post_init__(self):
+        self.name = self.name or self._name_prefix + name_of_obj(self.func)
         self.return_name = (
-            self.return_name or self.func.__name__ + self._return_name_suffix
+            self.return_name or name_of_obj(self.func) + self._return_name_suffix
         )
-        # wraps(self.func)(self)  # does what wraps does (a
-        self.func_sig = Sig(self.func)
-        self.func_sig(self)  # puts the signature of func on the call of self
-        # self.src_names =
+        # TODO: assert name != return_name?
 
-    def __call__(self, **src_kwargs):
-        # return call_forgivingly(self. func, **src_kwargs)
-        args, kwargs = self.func_sig.args_and_kwargs_from_kwargs(
-            self.func_sig.source_kwargs(**src_kwargs)
+        sig = Sig(self.func)
+        # complete src_names with the argnames of the signature
+        src_names_not_in_sig_names = self.src_names.keys() - sig.names
+        assert not src_names_not_in_sig_names, (
+            f"some src_names keys weren't found as function argnames: "
+            f"{', '.join(src_names_not_in_sig_names)}"
         )
-        return self.func(*args, **kwargs)
+        _complete_dict_with_iterable_of_required_keys(self.src_names, sig.names)
+        self.extractor = partial(_mapped_extraction, key_map=self.src_names)
+        self.func_sig = sig
+
+        # # TODO: Should we changed the sig to match the source? Using Sig.ch_param_attrs
+        # sig(self)  # puts the signature of func on the call of self
+
+    def call_on_scope(self, scope: dict):
+        relevant_kwargs = dict(self.extractor(scope))
+        print(scope, relevant_kwargs)
+        output = call_somewhat_forgivingly(
+            self.func, (), relevant_kwargs, enforce_sig=self.func_sig
+        )
+        if self.write_output_into_src_kwargs:
+            scope[self.return_name] = output
+        return output
+
+    def __call__(self, scope):
+        """Deprecated: Don't use. Might be a normal function with a signature"""
+        return self.call_on_scope(scope)
+
+
+def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
+    """Assert that the names of func_nodes are sane.
+    That is:
+        - are valid dot (graphviz) names (we'll use str.isidentifier because lazy)
+        - All the func.name and func.return_name are unique
+        - more to come
+    """
+    func_nodes = list(func_nodes)
+    node_names = [x.name for x in func_nodes]
+    return_names = [x.return_name for x in func_nodes]
+    assert all(
+        map(str.isidentifier, node_names)
+    ), f"some node names weren't valid identifiers: {node_names}"
+    assert all(
+        map(str.isidentifier, return_names)
+    ), f"some return names weren't valid identifiers: {return_names}"
+    if len(set(node_names) | set(return_names)) != 2 * len(func_nodes):
+        c = Counter(node_names + return_names)
+        offending_names = [name for name, count in c.items() if count > 1]
+        raise ValueError(
+            f"Some of your node names and/or return_names where used more than once. "
+            f"They shouldn't. These are the names I find offensive: {offending_names}"
+        )
 
 
 from meshed.makers import edge_reversed_graph
 
 
+def _mk_func_nodes(func_nodes):
+    # TODO: Take care of names (or track and take care if collision)
+    for func_node in func_nodes:
+        if isinstance(func_node, FuncNode):
+            yield func_node
+        elif isinstance(func_node, Callable):
+            yield FuncNode(func_node)
+        else:
+            raise TypeError(f"Can't convert this to a FuncNode: {func_node}")
+
+# TODO: Make a __getitem__that returns a function with specific args and return vals
+#   f = dag['a', 'b'] would be a callable (still a dag?) with args a and b in that order
+#   f['x', 'y'] would be like f, except returning the tuple (x, y) instead of the
+#   whole thing.
 @dataclass
 class DAG:
     func_nodes: Iterable[FuncNode]
 
     def __post_init__(self):
-        first_func, *_ = self.func_nodes
-        wraps(first_func)(self)
+        self.func_nodes = tuple(_mk_func_nodes(self.func_nodes))
 
-    def __call__(self, *args, **kwargs):
-        d = dict()
-        first_func, *other_funcs = self.func_nodes
-        args, kwargs = first_func.func_sig.args_and_kwargs_from_kwargs(
-            first_func.func_sig.source_kwargs(*args, **kwargs)
-        )
-        d[first_func.return_name] = first_func(*args, **kwargs)
-        for func in other_funcs:
-            d[func.return_name] = func(**d)
-        return d
+    def call_on_scope(self, scope=None):
+        if scope is None:
+            scope = dict()  # fresh new scope
+        self._last_scope = scope  # just to remember it, for debugging purposes ONLY!
+
+        for func_node in self.func_nodes:
+            func_node.call_on_scope(scope)
+
+    # TODO: Give more control (merge with lined)
+    def dot_digraph_body(self):
+        yield from dot_lines_of_func_nodes(self.func_nodes)
+
+    @wraps(dot_digraph_body)
+    def dot_digraph_ascii(self, *args, **kwargs):
+        """Get an ascii art string that represents the pipeline"""
+        from lined.util import dot_to_ascii
+
+        return dot_to_ascii("\n".join(self.dot_digraph_body(*args, **kwargs)))
+
+    @wraps(dot_digraph_body)
+    def dot_digraph(self, *args, **kwargs):
+        try:
+            import graphviz
+        except (ModuleNotFoundError, ImportError) as e:
+            raise ModuleNotFoundError(
+                f"{e}\nYou may not have graphviz installed. "
+                f"See https://pypi.org/project/graphviz/."
+            )
+
+        body = list(self.dot_digraph_body(*args, **kwargs))
+        return graphviz.Digraph(body=body)
 
 
-from i2.signatures import Sig
+from typing import Iterable
+from i2.signatures import Parameter, empty, Sig
+
+
+# These are the defaults used in lined.
+# TODO: Merge some of the functionalities around graph displays in lined and meshed
+dflt_configs = dict(
+    fnode_shape="box",
+    vnode_shape="none",
+    display_all_arguments=True,
+    edge_kind="to_args_on_edge",
+    input_node=True,
+    output_node="output",
+)
+
+
+def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
+    if p.default is not empty:
+        name = p.name + "="
+    else:
+        name = p.name
+    yield f'{p.name} [label="{name}" shape="{shape}"]'
 
 
 def call_func(func, kwargs):
     kwargs = {k.__name__: v for k, v in kwargs.items()}
     return Sig(func).source_kwargs(kwargs)
+
+
+def dot_lines_of_func_parameters(
+    parameters: Iterable[Parameter],
+    output_name: str,
+    func_name: str,
+    output_shape: str = dflt_configs["vnode_shape"],
+    func_shape: str = dflt_configs["fnode_shape"],
+) -> Iterable[str]:
+    assert func_name != output_name, (
+        f"Your func and output name shouldn't be the "
+        f"same: {output_name=} {func_name=}"
+    )
+    yield f'{output_name} [label="{output_name}" shape="{output_shape}"]'
+    yield f'{func_name} [label="{func_name}" shape="{func_shape}"]'
+    yield f"{func_name} -> {output_name}"
+    # args -> func
+    for p in parameters.values():
+        yield from param_to_dot_definition(p)
+    for argname in parameters:
+        yield f"{argname} -> {func_name}"
+
+
+def _parameters_and_names_from_sig(
+    sig: Sig,
+    output_name=None,
+    func_name=None,
+):
+    func_name = func_name or sig.name
+    output_name = output_name or sig.name
+    if func_name == output_name:
+        func_name = "_" + func_name
+    assert isinstance(func_name, str) and isinstance(output_name, str)
+    return sig.parameters, output_name, func_name
+
+
+def dot_lines_of_func_nodes(func_nodes: Iterable[FuncNode]):
+    r"""Got lines generator for the graphviz.DiGraph(body=list(...))
+
+    >>> def add(a, b=1):
+    ...     return a + b
+    >>> def mult(x, y=3):
+    ...     return x * y
+    >>> def exp(mult, a):
+    ...     return mult ** a
+    >>> func_nodes = [
+    ...     FuncNode(add, return_name='x'),
+    ...     FuncNode(mult, name='the_product'),
+    ...     FuncNode(exp)
+    ... ]
+    >>> lines = list(dot_lines_of_func_nodes(func_nodes))
+    >>> assert lines == [
+    ... 'x [label="x" shape="none"]',
+    ... '_add [label="_add" shape="box"]',
+    ... '_add -> x',
+    ... 'a [label="a" shape="none"]',
+    ... 'b [label="b=" shape="none"]',
+    ... 'a -> _add',
+    ... 'b -> _add',
+    ... 'mult [label="mult" shape="none"]',
+    ... 'the_product [label="the_product" shape="box"]',
+    ... 'the_product -> mult',
+    ... 'x [label="x" shape="none"]',
+    ... 'y [label="y=" shape="none"]',
+    ... 'x -> the_product',
+    ... 'y -> the_product',
+    ... 'exp [label="exp" shape="none"]',
+    ... '_exp [label="_exp" shape="box"]',
+    ... '_exp -> exp',
+    ... 'mult [label="mult" shape="none"]',
+    ... 'a [label="a" shape="none"]',
+    ... 'mult -> _exp',
+    ... 'a -> _exp'
+    ... ]
+
+    >>> from lined.util import dot_to_ascii
+    >>>
+    >>> print(dot_to_ascii('\n'.join(lines)))  # doctest: +SKIP
+    <BLANKLINE>
+                    a        ─┐
+                              │
+               │              │
+               │              │
+               ▼              │
+             ┌─────────────┐  │
+     b=  ──▶ │    _add     │  │
+             └─────────────┘  │
+               │              │
+               │              │
+               ▼              │
+                              │
+                    x         │
+                              │
+               │              │
+               │              │
+               ▼              │
+             ┌─────────────┐  │
+     y=  ──▶ │ the_product │  │
+             └─────────────┘  │
+               │              │
+               │              │
+               ▼              │
+                              │
+                  mult        │
+                              │
+               │              │
+               │              │
+               ▼              │
+             ┌─────────────┐  │
+             │    _exp     │ ◀┘
+             └─────────────┘
+               │
+               │
+               ▼
+    <BLANKLINE>
+                   exp
+    <BLANKLINE>
+
+    """
+    validate_that_func_node_names_are_sane(func_nodes)
+    for func_node in func_nodes:
+        sig = func_node.func_sig
+        output_name = func_node.return_name
+        func_name = func_node.name
+        if output_name == func_name:
+            func_name = "_" + func_name
+        yield from dot_lines_of_func_parameters(
+            sig.parameters,
+            output_name=output_name,
+            func_name=func_name,
+        )
+
+
+# ---------- with ext.gk -------------------------------------------------------
+
+with suppress(ModuleNotFoundError, ImportError):
+    from meshed.ext.gk import operation, Network, Operation
+
+    def funcs_to_operations(*funcs, exclude_names=()) -> Operation:
+        """Get an operation from a callable"""
+
+        for func in funcs:
+            _func_name = func_name(func, exclude_names)
+            exclude_names = exclude_names + (_func_name,)
+            needs = arg_names(func, _func_name, exclude_names)
+            exclude_names = exclude_names + tuple(needs)
+            yield operation(
+                func,
+                name=_func_name,
+                needs=needs,
+                provides=_func_name,
+            )
+
+    def funcs_to_operators(*funcs, exclude_names=()) -> Operation:
+        """Get an operation from a callable"""
+
+        for func, operation in zip(funcs, funcs_to_operations(funcs, exclude_names)):
+            yield operation(func)

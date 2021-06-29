@@ -39,7 +39,10 @@ def _handle_exclude_nodes(func):
 
 def add_edge(g: MutableMapping, node1, node2):
     """Add an edge FROM node1 TO node2"""
-    g[node1] = node2
+    if node1 in g:
+        g[node1].append(node2)
+    else:
+        g[node1] = [node2]
 
 
 def edges(g: Mapping):
@@ -351,8 +354,13 @@ def _topological_sort_helper(g, v, visited, stack):
 
 
 def topological_sort(g: Mapping):
-    """
-    >>> from meshed.itools import topological_sort
+    """Return the list of nodes in topological sort order.
+
+    This order is such that a node parents will all occur before;
+        If order[i] is parent of order[j] then i < j
+
+    This is often used to compute the order of computation in a DAG.
+
     >>> g = {
     ...     0: [4, 2],
     ...     4: [3, 1],
