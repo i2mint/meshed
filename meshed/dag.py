@@ -141,9 +141,9 @@ def _complete_dict_with_iterable_of_required_keys(
     with key=val
 
     >>> d = {'a': 'A', 'c': 'C'}
-    >>> _complete_dict_with_iterable_when_values_missing(d, 'ABC')
+    >>> _complete_dict_with_iterable_of_required_keys(d, 'abc')
     >>> d
-    {'a': 'A', 'c': 'C', 'B': 'B'}
+    {'a': 'A', 'c': 'C', 'b': 'b'}
 
     """
     keys_already_covered = set(to_complete)
