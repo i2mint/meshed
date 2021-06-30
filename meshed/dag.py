@@ -3,13 +3,27 @@ Making DAGs
 """
 
 from contextlib import suppress
-from typing import Callable
 from functools import partial, wraps
-from collections import Counter
-from i2 import Sig
+from collections import Counter, defaultdict
+
+from dataclasses import dataclass, field
+from typing import Callable, MutableMapping, Sized, Union, Mapping, Optional, Iterable
+
+from i2.signatures import (
+    call_forgivingly,
+    call_somewhat_forgivingly,
+    Parameter,
+    empty,
+    Sig,
+    sort_params,
+)
 
 from meshed.util import name_of_obj
 from meshed.itools import topological_sort, add_edge, leaf_nodes, root_nodes
+
+
+class ValidationError(ValueError):
+    """Error that is raised when an object's validation failed"""
 
 
 def find_first_free_name(prefix, exclude_names=(), start_at=2):
@@ -59,10 +73,6 @@ def named_partial(func, *args, __name__=None, **keywords):
     return f
 
 
-from dataclasses import dataclass, field
-from typing import Callable, MutableMapping, Mapping, Optional, Iterable
-
-from i2.signatures import call_forgivingly, call_somewhat_forgivingly
 from i2.deco import ch_func_to_all_pk
 
 
@@ -169,12 +179,55 @@ def _mapped_extraction(extract_from: dict, key_map: dict):
             yield v, extract_from[v]
 
 
+def underscore_func_node_names_maker(func: Callable, name=None, output_name=None):
+    """This name maker will resolve names in the following fashion:
+     (1) look at the func_name and output_name given as arguments, if None...
+     (3) use name_of_obj(func) to make names.
+
+    It will use the name_of_obj(func)  itself for output_name, but suffix the same with
+    an underscore to provide a func_name.
+
+    This is so because here we want to allow easy construction of function networks
+    where a function's output will be used as another's input argument when
+    that argument has the the function's (output) name.
+    """
+    if name is None or output_name is None:
+        name_of_func = name_of_obj(func)
+        name = name or name_of_func + "_"
+        output_name = output_name or name_of_func
+    return name, output_name
+
+
+def duplicates(elements: Union[Iterable, Sized]):
+    c = Counter(elements)
+    if len(c) != len(elements):
+        return [name for name, count in c.items() if count > 1]
+    else:
+        return []
+
+
+def basic_node_validator(func_node):
+    _duplicates = duplicates(
+        [func_node.name, func_node.output_name, *func_node.sig.names]
+    )
+    if _duplicates:
+        raise ValidationError(f"{func_node} has duplicate names: {_duplicates}")
+
+    src_names_not_in_sig_names = func_node.src_names.keys() - func_node.sig.names
+    assert not src_names_not_in_sig_names, (
+        f"some src_names keys weren't found as function argnames: "
+        f"{', '.join(src_names_not_in_sig_names)}"
+    )
+
+
 # TODO: Think of the hash more carefully.
 @dataclass
 class FuncNode:
-    """
+    """A function wrapper that makes the function amenable to operating in a network.
+
     :param func: Function to wrap
-    :src_names: The {func_argname: external_name,...} mapping that defines where
+    :param name: The name to associate to the function
+    :param src_names: The {func_argname: external_name,...} mapping that defines where
         the node will source the data to call the function.
         This only has to be used if the external names are different from the names
         of the arguments of the function.
@@ -185,48 +238,59 @@ class FuncNode:
     func: Callable
     name: str = field(default=None)
     src_names: dict = field(default_factory=dict)
-    return_name: str = field(default=None)
-    write_output_into_src_kwargs = (True,)
-    _name_prefix: str = field(default="_", init=False, repr=False)
-    _return_name_suffix: str = field(default="", init=False, repr=False)
+    output_name: str = field(default=None)
+    write_output_into_scope: bool = True  # TODO: Do we really want to allow False?
+    names_maker: Callable = underscore_func_node_names_maker
+    node_validator: Callable = basic_node_validator
 
     def __post_init__(self):
-        self.name = self.name or self._name_prefix + name_of_obj(self.func)
-        self.return_name = (
-            self.return_name or name_of_obj(self.func) + self._return_name_suffix
+        self.name, self.output_name = self.names_maker(
+            self.func, self.name, self.output_name
         )
-        # TODO: assert name != return_name?
 
-        sig = Sig(self.func)
+        self.sig = Sig(self.func)
         # complete src_names with the argnames of the signature
-        src_names_not_in_sig_names = self.src_names.keys() - sig.names
-        assert not src_names_not_in_sig_names, (
-            f"some src_names keys weren't found as function argnames: "
-            f"{', '.join(src_names_not_in_sig_names)}"
-        )
-        _complete_dict_with_iterable_of_required_keys(self.src_names, sig.names)
+
+        _complete_dict_with_iterable_of_required_keys(self.src_names, self.sig.names)
         self.extractor = partial(_mapped_extraction, key_map=self.src_names)
-        self.func_sig = sig
 
         # # TODO: Should we changed the sig to match the source? Using Sig.ch_param_attrs
         # sig(self)  # puts the signature of func on the call of self
 
-    def call_on_scope(self, scope: dict):
+    def synopsis_string(self):
+        return f"{','.join(self.sig.names)} -> {self.name} -> {self.output_name}"
+
+    def __repr__(self):
+        return f"FuncNode({self.synopsis_string()})"
+
+    def call_on_scope(self, scope: MutableMapping):
+        """Call the function using the given scope both to source arguments and write
+        results.
+
+        Note: This method is only meant to be used as a backend to __call__, not as
+        an actual interface method. Additional control/constraints on read and writes
+        can be implemented by providing a custom scope for that."""
         relevant_kwargs = dict(self.extractor(scope))
         # print(scope, relevant_kwargs)
         output = call_somewhat_forgivingly(
-            self.func, (), relevant_kwargs, enforce_sig=self.func_sig
+            self.func, (), relevant_kwargs, enforce_sig=self.sig
         )
-        if self.write_output_into_src_kwargs:
-            scope[self.return_name] = output
+        if self.write_output_into_scope:
+            scope[self.output_name] = output
         return output
 
     def _hash_str(self):
-        ",".join(self.src_names) + " -> " + self.return_name
+        """Design ideo.
+        Attempt to construct a hash that reflects the actual identity we want.
+        Need to transform to int. Only identifier chars alphanumerics and underscore
+        and space are used, so could possibly encode as int (for __hash__ method)
+        in a way that is reverse-decodable and with reasonable int size.
+        """
+        return ";".join(self.src_names) + "::" + self.output_name
 
     # TODO: Find a better one
     def __hash__(self):
-        return id(self)
+        return hash(self._hash_str())
 
     def __call__(self, scope):
         """Deprecated: Don't use. Might be a normal function with a signature"""
@@ -237,28 +301,25 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
     """Assert that the names of func_nodes are sane.
     That is:
         - are valid dot (graphviz) names (we'll use str.isidentifier because lazy)
-        - All the func.name and func.return_name are unique
+        - All the func.name and func.output_name are unique
         - more to come
     """
     func_nodes = list(func_nodes)
     node_names = [x.name for x in func_nodes]
-    return_names = [x.return_name for x in func_nodes]
+    output_names = [x.output_name for x in func_nodes]
     assert all(
         map(str.isidentifier, node_names)
     ), f"some node names weren't valid identifiers: {node_names}"
     assert all(
-        map(str.isidentifier, return_names)
-    ), f"some return names weren't valid identifiers: {return_names}"
-    if len(set(node_names) | set(return_names)) != 2 * len(func_nodes):
-        c = Counter(node_names + return_names)
+        map(str.isidentifier, output_names)
+    ), f"some return names weren't valid identifiers: {output_names}"
+    if len(set(node_names) | set(output_names)) != 2 * len(func_nodes):
+        c = Counter(node_names + output_names)
         offending_names = [name for name, count in c.items() if count > 1]
         raise ValueError(
-            f"Some of your node names and/or return_names where used more than once. "
+            f"Some of your node names and/or output_names where used more than once. "
             f"They shouldn't. These are the names I find offensive: {offending_names}"
         )
-
-
-from meshed.makers import edge_reversed_graph
 
 
 def _mk_func_nodes(func_nodes):
@@ -278,7 +339,7 @@ def _func_nodes_to_graph_dict(func_nodes):
     for f in func_nodes:
         for src_name in f.src_names.values():
             add_edge(g, src_name, f)
-        add_edge(g, f, f.return_name)
+        add_edge(g, f, f.output_name)
     return g
 
 
@@ -290,35 +351,122 @@ def _is_not_func_node(obj) -> bool:
     return not _is_func_node(obj)
 
 
-def _extract_keys(d: dict, keys: Iterable):
+def extract_values(d: dict, keys: Iterable):
+    """generator of values extracted from d for keys"""
     for k in keys:
         yield d[k]
+
+
+def extract_items(d: dict, keys: Iterable):
+    """generator of (k, v) pairs extracted from d for keys"""
+    for k in keys:
+        yield k, d[k]
+
+
+def _separate_func_nodes_and_var_nodes(nodes):
+    func_nodes = list()
+    var_nodes = list()
+    for node in nodes:
+        if _is_func_node(node):
+            func_nodes.append(node)
+        else:
+            var_nodes.append(node)
+    return func_nodes, var_nodes
+
+
+ParameterMerger = Callable[[Iterable[Parameter]], Parameter]
+conservative_parameter_merge: ParameterMerger
+
+
+def conservative_parameter_merge(params):
+    """Validates that all the params are exactly the same, returning the first is so."""
+    first_param, *_ = params
+    if not all(p.name == first_param.name for p in params):
+        raise ValidationError(f"Some params didn't have the same name: {params}")
+    if not all(p.kind == first_param.kind for p in params):
+        raise ValidationError(f"Some params didn't have the same kind: {params}")
+    if not all(p.default == first_param.default for p in params):
+        raise ValidationError(f"Some params didn't have the same default: {params}")
+    if not all(p.annotation == first_param.annotation for p in params):
+        raise ValidationError(f"Some params didn't have the same annotation: {params}")
+    return first_param
 
 
 # TODO: Make a __getitem__that returns a function with specific args and return vals
 #   f = dag['a', 'b'] would be a callable (still a dag?) with args a and b in that order
 #   f['x', 'y'] would be like f, except returning the tuple (x, y) instead of the
 #   whole thing.
+# TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
+#  concern. Perhaps a more general form would be to define a cache factory defaulting
+#  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)
 @dataclass
 class DAG:
+    """
+    >>> from meshed.dag import DAG, Sig
+    >>>
+    >>> def this(a, b=1):
+    ...     return a + b
+    >>> def that(x, b=1):
+    ...     return x * b
+    >>> def combine(this, that):
+    ...     return (this, that)
+    >>>
+    >>> dag = DAG((this, that, combine))
+    >>> print(dag.synopsis_string())
+    x,b -> that_ -> that
+    a,b -> this_ -> this
+    this,that -> combine_ -> combine
+
+    But what does it do?
+
+    It's a callable, with a signature:
+
+    >>> Sig(dag)
+    <Sig (x, a, b=1)>
+
+    And when you call it, it executes the dag from the root values you give it and
+    returns the leaf output values.
+
+    >>> dag(1, 2, 3)  # (a+b,x*b) == (2+3,1*3) == (5, 3)
+    (5, 3)
+    >>> dag(1, 2)  # (a+b,x*b) == (2+1,1*1) == (3, 1)
+    (3, 1)
+
+    The above DAG was created straight from the functions, using only the names of the
+    functions and their arguments to define how to hook the network up.
+
+    But if you didn't write those functions specifically for that purpose, or you want
+    to use someone else's functions, we got you covered.
+
+    You can define the name of the node (the `name` argument), the name of the output
+    (the `output_name` argument) and a mapping from the function's arguments names to
+    "network names" (through the `src_names` argument).
+    The edges of the DAG are defined by matching `output_name` TO `src_names`.
+
+    """
+
     func_nodes: Iterable[FuncNode]
+    cache_last_scope: bool = True
+    parameter_merge: ParameterMerger = conservative_parameter_merge
 
     def __post_init__(self):
         self.func_nodes = tuple(_mk_func_nodes(self.func_nodes))
         self.graph = _func_nodes_to_graph_dict(self.func_nodes)
         self.nodes = topological_sort(self.graph)
-        # reorder the nodes to fit topplogical order
-        self.func_nodes = tuple(filter(_is_func_node, self.nodes))
+        # reorder the nodes to fit topological order
+        self.func_nodes, self.var_nodes = _separate_func_nodes_and_var_nodes(self.nodes)
         # figure out the roots and leaves
         self.roots = set(root_nodes(self.graph))
         self.leafs = set(leaf_nodes(self.graph))
-        self.sig = Sig(self.roots)  # TODO: add defaults
+        # self.sig = Sig(dict(extract_items(sig.parameters, 'xz')))
+        self.sig = Sig(sort_params(self.src_name_params(self.roots)))
         self.sig(self)  # to put the signature on the callable DAG
+        self.last_scope = None
 
     def __call__(self, *args, **kwargs):
         scope = self.sig.kwargs_from_args_and_kwargs(args, kwargs)
         self.call_on_scope(scope)
-        tup = tuple(_extract_keys(scope, self.leafs))
+        tup = tuple(extract_values(scope, self.leafs))
         if len(tup) > 1:
             return tup
         elif len(tup) == 1:
@@ -327,12 +475,51 @@ class DAG:
             return None
 
     def call_on_scope(self, scope=None):
+        """Calls the func_nodes using scope (a dict or MutableMapping) both to
+        source it's arguments and write it's results.
+
+        Note: This method is only meant to be used as a backend to __call__, not as
+        an actual interface method. Additional control/constraints on read and writes
+        can be implemented by providing a custom scope for that. For example, one could
+        log read and/or writes to specific keys, or disallow overwriting to an existing
+        key (useful for pipeline sanity), etc.
+        """
         if scope is None:
             scope = dict()  # fresh new scope
-        self._last_scope = scope  # just to remember it, for debugging purposes ONLY!
+        if self.cache_last_scope:
+            self.last_scope = scope  # just to remember it, for debugging purposes ONLY!
 
         for func_node in self.func_nodes:
             func_node.call_on_scope(scope)
+
+    def __getitem__(self, item):
+        return self._getitem(item)
+
+    def _getitem(self, item):
+        input_names, output_names = item
+
+    # ------------ utils --------------------------------------------------------------
+
+    def src_name_params(self, src_names: Optional[Iterable[str]] = None):
+        d = defaultdict(list)
+        for node in self.func_nodes:
+            for arg_name, src_name in node.src_names.items():
+                d[src_name].append(node.sig.parameters[arg_name])
+
+        if src_names is None:
+            src_names = set(d)
+
+        for src_name in filter(src_names.__contains__, d):
+            params = d[src_name]
+            if len(params) == 1:
+                yield params[0].replace(name=src_name)
+            else:
+                yield self.parameter_merge(params).replace(name=src_name)
+
+    # ------------ display --------------------------------------------------------------
+
+    def synopsis_string(self):
+        return "\n".join(func_node.synopsis_string() for func_node in self.func_nodes)
 
     # TODO: Give more control (merge with lined)
     def dot_digraph_body(self):
@@ -357,10 +544,6 @@ class DAG:
 
         body = list(self.dot_digraph_body(*args, **kwargs))
         return graphviz.Digraph(body=body)
-
-
-from typing import Iterable
-from i2.signatures import Parameter, empty, Sig
 
 
 # These are the defaults used in lined.
@@ -432,7 +615,7 @@ def dot_lines_of_func_nodes(func_nodes: Iterable[FuncNode]):
     >>> def exp(mult, a):
     ...     return mult ** a
     >>> func_nodes = [
-    ...     FuncNode(add, return_name='x'),
+    ...     FuncNode(add, output_name='x'),
     ...     FuncNode(mult, name='the_product'),
     ...     FuncNode(exp)
     ... ]
@@ -507,8 +690,8 @@ def dot_lines_of_func_nodes(func_nodes: Iterable[FuncNode]):
     """
     validate_that_func_node_names_are_sane(func_nodes)
     for func_node in func_nodes:
-        sig = func_node.func_sig
-        output_name = func_node.return_name
+        sig = func_node.sig
+        output_name = func_node.output_name
         func_name = func_node.name
         if output_name == func_name:
             func_name = "_" + func_name
