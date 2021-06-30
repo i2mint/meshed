@@ -68,9 +68,7 @@ class Operation:
         Operation equality is based on name of layer.
         (__eq__ and __hash__ must be overridden together)
         """
-        return bool(
-            self.name is not None and self.name == getattr(other, 'name', None)
-        )
+        return bool(self.name is not None and self.name == getattr(other, 'name', None))
 
     def __hash__(self):
         """
@@ -153,9 +151,7 @@ class NetworkOperation(Operation):
         self._execution_method = 'sequential'
 
     def _compute(self, named_inputs, outputs=None):
-        return self.net.compute(
-            outputs, named_inputs, method=self._execution_method
-        )
+        return self.net.compute(outputs, named_inputs, method=self._execution_method)
 
     def __call__(self, *args, **kwargs):
         return self._compute(*args, **kwargs)
@@ -301,14 +297,10 @@ class Network(object):
         # assert layer and its data requirements are named.
         assert operation.name, 'Operation must be named'
         assert operation.needs is not None, "Operation's 'needs' must be named"
-        assert (
-            operation.provides is not None
-        ), "Operation's 'provides' must be named"
+        assert operation.provides is not None, "Operation's 'provides' must be named"
 
         # assert layer is only added once to graph
-        assert operation not in gr.nodes(
-            self.graph
-        ), 'Operation may only be added once'
+        assert operation not in gr.nodes(self.graph), 'Operation may only be added once'
 
         # add nodes and edges to graph describing the data needs for this layer
         for n in operation.needs:
@@ -359,9 +351,7 @@ class Network(object):
                 # is no longer needed by future Operations.
                 for predecessor in gr.predecessors(self.graph, node):
                     if self._debug:
-                        print(
-                            'checking if node %s can be deleted' % predecessor
-                        )
+                        print('checking if node %s can be deleted' % predecessor)
                     predecessor_still_needed = False
                     for future_node in ordered_nodes[i + 1 :]:
                         if isinstance(future_node, Operation):
@@ -370,10 +360,7 @@ class Network(object):
                                 break
                     if not predecessor_still_needed:
                         if self._debug:
-                            print(
-                                '  adding delete instruction for %s'
-                                % predecessor
-                            )
+                            print('  adding delete instruction for %s' % predecessor)
                         self.steps.append(DeleteInstruction(predecessor))
 
             else:
@@ -402,9 +389,7 @@ class Network(object):
 
         # return steps if it has already been computed before for this set of inputs and outputs
         outputs = (
-            tuple(sorted(outputs))
-            if isinstance(outputs, (list, set))
-            else outputs
+            tuple(sorted(outputs)) if isinstance(outputs, (list, set)) else outputs
         )
         inputs_keys = tuple(sorted(inputs.keys()))
         cache_key = (inputs_keys, outputs)
@@ -448,9 +433,7 @@ class Network(object):
             # Get rid of the unnecessary nodes from the set of necessary ones.
             necessary_nodes -= unnecessary_nodes
 
-        necessary_steps = [
-            step for step in self.steps if step in necessary_nodes
-        ]
+        necessary_steps = [step for step in self.steps if step in necessary_nodes]
 
         # save this result in a precomputed cache for future lookup
         self._necessary_steps_cache[cache_key] = necessary_steps
@@ -484,9 +467,7 @@ class Network(object):
 
         # choose a method of execution
         if method == 'parallel':
-            return self._compute_thread_pool_barrier_method(
-                named_inputs, outputs
-            )
+            return self._compute_thread_pool_barrier_method(named_inputs, outputs)
         else:
             return self._compute_sequential_method(named_inputs, outputs)
 
@@ -523,9 +504,7 @@ class Network(object):
             for node in necessary_nodes:
                 # only delete if all successors for the data node have been executed
                 if isinstance(node, DeleteInstruction):
-                    if ready_to_delete_data_node(
-                        node, has_executed, self.graph
-                    ):
+                    if ready_to_delete_data_node(node, has_executed, self.graph):
                         if node in cache:
                             cache.pop(node)
 
@@ -765,9 +744,7 @@ class FunctionalOperation(Operation):
         Operation.__init__(self, **kwargs)
 
     def _compute(self, named_inputs, outputs=None):
-        inputs = [
-            named_inputs[d] for d in self.needs if not isinstance(d, optional)
-        ]
+        inputs = [named_inputs[d] for d in self.needs if not isinstance(d, optional)]
 
         # Find any optional inputs in named_inputs.  Get only the ones that
         # are present there, no extra `None`s.
@@ -834,23 +811,17 @@ class operation(Operation):
 
         # Allow single value for needs parameter
         if 'needs' in kwargs and type(kwargs['needs']) == str:
-            assert kwargs[
-                'needs'
-            ], 'empty string provided for `needs` parameters'
+            assert kwargs['needs'], 'empty string provided for `needs` parameters'
             kwargs['needs'] = [kwargs['needs']]
 
         # Allow single value for provides parameter
         if 'provides' in kwargs and type(kwargs['provides']) == str:
-            assert kwargs[
-                'provides'
-            ], 'empty string provided for `needs` parameters'
+            assert kwargs['provides'], 'empty string provided for `needs` parameters'
             kwargs['provides'] = [kwargs['provides']]
 
         assert kwargs['name'], 'operation needs a name'
         assert type(kwargs['needs']) == list, 'no `needs` parameter provided'
-        assert (
-            type(kwargs['provides']) == list
-        ), 'no `provides` parameter provided'
+        assert type(kwargs['provides']) == list, 'no `provides` parameter provided'
         assert hasattr(
             kwargs['fn'], '__call__'
         ), 'operation was not provided with a callable'
@@ -952,9 +923,7 @@ class compose(object):
             merge_set = set()
             for op in operations:
                 if isinstance(op, NetworkOperation):
-                    net_ops = filter(
-                        lambda x: isinstance(x, Operation), op.net.steps
-                    )
+                    net_ops = filter(lambda x: isinstance(x, Operation), op.net.steps)
                     merge_set.update(net_ops)
                 else:
                     merge_set.add(op)

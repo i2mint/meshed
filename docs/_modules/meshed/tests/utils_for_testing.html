@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>meshed.tests.utils_for_testing &#8212; meshed 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for meshed.tests.utils_for_testing</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Make objects for testing fast&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
+
+
+<span class="k">def</span> <span class="nf">parse_names</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+
+
+<span class="k">def</span> <span class="nf">mk_func</span><span class="p">(</span><span class="n">arg_names</span><span class="p">,</span> <span class="n">func_name</span><span class="p">):</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">arg_names</span><span class="p">)</span>
+
+    <span class="nd">@sig</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">_kwargs</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">_kwargs_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="n">_kwargs_str</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+    <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">func_name</span>
+
+    <span class="k">return</span> <span class="n">func</span>
+
+
+<span class="k">def</span> <span class="nf">string_to_func</span><span class="p">(</span><span class="n">dot_string</span><span class="p">):</span>
+    <span class="n">arg_names</span><span class="p">,</span> <span class="n">func_name</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">parse_names</span><span class="p">,</span> <span class="n">dot_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">func_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">mk_func</span><span class="p">(</span><span class="n">arg_names</span><span class="p">,</span> <span class="n">func_name</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">string_to_func_node</span><span class="p">(</span><span class="n">dot_string</span><span class="p">):</span>
+    <span class="n">arg_names</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">output_name</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">parse_names</span><span class="p">,</span> <span class="n">dot_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">func_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">output_name</span> <span class="o">=</span> <span class="n">output_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">func</span> <span class="o">=</span> <span class="n">mk_func</span><span class="p">(</span><span class="n">arg_names</span><span class="p">,</span> <span class="n">func_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="n">output_name</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="string_to_dag"><a class="viewcode-back" href="../../../module_docs/meshed/tests/utils_for_testing.html#meshed.tests.utils_for_testing.string_to_dag">[docs]</a><span class="k">def</span> <span class="nf">string_to_dag</span><span class="p">(</span><span class="n">dot_string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; dot_string = &#39;&#39;&#39;</span>
+<span class="sd">    ... a, b, c -&gt; d -&gt; e</span>
+<span class="sd">    ... b, f -&gt; g -&gt; h</span>
+<span class="sd">    ... a, e -&gt; i -&gt; j</span>
+<span class="sd">    ... &#39;&#39;&#39;</span>
+<span class="sd">    &gt;&gt;&gt; dag = string_to_dag(dot_string)</span>
+<span class="sd">    &gt;&gt;&gt; print(dag.synopsis_string())</span>
+<span class="sd">    b,f -&gt; g -&gt; h</span>
+<span class="sd">    a,b,c -&gt; d -&gt; e</span>
+<span class="sd">    a,e -&gt; i -&gt; j</span>
+<span class="sd">    &gt;&gt;&gt; Sig(dag)</span>
+<span class="sd">    &lt;Sig (b, f, a, c)&gt;</span>
+<span class="sd">    &gt;&gt;&gt; sorted(dag(1,2,3,4))</span>
+<span class="sd">    [&#39;g(b=1, f=2)&#39;, &#39;i(a=3, e=d(a=3, b=1, c=4))&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">string_to_func_node</span><span class="p">,</span> <span class="nb">filter</span><span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="n">dot_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))))</span>
+    <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">meshed</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/dag_experiments.html">meshed.dag_experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/dag_experiments/misc_utils.html">meshed.dag_experiments.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext.html">meshed.ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/itools.html">meshed.itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/makers.html">meshed.makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/util.html">meshed.util</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;NO COPYRIGHT.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

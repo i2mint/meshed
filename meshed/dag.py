@@ -32,14 +32,14 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
     else:
         i = start_at
         while True:
-            name = f"{prefix}__{i}"
+            name = f'{prefix}__{i}'
             if name not in exclude_names:
                 return name
             i += 1
 
 
 def func_name(func, exclude_names=()):
-    name = getattr(func, "__name__", "")
+    name = getattr(func, '__name__', '')
     return find_first_free_name(name, exclude_names)
 
 
@@ -52,7 +52,9 @@ def arg_names(func, func_name, exclude_names=()):
             if name not in _exclude_names:
                 yield name
             else:
-                found_name = find_first_free_name(f"{func_name}__{name}", _exclude_names)
+                found_name = find_first_free_name(
+                    f'{func_name}__{name}', _exclude_names
+                )
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
 
@@ -155,7 +157,7 @@ def _complete_dict_with_iterable_of_required_keys(
 def _inverse_dict_asserting_losslessness(d: dict):
     inv_d = {v: k for k, v in d.items()}
     assert len(inv_d) == len(d), (
-        f"can't invert: You have some duplicate values in this dict: " f"{d}"
+        f"can't invert: You have some duplicate values in this dict: " f'{d}'
     )
     return inv_d
 
@@ -193,7 +195,7 @@ def underscore_func_node_names_maker(func: Callable, name=None, output_name=None
     """
     if name is None or output_name is None:
         name_of_func = name_of_obj(func)
-        name = name or name_of_func + "_"
+        name = name or name_of_func + '_'
         output_name = output_name or name_of_func
     return name, output_name
 
@@ -211,7 +213,7 @@ def basic_node_validator(func_node):
         [func_node.name, func_node.output_name, *func_node.sig.names]
     )
     if _duplicates:
-        raise ValidationError(f"{func_node} has duplicate names: {_duplicates}")
+        raise ValidationError(f'{func_node} has duplicate names: {_duplicates}')
 
     src_names_not_in_sig_names = func_node.src_names.keys() - func_node.sig.names
     assert not src_names_not_in_sig_names, (
@@ -261,7 +263,7 @@ class FuncNode:
         return f"{','.join(self.sig.names)} -> {self.name} -> {self.output_name}"
 
     def __repr__(self):
-        return f"FuncNode({self.synopsis_string()})"
+        return f'FuncNode({self.synopsis_string()})'
 
     def call_on_scope(self, scope: MutableMapping):
         """Call the function using the given scope both to source arguments and write
@@ -286,7 +288,7 @@ class FuncNode:
         and space are used, so could possibly encode as int (for __hash__ method)
         in a way that is reverse-decodable and with reasonable int size.
         """
-        return ";".join(self.src_names) + "::" + self.output_name
+        return ';'.join(self.src_names) + '::' + self.output_name
 
     # TODO: Find a better one
     def __hash__(self):
@@ -317,7 +319,7 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
         c = Counter(node_names + output_names)
         offending_names = [name for name, count in c.items() if count > 1]
         raise ValueError(
-            f"Some of your node names and/or output_names where used more than once. "
+            f'Some of your node names and/or output_names where used more than once. '
             f"They shouldn't. These are the names I find offensive: {offending_names}"
         )
 
@@ -519,7 +521,7 @@ class DAG:
     # ------------ display --------------------------------------------------------------
 
     def synopsis_string(self):
-        return "\n".join(func_node.synopsis_string() for func_node in self.func_nodes)
+        return '\n'.join(func_node.synopsis_string() for func_node in self.func_nodes)
 
     # TODO: Give more control (merge with lined)
     def dot_digraph_body(self):
@@ -530,7 +532,7 @@ class DAG:
         """Get an ascii art string that represents the pipeline"""
         from lined.util import dot_to_ascii
 
-        return dot_to_ascii("\n".join(self.dot_digraph_body(*args, **kwargs)))
+        return dot_to_ascii('\n'.join(self.dot_digraph_body(*args, **kwargs)))
 
     @wraps(dot_digraph_body)
     def dot_digraph(self, *args, **kwargs):
@@ -538,8 +540,8 @@ class DAG:
             import graphviz
         except (ModuleNotFoundError, ImportError) as e:
             raise ModuleNotFoundError(
-                f"{e}\nYou may not have graphviz installed. "
-                f"See https://pypi.org/project/graphviz/."
+                f'{e}\nYou may not have graphviz installed. '
+                f'See https://pypi.org/project/graphviz/.'
             )
 
         body = list(self.dot_digraph_body(*args, **kwargs))
@@ -549,18 +551,18 @@ class DAG:
 # These are the defaults used in lined.
 # TODO: Merge some of the functionalities around graph displays in lined and meshed
 dflt_configs = dict(
-    fnode_shape="box",
-    vnode_shape="none",
+    fnode_shape='box',
+    vnode_shape='none',
     display_all_arguments=True,
-    edge_kind="to_args_on_edge",
+    edge_kind='to_args_on_edge',
     input_node=True,
-    output_node="output",
+    output_node='output',
 )
 
 
-def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
+def param_to_dot_definition(p: Parameter, shape=dflt_configs['vnode_shape']):
     if p.default is not empty:
-        name = p.name + "="
+        name = p.name + '='
     else:
         name = p.name
     yield f'{p.name} [label="{name}" shape="{shape}"]'
@@ -575,32 +577,30 @@ def dot_lines_of_func_parameters(
     parameters: Iterable[Parameter],
     output_name: str,
     func_name: str,
-    output_shape: str = dflt_configs["vnode_shape"],
-    func_shape: str = dflt_configs["fnode_shape"],
+    output_shape: str = dflt_configs['vnode_shape'],
+    func_shape: str = dflt_configs['fnode_shape'],
 ) -> Iterable[str]:
     assert func_name != output_name, (
         f"Your func and output name shouldn't be the "
-        f"same: {output_name=} {func_name=}"
+        f'same: {output_name=} {func_name=}'
     )
     yield f'{output_name} [label="{output_name}" shape="{output_shape}"]'
     yield f'{func_name} [label="{func_name}" shape="{func_shape}"]'
-    yield f"{func_name} -> {output_name}"
+    yield f'{func_name} -> {output_name}'
     # args -> func
     for p in parameters.values():
         yield from param_to_dot_definition(p)
     for argname in parameters:
-        yield f"{argname} -> {func_name}"
+        yield f'{argname} -> {func_name}'
 
 
 def _parameters_and_names_from_sig(
-    sig: Sig,
-    output_name=None,
-    func_name=None,
+    sig: Sig, output_name=None, func_name=None,
 ):
     func_name = func_name or sig.name
     output_name = output_name or sig.name
     if func_name == output_name:
-        func_name = "_" + func_name
+        func_name = '_' + func_name
     assert isinstance(func_name, str) and isinstance(output_name, str)
     return sig.parameters, output_name, func_name
 
@@ -694,11 +694,9 @@ def dot_lines_of_func_nodes(func_nodes: Iterable[FuncNode]):
         output_name = func_node.output_name
         func_name = func_node.name
         if output_name == func_name:
-            func_name = "_" + func_name
+            func_name = '_' + func_name
         yield from dot_lines_of_func_parameters(
-            sig.parameters,
-            output_name=output_name,
-            func_name=func_name,
+            sig.parameters, output_name=output_name, func_name=func_name,
         )
 
 
@@ -716,10 +714,7 @@ with suppress(ModuleNotFoundError, ImportError):
             needs = arg_names(func, _func_name, exclude_names)
             exclude_names = exclude_names + tuple(needs)
             yield operation(
-                func,
-                name=_func_name,
-                needs=needs,
-                provides=_func_name,
+                func, name=_func_name, needs=needs, provides=_func_name,
             )
 
     def funcs_to_operators(*funcs, exclude_names=()) -> Operation:
