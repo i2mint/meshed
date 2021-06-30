@@ -1,3 +1,5 @@
+"""Make objects for testing fast"""
+
 from meshed.dag import *
 from i2 import Sig
 

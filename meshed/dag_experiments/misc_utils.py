@@ -1,3 +1,5 @@
+"""Misc utils"""
+
 from typing import Mapping
 from meshed.util import ModuleNotFoundIgnore
 from collections import deque, defaultdict

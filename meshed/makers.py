@@ -1,3 +1,5 @@
+"""Makers"""
+
 from typing import Mapping, Iterable, TypeVar, Callable
 from itertools import product
 from collections import defaultdict
