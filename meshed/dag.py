@@ -642,7 +642,7 @@ def dot_lines_of_func_nodes(func_nodes: Iterable[FuncNode]):
     ... 'a [label="a" shape="none"]',
     ... 'mult -> _exp',
     ... 'a -> _exp'
-    ... ]
+    ... ]  # doctest: +SKIP
 
     >>> from lined.util import dot_to_ascii
     >>>
