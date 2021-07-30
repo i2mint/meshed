@@ -6,3 +6,8 @@ from meshed.itools import (
     edges,
     nodes,
 )
+
+from meshed.dag import (
+    DAG,
+    FuncNode,
+)
