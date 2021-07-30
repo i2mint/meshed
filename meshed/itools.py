@@ -15,11 +15,15 @@ def _handle_exclude_nodes(func):
 
     @wraps(func)
     def _func(*args, **kwargs):
-        kwargs = sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
+        kwargs = sig.kwargs_from_args_and_kwargs(
+            args, kwargs, apply_defaults=True
+        )
         try:
             _exclude_nodes = kwargs["_exclude_nodes"]
         except KeyError:
-            raise RuntimeError(f"{func} doesn't have a _exclude_nodes argument")
+            raise RuntimeError(
+                f"{func} doesn't have a _exclude_nodes argument"
+            )
 
         if _exclude_nodes is None:
             _exclude_nodes = set()
@@ -215,8 +219,7 @@ def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
     assert isinstance(source, Iterable)
     source = set(source) - _exclude_nodes
     if source:
-        _parents = parents(g, source)
-        _exclude_nodes.update(_parents)
+        _parents = set(parents(g, source)) - _exclude_nodes
         _ancestors_of_parent = ancestors(g, _parents, _exclude_nodes)
         return _parents | _ancestors_of_parent
     else:

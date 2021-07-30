@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>meshed.util &#8212; meshed 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="meshed.tests.utils_for_testing" href="tests/utils_for_testing.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-meshed.util">
+<span id="meshed-util"></span><h1>meshed.util<a class="headerlink" href="#module-meshed.util" title="Permalink to this headline">¶</a></h1>
+<p>util functions</p>
+<dl class="py function">
+<dt id="meshed.util.name_of_obj">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">name_of_obj</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">o</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#name_of_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.name_of_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to find the (or “a”) name for an object, even if <cite>__name__</cite> doesn’t exist.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">name_of_obj</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span>
+<span class="go">&#39;map&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name_of_obj</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">&#39;list&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name_of_obj</span><span class="p">(</span><span class="nb">print</span><span class="p">)</span>
+<span class="go">&#39;print&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name_of_obj</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span>
+<span class="go">&#39;&lt;lambda&gt;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name_of_obj</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="nb">print</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+<span class="go">&#39;print&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">meshed</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dag_experiments.html">meshed.dag_experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dag_experiments/misc_utils.html">meshed.dag_experiments.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ext.html">meshed.ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ext/gk_tests.html">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="itools.html">meshed.itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="makers.html">meshed.makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.util</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="tests/utils_for_testing.html" title="previous chapter">meshed.tests.utils_for_testing</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;NO COPYRIGHT.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/module_docs/meshed/util.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

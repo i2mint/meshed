@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>meshed.makers &#8212; meshed 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="meshed.scrap" href="scrap.html" />
+    <link rel="prev" title="meshed.itools" href="itools.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-meshed.makers">
+<span id="meshed-makers"></span><h1>meshed.makers<a class="headerlink" href="#module-meshed.makers" title="Permalink to this headline">¶</a></h1>
+<p>Makers</p>
+<dl class="py function">
+<dt id="meshed.makers.edge_reversed_graph">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">edge_reversed_graph</code><span class="sig-paren">(</span><em class="sig-param">g: Mapping[T, Iterable[T]], dst_nodes_factory: Callable[[], Iterable[T]] = &lt;class 'list'&gt;, dst_nodes_append: Callable[[Iterable[T], T], None] = &lt;method 'append' of 'list' objects&gt;</em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span>T<span class="p">, </span>Iterable<span class="p">[</span>T<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#edge_reversed_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.edge_reversed_graph" title="Permalink to this definition">¶</a></dt>
+<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">&#39;cd&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;abd&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">edge_reversed_graph</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reverse_g_with_sets</span> <span class="o">=</span> <span class="n">edge_reversed_graph</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="nb">set</span><span class="p">,</span> <span class="nb">set</span><span class="o">.</span><span class="n">add</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">reverse_g_with_sets</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">},</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">},</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">},</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">},</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">([])}</span>
+</pre></div>
+</div>
+<p>Testing border cases
+&gt;&gt;&gt; assert edge_reversed_graph(dict(e=’’, a=’e’)) == {‘e’: [‘a’], ‘a’: []}
+&gt;&gt;&gt; assert edge_reversed_graph(dict(a=’e’, e=’’)) == {‘e’: [‘a’], ‘a’: []}</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">meshed</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dag_experiments.html">meshed.dag_experiments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dag_experiments/misc_utils.html">meshed.dag_experiments.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ext.html">meshed.ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ext/gk_tests.html">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="itools.html">meshed.itools</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">meshed.util</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="itools.html" title="previous chapter">meshed.itools</a></li>
+      <li>Next: <a href="scrap.html" title="next chapter">meshed.scrap</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;NO COPYRIGHT.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/module_docs/meshed/makers.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
