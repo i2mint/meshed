@@ -7,3 +7,7 @@ from meshed.itools import (
     nodes,
 )
 
+from meshed.dag import (
+    DAG,
+    FuncNode,
+)

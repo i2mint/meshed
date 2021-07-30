@@ -392,6 +392,12 @@ def conservative_parameter_merge(params):
     return first_param
 
 
+def ensure_list(x):
+    if not isinstance(x, list):
+        return [x]
+    return x
+
+
 # TODO: Make a __getitem__that returns a function with specific args and return vals
 #   f = dag['a', 'b'] would be a callable (still a dag?) with args a and b in that order
 #   f['x', 'y'] would be like f, except returning the tuple (x, y) instead of the
@@ -492,11 +498,30 @@ class DAG:
         for func_node in self.func_nodes:
             func_node.call_on_scope(scope)
 
+    # def clone(self, *args, **kwargs):
+    #     """Use args, kwargs to make an instance, using self attributes for
+    #     unspecified arguments.
+    #     """
+
     def __getitem__(self, item):
         return self._getitem(item)
 
     def _getitem(self, item):
-        input_names, output_names = item
+        from meshed.itools import descendants, ancestors
+        input_names, output_names = map(ensure_list, item)
+        _descendants = descendants(self.graph, input_names)
+        _ancestors = ancestors(self.graph, output_names)
+        # print(f"{_descendants=}")
+        # print(f"{_ancestors=}")
+        subgraph_nodes = _descendants.intersection(_ancestors)
+        # TODO: When clone ready, use to do below
+        # constructor = type(self)  # instead of DAG
+        return DAG(
+            func_nodes=subgraph_nodes,
+            cache_last_scope=self.cache_last_scope,
+            parameter_merge=self.parameter_merge
+        )
+
 
     # ------------ utils --------------------------------------------------------------
 
