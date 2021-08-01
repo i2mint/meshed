@@ -129,12 +129,12 @@ can be implemented by providing a custom scope for that.</p>
 <dt id="meshed.dag.FuncNode.names_maker">
 <code class="sig-name descname">names_maker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">output_name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.dag.FuncNode.names_maker" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>This name maker will resolve names in the following fashion:</dt><dd><p>(1) look at the func_name and output_name given as arguments, if None…
+<dt>This name maker will resolve names in the following fashion:</dt><dd><p>(1) look at the mk_func_name and output_name given as arguments, if None…
 (3) use name_of_obj(func) to make names.</p>
 </dd>
 </dl>
 <p>It will use the name_of_obj(func)  itself for output_name, but suffix the same with
-an underscore to provide a func_name.</p>
+an underscore to provide a mk_func_name.</p>
 <p>This is so because here we want to allow easy construction of function networks
 where a function’s output will be used as another’s input argument when
 that argument has the the function’s (output) name.</p>
@@ -320,12 +320,12 @@ to write the output of the function
 <dt id="meshed.dag.underscore_func_node_names_maker">
 <code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">underscore_func_node_names_maker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">output_name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#underscore_func_node_names_maker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.underscore_func_node_names_maker" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>This name maker will resolve names in the following fashion:</dt><dd><p>(1) look at the func_name and output_name given as arguments, if None…
+<dt>This name maker will resolve names in the following fashion:</dt><dd><p>(1) look at the mk_func_name and output_name given as arguments, if None…
 (3) use name_of_obj(func) to make names.</p>
 </dd>
 </dl>
 <p>It will use the name_of_obj(func)  itself for output_name, but suffix the same with
-an underscore to provide a func_name.</p>
+an underscore to provide a mk_func_name.</p>
 <p>This is so because here we want to allow easy construction of function networks
 where a function’s output will be used as another’s input argument when
 that argument has the the function’s (output) name.</p>
