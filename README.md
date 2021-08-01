@@ -1,5 +1,94 @@
 # meshed
 
+```python
+from meshed import DAG
+
+def this(a, b=1):
+    return a + b
+def that(x, b=1):
+    return x * b
+def combine(this, that):
+    return (this, that)
+
+dag = DAG((this, that, combine))
+print(dag.synopsis_string())
+```
+
+    x,b -> that_ -> that
+    a,b -> this_ -> this
+    this,that -> combine_ -> combine
+
+
+But what does it do?
+
+It's a callable, with a signature:
+
+```python
+from inspect import signature
+signature(dag)
+```
+
+    <Signature (x, a, b=1)>
+
+And when you call it, it executes the dag from the root values you give it and
+returns the leaf output values.
+
+```python
+dag(1, 2, 3)  # (a+b,x*b) == (2+3,1*3) == (5, 3)
+```
+    (5, 3)
+
+```python
+dag(1, 2)  # (a+b,x*b) == (2+1,1*1) == (3, 1)
+```
+    (3, 1)
+
+
+You can see (and save image, or ascii art) the dag:
+
+```python
+dag.dot_digraph()
+```
+
+<img src="https://user-images.githubusercontent.com/1906276/127779463-ae75604b-0d69-4ac4-b206-80c2c5ae582b.png" width=400>
+
+
+You can extend a dag
+
+```python
+dag2 = DAG([*dag, lambda this, a: this + a])
+dag2.dot_digraph()
+```
+
+<img src="https://user-images.githubusercontent.com/1906276/127779748-70b47907-e51f-4e64-bc18-9545ee07e632.png" width=400>
+
+You can get a sub-dag by specifying desired input(s) and outputs.
+
+```python
+dag2[['that', 'this'], 'combine'].dot_digraph()
+```
+
+<img src="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png" width=250>
+
+
+
+## Note on flexibility
+
+The above DAG was created straight from the functions, using only the names of the
+functions and their arguments to define how to hook the network up.
+
+But if you didn't write those functions specifically for that purpose, or you want
+to use someone else's functions, we got you covered.
+
+You can define the name of the node (the `name` argument), the name of the output
+(the `out` argument) and a mapping from the function's arguments names to
+"network names" (through the `bind` argument).
+The edges of the DAG are defined by matching `out` TO `bind`.
+
+
+
+
+# itools module
 Tools that enable operations on graphs where graphs are represented by an adjacency Mapping.
 
 Again. 
