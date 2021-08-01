@@ -2,7 +2,7 @@
 
 Link functions up into callable objects (DAGs)
 
-To install: `pip install meshed'
+To install: `pip install meshed`
 
 # Quick Start
 
@@ -74,7 +74,7 @@ You can get a sub-dag by specifying desired input(s) and outputs.
 dag2[['that', 'this'], 'combine'].dot_digraph()
 ```
 
-<img src="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png" width=215050>
+<img src="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png" width=150>
 
 
 
