@@ -37,7 +37,7 @@ def string_to_func_node(dot_string):
     output_name = output_name[0]
 
     func = mk_func(arg_names, func_name)
-    return FuncNode(func, name=func_name, output_name=output_name)
+    return FuncNode(func, name=func_name, out=output_name)
 
 
 def string_to_dag(dot_string):

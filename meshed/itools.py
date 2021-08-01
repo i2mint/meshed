@@ -220,6 +220,7 @@ def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
     source = set(source) - _exclude_nodes
     if source:
         _parents = set(parents(g, source)) - _exclude_nodes
+        _exclude_nodes = _parents
         _ancestors_of_parent = ancestors(g, _parents, _exclude_nodes)
         return _parents | _ancestors_of_parent
     else:
