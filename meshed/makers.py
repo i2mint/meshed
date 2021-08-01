@@ -6,7 +6,7 @@ from itertools import product
 from collections import defaultdict
 
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 with suppress(ModuleNotFoundError, ImportError):
     from numpy.random import randint, choice
