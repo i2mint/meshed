@@ -1,5 +1,11 @@
 # meshed
 
+Link functions up into callable objects (DAGs)
+
+To install: `pip install meshed'
+
+# Quick Start
+
 ```python
 from meshed import DAG
 
@@ -50,7 +56,7 @@ You can see (and save image, or ascii art) the dag:
 dag.dot_digraph()
 ```
 
-<img src="https://user-images.githubusercontent.com/1906276/127779463-ae75604b-0d69-4ac4-b206-80c2c5ae582b.png" width=400>
+<img src="https://user-images.githubusercontent.com/1906276/127779463-ae75604b-0d69-4ac4-b206-80c2c5ae582b.png" width=200>
 
 
 You can extend a dag
@@ -60,7 +66,7 @@ dag2 = DAG([*dag, lambda this, a: this + a])
 dag2.dot_digraph()
 ```
 
-<img src="https://user-images.githubusercontent.com/1906276/127779748-70b47907-e51f-4e64-bc18-9545ee07e632.png" width=400>
+<img src="https://user-images.githubusercontent.com/1906276/127779748-70b47907-e51f-4e64-bc18-9545ee07e632.png" width=200>
 
 You can get a sub-dag by specifying desired input(s) and outputs.
 
@@ -68,7 +74,7 @@ You can get a sub-dag by specifying desired input(s) and outputs.
 dag2[['that', 'this'], 'combine'].dot_digraph()
 ```
 
-<img src="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png" width=250>
+<img src="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png" width=215050>
 
 
 
