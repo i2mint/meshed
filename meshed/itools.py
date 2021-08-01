@@ -15,22 +15,18 @@ def _handle_exclude_nodes(func):
 
     @wraps(func)
     def _func(*args, **kwargs):
-        kwargs = sig.kwargs_from_args_and_kwargs(
-            args, kwargs, apply_defaults=True
-        )
+        kwargs = sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
         try:
-            _exclude_nodes = kwargs["_exclude_nodes"]
+            _exclude_nodes = kwargs['_exclude_nodes']
         except KeyError:
-            raise RuntimeError(
-                f"{func} doesn't have a _exclude_nodes argument"
-            )
+            raise RuntimeError(f"{func} doesn't have a _exclude_nodes argument")
 
         if _exclude_nodes is None:
             _exclude_nodes = set()
         elif not isinstance(_exclude_nodes, set):
             _exclude_nodes = set(_exclude_nodes)
 
-        kwargs["_exclude_nodes"] = _exclude_nodes
+        kwargs['_exclude_nodes'] = _exclude_nodes
         args, kwargs = sig.args_and_kwargs_from_kwargs(kwargs)
         return func(*args, **kwargs)
 

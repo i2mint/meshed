@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>meshed.itools &#8212; meshed 0.1.0 documentation</title>
+    <title>meshed.itools &#8212; meshed 0.1.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -250,8 +250,8 @@
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
     <span class="n">source</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">-</span> <span class="n">_exclude_nodes</span>
     <span class="k">if</span> <span class="n">source</span><span class="p">:</span>
-        <span class="n">_parents</span> <span class="o">=</span> <span class="n">parents</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
-        <span class="n">_exclude_nodes</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_parents</span><span class="p">)</span>
+        <span class="n">_parents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">parents</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span> <span class="o">-</span> <span class="n">_exclude_nodes</span>
+        <span class="n">_exclude_nodes</span> <span class="o">=</span> <span class="n">_parents</span>
         <span class="n">_ancestors_of_parent</span> <span class="o">=</span> <span class="n">ancestors</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">_parents</span><span class="p">,</span> <span class="n">_exclude_nodes</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">_parents</span> <span class="o">|</span> <span class="n">_ancestors_of_parent</span>
     <span class="k">else</span><span class="p">:</span>
