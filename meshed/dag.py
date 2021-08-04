@@ -626,7 +626,7 @@ class DAG:
 
     """
 
-    func_nodes: Iterable[FuncNode]
+    func_nodes: Iterable[Union[FuncNode, Callable]]
     cache_last_scope: bool = True
     parameter_merge: ParameterMerger = conservative_parameter_merge
     new_scope: Callable = dict  # can return a prepopulated scope too!
