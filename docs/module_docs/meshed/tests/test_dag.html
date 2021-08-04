@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>meshed.tests.utils_for_testing &#8212; meshed 0.1.10 documentation</title>
+    <title>meshed.tests.test_dag &#8212; meshed 0.1.10 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
@@ -17,8 +17,8 @@
     <script src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="meshed.util" href="../util.html" />
-    <link rel="prev" title="meshed.tests.test_dag" href="test_dag.html" />
+    <link rel="next" title="meshed.tests.utils_for_testing" href="utils_for_testing.html" />
+    <link rel="prev" title="meshed.tests" href="../tests.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
@@ -35,30 +35,9 @@
 
           <div class="body" role="main">
             
-  <section id="module-meshed.tests.utils_for_testing">
-<span id="meshed-tests-utils-for-testing"></span><h1>meshed.tests.utils_for_testing<a class="headerlink" href="#module-meshed.tests.utils_for_testing" title="Permalink to this headline">¶</a></h1>
-<p>Make objects for testing fast</p>
-<dl class="py function">
-<dt id="meshed.tests.utils_for_testing.string_to_dag">
-<code class="sig-prename descclassname">meshed.tests.utils_for_testing.</code><code class="sig-name descname">string_to_dag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dot_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/tests/utils_for_testing.html#string_to_dag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.tests.utils_for_testing.string_to_dag" title="Permalink to this definition">¶</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dot_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">... </span><span class="s1">a, b, c -&gt; d -&gt; e</span>
-<span class="gp">... </span><span class="s1">b, f -&gt; g -&gt; h</span>
-<span class="gp">... </span><span class="s1">a, e -&gt; i -&gt; j</span>
-<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">string_to_dag</span><span class="p">(</span><span class="n">dot_string</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
-<span class="go">b,f -&gt; g -&gt; h</span>
-<span class="go">a,b,c -&gt; d -&gt; e</span>
-<span class="go">a,e -&gt; i -&gt; j</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Sig</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
-<span class="go">&lt;Sig (b, f, a, c)&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="go">[&#39;g(b=1, f=2)&#39;, &#39;i(a=3, e=d(a=3, b=1, c=4))&#39;]</span>
-</pre></div>
-</div>
-</dd></dl>
-
+  <section id="module-meshed.tests.test_dag">
+<span id="meshed-tests-test-dag"></span><h1>meshed.tests.test_dag<a class="headerlink" href="#module-meshed.tests.test_dag" title="Permalink to this headline">¶</a></h1>
+<p>Test dags</p>
 </section>
 
 
@@ -92,8 +71,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../scrap.html">meshed.scrap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tests.html">meshed.tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="test_dag.html">meshed.tests.test_dag</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.tests.test_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../util.html">meshed.util</a></li>
 </ul>
 
@@ -101,8 +80,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="test_dag.html" title="previous chapter">meshed.tests.test_dag</a></li>
-      <li>Next: <a href="../util.html" title="next chapter">meshed.util</a></li>
+      <li>Previous: <a href="../tests.html" title="previous chapter">meshed.tests</a></li>
+      <li>Next: <a href="utils_for_testing.html" title="next chapter">meshed.tests.utils_for_testing</a></li>
   </ul></li>
 </ul>
 </div>
@@ -136,7 +115,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../../_sources/module_docs/meshed/tests/utils_for_testing.rst.txt"
+      <a href="../../../_sources/module_docs/meshed/tests/test_dag.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
