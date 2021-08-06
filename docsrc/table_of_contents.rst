@@ -14,5 +14,6 @@
    module_docs/meshed/scrap
    module_docs/meshed/scrap/gk_with_networkx
    module_docs/meshed/tests
+   module_docs/meshed/tests/test_dag
    module_docs/meshed/tests/utils_for_testing
    module_docs/meshed/util
