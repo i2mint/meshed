@@ -23,4 +23,4 @@ def test_func_name():
         return a * b
 
     assert ms.util.func_name(my_func) == "my_func"
-    assert ms.util.func_name(lambda x: x) == "lambda_001"
+    assert ms.util.func_name(lambda x: x).startswith("lambda_")
