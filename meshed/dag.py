@@ -69,7 +69,9 @@ def arg_names(func, func_name, exclude_names=()):
             if name not in _exclude_names:
                 yield name
             else:
-                found_name = find_first_free_name(f"{func_name}__{name}", _exclude_names)
+                found_name = find_first_free_name(
+                    f"{func_name}__{name}", _exclude_names
+                )
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
 
@@ -649,7 +651,7 @@ class DAG:
         if self.name is not None:
             self.__name__ = self.name
 
-    def __call__(self, *args, **kwargs):
+    def _call(self, *args, **kwargs):
         scope = self.sig.kwargs_from_args_and_kwargs(args, kwargs)
         self.call_on_scope(scope)
         tup = tuple(extract_values(scope, self.leafs))
@@ -659,6 +661,9 @@ class DAG:
             return tup[0]
         else:
             return None
+
+    def __call__(self, *args, **kwargs):
+        return self._call(*args, **kwargs)
 
     def call_on_scope(self, scope=None):
         """Calls the func_nodes using scope (a dict or MutableMapping) both to

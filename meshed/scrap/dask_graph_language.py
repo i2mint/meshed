@@ -27,7 +27,11 @@ def add(a, b):
 d = {"y": (inc, "x"), "z": (add, "y", "a")}
 
 dag = DAG(node_funcs_from_dask_graph_dict(d))
-dag.dot_digraph()
+
+from contextlib import suppress
+
+with suppress(ModuleNotFoundError, ImportError):
+    dag.dot_digraph()
 
 
 # For being able to handle non-tuple vals (like the 1 of 'x':1 and non string args
