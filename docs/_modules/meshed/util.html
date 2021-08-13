@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>meshed.util &#8212; meshed 0.1.11 documentation</title>
+    <title>meshed.util &#8212; meshed 0.1.12 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -34,6 +34,9 @@
             
   <h1>Source code for meshed.util</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;util functions&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="n">FunctionNamer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
 
 
 <span class="k">class</span> <span class="nc">ModuleNotFoundIgnore</span><span class="p">:</span>
@@ -46,7 +49,7 @@
         <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="name_of_obj"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.name_of_obj">[docs]</a><span class="k">def</span> <span class="nf">name_of_obj</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<div class="viewcode-block" id="name_of_obj"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.name_of_obj">[docs]</a><span class="k">def</span> <span class="nf">name_of_obj</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tries to find the (or &quot;a&quot;) name for an object, even if `__name__` doesn&#39;t exist.</span>
 
@@ -89,8 +92,10 @@
 <span class="n">lambda_name</span> <span class="o">=</span> <span class="n">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;lambda_</span><span class="si">{:03.0f}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">unnameable_func_name</span> <span class="o">=</span> <span class="n">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;unnameable_func_</span><span class="si">{:03.0f}</span><span class="s1">&#39;</span><span class="p">)</span>
 
+<span class="n">func_name</span><span class="p">:</span> <span class="n">FunctionNamer</span>
 
-<div class="viewcode-block" id="func_name"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.func_name">[docs]</a><span class="k">def</span> <span class="nf">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+
+<div class="viewcode-block" id="func_name"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.func_name">[docs]</a><span class="k">def</span> <span class="nf">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;The func.__name__ of a callable func, or makes and returns one if that fails.</span>
 <span class="sd">    To make one, it calls unamed_func_name which produces incremental names to reduce the chances of clashing&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -100,6 +105,47 @@
         <span class="k">return</span> <span class="n">name</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">unnameable_func_name</span><span class="p">()</span></div>
+
+
+<span class="c1"># ---------------------------------------------------------------------------------------</span>
+<span class="c1"># Misc</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+
+
+<div class="viewcode-block" id="args_funcnames"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.args_funcnames">[docs]</a><span class="k">def</span> <span class="nf">args_funcnames</span><span class="p">(</span>
+    <span class="n">funcs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">name_of_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FunctionNamer</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_name</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generates (arg_name, func_name) pairs from the iterable of functions&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span><span class="p">,</span> <span class="n">Parameter</span>
+
+    <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">:</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">arg_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># initialize</span>
+            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">VAR_POSITIONAL</span><span class="p">:</span>
+                <span class="n">arg_name</span> <span class="o">+=</span> <span class="s1">&#39;*&#39;</span>
+            <span class="k">elif</span> <span class="n">param</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">VAR_KEYWORD</span><span class="p">:</span>
+                <span class="n">arg_name</span> <span class="o">+=</span> <span class="s1">&#39;**&#39;</span>
+            <span class="n">arg_name</span> <span class="o">+=</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># append name of param</span>
+            <span class="k">yield</span> <span class="n">arg_name</span><span class="p">,</span> <span class="n">name_of_func</span><span class="p">(</span><span class="n">func</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">funcs_to_digraph</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">graphviz</span> <span class="kn">import</span> <span class="n">Digraph</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span> <span class="ow">or</span> <span class="n">Digraph</span><span class="p">()</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">args_funcnames</span><span class="p">(</span><span class="n">funcs</span><span class="p">)))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; [shape=box]&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">graph</span>
+
+
+<span class="k">def</span> <span class="nf">print_ascii_graph</span><span class="p">(</span><span class="n">funcs</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">lined.util</span> <span class="kn">import</span> <span class="n">dot_to_ascii</span>
+
+    <span class="n">digraph</span> <span class="o">=</span> <span class="n">funcs_to_digraph</span><span class="p">(</span><span class="n">funcs</span><span class="p">)</span>
+    <span class="n">dot_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">digraph</span><span class="o">.</span><span class="n">body</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dot_to_ascii</span><span class="p">(</span><span class="n">dot_str</span><span class="p">))</span>
 </pre></div>
 
           </div>
@@ -121,7 +167,11 @@
 <p><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext.html">meshed.ext</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>

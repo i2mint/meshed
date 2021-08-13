@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>meshed.util &#8212; meshed 0.1.11 documentation</title>
+    <title>meshed.util &#8212; meshed 0.1.12 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -38,8 +38,14 @@
 <span id="meshed-util"></span><h1>meshed.util<a class="headerlink" href="#module-meshed.util" title="Permalink to this headline">¶</a></h1>
 <p>util functions</p>
 <dl class="py function">
+<dt id="meshed.util.args_funcnames">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">args_funcnames</code><span class="sig-paren">(</span><em class="sig-param">funcs: Iterable[Callable], name_of_func: Optional[Callable[[Callable], str]] = &lt;function func_name&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#args_funcnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.args_funcnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates (arg_name, func_name) pairs from the iterable of functions</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="meshed.util.func_name">
-<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">func_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#func_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.func_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">func_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/meshed/util.html#func_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.func_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The func.__name__ of a callable func, or makes and returns one if that fails.
 To make one, it calls unamed_func_name which produces incremental names to reduce the chances of clashing</p>
 </dd></dl>
@@ -52,7 +58,7 @@ To make one, it calls unamed_func_name which produces incremental names to reduc
 
 <dl class="py function">
 <dt id="meshed.util.name_of_obj">
-<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">name_of_obj</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">o</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#name_of_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.name_of_obj" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">name_of_obj</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">o</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../../_modules/meshed/util.html#name_of_obj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.name_of_obj" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tries to find the (or “a”) name for an object, even if <cite>__name__</cite> doesn’t exist.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">name_of_obj</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span>
 <span class="go">&#39;map&#39;</span>
@@ -91,7 +97,11 @@ To make one, it calls unamed_func_name which produces incremental names to reduc
 <p><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="caching.html">meshed.caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ext.html">meshed.ext</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ext/gk.html">meshed.ext.gk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ext/gk_tests.html">meshed.ext.gk_tests</a></li>

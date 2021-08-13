@@ -3,7 +3,11 @@
    :caption: Contents:
 
    module_docs/meshed
+   module_docs/meshed/caching
    module_docs/meshed/dag
+   module_docs/meshed/examples/online_marketing
+   module_docs/meshed/examples/price_elasticity
+   module_docs/meshed/examples/vaccine_vs_no_vaccine
    module_docs/meshed/ext
    module_docs/meshed/ext/gk
    module_docs/meshed/ext/gk_tests
