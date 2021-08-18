@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>meshed.ext.gk_tests &#8212; meshed 0.1.12 documentation</title>
+    <title>meshed.examples.online_marketing &#8212; meshed 0.1.12 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
@@ -17,8 +17,8 @@
     <script src="../../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="meshed.itools" href="../itools.html" />
-    <link rel="prev" title="meshed.ext.gk" href="gk.html" />
+    <link rel="next" title="meshed.examples.price_elasticity" href="price_elasticity.html" />
+    <link rel="prev" title="meshed.dag" href="../dag.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
@@ -35,9 +35,48 @@
 
           <div class="body" role="main">
             
-  <section id="module-meshed.ext.gk_tests">
-<span id="meshed-ext-gk-tests"></span><h1>meshed.ext.gk_tests<a class="headerlink" href="#module-meshed.ext.gk_tests" title="Permalink to this headline">¶</a></h1>
-<p>Tests for gk.py</p>
+  <section id="module-meshed.examples.online_marketing">
+<span id="meshed-examples-online-marketing"></span><h1>meshed.examples.online_marketing<a class="headerlink" href="#module-meshed.examples.online_marketing" title="Permalink to this headline">¶</a></h1>
+<p>Online marketing funnel: impressions and clicks to sales and profit.</p>
+<blockquote>
+<div><blockquote>
+<div><p>┌──────────────────────┐
+│ click_per_impression │
+└──────────────────────┘</p>
+<blockquote>
+<div><p>│
+▼</p>
+</div></blockquote>
+</div></blockquote>
+<p>┌─────────────────┐     ┌──────────────────────┐
+│   impressions   │ ──▶ │        clicks        │
+└─────────────────┘     └──────────────────────┘</p>
+</div></blockquote>
+<p>┌────┘                       │
+│                            ▼
+│  ┌─────────────────┐     ┌──────────────────────┐
+│  │ sales_per_click │ ──▶ │        sales         │
+│  └─────────────────┘     └──────────────────────┘
+│                            │
+│                            ▼
+│                          ┌──────────────────────┐     ┌──────────────────┐
+│                          │       revenue        │ ◀── │ revenue_per_sale │
+│                          └──────────────────────┘     └──────────────────┘
+│                            │
+│                            ▼
+│                          ┌──────────────────────┐
+│                          │        profit        │ ◀┐
+│                          └──────────────────────┘  │
+│                          ┌──────────────────────┐  │
+│                          │ cost_per_impression  │  │
+│                          └──────────────────────┘  │
+│                            │                       │
+│                            ▼                       │
+│                          ┌──────────────────────┐  │
+└────────────────────────▶ │         cost         │ ─┘</p>
+<blockquote>
+<div><p>└──────────────────────┘</p>
+</div></blockquote>
 </section>
 
 
@@ -62,12 +101,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../meshed.html">meshed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../caching.html">meshed.caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dag.html">meshed.dag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/online_marketing.html">meshed.examples.online_marketing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.examples.online_marketing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ext.html">meshed.ext</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gk.html">meshed.ext.gk</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ext/gk_tests.html">meshed.ext.gk_tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../itools.html">meshed.itools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../makers.html">meshed.makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scrap.html">meshed.scrap</a></li>
@@ -89,8 +128,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="gk.html" title="previous chapter">meshed.ext.gk</a></li>
-      <li>Next: <a href="../itools.html" title="next chapter">meshed.itools</a></li>
+      <li>Previous: <a href="../dag.html" title="previous chapter">meshed.dag</a></li>
+      <li>Next: <a href="price_elasticity.html" title="next chapter">meshed.examples.price_elasticity</a></li>
   </ul></li>
 </ul>
 </div>
@@ -124,7 +163,7 @@
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../../_sources/module_docs/meshed/ext/gk_tests.rst.txt"
+      <a href="../../../_sources/module_docs/meshed/examples/online_marketing.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
