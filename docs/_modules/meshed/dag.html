@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>meshed.dag &#8212; meshed 0.1.12 documentation</title>
+    <title>meshed.dag &#8212; meshed 0.1.13 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -598,16 +598,20 @@
 <span class="n">conservative_parameter_merge</span><span class="p">:</span> <span class="n">ParameterMerger</span>
 
 
-<div class="viewcode-block" id="conservative_parameter_merge"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.conservative_parameter_merge">[docs]</a><span class="k">def</span> <span class="nf">conservative_parameter_merge</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+<div class="viewcode-block" id="conservative_parameter_merge"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.conservative_parameter_merge">[docs]</a><span class="k">def</span> <span class="nf">conservative_parameter_merge</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">,</span> <span class="n">same_kind</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_annotation</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Validates that all the params are exactly the same, returning the first is so.&quot;&quot;&quot;</span>
     <span class="n">first_param</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">params</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same name: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">kind</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">same_kind</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">kind</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same kind: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">default</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">same_default</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">default</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same default: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">annotation</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">annotation</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">same_annotation</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">annotation</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">annotation</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span>
+    <span class="p">):</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same annotation: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">first_param</span></div>
 
@@ -676,12 +680,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">topological_sort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
         <span class="c1"># reorder the nodes to fit topological order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span> <span class="o">=</span> <span class="n">_separate_func_nodes_and_var_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-        <span class="c1"># figure out the roots and leaves</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">roots</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">root_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">leafs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">leaf_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">))</span>
         <span class="c1"># self.sig = Sig(dict(extract_items(sig.parameters, &#39;xz&#39;)))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">sort_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_name_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">sort_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_name_params</span><span class="p">(</span><span class="n">root_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">))))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># to put the signature on the callable DAG</span>
+        <span class="c1"># figure out the roots and leaves</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roots</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>  <span class="c1"># roots in the same order as signature</span>
+        <span class="n">leafs</span> <span class="o">=</span> <span class="n">leaf_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
+        <span class="c1"># But we want leafs in topological order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leafs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">leafs</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_scope</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
@@ -830,8 +836,8 @@
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span> <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
 
     <span class="c1"># TODO: Give more control (merge with lined)</span>
-    <span class="k">def</span> <span class="nf">dot_digraph_body</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">yield from</span> <span class="n">dot_lines_of_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">dot_digraph_body</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_lines</span><span class="o">=</span><span class="p">()):</span>
+        <span class="k">yield from</span> <span class="n">dot_lines_of_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">start_lines</span><span class="o">=</span><span class="n">start_lines</span><span class="p">)</span>
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">dot_digraph_body</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">dot_digraph_ascii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -914,7 +920,7 @@
     <span class="k">return</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">func_name</span>
 
 
-<div class="viewcode-block" id="dot_lines_of_func_nodes"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.dot_lines_of_func_nodes">[docs]</a><span class="k">def</span> <span class="nf">dot_lines_of_func_nodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]):</span>
+<div class="viewcode-block" id="dot_lines_of_func_nodes"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.dot_lines_of_func_nodes">[docs]</a><span class="k">def</span> <span class="nf">dot_lines_of_func_nodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">],</span> <span class="n">start_lines</span><span class="o">=</span><span class="p">()):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Got lines generator for the graphviz.DiGraph(body=list(...))</span>
 
 <span class="sd">    &gt;&gt;&gt; def add(a, b=1):</span>
@@ -997,6 +1003,7 @@
 <span class="sd">    &lt;BLANKLINE&gt;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">yield from</span> <span class="n">start_lines</span>
     <span class="n">validate_that_func_node_names_are_sane</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">:</span>
         <span class="k">yield from</span> <span class="n">dot_lines_of_func_node</span><span class="p">(</span><span class="n">func_node</span><span class="p">)</span></div>

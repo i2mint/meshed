@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>meshed.dag &#8212; meshed 0.1.12 documentation</title>
+    <title>meshed.dag &#8212; meshed 0.1.13 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -99,7 +99,7 @@ key (useful for pipeline sanity), etc.</p>
 
 <dl class="py method">
 <dt id="meshed.dag.DAG.parameter_merge">
-<code class="sig-name descname">parameter_merge</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#meshed.dag.DAG.parameter_merge" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parameter_merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">same_kind</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_default</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_annotation</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.dag.DAG.parameter_merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that all the params are exactly the same, returning the first is so.</p>
 </dd></dl>
 
@@ -257,13 +257,13 @@ that argument has the the function’s (output) name.</p>
 
 <dl class="py function">
 <dt id="meshed.dag.conservative_parameter_merge">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">conservative_parameter_merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#conservative_parameter_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.conservative_parameter_merge" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">conservative_parameter_merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">same_kind</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_default</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_annotation</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#conservative_parameter_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.conservative_parameter_merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that all the params are exactly the same, returning the first is so.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="meshed.dag.dot_lines_of_func_nodes">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">dot_lines_of_func_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="#meshed.dag.FuncNode" title="meshed.dag.FuncNode">meshed.dag.FuncNode</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#dot_lines_of_func_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.dot_lines_of_func_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">dot_lines_of_func_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="#meshed.dag.FuncNode" title="meshed.dag.FuncNode">meshed.dag.FuncNode</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#dot_lines_of_func_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.dot_lines_of_func_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Got lines generator for the graphviz.DiGraph(body=list(…))</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
