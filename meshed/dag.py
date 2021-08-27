@@ -57,6 +57,9 @@ def mk_func_name(func, exclude_names=()):
     name = getattr(func, '__name__', '')
     if name == '<lambda>':
         name = lambda_name()  # make a lambda name that is a unique identifier
+    elif name == "":
+        if isinstance(func, partial):
+            return mk_func_name(func.func, exclude_names)
     return find_first_free_name(name, exclude_names)
 
 
@@ -80,6 +83,7 @@ def arg_names(func, func_name, exclude_names=()):
 
 def named_partial(func, *args, __name__=None, **keywords):
     """functools.partial, but with a __name__
+
     >>> f = named_partial(print, sep='\\n')
     >>> f.__name__
     'print'
@@ -367,6 +371,7 @@ class FuncNode:
 
     If you give a `name`, but not a `out`, an underscore-prefixed version of
     the `name` will be taken:
+
     >>> FuncNode(multiply, name='total_price')
     FuncNode(x,y -> total_price -> _total_price)
 
