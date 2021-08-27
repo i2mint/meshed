@@ -57,7 +57,7 @@ def mk_func_name(func, exclude_names=()):
     name = getattr(func, '__name__', '')
     if name == '<lambda>':
         name = lambda_name()  # make a lambda name that is a unique identifier
-    elif name == "":
+    elif name == '':
         if isinstance(func, partial):
             return mk_func_name(func.func, exclude_names)
     return find_first_free_name(name, exclude_names)
