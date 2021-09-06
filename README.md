@@ -4,6 +4,9 @@ Link functions up into callable objects (DAGs)
 
 To install: `pip install meshed`
 
+[Documentation](https://i2mint.github.io/meshed/)
+
+
 # Quick Start
 
 ```python
