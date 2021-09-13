@@ -72,9 +72,7 @@ def arg_names(func, func_name, exclude_names=()):
             if name not in _exclude_names:
                 yield name
             else:
-                found_name = find_first_free_name(
-                    f'{func_name}__{name}', _exclude_names
-                )
+                found_name = find_first_free_name(f'{func_name}__{name}', _exclude_names)
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
 
@@ -586,6 +584,33 @@ def conservative_parameter_merge(
     return first_param
 
 
+def modified_func_node(func_node, **modifications) -> FuncNode:
+    modifiable_attrs = {'func', 'name', 'bind', 'out'}
+    assert not modifications.keys().isdisjoint(
+        modifiable_attrs
+    ), f"Can only modify these: {', '.join(modifiable_attrs)}"
+    original_func_node_kwargs = {
+        'func': func_node.func,
+        'name': func_node.name,
+        'bind': func_node.bind,
+        'out': func_node.out,
+    }
+    return FuncNode(**dict(original_func_node_kwargs, **modifications))
+
+
+def partialized_funcnodes(func_nodes, **keyword_defaults):
+    for func_node in func_nodes:
+        if argnames_to_be_bound := set(keyword_defaults).intersection(
+            func_node.sig.names
+        ):
+            bindings = dict(extract_items(keyword_defaults, argnames_to_be_bound))
+            yield modified_func_node(
+                func_node, func=partial(func_node.func, **bindings)
+            )  # TODO: Try without partial?
+        else:
+            yield func_node
+
+
 # TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
 #  concern. Perhaps a more general form would be to define a cache factory defaulting
 #  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)
@@ -718,6 +743,26 @@ class DAG:
             cache_last_scope=self.cache_last_scope,
             parameter_merge=self.parameter_merge,
         )
+
+    def partial(
+        self,
+        *positional_dflts,
+        _remove_bound_arguments=False,
+        _roll_in_orphaned_nodes=False,
+        **keyword_dflts,
+    ):
+        if positional_dflts:
+            raise NotImplemented('Need to map positional_dflts to keyword_defaults')
+        # TODO(mk_instance): What about other init args (cache_last_scope, ...)?
+        mk_instance = type(self)
+        func_nodes = partialized_funcnodes(self, **keyword_dflts)
+        new_dag = mk_instance(func_nodes)
+        if _remove_bound_arguments:
+            new_sig = Sig(new_dag).remove_names(list(keyword_dflts))
+            new_sig(new_dag)  # Change the signature of new_dag with bound args removed
+        if _roll_in_orphaned_nodes:
+            raise NotImplementedError(f'_roll_in_orphaned_nodes=True to be implemented')
+        return new_dag
 
     def process_item(self, item):
 
