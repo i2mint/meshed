@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>meshed.dag &#8212; meshed 0.1.16 documentation</title>
+    <title>meshed.dag &#8212; meshed 0.1.17 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -621,6 +621,33 @@
     <span class="k">return</span> <span class="n">first_param</span></div>
 
 
+<span class="k">def</span> <span class="nf">modified_func_node</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="o">**</span><span class="n">modifications</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncNode</span><span class="p">:</span>
+    <span class="n">modifiable_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;func&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;bind&#39;</span><span class="p">,</span> <span class="s1">&#39;out&#39;</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">modifications</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span>
+        <span class="n">modifiable_attrs</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Can only modify these: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">modifiable_attrs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">original_func_node_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;func&#39;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span>
+        <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">original_func_node_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">modifications</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">partialized_funcnodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="o">**</span><span class="n">keyword_defaults</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">argnames_to_be_bound</span> <span class="o">:=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keyword_defaults</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+            <span class="n">func_node</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span>
+        <span class="p">):</span>
+            <span class="n">bindings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">extract_items</span><span class="p">(</span><span class="n">keyword_defaults</span><span class="p">,</span> <span class="n">argnames_to_be_bound</span><span class="p">))</span>
+            <span class="k">yield</span> <span class="n">modified_func_node</span><span class="p">(</span>
+                <span class="n">func_node</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="o">**</span><span class="n">bindings</span><span class="p">)</span>
+            <span class="p">)</span>  <span class="c1"># TODO: Try without partial?</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">func_node</span>
+
+
 <span class="c1"># TODO: caching last scope isn&#39;t really the DAG&#39;s direct concern -- it&#39;s a debugging</span>
 <span class="c1">#  concern. Perhaps a more general form would be to define a cache factory defaulting</span>
 <span class="c1">#  to a dict, but that could be a &quot;dict&quot; that logs writes (even to an attribute of self)</span>
@@ -753,6 +780,26 @@
             <span class="n">cache_last_scope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_last_scope</span><span class="p">,</span>
             <span class="n">parameter_merge</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_merge</span><span class="p">,</span>
         <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">partial</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">positional_dflts</span><span class="p">,</span>
+        <span class="n">_remove_bound_arguments</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">_roll_in_orphaned_nodes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">keyword_dflts</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">positional_dflts</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">(</span><span class="s1">&#39;Need to map positional_dflts to keyword_defaults&#39;</span><span class="p">)</span>
+        <span class="c1"># TODO(mk_instance): What about other init args (cache_last_scope, ...)?</span>
+        <span class="n">mk_instance</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">func_nodes</span> <span class="o">=</span> <span class="n">partialized_funcnodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">keyword_dflts</span><span class="p">)</span>
+        <span class="n">new_dag</span> <span class="o">=</span> <span class="n">mk_instance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_remove_bound_arguments</span><span class="p">:</span>
+            <span class="n">new_sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">new_dag</span><span class="p">)</span><span class="o">.</span><span class="n">remove_names</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">keyword_dflts</span><span class="p">))</span>
+            <span class="n">new_sig</span><span class="p">(</span><span class="n">new_dag</span><span class="p">)</span>  <span class="c1"># Change the signature of new_dag with bound args removed</span>
+        <span class="k">if</span> <span class="n">_roll_in_orphaned_nodes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;_roll_in_orphaned_nodes=True to be implemented&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_dag</span>
 
     <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 

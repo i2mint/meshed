@@ -72,7 +72,9 @@ def arg_names(func, func_name, exclude_names=()):
             if name not in _exclude_names:
                 yield name
             else:
-                found_name = find_first_free_name(f'{func_name}__{name}', _exclude_names)
+                found_name = find_first_free_name(
+                    f'{func_name}__{name}', _exclude_names
+                )
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
 
