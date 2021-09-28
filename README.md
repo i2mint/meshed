@@ -96,6 +96,36 @@ The edges of the DAG are defined by matching `out` TO `bind`.
 
 
 
+# Examples
+
+## A train/test ML pipeline
+
+Consider a simple train/test ML pipeline that looks like this.
+
+![image](https://user-images.githubusercontent.com/1906276/135151068-179d958e-9e96-48aa-9188-52ae22919c6e.png)
+
+With this, we might decide we want to give the user control over how to do 
+`train_test_split` and `learner`, so we offer this interface to the user:
+
+![image](https://user-images.githubusercontent.com/1906276/135151094-661850c0-f10c-49d8-ace2-46b3d994de80.png)
+
+With that, the user can just bring its own `train_test_split` and `learner` 
+functions, and as long as it satisfied the 
+expected (and even better; declared and validatable) protocol, things will work. 
+
+In some situations we'd like to fix some of how `train_test_split` and 
+`learner` work, allowing the user to control only some aspects of them. 
+This function would look like this:
+
+![image](https://user-images.githubusercontent.com/1906276/135151137-3d9a290f-d5e7-4f24-a418-82f1edb8a46a.png)
+
+And inside, it does:
+
+![image](https://user-images.githubusercontent.com/1906276/135151114-926b52b8-0536-4565-bd56-95099f21e4ff.png)
+
+`meshed` allows us to easily manipulate such functional structures to 
+adapt them to our needs.
+
 
 # itools module
 Tools that enable operations on graphs where graphs are represented by an adjacency Mapping.
