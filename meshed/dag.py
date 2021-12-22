@@ -87,6 +87,7 @@ def named_partial(func, *args, __name__=None, **keywords):
     >>> f = named_partial(print, sep='\\n')
     >>> f.__name__
     'print'
+    
     >>> f = named_partial(print, sep='\\n', __name__='now_partial_has_a_name')
     >>> f.__name__
     'now_partial_has_a_name'
