@@ -1,5 +1,132 @@
 """
 Making DAGs
+
+In it's simplest form, consider this:
+
+>>> from meshed import DAG
+>>>
+>>> def this(a, b=1):
+...     return a + b
+...
+>>> def that(x, b=1):
+...     return x * b
+...
+>>> def combine(this, that):
+...     return (this, that)
+...
+>>>
+>>> dag = DAG((this, that, combine))
+>>> print(dag.synopsis_string())
+x,b -> that_ -> that
+a,b -> this_ -> this
+this,that -> combine_ -> combine
+
+But don't be fooled: There's much more to it!
+
+
+FAQ and Troubleshooting
+=======================
+
+DAGs and Pipelines
+------------------
+
+>>> from functools import partial
+>>> from meshed import DAG
+>>> def chunker(sequence, chk_size: int):
+...     return zip(*[iter(sequence)] * chk_size)
+>>>
+>>> my_chunker = partial(chunker, chk_size=3)
+>>>
+>>> vec = range(8)  # when appropriate, use easier to read sequences
+>>> list(my_chunker(vec))
+[(0, 1, 2), (3, 4, 5)]
+
+Oh, that's just a ``my_chunker -> list`` pipeline!
+A pipeline is a subset of DAG, so let me do this:
+
+>>> dag = DAG([my_chunker, list])
+>>> dag(vec)
+Traceback (most recent call last):
+...
+TypeError: missing a required argument: 'sequence'
+
+What happened here?
+You're assuming that saying ``[my_chunker, list]`` is enough for DAG to know that
+what you meant is for ``my_chunker`` to feed it's input to ``list``.
+Sure, DAG has enough information to do so, but the default connection policy doesn't
+assume that it's a pipeline you want to make.
+In fact, the order you specify the functions doesn't have an affect on the connections
+with the default connection policy.
+
+See what the signature of ``dag`` is:
+
+>>> from inspect import signature
+>>> str(signature(dag))
+'(iterable=(), /, sequence, *, chk_size: int = 3)'
+
+So dag actually works just fine. Here's the proof:
+
+>>> dag([1,2,3], vec)  # doctest: +SKIP
+([1, 2, 3], <zip object at 0x104d7f080>)
+
+It's just not what you might have intended.
+
+Your best bet to get what you intended is to be explicit.
+
+The way to be explicit is to not specify functions alone, but ``FuncNodes`` that
+wrap them, along with the specification
+the ``name`` the function will be referred to by,
+the names that it's parameters should ``bind`` to (that is, where the function
+will get it's import arguments from), and
+the ``out`` name of where it should be it's output.
+
+In the current case a fully specified DAG would look something like this:
+
+>>> from meshed import FuncNode
+>>> dag = DAG(
+...     [
+...         FuncNode(
+...             func=my_chunker,
+...             name='chunker',
+...             bind=dict(sequence='sequence', chk_size='chk_size'),
+...             out='chks'
+...         ),
+...         FuncNode(
+...             func=list,
+...             name='gather_chks_into_list',
+...             bind=dict(iterable='chks'),
+...             out='list_of_chks'
+...         ),
+...     ]
+... )
+>>> list(dag(vec))
+[(0, 1, 2), (3, 4, 5)]
+
+But really, if you didn't care about the names of things,
+all you need in this case was to make sure that the output of ``my_chunker`` was
+fed to ``list``, and therefore the following was sufficient:
+
+>>> dag = DAG([
+...     FuncNode(my_chunker, out='chks'),  # call the output of chunker "chks"
+...     FuncNode(list, bind=dict(iterable='chks'))  # source list input from "chks"
+... ])
+>>> list(dag(vec))
+[(0, 1, 2), (3, 4, 5)]
+
+Connection policies are very useful when you want to define ways for DAG to
+"just figure it out" for you.
+That is, you want to tell the machine to adapt to your thoughts, not vice versa.
+We support such technological expectations!
+The default connection policy is there to provide one such ways, but
+by all means, use another!
+
+Does this mean that connection policies are not for production code?
+Well, it depends. The Zen of Python (``import this``)
+states "explicit is better than implicit", and indeed it's often
+a good fallback rule.
+But defining components and the way they should be assembled can go a long way
+in achieving separation of concerns, adaptability, and flexibility.
+
 """
 
 from contextlib import suppress
@@ -53,6 +180,10 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
             i += 1
 
 
+class NameValidationError(ValueError):
+    """Use to indicate that there's a problem with a name or generating a valid name"""
+
+
 def mk_func_name(func, exclude_names=()):
     name = getattr(func, "__name__", "")
     if name == "<lambda>":
@@ -60,6 +191,8 @@ def mk_func_name(func, exclude_names=()):
     elif name == "":
         if isinstance(func, partial):
             return mk_func_name(func.func, exclude_names)
+        else:
+            raise NameValidationError(f"Can't make a name for func: {func}")
     return find_first_free_name(name, exclude_names)
 
 
@@ -244,7 +377,15 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     if name is not None and out is not None:
         return name, out
 
-    name_of_func = mk_func_name(func)
+    try:
+        name_of_func = mk_func_name(func)
+    except NameValidationError as err:
+        err_msg = err.args[0]
+        err_msg += (
+            f"\nSuggestion: You might want to specify a name explicitly in "
+            f"FuncNode(func, name=name) instead of just giving me the func as is."
+        )
+        raise NameValidationError(err_msg)
     if name is None and out is None:
         return name_of_func + "_", name_of_func
     elif out is None:
@@ -419,9 +560,9 @@ class FuncNode:
         an actual interface method. Additional control/constraints on read and writes
         can be implemented by providing a custom scope for that."""
         relevant_kwargs = dict(self.extractor(scope))
-        # print(scope, relevant_kwargs)
+        args, kwargs = self.sig.args_and_kwargs_from_kwargs(relevant_kwargs)
         output = call_somewhat_forgivingly(
-            self.func, (), relevant_kwargs, enforce_sig=self.sig
+            self.func, args, kwargs, enforce_sig=self.sig
         )
         if self.write_output_into_scope:
             scope[self.out] = output
@@ -1080,3 +1221,14 @@ with suppress(ModuleNotFoundError, ImportError):
 
         for func, operation in zip(funcs, funcs_to_operations(funcs, exclude_names)):
             yield operation(func)
+
+
+if __name__ == "__main__":
+    from meshed import FuncNode
+    from lined import Line
+
+    def foo(a=1):
+        return a + 1
+
+    line = Line(foo)
+    fn_line = FuncNode(line)
