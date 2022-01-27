@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.24 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.25 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -45,7 +45,13 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../meshed.html">meshed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="caching.html">meshed.caching</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.dag</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.dag</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#faq-and-troubleshooting">FAQ and Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dags-and-pipelines">DAGs and Pipelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="examples/online_marketing.html">meshed.examples.online_marketing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
@@ -96,6 +102,123 @@
   <section id="module-meshed.dag">
 <span id="meshed-dag"></span><h1>meshed.dag<a class="headerlink" href="#module-meshed.dag" title="Permalink to this headline">¶</a></h1>
 <p>Making DAGs</p>
+<p>In it’s simplest form, consider this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">this</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">that</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">b</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">,</span> <span class="n">combine</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+<span class="go">x,b -&gt; that_ -&gt; that</span>
+<span class="go">a,b -&gt; this_ -&gt; this</span>
+<span class="go">this,that -&gt; combine_ -&gt; combine</span>
+</pre></div>
+</div>
+<p>But don’t be fooled: There’s much more to it!</p>
+<section id="faq-and-troubleshooting">
+<h2>FAQ and Troubleshooting<a class="headerlink" href="#faq-and-troubleshooting" title="Permalink to this headline">¶</a></h2>
+<section id="dags-and-pipelines">
+<h3>DAGs and Pipelines<a class="headerlink" href="#dags-and-pipelines" title="Permalink to this headline">¶</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">chunker</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">chk_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">iter</span><span class="p">(</span><span class="n">sequence</span><span class="p">)]</span> <span class="o">*</span> <span class="n">chk_size</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_chunker</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">chunker</span><span class="p">,</span> <span class="n">chk_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vec</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>  <span class="c1"># when appropriate, use easier to read sequences</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">my_chunker</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span>
+<span class="go">[(0, 1, 2), (3, 4, 5)]</span>
+</pre></div>
+</div>
+<p>Oh, that’s just a <code class="docutils literal notranslate"><span class="pre">my_chunker</span> <span class="pre">-&gt;</span> <span class="pre">list</span></code> pipeline!
+A pipeline is a subset of DAG, so let me do this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span><span class="n">my_chunker</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">missing a required argument: &#39;sequence&#39;</span>
+</pre></div>
+</div>
+<p>What happened here?
+You’re assuming that saying <code class="docutils literal notranslate"><span class="pre">[my_chunker,</span> <span class="pre">list]</span></code> is enough for DAG to know that
+what you meant is for <code class="docutils literal notranslate"><span class="pre">my_chunker</span></code> to feed it’s input to <code class="docutils literal notranslate"><span class="pre">list</span></code>.
+Sure, DAG has enough information to do so, but the default connection policy doesn’t
+assume that it’s a pipeline you want to make.
+In fact, the order you specify the functions doesn’t have an affect on the connections
+with the default connection policy.</p>
+<p>See what the signature of <code class="docutils literal notranslate"><span class="pre">dag</span></code> is:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">dag</span><span class="p">))</span>
+<span class="go">&#39;(iterable=(), /, sequence, *, chk_size: int = 3)&#39;</span>
+</pre></div>
+</div>
+<p>So dag actually works just fine. Here’s the proof:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">vec</span><span class="p">)</span>  
+<span class="go">([1, 2, 3], &lt;zip object at 0x104d7f080&gt;)</span>
+</pre></div>
+</div>
+<p>It’s just not what you might have intended.</p>
+<p>Your best bet to get what you intended is to be explicit.</p>
+<p>The way to be explicit is to not specify functions alone, but <code class="docutils literal notranslate"><span class="pre">FuncNodes</span></code> that
+wrap them, along with the specification
+the <code class="docutils literal notranslate"><span class="pre">name</span></code> the function will be referred to by,
+the names that it’s parameters should <code class="docutils literal notranslate"><span class="pre">bind</span></code> to (that is, where the function
+will get it’s import arguments from), and
+the <code class="docutils literal notranslate"><span class="pre">out</span></code> name of where it should be it’s output.</p>
+<p>In the current case a fully specified DAG would look something like this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">FuncNode</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span>
+<span class="gp">... </span>        <span class="n">FuncNode</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">func</span><span class="o">=</span><span class="n">my_chunker</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;chunker&#39;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">bind</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="s1">&#39;sequence&#39;</span><span class="p">,</span> <span class="n">chk_size</span><span class="o">=</span><span class="s1">&#39;chk_size&#39;</span><span class="p">),</span>
+<span class="gp">... </span>            <span class="n">out</span><span class="o">=</span><span class="s1">&#39;chks&#39;</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>        <span class="n">FuncNode</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">func</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gather_chks_into_list&#39;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">bind</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">iterable</span><span class="o">=</span><span class="s1">&#39;chks&#39;</span><span class="p">),</span>
+<span class="gp">... </span>            <span class="n">out</span><span class="o">=</span><span class="s1">&#39;list_of_chks&#39;</span>
+<span class="gp">... </span>        <span class="p">),</span>
+<span class="gp">... </span>    <span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">dag</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span>
+<span class="go">[(0, 1, 2), (3, 4, 5)]</span>
+</pre></div>
+</div>
+<p>But really, if you didn’t care about the names of things,
+all you need in this case was to make sure that the output of <code class="docutils literal notranslate"><span class="pre">my_chunker</span></code> was
+fed to <code class="docutils literal notranslate"><span class="pre">list</span></code>, and therefore the following was sufficient:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="n">my_chunker</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;chks&#39;</span><span class="p">),</span>  <span class="c1"># call the output of chunker &quot;chks&quot;</span>
+<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">iterable</span><span class="o">=</span><span class="s1">&#39;chks&#39;</span><span class="p">))</span>  <span class="c1"># source list input from &quot;chks&quot;</span>
+<span class="gp">... </span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">dag</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span>
+<span class="go">[(0, 1, 2), (3, 4, 5)]</span>
+</pre></div>
+</div>
+<p>Connection policies are very useful when you want to define ways for DAG to
+“just figure it out” for you.
+That is, you want to tell the machine to adapt to your thoughts, not vice versa.
+We support such technological expectations!
+The default connection policy is there to provide one such ways, but
+by all means, use another!</p>
+<p>Does this mean that connection policies are not for production code?
+Well, it depends. The Zen of Python (<code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">this</span></code>)
+states “explicit is better than implicit”, and indeed it’s often
+a good fallback rule.
+But defining components and the way they should be assembled can go a long way
+in achieving separation of concerns, adaptability, and flexibility.</p>
 <dl class="py class">
 <dt id="meshed.dag.DAG">
 <em class="property">class </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">DAG</code><span class="sig-paren">(</span><em class="sig-param">func_nodes: Iterable[Union[meshed.dag.FuncNode, Callable]], cache_last_scope: bool = True, parameter_merge: Callable[[Iterable[inspect.Parameter]], inspect.Parameter] = &lt;function conservative_parameter_merge&gt;, new_scope: Callable = &lt;class 'dict'&gt;, name: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG" title="Permalink to this definition">¶</a></dt>
@@ -295,6 +418,12 @@ where a function’s output will be used as another’s input argument when
 that argument has the the function’s (output) name.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py exception">
+<dt id="meshed.dag.NameValidationError">
+<em class="property">exception </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">NameValidationError</code><a class="reference internal" href="../../_modules/meshed/dag.html#NameValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.NameValidationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use to indicate that there’s a problem with a name or generating a valid name</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -538,6 +667,8 @@ That is:</p>
 </div></blockquote>
 </dd></dl>
 
+</section>
+</section>
 </section>
 
 
