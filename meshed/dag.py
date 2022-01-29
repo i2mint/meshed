@@ -386,8 +386,8 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     except NameValidationError as err:
         err_msg = err.args[0]
         err_msg += (
-            f"\nSuggestion: You might want to specify a name explicitly in "
-            f"FuncNode(func, name=name) instead of just giving me the func as is."
+            f'\nSuggestion: You might want to specify a name explicitly in '
+            f'FuncNode(func, name=name) instead of just giving me the func as is.'
         )
         raise NameValidationError(err_msg)
     if name is None and out is None:
@@ -1227,7 +1227,7 @@ with suppress(ModuleNotFoundError, ImportError):
             yield operation(func)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     from meshed import FuncNode
     from lined import Line
 
