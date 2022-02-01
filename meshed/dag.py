@@ -234,7 +234,7 @@ def named_partial(func, *args, __name__=None, **keywords):
     return f
 
 
-from i2.deco import ch_func_to_all_pk
+from i2.signatures import ch_func_to_all_pk
 
 
 def hook_up(func, variables: MutableMapping, output_name=None):
@@ -386,8 +386,8 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     except NameValidationError as err:
         err_msg = err.args[0]
         err_msg += (
-            f'\nSuggestion: You might want to specify a name explicitly in '
-            f'FuncNode(func, name=name) instead of just giving me the func as is.'
+            f"\nSuggestion: You might want to specify a name explicitly in "
+            f"FuncNode(func, name=name) instead of just giving me the func as is."
         )
         raise NameValidationError(err_msg)
     if name is None and out is None:
@@ -406,8 +406,36 @@ def duplicates(elements: Union[Iterable, Sized]):
         return []
 
 
+def _keys_and_values_are_strings_validation(d: dict):
+    for k, v in d.items():
+        if not isinstance(k, str):
+            raise ValidationError(f"Should be a str: {k}")
+        if not isinstance(v, str):
+            raise ValidationError(f"Should be a str: {v}")
+
+
+def _func_node_args_validation(func: Callable, name: str, bind: dict, out: str):
+    if not isinstance(func, Callable):
+        raise ValidationError(f"Should be callable: {func}")
+    if not isinstance(name, str):
+        raise ValidationError(f"Should be a str: {name}")
+    if not isinstance(bind, dict):
+        raise ValidationError(f"Should be a dict: {bind}")
+    _keys_and_values_are_strings_validation(bind)
+    if not isinstance(out, str):
+        raise ValidationError(f"Should be a str: {out}")
+
+
 def basic_node_validator(func_node):
+    _func_node_args_validation(
+        func_node.func, func_node.name, func_node.bind, func_node.out
+    )
     names = [func_node.name, func_node.out, *func_node.bind.values()]
+
+    names_that_are_not_strings = [name for name in names if not isinstance(name, str)]
+    if names_that_are_not_strings:
+        names_that_are_not_strings = ", ".join(map(str, names_that_are_not_strings))
+        raise ValidationError(f"Should be strings: {names_that_are_not_strings}")
 
     # Make sure there's no name duplicates
     _duplicates = duplicates(names)
@@ -538,6 +566,7 @@ class FuncNode:
     node_validator: Callable = basic_node_validator
 
     def __post_init__(self):
+        _func_node_args_validation(self.func, self.name, self.bind, self.out)
         self.name, self.out = self.names_maker(self.func, self.name, self.out)
 
         # The wrapped function's signature will be useful
@@ -1227,7 +1256,7 @@ with suppress(ModuleNotFoundError, ImportError):
             yield operation(func)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from meshed import FuncNode
     from lined import Line
 
