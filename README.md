@@ -212,4 +212,3 @@ you can easily create one using one of the many tools of `py2store` meant exactl
 >>> reverse_g_with_sets = edge_reversed_graph(g, set, set.add)
 >>> assert reverse_g_with_sets == {'c': {'a', 'b'}, 'd': {'b', 'c'}, 'a': {'c'}, 'b': {'c'}, 'e': set([])}
 ```
-
