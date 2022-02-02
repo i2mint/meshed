@@ -4,18 +4,19 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.ext.gk_tests &mdash; meshed 0.1.25 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <title>meshed.ext.gk_tests &mdash; meshed 0.1.25 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
         <script src="../../../_static/toggleprompt.js"></script>
         <script src="../../../_static/clipboard.min.js"></script>
         <script src="../../../_static/copybutton.js"></script>
@@ -41,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../meshed.html">meshed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../caching.html">meshed.caching</a></li>
@@ -94,8 +95,80 @@
            <div itemprop="articleBody">
              
   <section id="module-meshed.ext.gk_tests">
-<span id="meshed-ext-gk-tests"></span><h1>meshed.ext.gk_tests<a class="headerlink" href="#module-meshed.ext.gk_tests" title="Permalink to this headline">¶</a></h1>
+<span id="meshed-ext-gk-tests"></span><h1>meshed.ext.gk_tests<a class="headerlink" href="#module-meshed.ext.gk_tests" title="Permalink to this headline"></a></h1>
 <p>Tests for gk.py</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk_tests.Mul">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk_tests.</span></span><span class="sig-name descname"><span class="pre">Mul</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs:</span> <span class="pre">Optional[list]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provides:</span> <span class="pre">Optional[list]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Mul"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Mul" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk_tests.Mul.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Mul.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Mul.compute" title="Permalink to this definition"></a></dt>
+<dd><p>This method must be implemented to perform this layer’s feed-forward
+computation on a given set of inputs.
+:param list inputs:</p>
+<blockquote>
+<div><p>A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects on which to run the layer’s
+feed-forward computation.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns list</dt>
+<dd class="field-odd"><p>Should return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects representing
+the results of running the feed-forward computation on
+<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk_tests.Pow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk_tests.</span></span><span class="sig-name descname"><span class="pre">Pow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs:</span> <span class="pre">Optional[list]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provides:</span> <span class="pre">Optional[list]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Pow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Pow" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk_tests.Pow.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Pow.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Pow.compute" title="Permalink to this definition"></a></dt>
+<dd><p>This method must be implemented to perform this layer’s feed-forward
+computation on a given set of inputs.
+:param list inputs:</p>
+<blockquote>
+<div><p>A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects on which to run the layer’s
+feed-forward computation.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns list</dt>
+<dd class="field-odd"><p>Should return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects representing
+the results of running the feed-forward computation on
+<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk_tests.Sum">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk_tests.</span></span><span class="sig-name descname"><span class="pre">Sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs:</span> <span class="pre">Optional[list]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provides:</span> <span class="pre">Optional[list]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Sum" title="Permalink to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk_tests.Sum.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Sum.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Sum.compute" title="Permalink to this definition"></a></dt>
+<dd><p>This method must be implemented to perform this layer’s feed-forward
+computation on a given set of inputs.
+:param list inputs:</p>
+<blockquote>
+<div><p>A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects on which to run the layer’s
+feed-forward computation.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns list</dt>
+<dd class="field-odd"><p>Should return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects representing
+the results of running the feed-forward computation on
+<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

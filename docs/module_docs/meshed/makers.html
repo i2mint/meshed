@@ -4,18 +4,19 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.25 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.25 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
         <script src="../../_static/toggleprompt.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
@@ -41,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../meshed.html">meshed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="caching.html">meshed.caching</a></li>
@@ -94,11 +95,97 @@
            <div itemprop="articleBody">
              
   <section id="module-meshed.makers">
-<span id="meshed-makers"></span><h1>meshed.makers<a class="headerlink" href="#module-meshed.makers" title="Permalink to this headline">¶</a></h1>
+<span id="meshed-makers"></span><h1>meshed.makers<a class="headerlink" href="#module-meshed.makers" title="Permalink to this headline"></a></h1>
 <p>Makers</p>
 <dl class="py function">
-<dt id="meshed.makers.edge_reversed_graph">
-<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">edge_reversed_graph</code><span class="sig-paren">(</span><em class="sig-param">g: Mapping[T, Iterable[T]], dst_nodes_factory: Callable[[], Iterable[T]] = &lt;class 'list'&gt;, dst_nodes_append: Callable[[Iterable[T], T], None] = &lt;method 'append' of 'list' objects&gt;</em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span>T<span class="p">, </span>Iterable<span class="p">[</span>T<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#edge_reversed_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.edge_reversed_graph" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="meshed.makers.choice">
+<span class="sig-prename descclassname"><span class="pre">meshed.makers.</span></span><span class="sig-name descname"><span class="pre">choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.makers.choice" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a random sample from a given 1-D array</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.7.0.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>New code should use the <code class="docutils literal notranslate"><span class="pre">choice</span></code> method of a <code class="docutils literal notranslate"><span class="pre">default_rng()</span></code>
+instance instead; please see the <span class="xref std std-ref">random-quick-start</span>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>1-D array-like</em><em> or </em><em>int</em>) – If an ndarray, a random sample is generated from its elements.
+If an int, the random sample is generated as if a were np.arange(a)</p></li>
+<li><p><strong>size</strong> (<em>int</em><em> or </em><em>tuple of ints</em><em>, </em><a class="reference internal" href="ext/gk.html#meshed.ext.gk.optional" title="meshed.ext.gk.optional"><em>optional</em></a>) – Output shape.  If the given shape is, e.g., <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n,</span> <span class="pre">k)</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">*</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">k</span></code> samples are drawn.  Default is None, in which case a
+single value is returned.</p></li>
+<li><p><strong>replace</strong> (<em>boolean</em><em>, </em><a class="reference internal" href="ext/gk.html#meshed.ext.gk.optional" title="meshed.ext.gk.optional"><em>optional</em></a>) – Whether the sample is with or without replacement</p></li>
+<li><p><strong>p</strong> (<em>1-D array-like</em><em>, </em><a class="reference internal" href="ext/gk.html#meshed.ext.gk.optional" title="meshed.ext.gk.optional"><em>optional</em></a>) – The probabilities associated with each entry in a.
+If not given the sample assumes a uniform distribution over all
+entries in a.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>samples</strong> – The generated random samples</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>single item or ndarray</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If a is an int and less than zero, if a or p are not 1-dimensional,
+    if a is an array-like of size 0, if p is not a vector of
+    probabilities, if a and p have different lengths, or if
+    replace=False and the sample size is greater than the population
+    size</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#meshed.makers.randint" title="meshed.makers.randint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">randint</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">shuffle</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">permutation</span></code></p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Generator.choice</span></code></dt><dd><p>which should be used in new code</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>Sampling random rows from a 2-D array is not possible with this function,
+but is possible with <cite>Generator.choice</cite> through its <code class="docutils literal notranslate"><span class="pre">axis</span></code> keyword.</p>
+<p class="rubric">Examples</p>
+<p>Generate a uniform random sample from np.arange(5) of size 3:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">array([0, 3, 4]) # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#This is equivalent to np.random.randint(0,5,3)</span>
+</pre></div>
+</div>
+<p>Generate a non-uniform random sample from np.arange(5) of size 3:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">array([3, 3, 0]) # random</span>
+</pre></div>
+</div>
+<p>Generate a uniform random sample from np.arange(5) of size 3 without
+replacement:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">array([3,1,0]) # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#This is equivalent to np.random.permutation(np.arange(5))[:3]</span>
+</pre></div>
+</div>
+<p>Generate a non-uniform random sample from np.arange(5) of size
+3 without replacement:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">array([2, 3, 0]) # random</span>
+</pre></div>
+</div>
+<p>Any of the above can be repeated with an arbitrary array-like
+instead of just integers. For instance:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">aa_milne_arr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pooh&#39;</span><span class="p">,</span> <span class="s1">&#39;rabbit&#39;</span><span class="p">,</span> <span class="s1">&#39;piglet&#39;</span><span class="p">,</span> <span class="s1">&#39;Christopher&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">aa_milne_arr</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
+<span class="go">array([&#39;pooh&#39;, &#39;pooh&#39;, &#39;pooh&#39;, &#39;Christopher&#39;, &#39;piglet&#39;], # random</span>
+<span class="go">      dtype=&#39;&lt;U11&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.makers.edge_reversed_graph">
+<span class="sig-prename descclassname"><span class="pre">meshed.makers.</span></span><span class="sig-name descname"><span class="pre">edge_reversed_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">g:</span> <span class="pre">Mapping[meshed.makers.T,</span> <span class="pre">Iterable[meshed.makers.T]],</span> <span class="pre">dst_nodes_factory:</span> <span class="pre">Callable[[],</span> <span class="pre">Iterable[meshed.makers.T]]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'list'&gt;,</span> <span class="pre">dst_nodes_append:</span> <span class="pre">Callable[[Iterable[meshed.makers.T],</span> <span class="pre">meshed.makers.T],</span> <span class="pre">None]</span> <span class="pre">=</span> <span class="pre">&lt;method</span> <span class="pre">'append'</span> <span class="pre">of</span> <span class="pre">'list'</span> <span class="pre">objects&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">meshed.makers.T</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">meshed.makers.T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/meshed/makers.html#edge_reversed_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.makers.edge_reversed_graph" title="Permalink to this definition"></a></dt>
 <dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">&#39;cd&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;abd&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">edge_reversed_graph</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="p">[]}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reverse_g_with_sets</span> <span class="o">=</span> <span class="n">edge_reversed_graph</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="nb">set</span><span class="p">,</span> <span class="nb">set</span><span class="o">.</span><span class="n">add</span><span class="p">)</span>
@@ -108,6 +195,92 @@
 <p>Testing border cases
 &gt;&gt;&gt; assert edge_reversed_graph(dict(e=’’, a=’e’)) == {‘e’: [‘a’], ‘a’: []}
 &gt;&gt;&gt; assert edge_reversed_graph(dict(a=’e’, e=’’)) == {‘e’: [‘a’], ‘a’: []}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.makers.randint">
+<span class="sig-prename descclassname"><span class="pre">meshed.makers.</span></span><span class="sig-name descname"><span class="pre">randint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.makers.randint" title="Permalink to this definition"></a></dt>
+<dd><p>Return random integers from <cite>low</cite> (inclusive) to <cite>high</cite> (exclusive).</p>
+<p>Return random integers from the “discrete uniform” distribution of
+the specified dtype in the “half-open” interval [<cite>low</cite>, <cite>high</cite>). If
+<cite>high</cite> is None (the default), then results are from [0, <cite>low</cite>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>New code should use the <code class="docutils literal notranslate"><span class="pre">integers</span></code> method of a <code class="docutils literal notranslate"><span class="pre">default_rng()</span></code>
+instance instead; please see the <span class="xref std std-ref">random-quick-start</span>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>low</strong> (<em>int</em><em> or </em><em>array-like of ints</em>) – Lowest (signed) integers to be drawn from the distribution (unless
+<code class="docutils literal notranslate"><span class="pre">high=None</span></code>, in which case this parameter is one above the
+<em>highest</em> such integer).</p></li>
+<li><p><strong>high</strong> (<em>int</em><em> or </em><em>array-like of ints</em><em>, </em><a class="reference internal" href="ext/gk.html#meshed.ext.gk.optional" title="meshed.ext.gk.optional"><em>optional</em></a>) – If provided, one above the largest (signed) integer to be drawn
+from the distribution (see above for behavior if <code class="docutils literal notranslate"><span class="pre">high=None</span></code>).
+If array-like, must contain integer values</p></li>
+<li><p><strong>size</strong> (<em>int</em><em> or </em><em>tuple of ints</em><em>, </em><a class="reference internal" href="ext/gk.html#meshed.ext.gk.optional" title="meshed.ext.gk.optional"><em>optional</em></a>) – Output shape.  If the given shape is, e.g., <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n,</span> <span class="pre">k)</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">*</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">k</span></code> samples are drawn.  Default is None, in which case a
+single value is returned.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype</em><em>, </em><a class="reference internal" href="ext/gk.html#meshed.ext.gk.optional" title="meshed.ext.gk.optional"><em>optional</em></a>) – <p>Desired dtype of the result. Byteorder must be native.
+The default value is int.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.11.0.</span></p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – <cite>size</cite>-shaped array of random integers from the appropriate
+distribution, or a single such random int if <cite>size</cite> not provided.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int or ndarray of ints</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">random_integers</span></code></dt><dd><p>similar to <cite>randint</cite>, only for the closed interval [<cite>low</cite>, <cite>high</cite>], and 1 is the lowest value if <cite>high</cite> is omitted.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Generator.integers</span></code></dt><dd><p>which should be used for new code.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">array([1, 0, 0, 0, 1, 1, 0, 0, 1, 0]) # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])</span>
+</pre></div>
+</div>
+<p>Generate a 2 x 4 array of ints between 0 and 4, inclusive:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="go">array([[4, 0, 2, 1], # random</span>
+<span class="go">       [3, 2, 2, 0]])</span>
+</pre></div>
+</div>
+<p>Generate a 1 x 3 array with 3 different upper bounds</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="go">array([2, 2, 9]) # random</span>
+</pre></div>
+</div>
+<p>Generate a 1 by 3 array with 3 different lower bounds</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">array([9, 8, 7]) # random</span>
+</pre></div>
+</div>
+<p>Generate a 2 by 4 array using broadcasting with dtype of uint8</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[[</span><span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">20</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="go">array([[ 8,  6,  9,  7], # random</span>
+<span class="go">       [ 1, 16,  9, 12]], dtype=uint8)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.makers.random_graph">
+<span class="sig-prename descclassname"><span class="pre">meshed.makers.</span></span><span class="sig-name descname"><span class="pre">random_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#random_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.makers.random_graph" title="Permalink to this definition"></a></dt>
+<dd><p>Get a random graph</p>
 </dd></dl>
 
 </section>

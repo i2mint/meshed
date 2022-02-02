@@ -127,9 +127,7 @@ a good fallback rule.
 But defining components and the way they should be assembled can go a long way
 in achieving consistency, separation of concerns, adaptability, and flexibility.
 All quite useful things. Also in production. Especially in production.
-That said it is :underline:`your` responsiblity to use the right policy for
-:underline:`your` context.
-
+That said it is your responsiblity to use the right policy for your particular context.
 
 """
 
@@ -368,8 +366,9 @@ def _mapped_extraction(src: dict, to_extract: dict):
 
 def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     """This name maker will resolve names in the following fashion:
-     (1) look at the (func) name and out given as arguments, if None...
-     (3) use mk_func_name(func) to make names.
+
+     #. look at the (func) name and out given as arguments, if None...
+     #. use mk_func_name(func) to make names.
 
     It will use the mk_func_name(func)  itself for out, but suffix the same with
     an underscore to provide a mk_func_name.
@@ -415,18 +414,44 @@ def _keys_and_values_are_strings_validation(d: dict):
 
 
 def _func_node_args_validation(func: Callable, name: str, bind: dict, out: str):
-    if not isinstance(func, Callable):
+    """Validates the four first arguments that are used to make a ``FuncNode``.
+    Namely, if not ``None``,
+
+    * ``func`` should be a callable
+
+    * ``name`` and ``out`` should be ``str``
+
+    * ``bind`` should be a ``Dict[str, str]``
+
+    """
+    if func is not None and not isinstance(func, Callable):
         raise ValidationError(f"Should be callable: {func}")
-    if not isinstance(name, str):
+    if name is not None and not isinstance(name, str):
         raise ValidationError(f"Should be a str: {name}")
-    if not isinstance(bind, dict):
-        raise ValidationError(f"Should be a dict: {bind}")
-    _keys_and_values_are_strings_validation(bind)
-    if not isinstance(out, str):
+    if bind is not None:
+        if not isinstance(bind, dict):
+            raise ValidationError(f"Should be a dict: {bind}")
+        _keys_and_values_are_strings_validation(bind)
+    if out is not None and not isinstance(out, str):
         raise ValidationError(f"Should be a str: {out}")
 
 
 def basic_node_validator(func_node):
+    """Validates a func node. Raises ValidationError if something wrong. Returns None.
+
+    Validates:
+
+    * that the ``func_node`` params are valid, that is, if not ``None``
+        * ``func`` should be a callable
+        * ``name`` and ``out`` should be ``str``
+        * ``bind`` should be a ``Dict[str, str]``
+    * that the names (``.name``, ``.out`` and all ``.bind.values()``)
+        * are valid python identifiers (alphanumeric or underscore not starting with
+          digit)
+        * are not repeated (no duplicates)
+    * that ``.bind.keys()`` are indeed present as params of ``.func``
+
+    """
     _func_node_args_validation(
         func_node.func, func_node.name, func_node.bind, func_node.out
     )
@@ -620,7 +645,7 @@ class FuncNode:
 
     @classmethod
     def has_as_instance(cls, obj):
-        """Verify if obj is an instance of a FuncNode (or specific sub-class).
+        """Verify if ``obj`` is an instance of a FuncNode (or specific sub-class).
 
         The usefulness of this method is to not have to make a lambda with isinstance
         when filtering.
@@ -636,9 +661,10 @@ class FuncNode:
 def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
     """Assert that the names of func_nodes are sane.
     That is:
-        - are valid dot (graphviz) names (we'll use str.isidentifier because lazy)
-        - All the func.name and func.out are unique
-        - more to come
+
+    * are valid dot (graphviz) names (we'll use str.isidentifier because lazy)
+    * All the ``func.name`` and ``func.out`` are unique
+    * more to come (TODO)...
     """
     func_nodes = list(func_nodes)
     node_names = [x.name for x in func_nodes]
@@ -699,10 +725,30 @@ def is_not_func_node(obj) -> bool:
     return not FuncNode.has_as_instance(obj)
 
 
-def extract_values(d: dict, keys: Iterable):
+def _extract_values(d: dict, keys: Iterable):
     """generator of values extracted from d for keys"""
     for k in keys:
         yield d[k]
+
+
+def extract_values(d: dict, keys: Iterable):
+    """Extract values from dict ``d``, returning them:
+
+    - as a tuple if len(keys) > 1
+
+    - a single value if len(keys) == 1
+
+    - None if not
+
+    This is used as the default extractor in DAG
+    """
+    tup = tuple(_extract_values(d, keys))
+    if len(tup) > 1:
+        return tup
+    elif len(tup) == 1:
+        return tup[0]
+    else:
+        return None
 
 
 def extract_items(d: dict, keys: Iterable):
@@ -746,18 +792,51 @@ conservative_parameter_merge: ParameterMerger
 def conservative_parameter_merge(
     params, same_kind=True, same_default=True, same_annotation=True
 ):
-    """Validates that all the params are exactly the same, returning the first is so."""
+    """Validates that all the params are exactly the same, returning the first if so.
+
+    This is used when hooking up functions that use the same parameters (i.e. arg
+    names). When the name of an argument is used more than once, which kind, default,
+    and annotation should be used in the interface of the DAG?
+
+    If they're all the same, there's no problem.
+
+    But if they're not the same, we need to provide control on which to ignore.
+
+    """
+    suggestion_on_error = """To resolve this you have several choices:
+    
+    - Change the properties of the param (kind, default, annotation) to be those you 
+      want. For example, you can use ``i2.Sig.ch_param_attrs`` 
+      (or ``i2.Sig.ch_defaults``, ``i2.Sig.ch_kinds``, ``i2.Sig.ch_annotations``)
+      to get a function decorator that will do that for you.
+    - If you're making a DAG, consider specifying a different ``parameter_merge``.
+      For example you can use ``functools.partial`` on 
+      ``i2.dag.conservative_parameter_merge``, fixing ``same_kind``, ``same_default``, 
+      and/or ``same_annotation`` to ``False`` to get a more lenient version of it.
+      
+    See https://github.com/i2mint/meshed/issues/7 (description and comments) for more
+    info.
+    """
     first_param, *_ = params
     if not all(p.name == first_param.name for p in params):
-        raise ValidationError(f"Some params didn't have the same name: {params}")
+        raise ValidationError(
+            f"Some params didn't have the same name: {params}\n{suggestion_on_error}"
+        )
     if same_kind and not all(p.kind == first_param.kind for p in params):
-        raise ValidationError(f"Some params didn't have the same kind: {params}")
+        raise ValidationError(
+            f"Some params didn't have the same kind: {params}\n{suggestion_on_error}"
+        )
     if same_default and not all(p.default == first_param.default for p in params):
-        raise ValidationError(f"Some params didn't have the same default: {params}")
+        raise ValidationError(
+            f"Some params didn't have the same default: {params}\n{suggestion_on_error}"
+        )
     if same_annotation and not all(
         p.annotation == first_param.annotation for p in params
     ):
-        raise ValidationError(f"Some params didn't have the same annotation: {params}")
+        raise ValidationError(
+            f"Some params didn't have the same annotation: "
+            f"{params}\n{suggestion_on_error}"
+        )
     return first_param
 
 
@@ -787,6 +866,10 @@ def partialized_funcnodes(func_nodes, **keyword_defaults):
         else:
             yield func_node
 
+
+Scope = dict
+VarNames = Iterable[str]
+DagOutput = Any
 
 # TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
 #  concern. Perhaps a more general form would be to define a cache factory defaulting
@@ -845,6 +928,9 @@ class DAG:
     # can return a prepopulated scope too!
     new_scope: Callable = field(default=dict, repr=False)
     name: str = None
+    extract_output_from_scope: Callable[[Scope, VarNames], DagOutput] = field(
+        default=extract_values, repr=False
+    )
 
     def __post_init__(self):
         self.func_nodes = tuple(_mk_func_nodes(self.func_nodes))
@@ -853,7 +939,11 @@ class DAG:
         # reorder the nodes to fit topological order
         self.func_nodes, self.var_nodes = _separate_func_nodes_and_var_nodes(self.nodes)
         # self.sig = Sig(dict(extract_items(sig.parameters, 'xz')))
-        self.sig = Sig(sort_params(self.src_name_params(root_nodes(self.graph))))
+        self.sig = Sig(  # make a signature
+            sort_params(  # with the sorted params (sorted to satisfy kind/default order)
+                self.src_name_params(root_nodes(self.graph))
+            )
+        )
         self.sig(self)  # to put the signature on the callable DAG
         # figure out the roots and leaves
         self.roots = tuple(self.sig.names)  # roots in the same order as signature
@@ -864,19 +954,21 @@ class DAG:
         if self.name is not None:
             self.__name__ = self.name
 
-    def _call(self, *args, **kwargs):
-        scope = self.sig.kwargs_from_args_and_kwargs(args, kwargs)
-        self.call_on_scope(scope)
-        tup = tuple(extract_values(scope, self.leafs))
-        if len(tup) > 1:
-            return tup
-        elif len(tup) == 1:
-            return tup[0]
-        else:
-            return None
-
     def __call__(self, *args, **kwargs):
         return self._call(*args, **kwargs)
+
+    def _call(self, *args, **kwargs):
+        # Get a dict of {argname: argval} pairs from positional and keyword arguments
+        # How positionals are resolved is determined by sels.sig
+        # The result is the initial ``scope`` the func nodes will both read from
+        # to get their arguments, and write their outputs to.
+        scope = self.sig.kwargs_from_args_and_kwargs(args, kwargs)
+        # Go through self.func_nodes in order and call them on scope (performing said
+        # read_input -> call_func -> write_output operations)
+        self.call_on_scope(scope)
+        # From the scope, that may contain all intermediary results,
+        # extract the desired final output and return it
+        return self.extract_output_from_scope(scope, self.leafs)
 
     def call_on_scope(self, scope=None):
         """Calls the func_nodes using scope (a dict or MutableMapping) both to
@@ -1006,21 +1098,49 @@ class DAG:
 
     # ------------ utils --------------------------------------------------------------
 
-    def src_name_params(self, bind: Optional[Iterable[str]] = None):
+    @property
+    def params_for_src(self):
+        """The ``{src_name: list_of_params_using_that_src,...}`` dictionary.
+        That is, a ``dict`` having lists of all ``Parameter`` objs that are used by a
+        ``node.bind`` source (value of ``node.bind``) for each such source in the graph
+
+        For each ``func_node``, ``func_node.bind`` gives us the
+        ``{param: varnode_src_name}`` specification that tells us where (key of scope)
+        to source the arguments of the ``func_node.func`` for each ``param`` of that
+        function.
+
+        What ``params_for_src`` is, is the corresponding inverse map.
+        The ``{varnode_src_name: list_of_params}`` gathered by scanning each
+        ``func_node`` of the DAG.
+        """
         d = defaultdict(list)
         for node in self.func_nodes:
             for arg_name, src_name in node.bind.items():
                 d[src_name].append(node.sig.parameters[arg_name])
+        return dict(d)
 
-        if bind is None:
-            bind = set(d)
+    def src_name_params(self, src_names: Optional[Iterable[str]] = None):
+        # see params_for_src property to see what d is
+        d = self.params_for_src
+        if src_names is None:  # if no src_names given, use the names of all var_nodes
+            src_names = set(d)
 
-        for src_name in filter(bind.__contains__, d):
-            params = d[src_name]
-            if len(params) == 1:
-                yield params[0].replace(name=src_name)
-            else:
-                yield self.parameter_merge(params).replace(name=src_name)
+        # For every src_name of the DAG that is in ``src_name``...
+        for src_name in filter(src_names.__contains__, d):
+            params = d[src_name]  # consider all the params that use it
+            # make version of these params that have the same name (namely src_name)
+            params_with_name_changed_to_src_name = [
+                p.replace(name=src_name) for p in params
+            ]
+            if len(params_with_name_changed_to_src_name) == 1:
+                # if there's only one param, return it (there can be no conflict)
+                yield params_with_name_changed_to_src_name[0]
+            else:  # if there's more than one param, merge them
+                # How to resolve conflicts (different defaults, annotations or kinds)
+                # is determined by what ``parameter_merge`` specified, which is,
+                # by default, strict (everything needs to be the same, or
+                # ``parameter_merge`` with raise an error.
+                yield self.parameter_merge(params_with_name_changed_to_src_name)
 
     # ------------ display --------------------------------------------------------------
 

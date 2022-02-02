@@ -1,7 +1,8 @@
 """Test dags"""
+import pytest
 
 
-def iterize_dag_test():
+def test_iterize_dag():
     def f(a, b=2):
         return a + b
 
@@ -19,12 +20,17 @@ def iterize_dag_test():
 
     # But if you need a function that "looks like" d, but is "vectorized" (really
     # iterized) version...
-    from lined import iterize
-    from i2 import Sig
+    from functools import partial
+    from inspect import signature
+
+    def iterize(func):
+        _iterized_func = partial(map, func)
+        _iterized_func.__signature__ = signature(func)
+        return _iterized_func
 
     di = iterize(d)
     # di has the same signature as d:
-    Sig(di)
+    assert signature(di) == signature(d)
     assert (list(di([1, 2, 3]))) == ([9, 12, 15])  # But works with a being an iterator
 
     # Note that di will return an iterator that needs to be "consumed" (here with list)
@@ -35,7 +41,123 @@ def iterize_dag_test():
 
     # You could use lined.Line
 
-    from lined import Line
+    from i2 import Pipe
 
-    di_list = Line(di, list)
+    di_list = Pipe(di, list)
     assert di_list([1, 2, 3]) == [9, 12, 15]
+
+
+def test_binding_to_a_root_node():
+    """
+    See: https://github.com/i2mint/meshed/issues/7
+    """
+    from meshed.dag import DAG, FuncNode, ValidationError
+
+    def f(a, b):
+        return a + b
+
+    def g(a_plus_b, d):
+        return a_plus_b * d
+
+    # we bind d to b, and it works!
+    f_node = FuncNode(func=f, out="a_plus_b")
+    g_node = FuncNode(func=g, bind={"d": "b"})
+    dag = DAG((f_node, g_node))
+    assert dag(a=1, b=2) == 6
+
+    # but if b and d are not aligned on all other parameter props besides name
+    # (kind, default, annotation), then we get an error
+
+    def gg(a_plus_b, d=4):
+        return a_plus_b * d
+
+    gg_node = FuncNode(func=gg, bind={"d": "b"})
+
+    with pytest.raises(ValidationError) as e_info:
+        _ = DAG((f_node, gg_node))
+
+    assert "didn't have the same default" in e_info.value.args[0]
+
+    # There's several solutions to this.
+    # First, we can simply prepare the functions to that the defaults align.
+    # The following shows how to do this in two different ways
+
+    # 1: "Manually"
+    def ff(a, b=4):
+        return f(a, b)
+    ff_node = FuncNode(func=ff, out="a_plus_b")
+    dag = DAG((ff_node, gg_node))
+    assert dag(a=1, b=2) == 6
+
+    # 2: With i2.Sig
+    from i2 import Sig
+    give_default_to_b = lambda func: Sig(func).ch_defaults(b=4)(func)
+    ff_node = FuncNode(func=give_default_to_b(f), out="a_plus_b")
+    dag = DAG((ff_node, gg_node))
+    assert dag(a=1, b=2) == 6
+    # And if you don't specify b, it has that default you set!
+    assert dag(a=1) == 20
+
+    # Second, we could specify a different "merging policy" (the function that
+    # determines how to resolve the issue of several params with the same name
+    # (or binding) that conflict on some prop (kind, default and/or annotation)
+
+    # Before we go there though, let's show that default is not the only problem.
+    # If the annotation, or the kind are different, we also run in to the same problem
+    # (and solution to it)
+    def f(a, b):
+        return a + b
+
+    def ggg(a_plus_b, d: int):  # note that d has no default, but an annotation
+        return a_plus_b * d
+
+    ggg_node = FuncNode(func=ggg, bind={"d": "b"})
+    with pytest.raises(ValidationError) as e_info:
+        _ = DAG((f_node, ggg_node))
+    assert "didn't have the same annotation" in e_info.value.args[0]
+
+    # Solution (with i2.Sig)
+    def ggg(a_plus_b, d: int):  # note that d has no default, but an annotation
+        return a_plus_b * d
+
+    ggg_node = FuncNode(func=ggg, bind={"d": "b"})
+
+    give_annotation_to_b = lambda func: Sig(func).ch_annotations(b=int)(func)
+    ff_node = FuncNode(func=give_annotation_to_b(f), out="a_plus_b")
+    dag = DAG((ff_node, ggg_node))
+    assert dag(a=1, b=2) == 6
+
+    # The other solution to the parameter property misalignment is to tell the DAG
+    # constructor what we want it to do with conflicts. For example, just ignore them.
+    # (Not a good general policy though!)
+
+    from meshed.dag import conservative_parameter_merge
+    from functools import partial
+
+    first_wins_all_merger = partial(
+        conservative_parameter_merge,
+        same_kind=False,
+        same_default=False,
+        same_annotation=False,
+    )
+
+    def f(a, b: int, /):
+        return a + b
+
+    def g(a_plus_b, d: float = 4):
+        return a_plus_b * d
+
+    linient_dag_maker = partial(DAG, parameter_merge=first_wins_all_merger)
+
+    f_node = FuncNode(func=f, out="a_plus_b")
+    g_node = FuncNode(func=g, bind={"d": "b"})
+    dag = linient_dag_maker([f_node, g_node])
+    assert dag(1, 2) == 6
+    # note we can't specify args with keywords, since (like f) it's position-only
+
+    # Resolving conflicts this way isn't the best general policy (that's why it's not
+    # the default).
+    # In production, it's advised to implement a more careful merging policy, possibly
+    # specifying (in the `parameter_merge` callable itself) explicitly what to do for
+    # every situation that we encounter.
+

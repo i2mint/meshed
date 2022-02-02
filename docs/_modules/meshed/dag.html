@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.25 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.25 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
         <script src="../../_static/toggleprompt.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
@@ -38,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed.html">meshed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
@@ -218,7 +219,9 @@
 <span class="sd">states &quot;explicit is better than implicit&quot;, and indeed it&#39;s often</span>
 <span class="sd">a good fallback rule.</span>
 <span class="sd">But defining components and the way they should be assembled can go a long way</span>
-<span class="sd">in achieving separation of concerns, adaptability, and flexibility.</span>
+<span class="sd">in achieving consistency, separation of concerns, adaptability, and flexibility.</span>
+<span class="sd">All quite useful things. Also in production. Especially in production.</span>
+<span class="sd">That said it is your responsiblity to use the right policy for your particular context.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -267,7 +270,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">start_at</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">name</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -278,10 +281,10 @@
 
 
 <span class="k">def</span> <span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&lt;lambda&gt;&#39;</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">&quot;__name__&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&lt;lambda&gt;&quot;</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">lambda_name</span><span class="p">()</span>  <span class="c1"># make a lambda name that is a unique identifier</span>
-    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -299,7 +302,7 @@
                 <span class="k">yield</span> <span class="n">name</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">found_name</span> <span class="o">=</span> <span class="n">find_first_free_name</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">_exclude_names</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_exclude_names</span>
                 <span class="p">)</span>
                 <span class="k">yield</span> <span class="n">found_name</span>
                 <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">_exclude_names</span> <span class="o">+</span> <span class="p">(</span><span class="n">found_name</span><span class="p">,)</span>
@@ -323,7 +326,7 @@
     <span class="k">return</span> <span class="n">f</span></div>
 
 
-<span class="kn">from</span> <span class="nn">i2.deco</span> <span class="kn">import</span> <span class="n">ch_func_to_all_pk</span>
+<span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="n">ch_func_to_all_pk</span>
 
 
 <div class="viewcode-block" id="hook_up"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.hook_up">[docs]</a><span class="k">def</span> <span class="nf">hook_up</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -405,7 +408,7 @@
 <span class="k">def</span> <span class="nf">_inverse_dict_asserting_losslessness</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
     <span class="n">inv_d</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">inv_d</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;can&#39;t invert: You have some duplicate values in this dict: &quot;</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="sa">f</span><span class="s2">&quot;can&#39;t invert: You have some duplicate values in this dict: &quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">inv_d</span>
 
@@ -457,8 +460,9 @@
 
 <div class="viewcode-block" id="underscore_func_node_names_maker"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.underscore_func_node_names_maker">[docs]</a><span class="k">def</span> <span class="nf">underscore_func_node_names_maker</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;This name maker will resolve names in the following fashion:</span>
-<span class="sd">     (1) look at the (func) name and out given as arguments, if None...</span>
-<span class="sd">     (3) use mk_func_name(func) to make names.</span>
+
+<span class="sd">     #. look at the (func) name and out given as arguments, if None...</span>
+<span class="sd">     #. use mk_func_name(func) to make names.</span>
 
 <span class="sd">    It will use the mk_func_name(func)  itself for out, but suffix the same with</span>
 <span class="sd">    an underscore to provide a mk_func_name.</span>
@@ -475,14 +479,14 @@
     <span class="k">except</span> <span class="n">NameValidationError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
         <span class="n">err_msg</span> <span class="o">=</span> <span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">err_msg</span> <span class="o">+=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Suggestion: You might want to specify a name explicitly in &#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;FuncNode(func, name=name) instead of just giving me the func as is.&#39;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Suggestion: You might want to specify a name explicitly in &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;FuncNode(func, name=name) instead of just giving me the func as is.&quot;</span>
         <span class="p">)</span>
         <span class="k">raise</span> <span class="n">NameValidationError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">name_of_func</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">name_of_func</span>
+        <span class="k">return</span> <span class="n">name_of_func</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">name_of_func</span>
     <span class="k">elif</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span>
+        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">name</span>
     <span class="k">elif</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">name_of_func</span><span class="p">,</span> <span class="n">out</span></div>
 
@@ -495,26 +499,81 @@
         <span class="k">return</span> <span class="p">[]</span>
 
 
-<span class="k">def</span> <span class="nf">basic_node_validator</span><span class="p">(</span><span class="n">func_node</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_keys_and_values_are_strings_validation</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Should be a str: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Should be a str: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_func_node_args_validation</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bind</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validates the four first arguments that are used to make a ``FuncNode``.</span>
+<span class="sd">    Namely, if not ``None``,</span>
+
+<span class="sd">    * ``func`` should be a callable</span>
+
+<span class="sd">    * ``name`` and ``out`` should be ``str``</span>
+
+<span class="sd">    * ``bind`` should be a ``Dict[str, str]``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Should be callable: </span><span class="si">{</span><span class="n">func</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Should be a str: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bind</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bind</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Should be a dict: </span><span class="si">{</span><span class="n">bind</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">_keys_and_values_are_strings_validation</span><span class="p">(</span><span class="n">bind</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Should be a str: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="basic_node_validator"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.basic_node_validator">[docs]</a><span class="k">def</span> <span class="nf">basic_node_validator</span><span class="p">(</span><span class="n">func_node</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validates a func node. Raises ValidationError if something wrong. Returns None.</span>
+
+<span class="sd">    Validates:</span>
+
+<span class="sd">    * that the ``func_node`` params are valid, that is, if not ``None``</span>
+<span class="sd">        * ``func`` should be a callable</span>
+<span class="sd">        * ``name`` and ``out`` should be ``str``</span>
+<span class="sd">        * ``bind`` should be a ``Dict[str, str]``</span>
+<span class="sd">    * that the names (``.name``, ``.out`` and all ``.bind.values()``)</span>
+<span class="sd">        * are valid python identifiers (alphanumeric or underscore not starting with</span>
+<span class="sd">          digit)</span>
+<span class="sd">        * are not repeated (no duplicates)</span>
+<span class="sd">    * that ``.bind.keys()`` are indeed present as params of ``.func``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_func_node_args_validation</span><span class="p">(</span>
+        <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span>
+    <span class="p">)</span>
     <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="o">*</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+
+    <span class="n">names_that_are_not_strings</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">names_that_are_not_strings</span><span class="p">:</span>
+        <span class="n">names_that_are_not_strings</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">names_that_are_not_strings</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Should be strings: </span><span class="si">{</span><span class="n">names_that_are_not_strings</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Make sure there&#39;s no name duplicates</span>
     <span class="n">_duplicates</span> <span class="o">=</span> <span class="n">duplicates</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">_duplicates</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_node</span><span class="si">}</span><span class="s1"> has duplicate names: </span><span class="si">{</span><span class="n">_duplicates</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_node</span><span class="si">}</span><span class="s2"> has duplicate names: </span><span class="si">{</span><span class="n">_duplicates</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Make sure all names are identifiers</span>
     <span class="n">_non_identifiers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">(),</span> <span class="n">names</span><span class="p">))</span>
     <span class="c1"># print(_non_identifiers, names)</span>
     <span class="k">if</span> <span class="n">_non_identifiers</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_node</span><span class="si">}</span><span class="s1"> non-identifier names: </span><span class="si">{</span><span class="n">_non_identifiers</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_node</span><span class="si">}</span><span class="s2"> non-identifier names: </span><span class="si">{</span><span class="n">_non_identifiers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Making sure all src_name keys are in the function&#39;s signature</span>
     <span class="n">bind_names_not_in_sig_names</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="n">func_node</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">bind_names_not_in_sig_names</span><span class="p">,</span> <span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;some bind keys weren&#39;t found as function argnames: &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bind_names_not_in_sig_names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="p">)</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="c1"># TODO: Think of the hash more carefully.</span>
@@ -627,6 +686,7 @@
     <span class="n">node_validator</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">basic_node_validator</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_func_node_args_validation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_maker</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">)</span>
 
         <span class="c1"># The wrapped function&#39;s signature will be useful</span>
@@ -640,10 +700,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">node_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s1">&#39;-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s2">&quot;-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;FuncNode(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;FuncNode(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span>
 
 <div class="viewcode-block" id="FuncNode.call_on_scope"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.FuncNode.call_on_scope">[docs]</a>    <span class="k">def</span> <span class="nf">call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call the function using the given scope both to source arguments and write</span>
@@ -668,7 +728,7 @@
 <span class="sd">        and space are used, so could possibly encode as int (for __hash__ method)</span>
 <span class="sd">        in a way that is reverse-decodable and with reasonable int size.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s1">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;::&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
+        <span class="k">return</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;::&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
 
     <span class="c1"># TODO: Find a better one</span>
     <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -680,7 +740,7 @@
 
 <div class="viewcode-block" id="FuncNode.has_as_instance"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.FuncNode.has_as_instance">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">has_as_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verify if obj is an instance of a FuncNode (or specific sub-class).</span>
+        <span class="sd">&quot;&quot;&quot;Verify if ``obj`` is an instance of a FuncNode (or specific sub-class).</span>
 
 <span class="sd">        The usefulness of this method is to not have to make a lambda with isinstance</span>
 <span class="sd">        when filtering.</span>
@@ -696,9 +756,10 @@
 <div class="viewcode-block" id="validate_that_func_node_names_are_sane"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.validate_that_func_node_names_are_sane">[docs]</a><span class="k">def</span> <span class="nf">validate_that_func_node_names_are_sane</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;Assert that the names of func_nodes are sane.</span>
 <span class="sd">    That is:</span>
-<span class="sd">        - are valid dot (graphviz) names (we&#39;ll use str.isidentifier because lazy)</span>
-<span class="sd">        - All the func.name and func.out are unique</span>
-<span class="sd">        - more to come</span>
+
+<span class="sd">    * are valid dot (graphviz) names (we&#39;ll use str.isidentifier because lazy)</span>
+<span class="sd">    * All the ``func.name`` and ``func.out`` are unique</span>
+<span class="sd">    * more to come (TODO)...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
     <span class="n">node_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">]</span>
@@ -713,7 +774,7 @@
         <span class="n">c</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">node_names</span> <span class="o">+</span> <span class="n">outs</span><span class="p">)</span>
         <span class="n">offending_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;Some of your node names and/or outs where used more than once. &#39;</span>
+            <span class="sa">f</span><span class="s2">&quot;Some of your node names and/or outs where used more than once. &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;They shouldn&#39;t. These are the names I find offensive: </span><span class="si">{</span><span class="n">offending_names</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span></div>
 
@@ -759,10 +820,30 @@
     <span class="k">return</span> <span class="ow">not</span> <span class="n">FuncNode</span><span class="o">.</span><span class="n">has_as_instance</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="extract_values"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.extract_values">[docs]</a><span class="k">def</span> <span class="nf">extract_values</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_extract_values</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;generator of values extracted from d for keys&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span></div>
+        <span class="k">yield</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="extract_values"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.extract_values">[docs]</a><span class="k">def</span> <span class="nf">extract_values</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract values from dict ``d``, returning them:</span>
+
+<span class="sd">    - as a tuple if len(keys) &gt; 1</span>
+
+<span class="sd">    - a single value if len(keys) == 1</span>
+
+<span class="sd">    - None if not</span>
+
+<span class="sd">    This is used as the default extractor in DAG</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tup</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_extract_values</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">keys</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tup</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="extract_items"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.extract_items">[docs]</a><span class="k">def</span> <span class="nf">extract_items</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
@@ -806,7 +887,17 @@
 <div class="viewcode-block" id="conservative_parameter_merge"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.conservative_parameter_merge">[docs]</a><span class="k">def</span> <span class="nf">conservative_parameter_merge</span><span class="p">(</span>
     <span class="n">params</span><span class="p">,</span> <span class="n">same_kind</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_annotation</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Validates that all the params are exactly the same, returning the first is so.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Validates that all the params are exactly the same, returning the first if so.</span>
+
+<span class="sd">    This is used when hooking up functions that use the same parameters (i.e. arg</span>
+<span class="sd">    names). When the name of an argument is used more than once, which kind, default,</span>
+<span class="sd">    and annotation should be used in the interface of the DAG?</span>
+
+<span class="sd">    If they&#39;re all the same, there&#39;s no problem.</span>
+
+<span class="sd">    But if they&#39;re not the same, we need to provide control on which to ignore.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">first_param</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">params</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same name: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -822,15 +913,15 @@
 
 
 <span class="k">def</span> <span class="nf">modified_func_node</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="o">**</span><span class="n">modifications</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncNode</span><span class="p">:</span>
-    <span class="n">modifiable_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;func&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;bind&#39;</span><span class="p">,</span> <span class="s1">&#39;out&#39;</span><span class="p">}</span>
+    <span class="n">modifiable_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;bind&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">}</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">modifications</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span>
         <span class="n">modifiable_attrs</span>
     <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Can only modify these: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">modifiable_attrs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">original_func_node_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;func&#39;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span>
-        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span>
-        <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
+        <span class="s2">&quot;func&quot;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s2">&quot;bind&quot;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span>
+        <span class="s2">&quot;out&quot;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">original_func_node_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">modifications</span><span class="p">))</span>
 
@@ -847,6 +938,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">func_node</span>
 
+
+<span class="n">Scope</span> <span class="o">=</span> <span class="nb">dict</span>
+<span class="n">VarNames</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="n">DagOutput</span> <span class="o">=</span> <span class="n">Any</span>
 
 <span class="c1"># TODO: caching last scope isn&#39;t really the DAG&#39;s direct concern -- it&#39;s a debugging</span>
 <span class="c1">#  concern. Perhaps a more general form would be to define a cache factory defaulting</span>
@@ -905,6 +1000,9 @@
     <span class="c1"># can return a prepopulated scope too!</span>
     <span class="n">new_scope</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">extract_output_from_scope</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Scope</span><span class="p">,</span> <span class="n">VarNames</span><span class="p">],</span> <span class="n">DagOutput</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">extract_values</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_mk_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
@@ -913,7 +1011,11 @@
         <span class="c1"># reorder the nodes to fit topological order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span> <span class="o">=</span> <span class="n">_separate_func_nodes_and_var_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
         <span class="c1"># self.sig = Sig(dict(extract_items(sig.parameters, &#39;xz&#39;)))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">sort_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_name_params</span><span class="p">(</span><span class="n">root_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">))))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span>  <span class="c1"># make a signature</span>
+            <span class="n">sort_params</span><span class="p">(</span>  <span class="c1"># with the sorted params (sorted to satisfy kind/default order)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">src_name_params</span><span class="p">(</span><span class="n">root_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># to put the signature on the callable DAG</span>
         <span class="c1"># figure out the roots and leaves</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">roots</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>  <span class="c1"># roots in the same order as signature</span>
@@ -924,19 +1026,21 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
-        <span class="n">tup</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">extract_values</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leafs</span><span class="p">))</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">tup</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Get a dict of {argname: argval} pairs from positional and keyword arguments</span>
+        <span class="c1"># How positionals are resolved is determined by sels.sig</span>
+        <span class="c1"># The result is the initial ``scope`` the func nodes will both read from</span>
+        <span class="c1"># to get their arguments, and write their outputs to.</span>
+        <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># Go through self.func_nodes in order and call them on scope (performing said</span>
+        <span class="c1"># read_input -&gt; call_func -&gt; write_output operations)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+        <span class="c1"># From the scope, that may contain all intermediary results,</span>
+        <span class="c1"># extract the desired final output and return it</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_output_from_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leafs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DAG.call_on_scope"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.call_on_scope">[docs]</a>    <span class="k">def</span> <span class="nf">call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calls the func_nodes using scope (a dict or MutableMapping) both to</span>
@@ -989,7 +1093,7 @@
         <span class="o">**</span><span class="n">keyword_dflts</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">positional_dflts</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">(</span><span class="s1">&#39;Need to map positional_dflts to keyword_defaults&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">(</span><span class="s2">&quot;Need to map positional_dflts to keyword_defaults&quot;</span><span class="p">)</span>
         <span class="c1"># TODO(mk_instance): What about other init args (cache_last_scope, ...)?</span>
         <span class="n">mk_instance</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">func_nodes</span> <span class="o">=</span> <span class="n">partialized_funcnodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">keyword_dflts</span><span class="p">)</span>
@@ -998,7 +1102,7 @@
             <span class="n">new_sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">new_dag</span><span class="p">)</span><span class="o">.</span><span class="n">remove_names</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">keyword_dflts</span><span class="p">))</span>
             <span class="n">new_sig</span><span class="p">(</span><span class="n">new_dag</span><span class="p">)</span>  <span class="c1"># Change the signature of new_dag with bound args removed</span>
         <span class="k">if</span> <span class="n">_roll_in_orphaned_nodes</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;_roll_in_orphaned_nodes=True to be implemented&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_roll_in_orphaned_nodes=True to be implemented&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_dag</span>
 
     <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
@@ -1013,9 +1117,9 @@
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
                 <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_node_matching</span><span class="p">,</span> <span class="n">obj</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unrecognized variables specification: </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognized variables specification: </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Only items of size 1 or 2 are supported&#39;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Only items of size 1 or 2 are supported&quot;</span>
         <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">ensure_variable_list</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span>
 
@@ -1026,7 +1130,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_node_for_name</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_node_for_func</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No matching node: </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No matching node: </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">func_node_for_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">_find_unique_element</span><span class="p">(</span>
@@ -1066,12 +1170,17 @@
 
     <span class="c1"># ------------ utils --------------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">src_name_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">params_for_src</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The ``{src_name: list_of_params_using_that_src,...}`` dict.&quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">arg_name</span><span class="p">,</span> <span class="n">src_name</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">d</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">arg_name</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">src_name_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_for_src</span>
         <span class="k">if</span> <span class="n">bind</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">bind</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 
@@ -1085,7 +1194,7 @@
     <span class="c1"># ------------ display --------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span> <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span> <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
 
     <span class="c1"># TODO: Give more control (merge with lined)</span>
     <span class="k">def</span> <span class="nf">dot_digraph_body</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_lines</span><span class="o">=</span><span class="p">()):</span>
@@ -1096,7 +1205,7 @@
         <span class="sd">&quot;&quot;&quot;Get an ascii art string that represents the pipeline&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">lined.util</span> <span class="kn">import</span> <span class="n">dot_to_ascii</span>
 
-        <span class="k">return</span> <span class="n">dot_to_ascii</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dot_digraph_body</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">dot_to_ascii</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dot_digraph_body</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span>
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">dot_digraph_body</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1104,8 +1213,8 @@
             <span class="kn">import</span> <span class="nn">graphviz</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s1">You may not have graphviz installed. &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;See https://pypi.org/project/graphviz/.&#39;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s2">You may not have graphviz installed. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;See https://pypi.org/project/graphviz/.&quot;</span>
             <span class="p">)</span>
         <span class="c1"># Note: Since graphviz 0.18, need to have a newline in body lines!</span>
         <span class="n">body</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_add_new_line_if_none</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dot_digraph_body</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span>
@@ -1115,22 +1224,22 @@
 <span class="c1"># These are the defaults used in lined.</span>
 <span class="c1"># TODO: Merge some of the functionalities around graph displays in lined and meshed</span>
 <span class="n">dflt_configs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">fnode_shape</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">,</span>
-    <span class="n">vnode_shape</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
+    <span class="n">fnode_shape</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">,</span>
+    <span class="n">vnode_shape</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
     <span class="n">display_all_arguments</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">edge_kind</span><span class="o">=</span><span class="s1">&#39;to_args_on_edge&#39;</span><span class="p">,</span>
+    <span class="n">edge_kind</span><span class="o">=</span><span class="s2">&quot;to_args_on_edge&quot;</span><span class="p">,</span>
     <span class="n">input_node</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">output_node</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
+    <span class="n">output_node</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">param_to_dot_definition</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">dflt_configs</span><span class="p">[</span><span class="s1">&#39;vnode_shape&#39;</span><span class="p">]):</span>
+<span class="k">def</span> <span class="nf">param_to_dot_definition</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">dflt_configs</span><span class="p">[</span><span class="s2">&quot;vnode_shape&quot;</span><span class="p">]):</span>
     <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">empty</span><span class="p">:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span>
     <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">p</span><span class="o">.</span><span class="n">VAR_POSITIONAL</span><span class="p">:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span>
     <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">p</span><span class="o">.</span><span class="n">VAR_KEYWORD</span><span class="p">:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;**&#39;</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;**&quot;</span> <span class="o">+</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span>
     <span class="k">yield</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> [label=&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot; shape=&quot;</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s1">&quot;]&#39;</span>
@@ -1145,29 +1254,31 @@
     <span class="n">parameters</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Parameter</span><span class="p">],</span>
     <span class="n">out</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">func_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">output_shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s1">&#39;vnode_shape&#39;</span><span class="p">],</span>
-    <span class="n">func_shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s1">&#39;fnode_shape&#39;</span><span class="p">],</span>
+    <span class="n">output_shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s2">&quot;vnode_shape&quot;</span><span class="p">],</span>
+    <span class="n">func_shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s2">&quot;fnode_shape&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="k">assert</span> <span class="n">func_name</span> <span class="o">!=</span> <span class="n">out</span><span class="p">,</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Your func and output name shouldn&#39;t be the &quot;</span> <span class="sa">f</span><span class="s1">&#39;same: </span><span class="si">{</span><span class="n">out</span><span class="si">=}</span><span class="s1"> </span><span class="si">{</span><span class="n">func_name</span><span class="si">=}</span><span class="s1">&#39;</span>
+        <span class="sa">f</span><span class="s2">&quot;Your func and output name shouldn&#39;t be the &quot;</span> <span class="sa">f</span><span class="s2">&quot;same: </span><span class="si">{</span><span class="n">out</span><span class="si">=}</span><span class="s2"> </span><span class="si">{</span><span class="n">func_name</span><span class="si">=}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
     <span class="k">yield</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1"> [label=&quot;</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">&quot; shape=&quot;</span><span class="si">{</span><span class="n">output_shape</span><span class="si">}</span><span class="s1">&quot;]&#39;</span>
     <span class="k">yield</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s1"> [label=&quot;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s1">&quot; shape=&quot;</span><span class="si">{</span><span class="n">func_shape</span><span class="si">}</span><span class="s1">&quot;]&#39;</span>
-    <span class="k">yield</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s1"> -&gt; </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="c1"># args -&gt; func</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
         <span class="k">yield from</span> <span class="n">param_to_dot_definition</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> -&gt; </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">&quot;</span>
 
 
 <span class="k">def</span> <span class="nf">_parameters_and_names_from_sig</span><span class="p">(</span>
-    <span class="n">sig</span><span class="p">:</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">func_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sig</span><span class="p">:</span> <span class="n">Sig</span><span class="p">,</span>
+    <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">func_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">func_name</span> <span class="o">=</span> <span class="n">func_name</span> <span class="ow">or</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="ow">or</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span>
     <span class="k">if</span> <span class="n">func_name</span> <span class="o">==</span> <span class="n">out</span><span class="p">:</span>
-        <span class="n">func_name</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">func_name</span>
+        <span class="n">func_name</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">func_name</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">func_name</span>
 
@@ -1266,13 +1377,15 @@
     <span class="n">out</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span>
     <span class="n">func_name</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span>
     <span class="k">if</span> <span class="n">out</span> <span class="o">==</span> <span class="n">func_name</span><span class="p">:</span>  <span class="c1"># though forbidden in default FuncNode validation</span>
-        <span class="n">func_name</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">func_name</span>
+        <span class="n">func_name</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">func_name</span>
 
     <span class="c1"># Get the Parameter objects for sig, with names changed to bind ones</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">ch_names</span><span class="p">(</span><span class="o">**</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span><span class="o">.</span><span class="n">params</span>
 
     <span class="k">yield from</span> <span class="n">dot_lines_of_func_parameters</span><span class="p">(</span>
-        <span class="n">params</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">,</span> <span class="n">func_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">,</span>
+        <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">,</span>
+        <span class="n">func_name</span><span class="o">=</span><span class="n">func_name</span><span class="p">,</span>
     <span class="p">)</span>
 
 
@@ -1280,8 +1393,8 @@
     <span class="sd">&quot;&quot;&quot;Since graphviz 0.18, need to have a newline in body lines.</span>
 <span class="sd">    This util is there to address that, adding newlines to body lines</span>
 <span class="sd">    when missing.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">s</span>
 
 
@@ -1299,7 +1412,10 @@
             <span class="n">needs</span> <span class="o">=</span> <span class="n">arg_names</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">_func_name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
             <span class="n">exclude_names</span> <span class="o">=</span> <span class="n">exclude_names</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">needs</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">operation</span><span class="p">(</span>
-                <span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">_func_name</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="n">needs</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="n">_func_name</span><span class="p">,</span>
+                <span class="n">func</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">_func_name</span><span class="p">,</span>
+                <span class="n">needs</span><span class="o">=</span><span class="n">needs</span><span class="p">,</span>
+                <span class="n">provides</span><span class="o">=</span><span class="n">_func_name</span><span class="p">,</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="funcs_to_operators"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.funcs_to_operators">[docs]</a>    <span class="k">def</span> <span class="nf">funcs_to_operators</span><span class="p">(</span><span class="o">*</span><span class="n">funcs</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="n">Operation</span><span class="p">:</span>
@@ -1309,7 +1425,7 @@
             <span class="k">yield</span> <span class="n">operation</span><span class="p">(</span><span class="n">func</span><span class="p">)</span></div>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">FuncNode</span>
     <span class="kn">from</span> <span class="nn">lined</span> <span class="kn">import</span> <span class="n">Line</span>
 
