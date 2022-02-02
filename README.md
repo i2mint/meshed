@@ -84,16 +84,55 @@ dag2[['that', 'this'], 'combine'].dot_digraph()
 ## Note on flexibility
 
 The above DAG was created straight from the functions, using only the names of the
-functions and their arguments to define how to hook the network up.
+functions and their parameters to define how to hook the network up.
 
 But if you didn't write those functions specifically for that purpose, or you want
-to use someone else's functions, we got you covered.
+to use someone else's functions, one would need to specify the relation between parameters, inputs and outputs.
 
-You can define the name of the node (the `name` argument), the name of the output
-(the `out` argument) and a mapping from the function's arguments names to
-"network names" (through the `bind` argument).
-The edges of the DAG are defined by matching `out` TO `bind`.
+For that purpose, functions can be adapted using the class FuncNode. The class allows you to essentially rename each of the parameters and also specify which output should be used as an argument for any other functions.
 
+Let us consider the example below.
+
+```python
+def f(a, b):
+    return a + b
+
+def g(a_plus_b, d):
+    return a_plus_b * d
+```
+
+Say we want the output of f to become the value of the parameter a_plus_b. We can do that by assigning the string 'a_plus_b' to the out parameter of a FuncNode representing the function f:
+
+```python
+f_node = FuncNode(func=f, out="a_plus_b")
+```
+
+We can now create a dag using our f_node instead of f:
+
+```python
+dag = DAG((f_node, g))
+```
+
+Our dag behaves as wanted:
+
+```python
+dag(a=1, b=2, d=3)
+9
+```
+
+Now say we would also like for the value given to b to be also given to d. We can achieve that by binding d to b in the bind parameter of a FuncNode representing g:
+
+```python
+g_node = FuncNode(func=g, bind={"d": "b"})
+```
+
+The dag created with f_node and g_node has only two parameters, namely a and b:
+
+``python
+dag = DAG((f_node, g_node))
+dag(a=1, b=2)
+6
+```
 
 
 # Examples
