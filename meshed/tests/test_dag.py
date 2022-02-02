@@ -60,8 +60,8 @@ def test_binding_to_a_root_node():
         return a_plus_b * d
 
     # we bind d to b, and it works!
-    f_node = FuncNode(func=f, out="a_plus_b")
-    g_node = FuncNode(func=g, bind={"d": "b"})
+    f_node = FuncNode(func=f, out='a_plus_b')
+    g_node = FuncNode(func=g, bind={'d': 'b'})
     dag = DAG((f_node, g_node))
     assert dag(a=1, b=2) == 6
 
@@ -71,7 +71,7 @@ def test_binding_to_a_root_node():
     def gg(a_plus_b, d=4):
         return a_plus_b * d
 
-    gg_node = FuncNode(func=gg, bind={"d": "b"})
+    gg_node = FuncNode(func=gg, bind={'d': 'b'})
 
     with pytest.raises(ValidationError) as e_info:
         _ = DAG((f_node, gg_node))
@@ -85,14 +85,16 @@ def test_binding_to_a_root_node():
     # 1: "Manually"
     def ff(a, b=4):
         return f(a, b)
-    ff_node = FuncNode(func=ff, out="a_plus_b")
+
+    ff_node = FuncNode(func=ff, out='a_plus_b')
     dag = DAG((ff_node, gg_node))
     assert dag(a=1, b=2) == 6
 
     # 2: With i2.Sig
     from i2 import Sig
+
     give_default_to_b = lambda func: Sig(func).ch_defaults(b=4)(func)
-    ff_node = FuncNode(func=give_default_to_b(f), out="a_plus_b")
+    ff_node = FuncNode(func=give_default_to_b(f), out='a_plus_b')
     dag = DAG((ff_node, gg_node))
     assert dag(a=1, b=2) == 6
     # And if you don't specify b, it has that default you set!
@@ -111,7 +113,7 @@ def test_binding_to_a_root_node():
     def ggg(a_plus_b, d: int):  # note that d has no default, but an annotation
         return a_plus_b * d
 
-    ggg_node = FuncNode(func=ggg, bind={"d": "b"})
+    ggg_node = FuncNode(func=ggg, bind={'d': 'b'})
     with pytest.raises(ValidationError) as e_info:
         _ = DAG((f_node, ggg_node))
     assert "didn't have the same annotation" in e_info.value.args[0]
@@ -120,10 +122,10 @@ def test_binding_to_a_root_node():
     def ggg(a_plus_b, d: int):  # note that d has no default, but an annotation
         return a_plus_b * d
 
-    ggg_node = FuncNode(func=ggg, bind={"d": "b"})
+    ggg_node = FuncNode(func=ggg, bind={'d': 'b'})
 
     give_annotation_to_b = lambda func: Sig(func).ch_annotations(b=int)(func)
-    ff_node = FuncNode(func=give_annotation_to_b(f), out="a_plus_b")
+    ff_node = FuncNode(func=give_annotation_to_b(f), out='a_plus_b')
     dag = DAG((ff_node, ggg_node))
     assert dag(a=1, b=2) == 6
 
@@ -149,8 +151,8 @@ def test_binding_to_a_root_node():
 
     linient_dag_maker = partial(DAG, parameter_merge=first_wins_all_merger)
 
-    f_node = FuncNode(func=f, out="a_plus_b")
-    g_node = FuncNode(func=g, bind={"d": "b"})
+    f_node = FuncNode(func=f, out='a_plus_b')
+    g_node = FuncNode(func=g, bind={'d': 'b'})
     dag = linient_dag_maker([f_node, g_node])
     assert dag(1, 2) == 6
     # note we can't specify args with keywords, since (like f) it's position-only
@@ -160,4 +162,3 @@ def test_binding_to_a_root_node():
     # In production, it's advised to implement a more careful merging policy, possibly
     # specifying (in the `parameter_merge` callable itself) explicitly what to do for
     # every situation that we encounter.
-

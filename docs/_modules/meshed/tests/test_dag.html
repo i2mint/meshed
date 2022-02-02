@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>meshed.tests.test_dag &mdash; meshed 0.1.26 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/toggleprompt.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> meshed
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/caching.html">meshed.caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext.html">meshed.ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/itools.html">meshed.itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/makers.html">meshed.makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_makers.html">meshed.tests.test_makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_util.html">meshed.tests.test_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/util.html">meshed.util</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">meshed</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>meshed.tests.test_dag</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for meshed.tests.test_dag</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Test dags&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<span class="k">def</span> <span class="nf">test_iterize_dag</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+    <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span> <span class="o">*</span> <span class="n">c</span>
+
+    <span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">])</span>
+    <span class="c1"># d.dot_digraph()  # smoke testing the digraph</span>
+
+    <span class="k">assert</span> <span class="p">(</span>  <span class="c1"># if you needed to apply d to an iterator, you&#39;d normally do this</span>
+        <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+    <span class="p">)</span> <span class="o">==</span> <span class="p">([</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
+
+    <span class="c1"># But if you need a function that &quot;looks like&quot; d, but is &quot;vectorized&quot; (really</span>
+    <span class="c1"># iterized) version...</span>
+    <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+    <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+
+    <span class="k">def</span> <span class="nf">iterize</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">_iterized_func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+        <span class="n">_iterized_func</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_iterized_func</span>
+
+    <span class="n">di</span> <span class="o">=</span> <span class="n">iterize</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="c1"># di has the same signature as d:</span>
+    <span class="k">assert</span> <span class="n">signature</span><span class="p">(</span><span class="n">di</span><span class="p">)</span> <span class="o">==</span> <span class="n">signature</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">di</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])))</span> <span class="o">==</span> <span class="p">([</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>  <span class="c1"># But works with a being an iterator</span>
+
+    <span class="c1"># Note that di will return an iterator that needs to be &quot;consumed&quot; (here with list)</span>
+    <span class="c1"># That is, no matter what the (iterable) type of the input is.</span>
+    <span class="c1"># If you wanted to systematically get your output as a list (or tuple, or set,</span>
+    <span class="c1"># or numpy.array),</span>
+    <span class="c1"># there&#39;s several choices...</span>
+
+    <span class="c1"># You could use lined.Line</span>
+
+    <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Pipe</span>
+
+    <span class="n">di_list</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span><span class="n">di</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">di_list</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="test_binding_to_a_root_node"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_dag.html#meshed.tests.test_dag.test_binding_to_a_root_node">[docs]</a><span class="k">def</span> <span class="nf">test_binding_to_a_root_node</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    See: https://github.com/i2mint/meshed/issues/7</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="n">ValidationError</span>
+
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+    <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">d</span>
+
+    <span class="c1"># we bind d to b, and it works!</span>
+    <span class="n">f_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
+    <span class="n">g_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">f_node</span><span class="p">,</span> <span class="n">g_node</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">dag</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+
+    <span class="c1"># but if b and d are not aligned on all other parameter props besides name</span>
+    <span class="c1"># (kind, default, annotation), then we get an error</span>
+
+    <span class="k">def</span> <span class="nf">gg</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">d</span>
+
+    <span class="n">gg_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">gg</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
+
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">ValidationError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_info</span><span class="p">:</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">f_node</span><span class="p">,</span> <span class="n">gg_node</span><span class="p">))</span>
+
+    <span class="k">assert</span> <span class="s2">&quot;didn&#39;t have the same default&quot;</span> <span class="ow">in</span> <span class="n">e_info</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># There&#39;s several solutions to this.</span>
+    <span class="c1"># First, we can simply prepare the functions to that the defaults align.</span>
+    <span class="c1"># The following shows how to do this in two different ways</span>
+
+    <span class="c1"># 1: &quot;Manually&quot;</span>
+    <span class="k">def</span> <span class="nf">ff</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="n">ff_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">ff</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">ff_node</span><span class="p">,</span> <span class="n">gg_node</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">dag</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+
+    <span class="c1"># 2: With i2.Sig</span>
+    <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
+
+    <span class="n">give_default_to_b</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">:</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">ch_defaults</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">)(</span><span class="n">func</span><span class="p">)</span>
+    <span class="n">ff_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">give_default_to_b</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">ff_node</span><span class="p">,</span> <span class="n">gg_node</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">dag</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+    <span class="c1"># And if you don&#39;t specify b, it has that default you set!</span>
+    <span class="k">assert</span> <span class="n">dag</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">20</span>
+
+    <span class="c1"># Second, we could specify a different &quot;merging policy&quot; (the function that</span>
+    <span class="c1"># determines how to resolve the issue of several params with the same name</span>
+    <span class="c1"># (or binding) that conflict on some prop (kind, default and/or annotation)</span>
+
+    <span class="c1"># Before we go there though, let&#39;s show that default is not the only problem.</span>
+    <span class="c1"># If the annotation, or the kind are different, we also run in to the same problem</span>
+    <span class="c1"># (and solution to it)</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+    <span class="k">def</span> <span class="nf">ggg</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># note that d has no default, but an annotation</span>
+        <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">d</span>
+
+    <span class="n">ggg_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">ggg</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">ValidationError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_info</span><span class="p">:</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">f_node</span><span class="p">,</span> <span class="n">ggg_node</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="s2">&quot;didn&#39;t have the same annotation&quot;</span> <span class="ow">in</span> <span class="n">e_info</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Solution (with i2.Sig)</span>
+    <span class="k">def</span> <span class="nf">ggg</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># note that d has no default, but an annotation</span>
+        <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">d</span>
+
+    <span class="n">ggg_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">ggg</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
+
+    <span class="n">give_annotation_to_b</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">:</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">ch_annotations</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="nb">int</span><span class="p">)(</span><span class="n">func</span><span class="p">)</span>
+    <span class="n">ff_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">give_annotation_to_b</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">ff_node</span><span class="p">,</span> <span class="n">ggg_node</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">dag</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+
+    <span class="c1"># The other solution to the parameter property misalignment is to tell the DAG</span>
+    <span class="c1"># constructor what we want it to do with conflicts. For example, just ignore them.</span>
+    <span class="c1"># (Not a good general policy though!)</span>
+
+    <span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">conservative_parameter_merge</span>
+    <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+    <span class="n">first_wins_all_merger</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+        <span class="n">conservative_parameter_merge</span><span class="p">,</span>
+        <span class="n">same_kind</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">same_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">same_annotation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+    <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">d</span>
+
+    <span class="n">linient_dag_maker</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">parameter_merge</span><span class="o">=</span><span class="n">first_wins_all_merger</span><span class="p">)</span>
+
+    <span class="n">f_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
+    <span class="n">g_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">linient_dag_maker</span><span class="p">([</span><span class="n">f_node</span><span class="p">,</span> <span class="n">g_node</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span></div>
+    <span class="c1"># note we can&#39;t specify args with keywords, since (like f) it&#39;s position-only</span>
+
+    <span class="c1"># Resolving conflicts this way isn&#39;t the best general policy (that&#39;s why it&#39;s not</span>
+    <span class="c1"># the default).</span>
+    <span class="c1"># In production, it&#39;s advised to implement a more careful merging policy, possibly</span>
+    <span class="c1"># specifying (in the `parameter_merge` callable itself) explicitly what to do for</span>
+    <span class="c1"># every situation that we encounter.</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

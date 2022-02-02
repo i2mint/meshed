@@ -3,19 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.gk_with_networkx &mdash; meshed 0.1.25 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.gk_with_networkx &mdash; meshed 0.1.26 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
         <script src="../../../_static/toggleprompt.js"></script>
         <script src="../../../_static/clipboard.min.js"></script>
         <script src="../../../_static/copybutton.js"></script>
@@ -39,7 +38,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed.html">meshed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/caching.html">meshed.caching</a></li>
@@ -332,25 +331,25 @@
 
     <span class="c1"># uses base.Operation</span>
 
-<div class="viewcode-block" id="DataPlaceholderNode"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.DataPlaceholderNode">[docs]</a>    <span class="k">class</span> <span class="nc">DataPlaceholderNode</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">DataPlaceholderNode</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A node for the Network graph that describes the name of a Data instance</span>
 <span class="sd">        produced or required by a layer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s1">&#39;DataPlaceholderNode(&quot;</span><span class="si">%s</span><span class="s1">&quot;)&#39;</span> <span class="o">%</span> <span class="bp">self</span></div>
+            <span class="k">return</span> <span class="s1">&#39;DataPlaceholderNode(&quot;</span><span class="si">%s</span><span class="s1">&quot;)&#39;</span> <span class="o">%</span> <span class="bp">self</span>
 
-<div class="viewcode-block" id="DeleteInstruction"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.DeleteInstruction">[docs]</a>    <span class="k">class</span> <span class="nc">DeleteInstruction</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">DeleteInstruction</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        An instruction for the compiled list of evaluation steps to free or delete</span>
 <span class="sd">        a Data instance from the Network&#39;s cache after it is no longer needed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s1">&#39;DeleteInstruction(&quot;</span><span class="si">%s</span><span class="s1">&quot;)&#39;</span> <span class="o">%</span> <span class="bp">self</span></div>
+            <span class="k">return</span> <span class="s1">&#39;DeleteInstruction(&quot;</span><span class="si">%s</span><span class="s1">&quot;)&#39;</span> <span class="o">%</span> <span class="bp">self</span>
 
-<div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Network">[docs]</a>    <span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is the main network implementation. The class contains all of the</span>
 <span class="sd">        code necessary to weave together operations into a directed-acyclic-graph (DAG)</span>
@@ -376,7 +375,7 @@
             <span class="c1"># graph in networkx</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_necessary_steps_cache</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="Network.add_op"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Network.add_op">[docs]</a>        <span class="k">def</span> <span class="nf">add_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">add_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Adds the given operation and its data requirements to the network graph</span>
 <span class="sd">            based on the name of the operation, the names of the operation&#39;s needs, and</span>
@@ -406,21 +405,21 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">DataPlaceholderNode</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
 
             <span class="c1"># clear compiled steps (must recompile after adding new layers)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">def</span> <span class="nf">list_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="s1">&#39;network must be compiled before listing layers.&#39;</span>
             <span class="k">return</span> <span class="p">[(</span><span class="n">s</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Operation</span><span class="p">)]</span>
 
-<div class="viewcode-block" id="Network.show_layers"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Network.show_layers">[docs]</a>        <span class="k">def</span> <span class="nf">show_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">show_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Shows info (name, needs, and provides) about all layers in this network.&quot;&quot;&quot;</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_layers</span><span class="p">():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;layer_name: &#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;needs: &#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">needs</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;provides: &#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">provides</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Network.compile"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Network.compile">[docs]</a>        <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;Create a set of steps for evaluating layers</span>
 <span class="sd">            and freeing memory as necessary&quot;&quot;&quot;</span>
 
@@ -461,7 +460,7 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DeleteInstruction</span><span class="p">(</span><span class="n">predecessor</span><span class="p">))</span>
 
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unrecognized network graph node&#39;</span><span class="p">)</span></div>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unrecognized network graph node&#39;</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_find_necessary_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
@@ -538,7 +537,7 @@
             <span class="c1"># Return an ordered list of the needed steps.</span>
             <span class="k">return</span> <span class="n">necessary_steps</span>
 
-<div class="viewcode-block" id="Network.compute"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Network.compute">[docs]</a>        <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Run the graph. Any inputs to the network must be passed in by name.</span>
 
@@ -566,7 +565,7 @@
             <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;parallel&#39;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_thread_pool_barrier_method</span><span class="p">(</span><span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_sequential_method</span><span class="p">(</span><span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span></div>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_sequential_method</span><span class="p">(</span><span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_compute_thread_pool_barrier_method</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">thread_pool_size</span><span class="o">=</span><span class="mi">10</span>
@@ -695,7 +694,7 @@
                 <span class="c1"># Note: list comprehensions exist in python 2.7+</span>
                 <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">cache</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">cache</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">}</span>
 
-<div class="viewcode-block" id="Network.plot"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Network.plot">[docs]</a>        <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Plot the graph.</span>
 
@@ -770,9 +769,9 @@
                     <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
                     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-                <span class="k">return</span> <span class="n">g</span></div></div>
+                <span class="k">return</span> <span class="n">g</span>
 
-<div class="viewcode-block" id="ready_to_schedule_operation"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.ready_to_schedule_operation">[docs]</a>    <span class="k">def</span> <span class="nf">ready_to_schedule_operation</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">has_executed</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ready_to_schedule_operation</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">has_executed</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines if a Operation is ready to be scheduled for execution based on</span>
 <span class="sd">        what has already been executed.</span>
@@ -791,9 +790,9 @@
         <span class="n">dependencies</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
             <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Operation</span><span class="p">),</span> <span class="n">nx</span><span class="o">.</span><span class="n">ancestors</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">op</span><span class="p">))</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">has_executed</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">dependencies</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">has_executed</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ready_to_delete_data_node"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.ready_to_delete_data_node">[docs]</a>    <span class="k">def</span> <span class="nf">ready_to_delete_data_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">has_executed</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ready_to_delete_data_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">has_executed</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines if a DataPlaceholderNode is ready to be deleted from the</span>
 <span class="sd">        cache.</span>
@@ -809,16 +808,16 @@
 <span class="sd">            A boolean indicating whether the data node can be deleted or not.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data_node</span> <span class="o">=</span> <span class="n">get_data_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">graph</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">data_node</span><span class="p">))</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">has_executed</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">data_node</span><span class="p">))</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">has_executed</span><span class="p">)</span>
 
-<div class="viewcode-block" id="get_data_node"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.get_data_node">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_data_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets a data node from a graph using its name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="n">name</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">DataPlaceholderNode</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">node</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="c1"># ------------ functional ------------------------------------------------------</span>
 
@@ -830,7 +829,7 @@
     <span class="c1"># uses Operation, NetworkOperation from base</span>
     <span class="c1"># uses Network from network</span>
 
-<div class="viewcode-block" id="FunctionalOperation"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.FunctionalOperation">[docs]</a>    <span class="k">class</span> <span class="nc">FunctionalOperation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">FunctionalOperation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;fn&#39;</span><span class="p">)</span>
             <span class="n">Operation</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -867,9 +866,9 @@
         <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="n">state</span> <span class="o">=</span> <span class="n">Operation</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="n">state</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">state</span></div>
+            <span class="k">return</span> <span class="n">state</span>
 
-<div class="viewcode-block" id="operation"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.operation">[docs]</a>    <span class="k">class</span> <span class="nc">operation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">operation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This object represents an operation in a computation graph.  Its</span>
 <span class="sd">        relationship to other operations in the graph is specified via its</span>
@@ -969,9 +968,9 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">needs</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">provides</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-            <span class="p">)</span></div>
+            <span class="p">)</span>
 
-<div class="viewcode-block" id="compose"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.compose">[docs]</a>    <span class="k">class</span> <span class="nc">compose</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">compose</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is a simple class that&#39;s used to compose ``operation`` instances into</span>
 <span class="sd">        a computation graph.</span>
@@ -1045,7 +1044,7 @@
 
             <span class="k">return</span> <span class="n">NetworkOperation</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="n">needs</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="n">provides</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">net</span><span class="o">=</span><span class="n">net</span>
-            <span class="p">)</span></div>
+            <span class="p">)</span>
 </pre></div>
 
            </div>

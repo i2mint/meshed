@@ -4,19 +4,18 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.ext.gk &mdash; meshed 0.1.25 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.ext.gk &mdash; meshed 0.1.26 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
         <script src="../../../_static/toggleprompt.js"></script>
         <script src="../../../_static/clipboard.min.js"></script>
         <script src="../../../_static/copybutton.js"></script>
@@ -42,7 +41,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../meshed.html">meshed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../caching.html">meshed.caching</a></li>
@@ -95,12 +94,12 @@
            <div itemprop="articleBody">
              
   <section id="module-meshed.ext.gk">
-<span id="meshed-ext-gk"></span><h1>meshed.ext.gk<a class="headerlink" href="#module-meshed.ext.gk" title="Permalink to this headline"></a></h1>
+<span id="meshed-ext-gk"></span><h1>meshed.ext.gk<a class="headerlink" href="#module-meshed.ext.gk" title="Permalink to this headline">¶</a></h1>
 <p>This module was based on yahoo/graphkit
 Made to without networkx, amongst other things</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.Data">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Data" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.Data">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">Data</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.Data" title="Permalink to this definition">¶</a></dt>
 <dd><p>This wraps any data that is consumed or produced
 by a Operation. This data should also know how to serialize
 itself appropriately.
@@ -109,33 +108,33 @@ any class working with data in the HiC framework.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.DataPlaceholderNode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">DataPlaceholderNode</span></span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#DataPlaceholderNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.DataPlaceholderNode" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.DataPlaceholderNode">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">DataPlaceholderNode</code><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#DataPlaceholderNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.DataPlaceholderNode" title="Permalink to this definition">¶</a></dt>
 <dd><p>A node for the Network graph that describes the name of a Data instance
 produced or required by a layer.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.DeleteInstruction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">DeleteInstruction</span></span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#DeleteInstruction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.DeleteInstruction" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.DeleteInstruction">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">DeleteInstruction</code><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#DeleteInstruction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.DeleteInstruction" title="Permalink to this definition">¶</a></dt>
 <dd><p>An instruction for the compiled list of evaluation steps to free or delete
 a Data instance from the Network’s cache after it is no longer needed.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.FunctionalOperation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">FunctionalOperation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#FunctionalOperation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.FunctionalOperation" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.FunctionalOperation">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">FunctionalOperation</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#FunctionalOperation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.FunctionalOperation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.Network">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.Network">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">Network</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.Network" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the main network implementation. The class contains all of the
 code necessary to weave together operations into a directed-acyclic-graph (DAG)
 and pass data through.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk.Network.add_op">
-<span class="sig-name descname"><span class="pre">add_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.add_op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.add_op" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.Network.add_op">
+<code class="sig-name descname">add_op</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">operation</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.add_op"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.Network.add_op" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the given operation and its data requirements to the network graph
 based on the name of the operation, the names of the operation’s needs, and
 the names of the data it provides.</p>
@@ -147,15 +146,15 @@ the names of the data it provides.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk.Network.compile">
-<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.compile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.compile" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.Network.compile">
+<code class="sig-name descname">compile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.compile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.Network.compile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a set of steps for evaluating layers
 and freeing memory as necessary</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk.Network.compute">
-<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.compute" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.Network.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">outputs</span></em>, <em class="sig-param"><span class="n">named_inputs</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.Network.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the graph. Any inputs to the network must be passed in by name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -177,8 +176,8 @@ want to set for the data node.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk.Network.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.plot" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.Network.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.Network.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the graph.</p>
 <p>params:
 :param str filename:</p>
@@ -198,19 +197,19 @@ controls the output format.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk.Network.show_layers">
-<span class="sig-name descname"><span class="pre">show_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.show_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.show_layers" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.Network.show_layers">
+<code class="sig-name descname">show_layers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Network.show_layers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.Network.show_layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shows info (name, needs, and provides) about all layers in this network.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.NetworkOperation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">NetworkOperation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#NetworkOperation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.NetworkOperation" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.NetworkOperation">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">NetworkOperation</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#NetworkOperation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.NetworkOperation" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk.NetworkOperation.set_execution_method">
-<span class="sig-name descname"><span class="pre">set_execution_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#NetworkOperation.set_execution_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.NetworkOperation.set_execution_method" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.NetworkOperation.set_execution_method">
+<code class="sig-name descname">set_execution_method</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">method</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#NetworkOperation.set_execution_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.NetworkOperation.set_execution_method" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine how the network will be executed.
 :param method: str</p>
 <blockquote>
@@ -222,8 +221,8 @@ using a threadpool.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.Operation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs:</span> <span class="pre">Optional[list]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provides:</span> <span class="pre">Optional[list]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Operation" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.Operation">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">Operation</code><span class="sig-paren">(</span><em class="sig-param">name: str = 'None'</em>, <em class="sig-param">needs: list = None</em>, <em class="sig-param">provides: list = None</em>, <em class="sig-param">params: dict = &lt;factory&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.Operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is an abstract class representing a data transformation. To use this,
 please inherit from this class and customize the <code class="docutils literal notranslate"><span class="pre">.compute</span></code> method to your
 specific application.</p>
@@ -241,8 +240,8 @@ NOTE: It’s important that any values stored in this
 argument must be pickelable.</p>
 </div></blockquote>
 <dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk.Operation.compute">
-<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Operation.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Operation.compute" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.Operation.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Operation.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.Operation.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method must be implemented to perform this layer’s feed-forward
 computation on a given set of inputs.
 :param list inputs:</p>
@@ -262,8 +261,8 @@ the results of running the feed-forward computation on
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.compose">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#compose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.compose" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.compose">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">compose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">merge</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#compose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.compose" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a simple class that’s used to compose <code class="docutils literal notranslate"><span class="pre">operation</span></code> instances into
 a computation graph.</p>
 <dl class="field-list simple">
@@ -286,14 +285,14 @@ of multiple times (one for each time the operation appears).</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshed.ext.gk.get_data_node">
-<span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">get_data_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#get_data_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.get_data_node" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.get_data_node">
+<code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">get_data_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">graph</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#get_data_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.get_data_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a data node from a graph using its name</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.operation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.operation" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.operation">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">operation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>This object represents an operation in a computation graph.  Its
 relationship to other operations in the graph is specified via its
 <code class="docutils literal notranslate"><span class="pre">needs</span></code> and <code class="docutils literal notranslate"><span class="pre">provides</span></code> arguments.</p>
@@ -316,8 +315,8 @@ associated with your operation.  These can correspond to either
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk.optional">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">optional</span></span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#optional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.optional" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.optional">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">optional</code><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#optional"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.optional" title="Permalink to this definition">¶</a></dt>
 <dd><p>Input values in <code class="docutils literal notranslate"><span class="pre">needs</span></code> may be designated as optional using this modifier.
 If this modifier is applied to an input value, that value will be input to
 the <code class="docutils literal notranslate"><span class="pre">operation</span></code> if it is available.  The function underlying the
@@ -345,8 +344,8 @@ it is available.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshed.ext.gk.ready_to_delete_data_node">
-<span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">ready_to_delete_data_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_executed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#ready_to_delete_data_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.ready_to_delete_data_node" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.ready_to_delete_data_node">
+<code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">ready_to_delete_data_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">has_executed</span></em>, <em class="sig-param"><span class="n">graph</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#ready_to_delete_data_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.ready_to_delete_data_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if a DataPlaceholderNode is ready to be deleted from the
 cache.</p>
 <dl class="field-list simple">
@@ -365,8 +364,8 @@ A set containing all operations that have been executed so far</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshed.ext.gk.ready_to_schedule_operation">
-<span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">ready_to_schedule_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_executed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#ready_to_schedule_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.ready_to_schedule_operation" title="Permalink to this definition"></a></dt>
+<dt id="meshed.ext.gk.ready_to_schedule_operation">
+<code class="sig-prename descclassname">meshed.ext.gk.</code><code class="sig-name descname">ready_to_schedule_operation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">op</span></em>, <em class="sig-param"><span class="n">has_executed</span></em>, <em class="sig-param"><span class="n">graph</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#ready_to_schedule_operation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk.ready_to_schedule_operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines if a Operation is ready to be scheduled for execution based on
 what has already been executed.</p>
 <dl class="field-list simple">
