@@ -130,6 +130,7 @@ The dag created with f_node and g_node has only two parameters, namely a and b:
 
 ``python
 dag = DAG((f_node, g_node))
+
 dag(a=1, b=2)
 6
 ```
