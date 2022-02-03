@@ -1,6 +1,33 @@
 """Test dags"""
 import pytest
 
+def test_funcnode_bind():
+    """
+    Test the renaming of arguments and output of functions using FuncNode and its
+    effect on DAG
+    """
+    from meshed.dag import DAG, FuncNode
+
+    def f(a, b):
+        return a + b
+
+    def g(a_plus_b, d):
+        return a_plus_b * d
+
+    # here we specify that the output of f will be injected in g as an argument for the parameter a_plus_b
+    f_node = FuncNode(func=f, out="a_plus_b")
+    g_node = FuncNode(func=g)
+    dag = DAG((f_node, g_node))
+    assert dag(a=1, b=2, d=3) == 9
+
+    # we can do more complex renaming as well, for example here we specify that the value for b is also the value for d,
+    # resulting in the dag being now 2 variable dag
+    f_node = FuncNode(func=f, out="a_plus_b")
+    g_node = FuncNode(func=g, bind={"d": "b"})
+    dag = DAG((f_node, g_node))
+    assert dag(a=1, b=2) == 6
+
+
 
 def test_iterize_dag():
     def f(a, b=2):
@@ -79,7 +106,7 @@ def test_binding_to_a_root_node():
     assert "didn't have the same default" in e_info.value.args[0]
 
     # There's several solutions to this.
-    # First, we can simply prepare the functions to that the defaults align.
+    # First, we can simply prepare the functions so that the defaults align.
     # The following shows how to do this in two different ways
 
     # 1: "Manually"
@@ -119,10 +146,6 @@ def test_binding_to_a_root_node():
     assert "didn't have the same annotation" in e_info.value.args[0]
 
     # Solution (with i2.Sig)
-    def ggg(a_plus_b, d: int):  # note that d has no default, but an annotation
-        return a_plus_b * d
-
-    ggg_node = FuncNode(func=ggg, bind={'d': 'b'})
 
     give_annotation_to_b = lambda func: Sig(func).ch_annotations(b=int)(func)
     ff_node = FuncNode(func=give_annotation_to_b(f), out='a_plus_b')
@@ -149,13 +172,14 @@ def test_binding_to_a_root_node():
     def g(a_plus_b, d: float = 4):
         return a_plus_b * d
 
-    linient_dag_maker = partial(DAG, parameter_merge=first_wins_all_merger)
+    lenient_dag_maker = partial(DAG, parameter_merge=first_wins_all_merger)
 
     f_node = FuncNode(func=f, out='a_plus_b')
     g_node = FuncNode(func=g, bind={'d': 'b'})
-    dag = linient_dag_maker([f_node, g_node])
+    dag = lenient_dag_maker([f_node, g_node])
     assert dag(1, 2) == 6
-    # note we can't specify args with keywords, since (like f) it's position-only
+    # Note we can't do dag(a=1, b=2) since (like f) it's position-only.
+    # Indeed the dag inherits its arguments' properties from the functions composing it, in this case f
 
     # Resolving conflicts this way isn't the best general policy (that's why it's not
     # the default).
