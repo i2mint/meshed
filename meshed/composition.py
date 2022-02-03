@@ -3,6 +3,7 @@
 from inspect import signature
 from meshed import FuncNode, DAG
 
+
 def get_param(func):
     """
     Find the name of the parameter of a function with exactly one parameter. Raise an error if more or less parameters.
@@ -11,7 +12,9 @@ def get_param(func):
     """
 
     params = signature(func).parameters.keys()
-    assert len(params) == 1, f"Your function has more than 1 parameter! Namely: {', '.join(params)}"
+    assert (
+        len(params) == 1
+    ), f"Your function has more than 1 parameter! Namely: {', '.join(params)}"
     for param in params:
         return param
 
@@ -28,7 +31,11 @@ def line_with_dag(*steps):
     first_node = FuncNode(steps[0], out=f'step_{step_counter}')
     funcnodes = [first_node]
     for step in steps[1:]:
-        step_node = FuncNode(step, out=f'step_{step_counter + 1}', bind={get_param(step): f'step_{step_counter}'})
+        step_node = FuncNode(
+            step,
+            out=f'step_{step_counter + 1}',
+            bind={get_param(step): f'step_{step_counter}'},
+        )
         step_counter += 1
         funcnodes.append(step_node)
 

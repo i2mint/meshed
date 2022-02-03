@@ -1,6 +1,7 @@
 """Test dags"""
 import pytest
 
+
 def test_funcnode_bind():
     """
     Test the renaming of arguments and output of functions using FuncNode and its
@@ -15,18 +16,17 @@ def test_funcnode_bind():
         return a_plus_b * d
 
     # here we specify that the output of f will be injected in g as an argument for the parameter a_plus_b
-    f_node = FuncNode(func=f, out="a_plus_b")
+    f_node = FuncNode(func=f, out='a_plus_b')
     g_node = FuncNode(func=g)
     dag = DAG((f_node, g_node))
     assert dag(a=1, b=2, d=3) == 9
 
     # we can do more complex renaming as well, for example here we specify that the value for b is also the value for d,
     # resulting in the dag being now 2 variable dag
-    f_node = FuncNode(func=f, out="a_plus_b")
-    g_node = FuncNode(func=g, bind={"d": "b"})
+    f_node = FuncNode(func=f, out='a_plus_b')
+    g_node = FuncNode(func=g, bind={'d': 'b'})
     dag = DAG((f_node, g_node))
     assert dag(a=1, b=2) == 6
-
 
 
 def test_iterize_dag():
