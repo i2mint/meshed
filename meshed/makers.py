@@ -7,7 +7,7 @@ from itertools import product
 from collections import defaultdict
 
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 # TODO: This function should really be a DAG where we can choose if we want parsed lines,
 #   digraph dot commands, the graphviz.Digraph object itself etc.
@@ -25,13 +25,13 @@ def simple_code_to_digraph(code):
             return getsource(code)
         return code
 
-    empty_spaces = re.compile("^\s*$")
+    empty_spaces = re.compile('^\s*$')
     simple_assignment_p = re.compile(
-        "(?P<output_vars>[^=]+)" "\s*=\s*" "(?P<func>\w+)" "\((?P<input_vars>.*)\)"
+        '(?P<output_vars>[^=]+)' '\s*=\s*' '(?P<func>\w+)' '\((?P<input_vars>.*)\)'
     )
 
     def get_lines(code_str):
-        for line in code_str.split("\n"):
+        for line in code_str.split('\n'):
             if not empty_spaces.match(line):
                 yield line.strip()
 

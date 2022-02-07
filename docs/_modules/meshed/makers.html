@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.30 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.31 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -96,6 +96,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Makers&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
@@ -103,6 +104,55 @@
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
 
+<span class="c1"># TODO: This function should really be a DAG where we can choose if we want parsed lines,</span>
+<span class="c1">#   digraph dot commands, the graphviz.Digraph object itself etc.</span>
+<span class="c1"># TODO: The function below is meant to evolve into a tool that can take python code,</span>
+<span class="c1">#  (possibly written with some style constraints) and produce an equivalent DAG.</span>
+<span class="c1">#   Here, it just produces a graphviz.Digraph of the code.</span>
+<div class="viewcode-block" id="simple_code_to_digraph"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.simple_code_to_digraph">[docs]</a><span class="k">def</span> <span class="nf">simple_code_to_digraph</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a graphviz.Digraph object based on code (string or function&#39;s body)&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">re</span>
+    <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getsource</span>
+    <span class="kn">from</span> <span class="nn">graphviz</span> <span class="kn">import</span> <span class="n">Digraph</span>
+
+    <span class="k">def</span> <span class="nf">get_code_str</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">getsource</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">code</span>
+
+    <span class="n">empty_spaces</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^\s*$&#39;</span><span class="p">)</span>
+    <span class="n">simple_assignment_p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+        <span class="s1">&#39;(?P&lt;output_vars&gt;[^=]+)&#39;</span> <span class="s1">&#39;\s*=\s*&#39;</span> <span class="s1">&#39;(?P&lt;func&gt;\w+)&#39;</span> <span class="s1">&#39;\((?P&lt;input_vars&gt;.*)\)&#39;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_lines</span><span class="p">(</span><span class="n">code_str</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">code_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">empty_spaces</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">groupdict_parser</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">parsed_lines</span><span class="p">(</span>
+        <span class="n">code_str</span><span class="p">,</span> <span class="n">line_parser</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">groupdict_parser</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">simple_assignment_p</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">yield from</span> <span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">line_parser</span><span class="p">,</span> <span class="n">get_lines</span><span class="p">(</span><span class="n">code_str</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">parsed_lines_to_dot</span><span class="p">(</span><span class="n">parsed_lines</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">parsed_lines</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> [shape=box]&quot;</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;input_vars&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;output_vars&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">code_str</span> <span class="o">=</span> <span class="n">get_code_str</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+    <span class="n">dot_lines</span> <span class="o">=</span> <span class="n">parsed_lines_to_dot</span><span class="p">(</span><span class="n">parsed_lines</span><span class="p">(</span><span class="n">code_str</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">Digraph</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">dot_lines</span><span class="p">)</span></div>
+
+
+<span class="c1"># TODO: Replace using builtin random</span>
 <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">randint</span><span class="p">,</span> <span class="n">choice</span>
 

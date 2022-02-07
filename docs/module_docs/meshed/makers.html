@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.30 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.31 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -110,6 +110,12 @@
 <p>Testing border cases
 &gt;&gt;&gt; assert edge_reversed_graph(dict(e=’’, a=’e’)) == {‘e’: [‘a’], ‘a’: []}
 &gt;&gt;&gt; assert edge_reversed_graph(dict(a=’e’, e=’’)) == {‘e’: [‘a’], ‘a’: []}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.makers.simple_code_to_digraph">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">simple_code_to_digraph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#simple_code_to_digraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.simple_code_to_digraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a graphviz.Digraph object based on code (string or function’s body)</p>
 </dd></dl>
 
 </section>
