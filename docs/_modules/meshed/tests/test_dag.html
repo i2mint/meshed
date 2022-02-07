@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.test_dag &mdash; meshed 0.1.29 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.tests.test_dag &mdash; meshed 0.1.30 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -42,6 +42,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed.html">meshed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/caching.html">meshed.caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/composition.html">meshed.composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/dag.html">meshed.dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
@@ -57,6 +58,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
@@ -93,6 +95,33 @@
   <h1>Source code for meshed.tests.test_dag</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Test dags&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">pytest</span>
+
+
+<div class="viewcode-block" id="test_funcnode_bind"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_dag.html#meshed.tests.test_dag.test_funcnode_bind">[docs]</a><span class="k">def</span> <span class="nf">test_funcnode_bind</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test the renaming of arguments and output of functions using FuncNode and its</span>
+<span class="sd">    effect on DAG</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">FuncNode</span>
+
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+    <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">d</span>
+
+    <span class="c1"># here we specify that the output of f will be injected in g as an argument for the parameter a_plus_b</span>
+    <span class="n">f_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
+    <span class="n">g_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">f_node</span><span class="p">,</span> <span class="n">g_node</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">dag</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">9</span>
+
+    <span class="c1"># we can do more complex renaming as well, for example here we specify that the value for b is also the value for d,</span>
+    <span class="c1"># resulting in the dag being now 2 variable dag</span>
+    <span class="n">f_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
+    <span class="n">g_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">f_node</span><span class="p">,</span> <span class="n">g_node</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">dag</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span></div>
 
 
 <span class="k">def</span> <span class="nf">test_iterize_dag</span><span class="p">():</span>
@@ -172,7 +201,7 @@
     <span class="k">assert</span> <span class="s2">&quot;didn&#39;t have the same default&quot;</span> <span class="ow">in</span> <span class="n">e_info</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="c1"># There&#39;s several solutions to this.</span>
-    <span class="c1"># First, we can simply prepare the functions to that the defaults align.</span>
+    <span class="c1"># First, we can simply prepare the functions so that the defaults align.</span>
     <span class="c1"># The following shows how to do this in two different ways</span>
 
     <span class="c1"># 1: &quot;Manually&quot;</span>
@@ -212,10 +241,6 @@
     <span class="k">assert</span> <span class="s2">&quot;didn&#39;t have the same annotation&quot;</span> <span class="ow">in</span> <span class="n">e_info</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="c1"># Solution (with i2.Sig)</span>
-    <span class="k">def</span> <span class="nf">ggg</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>  <span class="c1"># note that d has no default, but an annotation</span>
-        <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">d</span>
-
-    <span class="n">ggg_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">ggg</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
 
     <span class="n">give_annotation_to_b</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">:</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">ch_annotations</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="nb">int</span><span class="p">)(</span><span class="n">func</span><span class="p">)</span>
     <span class="n">ff_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">give_annotation_to_b</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
@@ -242,13 +267,14 @@
     <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">d</span>
 
-    <span class="n">linient_dag_maker</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">parameter_merge</span><span class="o">=</span><span class="n">first_wins_all_merger</span><span class="p">)</span>
+    <span class="n">lenient_dag_maker</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">parameter_merge</span><span class="o">=</span><span class="n">first_wins_all_merger</span><span class="p">)</span>
 
     <span class="n">f_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
     <span class="n">g_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
-    <span class="n">dag</span> <span class="o">=</span> <span class="n">linient_dag_maker</span><span class="p">([</span><span class="n">f_node</span><span class="p">,</span> <span class="n">g_node</span><span class="p">])</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">lenient_dag_maker</span><span class="p">([</span><span class="n">f_node</span><span class="p">,</span> <span class="n">g_node</span><span class="p">])</span>
     <span class="k">assert</span> <span class="n">dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span></div>
-    <span class="c1"># note we can&#39;t specify args with keywords, since (like f) it&#39;s position-only</span>
+    <span class="c1"># Note we can&#39;t do dag(a=1, b=2) since (like f) it&#39;s position-only.</span>
+    <span class="c1"># Indeed the dag inherits its arguments&#39; properties from the functions composing it, in this case f</span>
 
     <span class="c1"># Resolving conflicts this way isn&#39;t the best general policy (that&#39;s why it&#39;s not</span>
     <span class="c1"># the default).</span>
