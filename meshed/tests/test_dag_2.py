@@ -1,6 +1,9 @@
 import meshed as ms
 import pytest
 
+import meshed.base
+import meshed.util
+
 
 @pytest.fixture
 def example_func_nodes():
@@ -11,7 +14,7 @@ def example_func_nodes():
         return 42
 
     func_nodes = [f, g]
-    result = ms.dag._mk_func_nodes(func_nodes)
+    result = meshed.base._mk_func_nodes(func_nodes)
     return result
 
 
@@ -19,8 +22,8 @@ def test_find_first_free_name():
     prefix = "ab"
     exclude_names = ("cd", "lm", "ab", "ab__0", "ef")
     assert (
-        ms.dag.find_first_free_name(prefix, exclude_names=exclude_names, start_at=0)
-        == "ab__1"
+            meshed.util.find_first_free_name(prefix, exclude_names=exclude_names, start_at=0)
+            == "ab__1"
     )
 
 
@@ -28,21 +31,21 @@ def test_mk_func_name():
     def myfunc1(a=1, b=3, c=1):
         return a + b * c
 
-    assert ms.dag.mk_func_name(myfunc1, exclude_names=("myfunc1")) == "myfunc1__2"
+    assert meshed.util.mk_func_name(myfunc1, exclude_names=("myfunc1")) == "myfunc1__2"
 
 
 def test_arg_names():
     def myfunc1(a=1, b=3, c=1):
         return a + b * c
 
-    args_list = ms.dag.arg_names(myfunc1, "myfunc1", exclude_names=("a", "b"))
+    args_list = meshed.util.arg_names(myfunc1, "myfunc1", exclude_names=("a", "b"))
     assert args_list == ["myfunc1__a", "myfunc1__b", "c"]
 
 
 def test_named_partial():
-    f = ms.dag.named_partial(print, sep="\\n")
+    f = meshed.util.named_partial(print, sep="\\n")
     assert f.__name__ == "print"
-    g = ms.dag.named_partial(print, sep="\\n", __name__="now_partial_has_a_name")
+    g = meshed.util.named_partial(print, sep="\\n", __name__="now_partial_has_a_name")
     assert g.__name__ == "now_partial_has_a_name"
 
 
@@ -63,7 +66,7 @@ def test_hook_up():
 
 def test_complete_dict_with_iterable_of_required_keys():
     d = {"a": "A", "c": "C"}
-    ms.dag._complete_dict_with_iterable_of_required_keys(d, "abc")
+    meshed.base._complete_dict_with_iterable_of_required_keys(d, "abc")
     assert d == {"a": "A", "c": "C", "b": "b"}
 
 
@@ -74,7 +77,7 @@ def test_inverse_dict_asserting_losslessness():
 
 
 def test_mapped_extraction():
-    extracted = ms.dag._mapped_extraction(
+    extracted = meshed.base._mapped_extraction(
         src={"A": 1, "B": 2, "C": 3}, to_extract={"a": "A", "c": "C", "d": "D"}
     )
     assert dict(extracted) == {"a": 1, "c": 3}
@@ -84,26 +87,26 @@ def test_underscore_func_node_names_maker():
     def func_1():
         pass
 
-    name, out = ms.dag.underscore_func_node_names_maker(
+    name, out = meshed.base.underscore_func_node_names_maker(
         func_1, name="init_func", out="output_name"
     )
     assert name, out == ("init_func", "output_name")
-    assert ms.dag.underscore_func_node_names_maker(func_1) == (
+    assert meshed.base.underscore_func_node_names_maker(func_1) == (
         "func_1_",
         "func_1",
     )
-    assert ms.dag.underscore_func_node_names_maker(func_1, name="init_func") == (
+    assert meshed.base.underscore_func_node_names_maker(func_1, name="init_func") == (
         "init_func",
         "_init_func",
     )
-    assert ms.dag.underscore_func_node_names_maker(func_1, out="output_name") == (
+    assert meshed.base.underscore_func_node_names_maker(func_1, out="output_name") == (
         "func_1",
         "output_name",
     )
 
 
 def test_duplicates():
-    assert ms.dag.duplicates("abbaaeccf") == ["a", "b", "c"]
+    assert meshed.base.duplicates("abbaaeccf") == ["a", "b", "c"]
 
 
 def test_FuncNode():
@@ -112,7 +115,7 @@ def test_FuncNode():
 
     item_price = 3.5
     num_of_items = 2
-    func_node = ms.dag.FuncNode(
+    func_node = meshed.base.FuncNode(
         func=multiply,
         bind={"x": "item_price", "y": "num_of_items"},
     )
@@ -125,7 +128,7 @@ def test_FuncNode():
     # Give a name to output
     assert (
         str(
-            ms.dag.FuncNode(
+            meshed.base.FuncNode(
                 func=multiply,
                 name="total_price",
                 bind={"x": "item_price", "y": "num_of_items"},
@@ -136,7 +139,7 @@ def test_FuncNode():
     # rename the function and the output
     assert (
         str(
-            ms.dag.FuncNode(
+            meshed.base.FuncNode(
                 func=multiply,
                 name="total_price",
                 bind={"x": "item_price", "y": "num_of_items"},
@@ -155,11 +158,11 @@ def test_mk_func_nodes():
         return 42
 
     func_nodes = [f, g]
-    result = ms.dag._mk_func_nodes(func_nodes)
+    result = meshed.base._mk_func_nodes(func_nodes)
     assert str(list(result)) == "[FuncNode(a,b -> f_ -> f), FuncNode(c -> g_ -> g)]"
 
 
 def test_func_nodes_to_graph_dict(example_func_nodes):
     fnodes = example_func_nodes
-    result = ms.dag._func_nodes_to_graph_dict(fnodes)
+    result = meshed.base._func_nodes_to_graph_dict(fnodes)
     assert True

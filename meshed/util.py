@@ -1,5 +1,8 @@
 """util functions"""
+from functools import partial
 from typing import Iterable, Callable, Optional, Union
+
+from i2 import Sig
 
 FunctionNamer = Callable[[Callable], str]
 
@@ -111,3 +114,77 @@ def print_ascii_graph(funcs):
     digraph = funcs_to_digraph(funcs)
     dot_str = "\n".join(map(lambda x: x[1:], digraph.body[:-1]))
     print(dot_to_ascii(dot_str))
+
+
+class ValidationError(ValueError):
+    """Error that is raised when an object's validation failed"""
+
+
+class NotUniqueError(ValidationError):
+    """Error to be raised when unicity is expected, but violated"""
+
+
+class NotFound(ValidationError):
+    """To be raised when something is expected to exist, but doesn't"""
+
+
+class NameValidationError(ValueError):
+    """Use to indicate that there's a problem with a name or generating a valid name"""
+
+
+def find_first_free_name(prefix, exclude_names=(), start_at=2):
+    if prefix not in exclude_names:
+        return prefix
+    else:
+        i = start_at
+        while True:
+            name = f"{prefix}__{i}"
+            if name not in exclude_names:
+                return name
+            i += 1
+
+
+def mk_func_name(func, exclude_names=()):
+    name = getattr(func, "__name__", "")
+    if name == "<lambda>":
+        name = lambda_name()  # make a lambda name that is a unique identifier
+    elif name == "":
+        if isinstance(func, partial):
+            return mk_func_name(func.func, exclude_names)
+        else:
+            raise NameValidationError(f"Can't make a name for func: {func}")
+    return find_first_free_name(name, exclude_names)
+
+
+def arg_names(func, func_name, exclude_names=()):
+    names = Sig(func).names
+
+    def gen():
+        _exclude_names = exclude_names
+        for name in names:
+            if name not in _exclude_names:
+                yield name
+            else:
+                found_name = find_first_free_name(
+                    f"{func_name}__{name}", _exclude_names
+                )
+                yield found_name
+                _exclude_names = _exclude_names + (found_name,)
+
+    return list(gen())
+
+
+def named_partial(func, *args, __name__=None, **keywords):
+    """functools.partial, but with a __name__
+
+    >>> f = named_partial(print, sep='\\n')
+    >>> f.__name__
+    'print'
+
+    >>> f = named_partial(print, sep='\\n', __name__='now_partial_has_a_name')
+    >>> f.__name__
+    'now_partial_has_a_name'
+    """
+    f = partial(func, *args, **keywords)
+    f.__name__ = __name__ or func.__name__
+    return f

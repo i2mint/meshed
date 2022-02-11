@@ -19,5 +19,5 @@ by an adjacency Mapping.
 
 from meshed.dag import (
     DAG,
-    FuncNode,
 )
+from meshed.base import FuncNode

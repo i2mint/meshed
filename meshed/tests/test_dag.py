@@ -7,7 +7,8 @@ def test_funcnode_bind():
     Test the renaming of arguments and output of functions using FuncNode and its
     effect on DAG
     """
-    from meshed.dag import DAG, FuncNode
+    from meshed.dag import DAG
+    from meshed import FuncNode
 
     def f(a, b):
         return a + b
@@ -78,7 +79,9 @@ def test_binding_to_a_root_node():
     """
     See: https://github.com/i2mint/meshed/issues/7
     """
-    from meshed.dag import DAG, FuncNode, ValidationError
+    from meshed.dag import DAG
+    from meshed.util import ValidationError
+    from meshed import FuncNode
 
     def f(a, b):
         return a + b

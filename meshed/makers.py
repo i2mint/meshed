@@ -3,7 +3,7 @@
 from contextlib import suppress
 from functools import partial
 from typing import Mapping, Iterable, TypeVar, Callable
-from meshed.dag import FuncNode
+from meshed import FuncNode
 from i2 import Pipe
 
 
