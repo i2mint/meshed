@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.32 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.33 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -44,6 +44,7 @@
               <p><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">meshed.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="caching.html">meshed.caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="composition.html">meshed.composition</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.dag</a><ul>
@@ -225,7 +226,7 @@ All quite useful things. Also in production. Especially in production.
 That said it is your responsiblity to use the right policy for your particular context.</p>
 <dl class="py class">
 <dt id="meshed.dag.DAG">
-<em class="property">class </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">DAG</code><span class="sig-paren">(</span><em class="sig-param">func_nodes: Iterable[Union[meshed.dag.FuncNode, Callable]], cache_last_scope: bool = True, parameter_merge: Callable[[Iterable[inspect.Parameter]], inspect.Parameter] = &lt;function conservative_parameter_merge&gt;, new_scope: Callable = &lt;class 'dict'&gt;, name: str = None, extract_output_from_scope: Callable[[dict, Iterable[str]], Any] = &lt;function extract_values&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">DAG</code><span class="sig-paren">(</span><em class="sig-param">func_nodes: Iterable[Union[meshed.base.FuncNode, Callable]], cache_last_scope: bool = True, parameter_merge: Callable[[Iterable[inspect.Parameter]], inspect.Parameter] = &lt;function conservative_parameter_merge&gt;, new_scope: Callable = &lt;class 'dict'&gt;, name: str = None, extract_output_from_scope: Callable[[dict, Iterable[str]], Any] = &lt;function extract_values&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG" title="Permalink to this definition">¶</a></dt>
 <dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Sig</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">this</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -322,222 +323,6 @@ The <code class="docutils literal notranslate"><span class="pre">{varnode_src_na
 
 </dd></dl>
 
-<dl class="py class">
-<dt id="meshed.dag.FuncNode">
-<em class="property">class </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">FuncNode</code><span class="sig-paren">(</span><em class="sig-param">func: Callable</em>, <em class="sig-param">name: str = None</em>, <em class="sig-param">bind: dict = &lt;factory&gt;</em>, <em class="sig-param">out: str = None</em>, <em class="sig-param">write_output_into_scope: bool = True</em>, <em class="sig-param">names_maker: Callable = &lt;function underscore_func_node_names_maker&gt;</em>, <em class="sig-param">node_validator: Callable = &lt;function basic_node_validator&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#FuncNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.FuncNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>A function wrapper that makes the function amenable to operating in a network.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> – Function to wrap</p></li>
-<li><p><strong>name</strong> – The name to associate to the function</p></li>
-<li><p><strong>bind</strong> – The {func_argname: external_name,…} mapping that defines where
-the node will source the data to call the function.
-This only has to be used if the external names are different from the names
-of the arguments of the function.</p></li>
-<li><p><strong>out</strong> – The variable name the function should write it’s result to</p></li>
-</ul>
-</dd>
-</dl>
-<p>Like we stated: <cite>FuncNode</cite> is meant to operate in computational networks.
-But knowing what it does will help you make the networks you want, so we commend
-your curiousity, and will oblige with an explanation.</p>
-<p>Say you have a function to multiply numbers.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">multiply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
-</pre></div>
-</div>
-<p>And you use it in some code like this:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">item_price</span> <span class="o">=</span> <span class="mf">3.5</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">num_of_items</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">total_price</span> <span class="o">=</span> <span class="n">multiply</span><span class="p">(</span><span class="n">item_price</span><span class="p">,</span> <span class="n">num_of_items</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>What the execution of <cite>total_price = multiply(item_price, num_of_items)</cite> does is
-- grab the values (in the locals scope – a dict), of <code class="docutils literal notranslate"><span class="pre">item_price</span></code> and <code class="docutils literal notranslate"><span class="pre">num_of_items</span></code>,
-- call the multiply function on these, and then
-- write the result to a variable (in locals) named <code class="docutils literal notranslate"><span class="pre">total_price</span></code></p>
-<p><cite>FuncNode</cite> is a function wrapper that specification of such a
-<cite>output = function(…inputs…)</cite> assignment statement
-in such a way that it can carry it out on a <cite>scope</cite>.
-A <cite>scope</cite> is a <cite>dict</cite> where the function can find it’s input values and write its
-output values.</p>
-<p>For example, the <cite>FuncNode</cite> form of the above statement would be:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">func_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">func</span><span class="o">=</span><span class="n">multiply</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s1">&#39;item_price&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="s1">&#39;num_of_items&#39;</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">func_node</span>
-<span class="go">FuncNode(item_price,num_of_items -&gt; multiply_ -&gt; multiply)</span>
-</pre></div>
-</div>
-<p>Note the <cite>bind</cite> is a mapping <strong>from</strong> the variable names of the wrapped function
-<strong>to</strong> the names of the scope.</p>
-<p>That is, when it’s time to execute, it tells the <cite>FuncNode</cite> where to find the values
-of its inputs.</p>
-<p>If an input is not specified in this <cite>bind</cite> mapping, the scope
-(external) name is supposed to be the same as the function’s (internal) name.</p>
-<p>The purpose of a <cite>FuncNode</cite> is to source some inputs somewhere, compute something
-with these, and write the result somewhere. That somewhere is what we call a
-scope. A scope is a dictionary (or any mutuable mapping to be precise) and it works
-like this:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">scope</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;item_price&#39;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span> <span class="s1">&#39;num_of_items&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">func_node</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>  <span class="c1"># see that it returns 7.0</span>
-<span class="go">7.0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">scope</span>  <span class="c1"># but also wrote this in the scope</span>
-<span class="go">{&#39;item_price&#39;: 3.5, &#39;num_of_items&#39;: 2, &#39;multiply&#39;: 7.0}</span>
-</pre></div>
-</div>
-<p>Consider <code class="docutils literal notranslate"><span class="pre">item_price,num_of_items</span> <span class="pre">-&gt;</span> <span class="pre">multiply_</span> <span class="pre">-&gt;</span> <span class="pre">multiply</span></code>.
-See that the name of the function is used for the name of its output,
-and an underscore-suffixed name for its function name.
-That’s the default behavior if you don’t specify either a name (of the function)
-for the <cite>FuncNode</cite>, or a <cite>out</cite>.
-The underscore is to distinguish from the name of the function itself.
-The function gets the underscore because this favors particular naming style.</p>
-<p>You can give it a custom name as well.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">FuncNode</span><span class="p">(</span><span class="n">multiply</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_price&#39;</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;daily_expense&#39;</span><span class="p">)</span>
-<span class="go">FuncNode(x,y -&gt; total_price -&gt; daily_expense)</span>
-</pre></div>
-</div>
-<p>If you give an <cite>out</cite>, but not a <cite>name</cite> (for the function), the function’s
-name will be taken:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">FuncNode</span><span class="p">(</span><span class="n">multiply</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;daily_expense&#39;</span><span class="p">)</span>
-<span class="go">FuncNode(x,y -&gt; multiply -&gt; daily_expense)</span>
-</pre></div>
-</div>
-<p>If you give a <cite>name</cite>, but not a <cite>out</cite>, an underscore-prefixed version of
-the <cite>name</cite> will be taken:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">FuncNode</span><span class="p">(</span><span class="n">multiply</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_price&#39;</span><span class="p">)</span>
-<span class="go">FuncNode(x,y -&gt; total_price -&gt; _total_price)</span>
-</pre></div>
-</div>
-<p>Note: In the context of networks if you want to reuse a same function
-(say, <cite>multiply</cite>) in multiple places
-you’ll <strong>need</strong> to give it a custom name because the functions are identified by
-this name in the network.</p>
-<dl class="py method">
-<dt id="meshed.dag.FuncNode.call_on_scope">
-<code class="sig-name descname">call_on_scope</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#FuncNode.call_on_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.FuncNode.call_on_scope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call the function using the given scope both to source arguments and write
-results.</p>
-<p>Note: This method is only meant to be used as a backend to __call__, not as
-an actual interface method. Additional control/constraints on read and writes
-can be implemented by providing a custom scope for that.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="meshed.dag.FuncNode.has_as_instance">
-<em class="property">classmethod </em><code class="sig-name descname">has_as_instance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#FuncNode.has_as_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.FuncNode.has_as_instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verify if <code class="docutils literal notranslate"><span class="pre">obj</span></code> is an instance of a FuncNode (or specific sub-class).</p>
-<p>The usefulness of this method is to not have to make a lambda with isinstance
-when filtering.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">FuncNode</span><span class="o">.</span><span class="n">has_as_instance</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">))</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">FuncNode</span><span class="o">.</span><span class="n">has_as_instance</span><span class="p">(</span><span class="s2">&quot;I am not a FuncNode: I&#39;m a string&quot;</span><span class="p">)</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt id="meshed.dag.FuncNode.names_maker">
-<code class="sig-name descname">names_maker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.dag.FuncNode.names_maker" title="Permalink to this definition">¶</a></dt>
-<dd><p>This name maker will resolve names in the following fashion:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>look at the (func) name and out given as arguments, if None…</p></li>
-<li><p>use mk_func_name(func) to make names.</p></li>
-</ol>
-</div></blockquote>
-<p>It will use the mk_func_name(func)  itself for out, but suffix the same with
-an underscore to provide a mk_func_name.</p>
-<p>This is so because here we want to allow easy construction of function networks
-where a function’s output will be used as another’s input argument when
-that argument has the the function’s (output) name.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="meshed.dag.FuncNode.node_validator">
-<code class="sig-name descname">node_validator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#meshed.dag.FuncNode.node_validator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates a func node. Raises ValidationError if something wrong. Returns None.</p>
-<p>Validates:</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>that the <code class="docutils literal notranslate"><span class="pre">func_node</span></code> params are valid, that is, if not <code class="docutils literal notranslate"><span class="pre">None</span></code></dt><dd><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">func</span></code> should be a callable</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">out</span></code> should be <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">bind</span></code> should be a <code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">str]</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>that the names (<code class="docutils literal notranslate"><span class="pre">.name</span></code>, <code class="docutils literal notranslate"><span class="pre">.out</span></code> and all <code class="docutils literal notranslate"><span class="pre">.bind.values()</span></code>)</dt><dd><ul>
-<li><p>are valid python identifiers (alphanumeric or underscore not starting with
-digit)</p></li>
-<li><p>are not repeated (no duplicates)</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><p>that <code class="docutils literal notranslate"><span class="pre">.bind.keys()</span></code> are indeed present as params of <code class="docutils literal notranslate"><span class="pre">.func</span></code></p></li>
-</ul>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py exception">
-<dt id="meshed.dag.NameValidationError">
-<em class="property">exception </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">NameValidationError</code><a class="reference internal" href="../../_modules/meshed/dag.html#NameValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.NameValidationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Use to indicate that there’s a problem with a name or generating a valid name</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt id="meshed.dag.NotFound">
-<em class="property">exception </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">NotFound</code><a class="reference internal" href="../../_modules/meshed/dag.html#NotFound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.NotFound" title="Permalink to this definition">¶</a></dt>
-<dd><p>To be raised when something is expected to exist, but doesn’t</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt id="meshed.dag.NotUniqueError">
-<em class="property">exception </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">NotUniqueError</code><a class="reference internal" href="../../_modules/meshed/dag.html#NotUniqueError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.NotUniqueError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Error to be raised when unicity is expected, but violated</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt id="meshed.dag.ValidationError">
-<em class="property">exception </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">ValidationError</code><a class="reference internal" href="../../_modules/meshed/dag.html#ValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.ValidationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Error that is raised when an object’s validation failed</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="meshed.dag.basic_node_validator">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">basic_node_validator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#basic_node_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.basic_node_validator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates a func node. Raises ValidationError if something wrong. Returns None.</p>
-<p>Validates:</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>that the <code class="docutils literal notranslate"><span class="pre">func_node</span></code> params are valid, that is, if not <code class="docutils literal notranslate"><span class="pre">None</span></code></dt><dd><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">func</span></code> should be a callable</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">out</span></code> should be <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">bind</span></code> should be a <code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">str]</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>that the names (<code class="docutils literal notranslate"><span class="pre">.name</span></code>, <code class="docutils literal notranslate"><span class="pre">.out</span></code> and all <code class="docutils literal notranslate"><span class="pre">.bind.values()</span></code>)</dt><dd><ul>
-<li><p>are valid python identifiers (alphanumeric or underscore not starting with
-digit)</p></li>
-<li><p>are not repeated (no duplicates)</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><p>that <code class="docutils literal notranslate"><span class="pre">.bind.keys()</span></code> are indeed present as params of <code class="docutils literal notranslate"><span class="pre">.func</span></code></p></li>
-</ul>
-</dd></dl>
-
 <dl class="py function">
 <dt id="meshed.dag.conservative_parameter_merge">
 <code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">conservative_parameter_merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">same_kind</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_default</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_annotation</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#conservative_parameter_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.conservative_parameter_merge" title="Permalink to this definition">¶</a></dt>
@@ -551,7 +336,7 @@ and annotation should be used in the interface of the DAG?</p>
 
 <dl class="py function">
 <dt id="meshed.dag.dot_lines_of_func_nodes">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">dot_lines_of_func_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="#meshed.dag.FuncNode" title="meshed.dag.FuncNode">meshed.dag.FuncNode</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#dot_lines_of_func_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.dot_lines_of_func_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">dot_lines_of_func_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#dot_lines_of_func_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.dot_lines_of_func_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Got lines generator for the graphviz.DiGraph(body=list(…))</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
@@ -706,28 +491,6 @@ to write the output of the function
 </dd></dl>
 
 <dl class="py function">
-<dt id="meshed.dag.is_func_node">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">is_func_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/meshed/dag.html#is_func_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.is_func_node" title="Permalink to this definition">¶</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_func_node</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">))</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_func_node</span><span class="p">(</span><span class="s2">&quot;I am not a FuncNode: I&#39;m a string&quot;</span><span class="p">)</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt id="meshed.dag.is_not_func_node">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">is_not_func_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/meshed/dag.html#is_not_func_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.is_not_func_node" title="Permalink to this definition">¶</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_not_func_node</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">))</span>
-<span class="go">False</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_not_func_node</span><span class="p">(</span><span class="s2">&quot;I am not a FuncNode: I&#39;m a string&quot;</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
 <dt id="meshed.dag.named_partial">
 <code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">named_partial</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">__name__</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">keywords</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#named_partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.named_partial" title="Permalink to this definition">¶</a></dt>
 <dd><p>functools.partial, but with a __name__</p>
@@ -741,35 +504,6 @@ to write the output of the function
 <span class="go">&#39;now_partial_has_a_name&#39;</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt id="meshed.dag.underscore_func_node_names_maker">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">underscore_func_node_names_maker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#underscore_func_node_names_maker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.underscore_func_node_names_maker" title="Permalink to this definition">¶</a></dt>
-<dd><p>This name maker will resolve names in the following fashion:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>look at the (func) name and out given as arguments, if None…</p></li>
-<li><p>use mk_func_name(func) to make names.</p></li>
-</ol>
-</div></blockquote>
-<p>It will use the mk_func_name(func)  itself for out, but suffix the same with
-an underscore to provide a mk_func_name.</p>
-<p>This is so because here we want to allow easy construction of function networks
-where a function’s output will be used as another’s input argument when
-that argument has the the function’s (output) name.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="meshed.dag.validate_that_func_node_names_are_sane">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">validate_that_func_node_names_are_sane</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="#meshed.dag.FuncNode" title="meshed.dag.FuncNode">meshed.dag.FuncNode</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#validate_that_func_node_names_are_sane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.validate_that_func_node_names_are_sane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assert that the names of func_nodes are sane.
-That is:</p>
-<ul class="simple">
-<li><p>are valid dot (graphviz) names (we’ll use str.isidentifier because lazy)</p></li>
-<li><p>All the <code class="docutils literal notranslate"><span class="pre">func.name</span></code> and <code class="docutils literal notranslate"><span class="pre">func.out</span></code> are unique</p></li>
-<li><p>more to come (TODO)…</p></li>
-</ul>
 </dd></dl>
 
 </section>

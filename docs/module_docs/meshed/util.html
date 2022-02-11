@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.32 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.33 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -43,6 +43,7 @@
               <p><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">meshed.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="caching.html">meshed.caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="composition.html">meshed.composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dag.html">meshed.dag</a></li>
@@ -97,6 +98,30 @@
   <section id="module-meshed.util">
 <span id="meshed-util"></span><h1>meshed.util<a class="headerlink" href="#module-meshed.util" title="Permalink to this headline">¶</a></h1>
 <p>util functions</p>
+<dl class="py exception">
+<dt id="meshed.util.NameValidationError">
+<em class="property">exception </em><code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">NameValidationError</code><a class="reference internal" href="../../_modules/meshed/util.html#NameValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.NameValidationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use to indicate that there’s a problem with a name or generating a valid name</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="meshed.util.NotFound">
+<em class="property">exception </em><code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">NotFound</code><a class="reference internal" href="../../_modules/meshed/util.html#NotFound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.NotFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be raised when something is expected to exist, but doesn’t</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="meshed.util.NotUniqueError">
+<em class="property">exception </em><code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">NotUniqueError</code><a class="reference internal" href="../../_modules/meshed/util.html#NotUniqueError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.NotUniqueError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error to be raised when unicity is expected, but violated</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="meshed.util.ValidationError">
+<em class="property">exception </em><code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">ValidationError</code><a class="reference internal" href="../../_modules/meshed/util.html#ValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.ValidationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error that is raised when an object’s validation failed</p>
+</dd></dl>
+
 <dl class="py function">
 <dt id="meshed.util.args_funcnames">
 <code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">args_funcnames</code><span class="sig-paren">(</span><em class="sig-param">funcs: Iterable[Callable], name_of_func: Optional[Callable[[Callable], str]] = &lt;function func_name&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#args_funcnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.args_funcnames" title="Permalink to this definition">¶</a></dt>
@@ -131,6 +156,22 @@ To make one, it calls unamed_func_name which produces incremental names to reduc
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">name_of_obj</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="nb">print</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
 <span class="go">&#39;print&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.util.named_partial">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">named_partial</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">__name__</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">keywords</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#named_partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.named_partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>functools.partial, but with a __name__</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">named_partial</span><span class="p">(</span><span class="nb">print</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
+<span class="go">&#39;print&#39;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">named_partial</span><span class="p">(</span><span class="nb">print</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="s1">&#39;now_partial_has_a_name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
+<span class="go">&#39;now_partial_has_a_name&#39;</span>
 </pre></div>
 </div>
 </dd></dl>

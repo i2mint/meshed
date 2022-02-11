@@ -32,14 +32,14 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     except NameValidationError as err:
         err_msg = err.args[0]
         err_msg += (
-            f"\nSuggestion: You might want to specify a name explicitly in "
-            f"FuncNode(func, name=name) instead of just giving me the func as is."
+            f'\nSuggestion: You might want to specify a name explicitly in '
+            f'FuncNode(func, name=name) instead of just giving me the func as is.'
         )
         raise NameValidationError(err_msg)
     if name is None and out is None:
-        return name_of_func + "_", name_of_func
+        return name_of_func + '_', name_of_func
     elif out is None:
-        return name, "_" + name
+        return name, '_' + name
     elif name is None:
         return name_of_func, out
 
@@ -67,19 +67,19 @@ def basic_node_validator(func_node):
 
     names_that_are_not_strings = [name for name in names if not isinstance(name, str)]
     if names_that_are_not_strings:
-        names_that_are_not_strings = ", ".join(map(str, names_that_are_not_strings))
-        raise ValidationError(f"Should be strings: {names_that_are_not_strings}")
+        names_that_are_not_strings = ', '.join(map(str, names_that_are_not_strings))
+        raise ValidationError(f'Should be strings: {names_that_are_not_strings}')
 
     # Make sure there's no name duplicates
     _duplicates = duplicates(names)
     if _duplicates:
-        raise ValidationError(f"{func_node} has duplicate names: {_duplicates}")
+        raise ValidationError(f'{func_node} has duplicate names: {_duplicates}')
 
     # Make sure all names are identifiers
     _non_identifiers = list(filter(lambda name: not name.isidentifier(), names))
     # print(_non_identifiers, names)
     if _non_identifiers:
-        raise ValidationError(f"{func_node} non-identifier names: {_non_identifiers}")
+        raise ValidationError(f'{func_node} non-identifier names: {_non_identifiers}')
 
     # Making sure all src_name keys are in the function's signature
     bind_names_not_in_sig_names = func_node.bind.keys() - func_node.sig.names
@@ -214,10 +214,10 @@ class FuncNode:
         self.node_validator(self)
 
     def synopsis_string(self):
-        return f"{','.join(self.bind.values())} -> {self.name} " f"-> {self.out}"
+        return f"{','.join(self.bind.values())} -> {self.name} " f'-> {self.out}'
 
     def __repr__(self):
-        return f"FuncNode({self.synopsis_string()})"
+        return f'FuncNode({self.synopsis_string()})'
 
     def call_on_scope(self, scope: MutableMapping):
         """Call the function using the given scope both to source arguments and write
@@ -242,7 +242,7 @@ class FuncNode:
         and space are used, so could possibly encode as int (for __hash__ method)
         in a way that is reverse-decodable and with reasonable int size.
         """
-        return ";".join(self.bind) + "::" + self.out
+        return ';'.join(self.bind) + '::' + self.out
 
     # TODO: Find a better one
     def __hash__(self):
@@ -288,7 +288,7 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
         c = Counter(node_names + outs)
         offending_names = [name for name, count in c.items() if count > 1]
         raise ValueError(
-            f"Some of your node names and/or outs where used more than once. "
+            f'Some of your node names and/or outs where used more than once. '
             f"They shouldn't. These are the names I find offensive: {offending_names}"
         )
 
@@ -337,9 +337,9 @@ def is_not_func_node(obj) -> bool:
 def _keys_and_values_are_strings_validation(d: dict):
     for k, v in d.items():
         if not isinstance(k, str):
-            raise ValidationError(f"Should be a str: {k}")
+            raise ValidationError(f'Should be a str: {k}')
         if not isinstance(v, str):
-            raise ValidationError(f"Should be a str: {v}")
+            raise ValidationError(f'Should be a str: {v}')
 
 
 def _func_node_args_validation(func: Callable, name: str, bind: dict, out: str):
@@ -354,15 +354,15 @@ def _func_node_args_validation(func: Callable, name: str, bind: dict, out: str):
 
     """
     if func is not None and not isinstance(func, Callable):
-        raise ValidationError(f"Should be callable: {func}")
+        raise ValidationError(f'Should be callable: {func}')
     if name is not None and not isinstance(name, str):
-        raise ValidationError(f"Should be a str: {name}")
+        raise ValidationError(f'Should be a str: {name}')
     if bind is not None:
         if not isinstance(bind, dict):
-            raise ValidationError(f"Should be a dict: {bind}")
+            raise ValidationError(f'Should be a dict: {bind}')
         _keys_and_values_are_strings_validation(bind)
     if out is not None and not isinstance(out, str):
-        raise ValidationError(f"Should be a str: {out}")
+        raise ValidationError(f'Should be a str: {out}')
 
 
 def _old_mapped_extraction(extract_from: dict, key_map: dict):
