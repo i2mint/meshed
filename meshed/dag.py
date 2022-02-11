@@ -176,7 +176,7 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
     else:
         i = start_at
         while True:
-            name = f"{prefix}__{i}"
+            name = f'{prefix}__{i}'
             if name not in exclude_names:
                 return name
             i += 1
@@ -187,10 +187,10 @@ class NameValidationError(ValueError):
 
 
 def mk_func_name(func, exclude_names=()):
-    name = getattr(func, "__name__", "")
-    if name == "<lambda>":
+    name = getattr(func, '__name__', '')
+    if name == '<lambda>':
         name = lambda_name()  # make a lambda name that is a unique identifier
-    elif name == "":
+    elif name == '':
         if isinstance(func, partial):
             return mk_func_name(func.func, exclude_names)
         else:
@@ -208,7 +208,7 @@ def arg_names(func, func_name, exclude_names=()):
                 yield name
             else:
                 found_name = find_first_free_name(
-                    f"{func_name}__{name}", _exclude_names
+                    f'{func_name}__{name}', _exclude_names
                 )
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
@@ -314,7 +314,7 @@ def _complete_dict_with_iterable_of_required_keys(
 def _inverse_dict_asserting_losslessness(d: dict):
     inv_d = {v: k for k, v in d.items()}
     assert len(inv_d) == len(d), (
-        f"can't invert: You have some duplicate values in this dict: " f"{d}"
+        f"can't invert: You have some duplicate values in this dict: " f'{d}'
     )
     return inv_d
 
@@ -385,14 +385,14 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     except NameValidationError as err:
         err_msg = err.args[0]
         err_msg += (
-            f"\nSuggestion: You might want to specify a name explicitly in "
-            f"FuncNode(func, name=name) instead of just giving me the func as is."
+            f'\nSuggestion: You might want to specify a name explicitly in '
+            f'FuncNode(func, name=name) instead of just giving me the func as is.'
         )
         raise NameValidationError(err_msg)
     if name is None and out is None:
-        return name_of_func + "_", name_of_func
+        return name_of_func + '_', name_of_func
     elif out is None:
-        return name, "_" + name
+        return name, '_' + name
     elif name is None:
         return name_of_func, out
 
@@ -408,9 +408,9 @@ def duplicates(elements: Union[Iterable, Sized]):
 def _keys_and_values_are_strings_validation(d: dict):
     for k, v in d.items():
         if not isinstance(k, str):
-            raise ValidationError(f"Should be a str: {k}")
+            raise ValidationError(f'Should be a str: {k}')
         if not isinstance(v, str):
-            raise ValidationError(f"Should be a str: {v}")
+            raise ValidationError(f'Should be a str: {v}')
 
 
 def _func_node_args_validation(func: Callable, name: str, bind: dict, out: str):
@@ -425,15 +425,15 @@ def _func_node_args_validation(func: Callable, name: str, bind: dict, out: str):
 
     """
     if func is not None and not isinstance(func, Callable):
-        raise ValidationError(f"Should be callable: {func}")
+        raise ValidationError(f'Should be callable: {func}')
     if name is not None and not isinstance(name, str):
-        raise ValidationError(f"Should be a str: {name}")
+        raise ValidationError(f'Should be a str: {name}')
     if bind is not None:
         if not isinstance(bind, dict):
-            raise ValidationError(f"Should be a dict: {bind}")
+            raise ValidationError(f'Should be a dict: {bind}')
         _keys_and_values_are_strings_validation(bind)
     if out is not None and not isinstance(out, str):
-        raise ValidationError(f"Should be a str: {out}")
+        raise ValidationError(f'Should be a str: {out}')
 
 
 def basic_node_validator(func_node):
@@ -459,19 +459,19 @@ def basic_node_validator(func_node):
 
     names_that_are_not_strings = [name for name in names if not isinstance(name, str)]
     if names_that_are_not_strings:
-        names_that_are_not_strings = ", ".join(map(str, names_that_are_not_strings))
-        raise ValidationError(f"Should be strings: {names_that_are_not_strings}")
+        names_that_are_not_strings = ', '.join(map(str, names_that_are_not_strings))
+        raise ValidationError(f'Should be strings: {names_that_are_not_strings}')
 
     # Make sure there's no name duplicates
     _duplicates = duplicates(names)
     if _duplicates:
-        raise ValidationError(f"{func_node} has duplicate names: {_duplicates}")
+        raise ValidationError(f'{func_node} has duplicate names: {_duplicates}')
 
     # Make sure all names are identifiers
     _non_identifiers = list(filter(lambda name: not name.isidentifier(), names))
     # print(_non_identifiers, names)
     if _non_identifiers:
-        raise ValidationError(f"{func_node} non-identifier names: {_non_identifiers}")
+        raise ValidationError(f'{func_node} non-identifier names: {_non_identifiers}')
 
     # Making sure all src_name keys are in the function's signature
     bind_names_not_in_sig_names = func_node.bind.keys() - func_node.sig.names
@@ -605,10 +605,10 @@ class FuncNode:
         self.node_validator(self)
 
     def synopsis_string(self):
-        return f"{','.join(self.bind.values())} -> {self.name} " f"-> {self.out}"
+        return f"{','.join(self.bind.values())} -> {self.name} " f'-> {self.out}'
 
     def __repr__(self):
-        return f"FuncNode({self.synopsis_string()})"
+        return f'FuncNode({self.synopsis_string()})'
 
     def call_on_scope(self, scope: MutableMapping):
         """Call the function using the given scope both to source arguments and write
@@ -633,7 +633,7 @@ class FuncNode:
         and space are used, so could possibly encode as int (for __hash__ method)
         in a way that is reverse-decodable and with reasonable int size.
         """
-        return ";".join(self.bind) + "::" + self.out
+        return ';'.join(self.bind) + '::' + self.out
 
     # TODO: Find a better one
     def __hash__(self):
@@ -679,7 +679,7 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
         c = Counter(node_names + outs)
         offending_names = [name for name, count in c.items() if count > 1]
         raise ValueError(
-            f"Some of your node names and/or outs where used more than once. "
+            f'Some of your node names and/or outs where used more than once. '
             f"They shouldn't. These are the names I find offensive: {offending_names}"
         )
 
@@ -803,7 +803,7 @@ def conservative_parameter_merge(
     But if they're not the same, we need to provide control on which to ignore.
 
     """
-    suggestion_on_error = """To resolve this you have several choices:
+    suggestion_on_error = '''To resolve this you have several choices:
     
     - Change the properties of the param (kind, default, annotation) to be those you 
       want. For example, you can use ``i2.Sig.ch_param_attrs`` 
@@ -816,7 +816,7 @@ def conservative_parameter_merge(
       
     See https://github.com/i2mint/meshed/issues/7 (description and comments) for more
     info.
-    """
+    '''
     first_param, *_ = params
     if not all(p.name == first_param.name for p in params):
         raise ValidationError(
@@ -835,21 +835,21 @@ def conservative_parameter_merge(
     ):
         raise ValidationError(
             f"Some params didn't have the same annotation: "
-            f"{params}\n{suggestion_on_error}"
+            f'{params}\n{suggestion_on_error}'
         )
     return first_param
 
 
 def modified_func_node(func_node, **modifications) -> FuncNode:
-    modifiable_attrs = {"func", "name", "bind", "out"}
+    modifiable_attrs = {'func', 'name', 'bind', 'out'}
     assert not modifications.keys().isdisjoint(
         modifiable_attrs
     ), f"Can only modify these: {', '.join(modifiable_attrs)}"
     original_func_node_kwargs = {
-        "func": func_node.func,
-        "name": func_node.name,
-        "bind": func_node.bind,
-        "out": func_node.out,
+        'func': func_node.func,
+        'name': func_node.name,
+        'bind': func_node.bind,
+        'out': func_node.out,
     }
     return FuncNode(**dict(original_func_node_kwargs, **modifications))
 
@@ -1021,7 +1021,7 @@ class DAG:
         **keyword_dflts,
     ):
         if positional_dflts:
-            raise NotImplemented("Need to map positional_dflts to keyword_defaults")
+            raise NotImplemented('Need to map positional_dflts to keyword_defaults')
         # TODO(mk_instance): What about other init args (cache_last_scope, ...)?
         mk_instance = type(self)
         func_nodes = partialized_funcnodes(self, **keyword_dflts)
@@ -1030,7 +1030,7 @@ class DAG:
             new_sig = Sig(new_dag).remove_names(list(keyword_dflts))
             new_sig(new_dag)  # Change the signature of new_dag with bound args removed
         if _roll_in_orphaned_nodes:
-            raise NotImplementedError(f"_roll_in_orphaned_nodes=True to be implemented")
+            raise NotImplementedError(f'_roll_in_orphaned_nodes=True to be implemented')
         return new_dag
 
     def process_item(self, item):
@@ -1045,9 +1045,9 @@ class DAG:
             elif isinstance(obj, Iterable):
                 return list(map(self.get_node_matching, obj))
             else:
-                raise ValidationError(f"Unrecognized variables specification: {obj}")
+                raise ValidationError(f'Unrecognized variables specification: {obj}')
 
-        assert len(item) == 2, f"Only items of size 1 or 2 are supported"
+        assert len(item) == 2, f'Only items of size 1 or 2 are supported'
         input_names, outs = map(ensure_variable_list, item)
         return input_names, outs
 
@@ -1058,7 +1058,7 @@ class DAG:
             return self.func_node_for_name(pattern)
         elif isinstance(pattern, Callable):
             return self.func_node_for_func(pattern)
-        raise NotFound(f"No matching node: {pattern}")
+        raise NotFound(f'No matching node: {pattern}')
 
     def func_node_for_name(self, name):
         return _find_unique_element(
@@ -1145,7 +1145,7 @@ class DAG:
     # ------------ display --------------------------------------------------------------
 
     def synopsis_string(self):
-        return "\n".join(func_node.synopsis_string() for func_node in self.func_nodes)
+        return '\n'.join(func_node.synopsis_string() for func_node in self.func_nodes)
 
     # TODO: Give more control (merge with lined)
     def dot_digraph_body(self, start_lines=()):
@@ -1156,7 +1156,7 @@ class DAG:
         """Get an ascii art string that represents the pipeline"""
         from lined.util import dot_to_ascii
 
-        return dot_to_ascii("\n".join(self.dot_digraph_body(*args, **kwargs)))
+        return dot_to_ascii('\n'.join(self.dot_digraph_body(*args, **kwargs)))
 
     @wraps(dot_digraph_body)
     def dot_digraph(self, *args, **kwargs):
@@ -1164,8 +1164,8 @@ class DAG:
             import graphviz
         except (ModuleNotFoundError, ImportError) as e:
             raise ModuleNotFoundError(
-                f"{e}\nYou may not have graphviz installed. "
-                f"See https://pypi.org/project/graphviz/."
+                f'{e}\nYou may not have graphviz installed. '
+                f'See https://pypi.org/project/graphviz/.'
             )
         # Note: Since graphviz 0.18, need to have a newline in body lines!
         body = list(map(_add_new_line_if_none, self.dot_digraph_body(*args, **kwargs)))
@@ -1175,22 +1175,22 @@ class DAG:
 # These are the defaults used in lined.
 # TODO: Merge some of the functionalities around graph displays in lined and meshed
 dflt_configs = dict(
-    fnode_shape="box",
-    vnode_shape="none",
+    fnode_shape='box',
+    vnode_shape='none',
     display_all_arguments=True,
-    edge_kind="to_args_on_edge",
+    edge_kind='to_args_on_edge',
     input_node=True,
-    output_node="output",
+    output_node='output',
 )
 
 
-def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
+def param_to_dot_definition(p: Parameter, shape=dflt_configs['vnode_shape']):
     if p.default is not empty:
-        name = p.name + "="
+        name = p.name + '='
     elif p.kind == p.VAR_POSITIONAL:
-        name = "*" + p.name
+        name = '*' + p.name
     elif p.kind == p.VAR_KEYWORD:
-        name = "**" + p.name
+        name = '**' + p.name
     else:
         name = p.name
     yield f'{p.name} [label="{name}" shape="{shape}"]'
@@ -1205,31 +1205,29 @@ def dot_lines_of_func_parameters(
     parameters: Iterable[Parameter],
     out: str,
     func_name: str,
-    output_shape: str = dflt_configs["vnode_shape"],
-    func_shape: str = dflt_configs["fnode_shape"],
+    output_shape: str = dflt_configs['vnode_shape'],
+    func_shape: str = dflt_configs['fnode_shape'],
 ) -> Iterable[str]:
     assert func_name != out, (
-        f"Your func and output name shouldn't be the " f"same: {out=} {func_name=}"
+        f"Your func and output name shouldn't be the " f'same: {out=} {func_name=}'
     )
     yield f'{out} [label="{out}" shape="{output_shape}"]'
     yield f'{func_name} [label="{func_name}" shape="{func_shape}"]'
-    yield f"{func_name} -> {out}"
+    yield f'{func_name} -> {out}'
     # args -> func
     for p in parameters:
         yield from param_to_dot_definition(p)
     for p in parameters:
-        yield f"{p.name} -> {func_name}"
+        yield f'{p.name} -> {func_name}'
 
 
 def _parameters_and_names_from_sig(
-    sig: Sig,
-    out=None,
-    func_name=None,
+    sig: Sig, out=None, func_name=None,
 ):
     func_name = func_name or sig.name
     out = out or sig.name
     if func_name == out:
-        func_name = "_" + func_name
+        func_name = '_' + func_name
     assert isinstance(func_name, str) and isinstance(out, str)
     return sig.parameters, out, func_name
 
@@ -1328,15 +1326,13 @@ def dot_lines_of_func_node(func_node: FuncNode):
     out = func_node.out
     func_name = func_node.name
     if out == func_name:  # though forbidden in default FuncNode validation
-        func_name = "_" + func_name
+        func_name = '_' + func_name
 
     # Get the Parameter objects for sig, with names changed to bind ones
     params = func_node.sig.ch_names(**func_node.bind).params
 
     yield from dot_lines_of_func_parameters(
-        params,
-        out=out,
-        func_name=func_name,
+        params, out=out, func_name=func_name,
     )
 
 
@@ -1344,8 +1340,8 @@ def _add_new_line_if_none(s: str):
     """Since graphviz 0.18, need to have a newline in body lines.
     This util is there to address that, adding newlines to body lines
     when missing."""
-    if s and s[-1] != "\n":
-        return s + "\n"
+    if s and s[-1] != '\n':
+        return s + '\n'
     return s
 
 
@@ -1363,10 +1359,7 @@ with suppress(ModuleNotFoundError, ImportError):
             needs = arg_names(func, _func_name, exclude_names)
             exclude_names = exclude_names + tuple(needs)
             yield operation(
-                func,
-                name=_func_name,
-                needs=needs,
-                provides=_func_name,
+                func, name=_func_name, needs=needs, provides=_func_name,
             )
 
     def funcs_to_operators(*funcs, exclude_names=()) -> Operation:
@@ -1376,7 +1369,7 @@ with suppress(ModuleNotFoundError, ImportError):
             yield operation(func)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     from meshed import FuncNode
     from lined import Line
 

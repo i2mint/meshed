@@ -24,7 +24,7 @@ def add(a, b):
     return a + b
 
 
-d = {"y": (inc, "x"), "z": (add, "y", "a")}
+d = {'y': (inc, 'x'), 'z': (add, 'y', 'a')}
 
 dag = DAG(node_funcs_from_dask_graph_dict(d))
 
