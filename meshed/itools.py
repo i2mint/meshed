@@ -8,7 +8,6 @@ from functools import wraps
 from collections import defaultdict
 
 from i2.signatures import Sig
-from meshed.makers import edge_reversed_graph
 
 
 def _handle_exclude_nodes(func):
