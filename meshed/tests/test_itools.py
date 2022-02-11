@@ -4,7 +4,7 @@ import pytest
 
 @pytest.fixture
 def example_graph():
-    return dict(a=["c"], b=["c", "c"], c=["a", "b", "d", "e"], d=["c"], e=["c", "z"])
+    return dict(a=['c'], b=['c', 'c'], c=['a', 'b', 'd', 'e'], d=['c'], e=['c', 'z'])
 
 
 @pytest.fixture
@@ -14,49 +14,49 @@ def graph_children():
 
 @pytest.fixture
 def graph_dict():
-    return dict(a="c", b="ce", c="abde", d="c", e=["c", "z"], f={})
+    return dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
 
 
 def test_add_edge(example_graph):
     g = example_graph
-    ms.itools.add_edge(g, "d", "a")
+    ms.itools.add_edge(g, 'd', 'a')
     assert g == {
-        "a": ["c"],
-        "b": ["c", "c"],
-        "c": ["a", "b", "d", "e"],
-        "d": ["c", "a"],
-        "e": ["c", "z"],
+        'a': ['c'],
+        'b': ['c', 'c'],
+        'c': ['a', 'b', 'd', 'e'],
+        'd': ['c', 'a'],
+        'e': ['c', 'z'],
     }
-    ms.itools.add_edge(g, "t", "y")
+    ms.itools.add_edge(g, 't', 'y')
     assert g == {
-        "a": ["c"],
-        "b": ["c", "c"],
-        "c": ["a", "b", "d", "e"],
-        "d": ["c", "a"],
-        "e": ["c", "z"],
-        "t": ["y"],
+        'a': ['c'],
+        'b': ['c', 'c'],
+        'c': ['a', 'b', 'd', 'e'],
+        'd': ['c', 'a'],
+        'e': ['c', 'z'],
+        't': ['y'],
     }
 
 
 def test_edges(example_graph):
     g = example_graph
     assert sorted(ms.itools.edges(g)) == [
-        ("a", "c"),
-        ("b", "c"),
-        ("b", "c"),
-        ("c", "a"),
-        ("c", "b"),
-        ("c", "d"),
-        ("c", "e"),
-        ("d", "c"),
-        ("e", "c"),
-        ("e", "z"),
+        ('a', 'c'),
+        ('b', 'c'),
+        ('b', 'c'),
+        ('c', 'a'),
+        ('c', 'b'),
+        ('c', 'd'),
+        ('c', 'e'),
+        ('d', 'c'),
+        ('e', 'c'),
+        ('e', 'z'),
     ]
 
 
 def test_nodes(example_graph):
     g = example_graph
-    assert sorted(ms.itools.nodes(g)) == ["a", "b", "c", "d", "e", "z"]
+    assert sorted(ms.itools.nodes(g)) == ['a', 'b', 'c', 'd', 'e', 'z']
 
 
 def test_has_node():
@@ -108,71 +108,71 @@ def test_descendants(graph_children):
 
 def test_root_nodes(graph_dict):
     g = graph_dict
-    assert sorted(ms.itools.root_nodes(g)) == ["f"]
+    assert sorted(ms.itools.root_nodes(g)) == ['f']
 
 
 def test_leaf_nodes(graph_dict):
     g = graph_dict
-    assert sorted(ms.itools.leaf_nodes(g)) == ["f", "z"]
+    assert sorted(ms.itools.leaf_nodes(g)) == ['f', 'z']
 
 
 def test_isolated_nodes(graph_dict):
     g = graph_dict
-    assert set(ms.itools.isolated_nodes(g)) == {"f"}
+    assert set(ms.itools.isolated_nodes(g)) == {'f'}
 
 
 def test_find_path(graph_dict):
     g = graph_dict
-    assert ms.itools.find_path(g, "a", "c") == ["a", "c"]
-    assert ms.itools.find_path(g, "a", "b") == ["a", "c", "b"]
-    assert ms.itools.find_path(g, "a", "z") == ["a", "c", "b", "e", "z"]
+    assert ms.itools.find_path(g, 'a', 'c') == ['a', 'c']
+    assert ms.itools.find_path(g, 'a', 'b') == ['a', 'c', 'b']
+    assert ms.itools.find_path(g, 'a', 'z') == ['a', 'c', 'b', 'e', 'z']
 
 
 def test_reverse_edges(example_graph):
     g = example_graph
     assert sorted(list(ms.itools.reverse_edges(g))) == [
-        ("a", "c"),
-        ("b", "c"),
-        ("c", "a"),
-        ("c", "b"),
-        ("c", "b"),
-        ("c", "d"),
-        ("c", "e"),
-        ("d", "c"),
-        ("e", "c"),
-        ("z", "e"),
+        ('a', 'c'),
+        ('b', 'c'),
+        ('c', 'a'),
+        ('c', 'b'),
+        ('c', 'b'),
+        ('c', 'd'),
+        ('c', 'e'),
+        ('d', 'c'),
+        ('e', 'c'),
+        ('z', 'e'),
     ]
 
 
 def test_out_degrees(graph_dict):
     g = graph_dict
     assert dict(ms.itools.out_degrees(g)) == (
-        {"a": 1, "b": 2, "c": 4, "d": 1, "e": 2, "f": 0}
+        {'a': 1, 'b': 2, 'c': 4, 'd': 1, 'e': 2, 'f': 0}
     )
 
 
 def test_in_degrees(graph_dict):
     g = graph_dict
     assert dict(ms.itools.in_degrees(g)) == (
-        {"a": 1, "b": 1, "c": 4, "d": 1, "e": 2, "f": 0, "z": 1}
+        {'a': 1, 'b': 1, 'c': 4, 'd': 1, 'e': 2, 'f': 0, 'z': 1}
     )
 
 
 def test_copy_of_g_with_some_keys_removed(example_graph):
     g = example_graph
-    keys = ["c", "d"]
+    keys = ['c', 'd']
     gg = ms.itools.copy_of_g_with_some_keys_removed(g, keys)
-    assert gg == {"a": ["c"], "b": ["c", "c"], "e": ["c", "z"]}
+    assert gg == {'a': ['c'], 'b': ['c', 'c'], 'e': ['c', 'z']}
 
 
 def test_topological_sort_helper(example_graph):
     g = example_graph
-    v = "a"
-    stack = ["b", "c"]
-    visited = set(["e"])
+    v = 'a'
+    stack = ['b', 'c']
+    visited = set(['e'])
     ms.itools._topological_sort_helper(g, v, visited, stack)
-    assert visited == {"a", "b", "c", "d", "e"}
-    assert sorted(stack) == ["a", "b", "b", "c", "c", "d"]
+    assert visited == {'a', 'b', 'c', 'd', 'e'}
+    assert sorted(stack) == ['a', 'b', 'b', 'c', 'c', 'd']
 
 
 def test_topological_sort():
@@ -181,8 +181,8 @@ def test_topological_sort():
 
 
 def test_handle_exclude_nodes():
-    def f(a=1, b=2, _exclude_nodes=["c"]):
-        return f"_exclude_nodes is now a set:{_exclude_nodes}"
+    def f(a=1, b=2, _exclude_nodes=['c']):
+        return f'_exclude_nodes is now a set:{_exclude_nodes}'
 
     new_f = ms.itools._handle_exclude_nodes(f)
     assert new_f(1) == "_exclude_nodes is now a set:{'c'}"
@@ -190,31 +190,31 @@ def test_handle_exclude_nodes():
 
 @pytest.fixture
 def simple_graph():
-    return dict(a="c", b="cd", c="abd", e="")
+    return dict(a='c', b='cd', c='abd', e='')
 
 
 def test_edge_reversed_graph(simple_graph):
     g = simple_graph
     assert ms.itools.edge_reversed_graph(g) == {
-        "c": ["a", "b"],
-        "d": ["b", "c"],
-        "a": ["c"],
-        "b": ["c"],
-        "e": [],
+        'c': ['a', 'b'],
+        'd': ['b', 'c'],
+        'a': ['c'],
+        'b': ['c'],
+        'e': [],
     }
     reverse_g_with_sets = ms.itools.edge_reversed_graph(g, set, set.add)
     assert reverse_g_with_sets == {
-        "c": {"a", "b"},
-        "d": {"b", "c"},
-        "a": {"c"},
-        "b": {"c"},
-        "e": set([]),
+        'c': {'a', 'b'},
+        'd': {'b', 'c'},
+        'a': {'c'},
+        'b': {'c'},
+        'e': set([]),
     }
-    assert ms.itools.edge_reversed_graph(dict(e="", a="e")) == {
-        "e": ["a"],
-        "a": [],
+    assert ms.itools.edge_reversed_graph(dict(e='', a='e')) == {
+        'e': ['a'],
+        'a': [],
     }
-    assert ms.itools.edge_reversed_graph(dict(a="e", e="")) == {
-        "e": ["a"],
-        "a": [],
+    assert ms.itools.edge_reversed_graph(dict(a='e', e='')) == {
+        'e': ['a'],
+        'a': [],
     }

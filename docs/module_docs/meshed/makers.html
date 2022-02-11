@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.31 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.32 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -98,20 +98,6 @@
   <section id="module-meshed.makers">
 <span id="meshed-makers"></span><h1>meshed.makers<a class="headerlink" href="#module-meshed.makers" title="Permalink to this headline">¶</a></h1>
 <p>Makers</p>
-<dl class="py function">
-<dt id="meshed.makers.edge_reversed_graph">
-<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">edge_reversed_graph</code><span class="sig-paren">(</span><em class="sig-param">g: Mapping[T, Iterable[T]], dst_nodes_factory: Callable[[], Iterable[T]] = &lt;class 'list'&gt;, dst_nodes_append: Callable[[Iterable[T], T], None] = &lt;method 'append' of 'list' objects&gt;</em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span>T<span class="p">, </span>Iterable<span class="p">[</span>T<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#edge_reversed_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.edge_reversed_graph" title="Permalink to this definition">¶</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">&#39;cd&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;abd&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">edge_reversed_graph</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="p">[]}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">reverse_g_with_sets</span> <span class="o">=</span> <span class="n">edge_reversed_graph</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="nb">set</span><span class="p">,</span> <span class="nb">set</span><span class="o">.</span><span class="n">add</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">reverse_g_with_sets</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">},</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">},</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">},</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">},</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">([])}</span>
-</pre></div>
-</div>
-<p>Testing border cases
-&gt;&gt;&gt; assert edge_reversed_graph(dict(e=’’, a=’e’)) == {‘e’: [‘a’], ‘a’: []}
-&gt;&gt;&gt; assert edge_reversed_graph(dict(a=’e’, e=’’)) == {‘e’: [‘a’], ‘a’: []}</p>
-</dd></dl>
-
 <dl class="py function">
 <dt id="meshed.makers.simple_code_to_digraph">
 <code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">simple_code_to_digraph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#simple_code_to_digraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.simple_code_to_digraph" title="Permalink to this definition">¶</a></dt>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.31 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.32 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -98,11 +98,107 @@
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Callable</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">FuncNode</span>
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Pipe</span>
 
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+
+<span class="c1"># Some restrictions exist and need to be clarified or removed (i.e. more cases handled)</span>
+<span class="c1"># For example,</span>
+<span class="c1"># * tuple assignment not handled (x, y = func(...))</span>
+<span class="c1"># * can&#39;t reuse a variable (would lead to same node)</span>
+<span class="c1"># * x = y (or x, y = tup) not handled (but could easily by binding)</span>
+<span class="c1"># We don&#39;t need these cases to be handled, only x = func(...) forms lead to Turing (I</span>
+<span class="c1"># think...):</span>
+<span class="c1"># Further other cases are not handled, but we don&#39;t want to handle ALL of python</span>
+<span class="c1"># -- just a sufficiently expressive subset.</span>
+
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Callable</span>
+
+
+<span class="k">def</span> <span class="nf">attr_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)}</span>
+
+
+<span class="k">def</span> <span class="nf">is_from_ast_module</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="s1">&#39;__module__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_ast&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_ast_info_str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;lineno=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s1">&#39;</span>
+
+
+<span class="c1"># Note: generalize? glom?</span>
+<span class="k">def</span> <span class="nf">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+    <span class="c1"># TODO: Make this validation better (at least more help in raised error)</span>
+    <span class="c1"># TODO: extract validating code out as validation functions?</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">_ast_info_str</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All commands should be assignments, this one wasn&#39;t: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">target</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">targets</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Only one target allowed: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">)</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Should be a ast.Name or ast.Tuple: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="n">value</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Only one target allowed: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">return</span> <span class="n">target</span><span class="p">,</span> <span class="n">value</span>
+
+
+<span class="k">def</span> <span class="nf">parsed_to_node_kwargs</span><span class="p">(</span><span class="n">target_value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="c1"># Note: ast.Tuple has names in &#39;elts&#39; attribute,</span>
+    <span class="c1"># and could be handled, but would need to lead to multiple nodes</span>
+    <span class="n">target</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">target_value</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Should be a ast.Name: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">args</span>
+    <span class="c1"># TODO: we&#39;re binding arg name to arg name here, but if the actual func</span>
+    <span class="c1"># doesn&#39;t use that arg name, the FuncNode won&#39;t work.</span>
+    <span class="c1"># Need to find a solution here.</span>
+    <span class="c1"># For example, late binding, only when the function is injected (therefore the</span>
+    <span class="c1"># signature known?)</span>
+    <span class="c1"># In that case, better just put args and keywords in here, and make the bind arg</span>
+    <span class="c1"># once the func is known</span>
+    <span class="n">bind_from_args</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">args</span><span class="p">}</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">arg</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">keywords</span><span class="p">}</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">bind_from_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+
+<span class="n">FuncNodeFactory</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">FuncNode</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">node_kwargs_to_func_node_factory</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncNodeFactory</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">,</span> <span class="o">**</span><span class="n">node_kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">parse_assignment_steps</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">func_body</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># TODO, work with func_body.args to get info on interface (name, args, kwargs,</span>
+    <span class="c1">#  return etc.)</span>
+    <span class="c1">#     return func_body</span>
+    <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">func_body</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+
+
+<span class="n">iterize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+
+<span class="n">targval_to_func_node_factory</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span>
+    <span class="n">parsed_to_node_kwargs</span><span class="p">,</span> <span class="n">node_kwargs_to_func_node_factory</span>
+<span class="p">)</span>
+<span class="n">src_to_func_node_factory</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span>
+    <span class="n">parse_assignment_steps</span><span class="p">,</span> <span class="n">iterize</span><span class="p">(</span><span class="n">targval_to_func_node_factory</span><span class="p">)</span>
+<span class="p">)</span>
+
 
 <span class="c1"># TODO: This function should really be a DAG where we can choose if we want parsed lines,</span>
 <span class="c1">#   digraph dot commands, the graphviz.Digraph object itself etc.</span>
@@ -167,31 +263,6 @@
                 <span class="k">yield</span> <span class="n">src</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
-
-
-<div class="viewcode-block" id="edge_reversed_graph"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.edge_reversed_graph">[docs]</a><span class="k">def</span> <span class="nf">edge_reversed_graph</span><span class="p">(</span>
-    <span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span>
-    <span class="n">dst_nodes_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">,</span>
-    <span class="n">dst_nodes_append</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">T</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;cd&#39;, c=&#39;abd&#39;, e=&#39;&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; assert edge_reversed_graph(g) == {&#39;c&#39;: [&#39;a&#39;, &#39;b&#39;], &#39;d&#39;: [&#39;b&#39;, &#39;c&#39;], &#39;a&#39;: [&#39;c&#39;], &#39;b&#39;: [&#39;c&#39;], &#39;e&#39;: []}</span>
-<span class="sd">    &gt;&gt;&gt; reverse_g_with_sets = edge_reversed_graph(g, set, set.add)</span>
-<span class="sd">    &gt;&gt;&gt; assert reverse_g_with_sets == {&#39;c&#39;: {&#39;a&#39;, &#39;b&#39;}, &#39;d&#39;: {&#39;b&#39;, &#39;c&#39;}, &#39;a&#39;: {&#39;c&#39;}, &#39;b&#39;: {&#39;c&#39;}, &#39;e&#39;: set([])}</span>
-
-<span class="sd">    Testing border cases</span>
-<span class="sd">    &gt;&gt;&gt; assert edge_reversed_graph(dict(e=&#39;&#39;, a=&#39;e&#39;)) == {&#39;e&#39;: [&#39;a&#39;], &#39;a&#39;: []}</span>
-<span class="sd">    &gt;&gt;&gt; assert edge_reversed_graph(dict(a=&#39;e&#39;, e=&#39;&#39;)) == {&#39;e&#39;: [&#39;a&#39;], &#39;a&#39;: []}</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Pattern: Groupby logic</span>
-
-    <span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">dst_nodes_factory</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst_nodes</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">d</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst_nodes_factory</span><span class="p">())</span>  <span class="c1"># add node if not present</span>
-        <span class="k">for</span> <span class="n">dst</span> <span class="ow">in</span> <span class="n">dst_nodes</span><span class="p">:</span>  <span class="c1"># empty iterable does nothing</span>
-            <span class="n">dst_nodes_append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">dst</span><span class="p">],</span> <span class="n">src</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">d</span></div>
 </pre></div>
 
            </div>

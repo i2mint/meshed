@@ -26,7 +26,7 @@ class LazyProps:
         super().__init_subclass__(**kwargs)
         #         cls.__literals = []
         #         cls.__lazyprops = []
-        for attr_name in (a for a in dir(cls) if not a.startswith("__")):
+        for attr_name in (a for a in dir(cls) if not a.startswith('__')):
             attr_obj = getattr(cls, attr_name)
             if isinstance(attr_obj, Literal):
                 setattr(cls, attr_name, attr_obj.val)
