@@ -396,6 +396,8 @@ def topological_sort(g: Mapping):
     return stack
 
 
+from typing import TypeVar
+
 T = TypeVar("T")
 
 

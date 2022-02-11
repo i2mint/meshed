@@ -30,19 +30,19 @@ def name_of_obj(o) -> Union[str, None]:
     >>> name_of_obj(partial(print, sep=','))
     'print'
     """
-    if hasattr(o, '__name__'):
+    if hasattr(o, "__name__"):
         return o.__name__
-    elif hasattr(o, '__class__'):
+    elif hasattr(o, "__class__"):
         name = name_of_obj(o.__class__)
-        if name == 'partial':
-            if hasattr(o, 'func'):
+        if name == "partial":
+            if hasattr(o, "func"):
                 return name_of_obj(o.func)
         return name
     else:
         return None
 
 
-def incremental_str_maker(str_format='{:03.f}'):
+def incremental_str_maker(str_format="{:03.f}"):
     """Make a function that will produce a (incrementally) new string at every call."""
     i = 0
 
@@ -54,8 +54,8 @@ def incremental_str_maker(str_format='{:03.f}'):
     return mk_next_str
 
 
-lambda_name = incremental_str_maker(str_format='lambda_{:03.0f}')
-unnameable_func_name = incremental_str_maker(str_format='unnameable_func_{:03.0f}')
+lambda_name = incremental_str_maker(str_format="lambda_{:03.0f}")
+unnameable_func_name = incremental_str_maker(str_format="unnameable_func_{:03.0f}")
 
 func_name: FunctionNamer
 
@@ -65,7 +65,7 @@ def func_name(func) -> str:
     To make one, it calls unamed_func_name which produces incremental names to reduce the chances of clashing"""
     try:
         name = func.__name__
-        if name == '<lambda>':
+        if name == "<lambda>":
             return lambda_name()
         return name
     except AttributeError:
@@ -87,11 +87,11 @@ def args_funcnames(
     for func in funcs:
         sig = signature(func)
         for param in sig.parameters.values():
-            arg_name = ''  # initialize
+            arg_name = ""  # initialize
             if param.kind == Parameter.VAR_POSITIONAL:
-                arg_name += '*'
+                arg_name += "*"
             elif param.kind == Parameter.VAR_KEYWORD:
-                arg_name += '**'
+                arg_name += "**"
             arg_name += param.name  # append name of param
             yield arg_name, name_of_func(func)
 
@@ -101,7 +101,7 @@ def funcs_to_digraph(funcs, graph=None):
 
     graph = graph or Digraph()
     graph.edges(list(args_funcnames(funcs)))
-    graph.body.extend([', '.join(func.__name__ for func in funcs) + ' [shape=box]'])
+    graph.body.extend([", ".join(func.__name__ for func in funcs) + " [shape=box]"])
     return graph
 
 
@@ -109,5 +109,5 @@ def print_ascii_graph(funcs):
     from lined.util import dot_to_ascii
 
     digraph = funcs_to_digraph(funcs)
-    dot_str = '\n'.join(map(lambda x: x[1:], digraph.body[:-1]))
+    dot_str = "\n".join(map(lambda x: x[1:], digraph.body[:-1]))
     print(dot_to_ascii(dot_str))

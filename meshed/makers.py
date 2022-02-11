@@ -3,8 +3,8 @@
 from contextlib import suppress
 from functools import partial
 from typing import Mapping, Iterable, TypeVar, Callable
-from itertools import product
-from collections import defaultdict
+from meshed.dag import FuncNode
+from i2 import Pipe
 
 
 T = TypeVar("T")
@@ -75,8 +75,6 @@ def parsed_to_node_kwargs(target_value) -> dict:
     return dict(name=value.func.id, out=target.id, bind=dict(bind_from_args, **kwargs))
 
 
-from meshed import FuncNode
-
 FuncNodeFactory = Callable[[Callable], FuncNode]
 
 
@@ -96,8 +94,6 @@ def parse_assignment_steps(src):
     for body in func_body.body:
         yield parse_assignment(body)
 
-
-from i2 import Pipe
 
 iterize = lambda func: partial(map, func)
 
