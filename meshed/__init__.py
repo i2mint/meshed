@@ -17,7 +17,5 @@ by an adjacency Mapping.
 """
 
 
-from meshed.dag import (
-    DAG,
-)
+from meshed.dag import DAG
 from meshed.base import FuncNode

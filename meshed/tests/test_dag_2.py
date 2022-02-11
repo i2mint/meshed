@@ -22,8 +22,10 @@ def test_find_first_free_name():
     prefix = "ab"
     exclude_names = ("cd", "lm", "ab", "ab__0", "ef")
     assert (
-            meshed.util.find_first_free_name(prefix, exclude_names=exclude_names, start_at=0)
-            == "ab__1"
+        meshed.util.find_first_free_name(
+            prefix, exclude_names=exclude_names, start_at=0
+        )
+        == "ab__1"
     )
 
 

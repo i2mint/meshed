@@ -150,14 +150,15 @@ from meshed.base import (
     _mk_func_nodes,
     _func_nodes_to_graph_dict,
     is_func_node,
+    FuncNode,
 )
 
 from meshed.util import (
-    lambda_name,
     ValidationError,
     NotUniqueError,
     NotFound,
-    NameValidationError, mk_func_name, arg_names,
+    mk_func_name,
+    arg_names,
 )
 from meshed.itools import (
     topological_sort,

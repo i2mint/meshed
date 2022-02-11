@@ -10,6 +10,85 @@ from i2 import Sig, call_somewhat_forgivingly
 from meshed.util import ValidationError, NameValidationError, mk_func_name
 from meshed.itools import add_edge
 
+
+def underscore_func_node_names_maker(func: Callable, name=None, out=None):
+    """This name maker will resolve names in the following fashion:
+
+     #. look at the (func) name and out given as arguments, if None...
+     #. use mk_func_name(func) to make names.
+
+    It will use the mk_func_name(func)  itself for out, but suffix the same with
+    an underscore to provide a mk_func_name.
+
+    This is so because here we want to allow easy construction of function networks
+    where a function's output will be used as another's input argument when
+    that argument has the the function's (output) name.
+    """
+    if name is not None and out is not None:
+        return name, out
+
+    try:
+        name_of_func = mk_func_name(func)
+    except NameValidationError as err:
+        err_msg = err.args[0]
+        err_msg += (
+            f"\nSuggestion: You might want to specify a name explicitly in "
+            f"FuncNode(func, name=name) instead of just giving me the func as is."
+        )
+        raise NameValidationError(err_msg)
+    if name is None and out is None:
+        return name_of_func + "_", name_of_func
+    elif out is None:
+        return name, "_" + name
+    elif name is None:
+        return name_of_func, out
+
+
+def basic_node_validator(func_node):
+    """Validates a func node. Raises ValidationError if something wrong. Returns None.
+
+    Validates:
+
+    * that the ``func_node`` params are valid, that is, if not ``None``
+        * ``func`` should be a callable
+        * ``name`` and ``out`` should be ``str``
+        * ``bind`` should be a ``Dict[str, str]``
+    * that the names (``.name``, ``.out`` and all ``.bind.values()``)
+        * are valid python identifiers (alphanumeric or underscore not starting with
+          digit)
+        * are not repeated (no duplicates)
+    * that ``.bind.keys()`` are indeed present as params of ``.func``
+
+    """
+    _func_node_args_validation(
+        func_node.func, func_node.name, func_node.bind, func_node.out
+    )
+    names = [func_node.name, func_node.out, *func_node.bind.values()]
+
+    names_that_are_not_strings = [name for name in names if not isinstance(name, str)]
+    if names_that_are_not_strings:
+        names_that_are_not_strings = ", ".join(map(str, names_that_are_not_strings))
+        raise ValidationError(f"Should be strings: {names_that_are_not_strings}")
+
+    # Make sure there's no name duplicates
+    _duplicates = duplicates(names)
+    if _duplicates:
+        raise ValidationError(f"{func_node} has duplicate names: {_duplicates}")
+
+    # Make sure all names are identifiers
+    _non_identifiers = list(filter(lambda name: not name.isidentifier(), names))
+    # print(_non_identifiers, names)
+    if _non_identifiers:
+        raise ValidationError(f"{func_node} non-identifier names: {_non_identifiers}")
+
+    # Making sure all src_name keys are in the function's signature
+    bind_names_not_in_sig_names = func_node.bind.keys() - func_node.sig.names
+    assert not bind_names_not_in_sig_names, (
+        f"some bind keys weren't found as function argnames: "
+        f"{', '.join(bind_names_not_in_sig_names)}"
+    )
+
+
 # TODO: Think of the hash more carefully.
 @dataclass
 class FuncNode:
@@ -284,51 +363,6 @@ def _func_node_args_validation(func: Callable, name: str, bind: dict, out: str):
         raise ValidationError(f"Should be a str: {out}")
 
 
-def basic_node_validator(func_node):
-    """Validates a func node. Raises ValidationError if something wrong. Returns None.
-
-    Validates:
-
-    * that the ``func_node`` params are valid, that is, if not ``None``
-        * ``func`` should be a callable
-        * ``name`` and ``out`` should be ``str``
-        * ``bind`` should be a ``Dict[str, str]``
-    * that the names (``.name``, ``.out`` and all ``.bind.values()``)
-        * are valid python identifiers (alphanumeric or underscore not starting with
-          digit)
-        * are not repeated (no duplicates)
-    * that ``.bind.keys()`` are indeed present as params of ``.func``
-
-    """
-    _func_node_args_validation(
-        func_node.func, func_node.name, func_node.bind, func_node.out
-    )
-    names = [func_node.name, func_node.out, *func_node.bind.values()]
-
-    names_that_are_not_strings = [name for name in names if not isinstance(name, str)]
-    if names_that_are_not_strings:
-        names_that_are_not_strings = ", ".join(map(str, names_that_are_not_strings))
-        raise ValidationError(f"Should be strings: {names_that_are_not_strings}")
-
-    # Make sure there's no name duplicates
-    _duplicates = duplicates(names)
-    if _duplicates:
-        raise ValidationError(f"{func_node} has duplicate names: {_duplicates}")
-
-    # Make sure all names are identifiers
-    _non_identifiers = list(filter(lambda name: not name.isidentifier(), names))
-    # print(_non_identifiers, names)
-    if _non_identifiers:
-        raise ValidationError(f"{func_node} non-identifier names: {_non_identifiers}")
-
-    # Making sure all src_name keys are in the function's signature
-    bind_names_not_in_sig_names = func_node.bind.keys() - func_node.sig.names
-    assert not bind_names_not_in_sig_names, (
-        f"some bind keys weren't found as function argnames: "
-        f"{', '.join(bind_names_not_in_sig_names)}"
-    )
-
-
 def _old_mapped_extraction(extract_from: dict, key_map: dict):
     """Deprecated: Old version of _mapped_extraction.
 
@@ -372,39 +406,6 @@ def _mapped_extraction(src: dict, to_extract: dict):
     for desired_name, src_name in to_extract.items():
         if src_name in src:
             yield desired_name, src[src_name]
-
-
-def underscore_func_node_names_maker(func: Callable, name=None, out=None):
-    """This name maker will resolve names in the following fashion:
-
-     #. look at the (func) name and out given as arguments, if None...
-     #. use mk_func_name(func) to make names.
-
-    It will use the mk_func_name(func)  itself for out, but suffix the same with
-    an underscore to provide a mk_func_name.
-
-    This is so because here we want to allow easy construction of function networks
-    where a function's output will be used as another's input argument when
-    that argument has the the function's (output) name.
-    """
-    if name is not None and out is not None:
-        return name, out
-
-    try:
-        name_of_func = mk_func_name(func)
-    except NameValidationError as err:
-        err_msg = err.args[0]
-        err_msg += (
-            f"\nSuggestion: You might want to specify a name explicitly in "
-            f"FuncNode(func, name=name) instead of just giving me the func as is."
-        )
-        raise NameValidationError(err_msg)
-    if name is None and out is None:
-        return name_of_func + "_", name_of_func
-    elif out is None:
-        return name, "_" + name
-    elif name is None:
-        return name_of_func, out
 
 
 def duplicates(elements: Union[Iterable, Sized]):
