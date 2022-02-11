@@ -4,7 +4,7 @@ Base functionality of meshed
 from collections import Counter
 from dataclasses import dataclass, field
 from functools import partial
-from typing import Callable, MutableMapping, Iterable, Union, Sized
+from typing import Callable, MutableMapping, Iterable, Union, Sized, Sequence
 
 from i2 import Sig, call_somewhat_forgivingly
 from meshed.util import ValidationError, NameValidationError, mk_func_name
@@ -205,6 +205,8 @@ class FuncNode:
         # when interfacing with it and the scope.
         self.sig = Sig(self.func)
 
+        # replace integer bind keys with their corresponding name
+        self.bind = _bind_where_int_keys_repl_with_argname(self.bind, self.sig.names)
         # complete bind with the argnames of the signature
         _complete_dict_with_iterable_of_required_keys(self.bind, self.sig.names)
         self.extractor = partial(_mapped_extraction, to_extract=self.bind)
@@ -414,6 +416,31 @@ def duplicates(elements: Union[Iterable, Sized]):
         return [name for name, count in c.items() if count > 1]
     else:
         return []
+
+
+def _bind_where_int_keys_repl_with_argname(bind: dict, names: Sequence[str]) -> dict:
+    """
+
+    :param bind: A bind dict, as used in FuncNode
+    :param names: A sequence of strings
+    :return: A bind dict where integer keys were replaced with the corresponding
+        name from names.
+
+    >>> bind = {0: 'a', 1: 'b', 'c': 'x', 'd': 'y'}
+    >>> names = 'e f g h'.split()
+    >>> _bind_where_int_keys_repl_with_argname(bind, names)
+    >>> {'e': 'a', 'f': 'b', 'c': 'x', 'd': 'y'}
+    """
+
+    def transformed_items():
+        for k, v in bind.items():
+            if isinstance(k, int):
+                argname = names[k]
+                yield argname, v
+            else:
+                yield k, v
+
+    return dict(transformed_items())
 
 
 def _complete_dict_with_iterable_of_required_keys(
