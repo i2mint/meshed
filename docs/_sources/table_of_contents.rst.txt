@@ -3,6 +3,7 @@
    :caption: Contents:
 
    module_docs/meshed
+   module_docs/meshed/base
    module_docs/meshed/caching
    module_docs/meshed/composition
    module_docs/meshed/dag

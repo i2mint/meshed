@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.32 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.33 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -41,6 +41,7 @@
               <p><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/base.html">meshed.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/composition.html">meshed.composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/dag.html">meshed.dag</a></li>
@@ -94,7 +95,10 @@
              
   <h1>Source code for meshed.util</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;util functions&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
 
 <span class="n">FunctionNamer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
 
@@ -206,6 +210,80 @@
     <span class="n">digraph</span> <span class="o">=</span> <span class="n">funcs_to_digraph</span><span class="p">(</span><span class="n">funcs</span><span class="p">)</span>
     <span class="n">dot_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">digraph</span><span class="o">.</span><span class="n">body</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">dot_to_ascii</span><span class="p">(</span><span class="n">dot_str</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="ValidationError"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.ValidationError">[docs]</a><span class="k">class</span> <span class="nc">ValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Error that is raised when an object&#39;s validation failed&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="NotUniqueError"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.NotUniqueError">[docs]</a><span class="k">class</span> <span class="nc">NotUniqueError</span><span class="p">(</span><span class="n">ValidationError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Error to be raised when unicity is expected, but violated&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="NotFound"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.NotFound">[docs]</a><span class="k">class</span> <span class="nc">NotFound</span><span class="p">(</span><span class="n">ValidationError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;To be raised when something is expected to exist, but doesn&#39;t&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="NameValidationError"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.NameValidationError">[docs]</a><span class="k">class</span> <span class="nc">NameValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Use to indicate that there&#39;s a problem with a name or generating a valid name&quot;&quot;&quot;</span></div>
+
+
+<span class="k">def</span> <span class="nf">find_first_free_name</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">(),</span> <span class="n">start_at</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">prefix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prefix</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">start_at</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">name</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&lt;lambda&gt;&#39;</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">lambda_name</span><span class="p">()</span>  <span class="c1"># make a lambda name that is a unique identifier</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NameValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can&#39;t make a name for func: </span><span class="si">{</span><span class="n">func</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">find_first_free_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">arg_names</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">names</span>
+
+    <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+        <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">exclude_names</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_exclude_names</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">found_name</span> <span class="o">=</span> <span class="n">find_first_free_name</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">_exclude_names</span>
+                <span class="p">)</span>
+                <span class="k">yield</span> <span class="n">found_name</span>
+                <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">_exclude_names</span> <span class="o">+</span> <span class="p">(</span><span class="n">found_name</span><span class="p">,)</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="named_partial"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.named_partial">[docs]</a><span class="k">def</span> <span class="nf">named_partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;functools.partial, but with a __name__</span>
+
+<span class="sd">    &gt;&gt;&gt; f = named_partial(print, sep=&#39;\\n&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; f.__name__</span>
+<span class="sd">    &#39;print&#39;</span>
+
+<span class="sd">    &gt;&gt;&gt; f = named_partial(print, sep=&#39;\\n&#39;, __name__=&#39;now_partial_has_a_name&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; f.__name__</span>
+<span class="sd">    &#39;now_partial_has_a_name&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="vm">__name__</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="k">return</span> <span class="n">f</span></div>
 </pre></div>
 
            </div>
