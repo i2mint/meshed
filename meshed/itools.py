@@ -2,9 +2,10 @@
 adjacency Mapping representation.
 
 """
-from typing import Any, Mapping, Sized, MutableMapping, Iterable
+from typing import Any, Mapping, Sized, MutableMapping, Iterable, Callable
 from itertools import product, chain
 from functools import wraps
+from collections import defaultdict
 
 from i2.signatures import Sig
 from meshed.makers import edge_reversed_graph
@@ -17,7 +18,7 @@ def _handle_exclude_nodes(func):
     def _func(*args, **kwargs):
         kwargs = sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
         try:
-            _exclude_nodes = kwargs['_exclude_nodes']
+            _exclude_nodes = kwargs["_exclude_nodes"]
         except KeyError:
             raise RuntimeError(f"{func} doesn't have a _exclude_nodes argument")
 
@@ -26,7 +27,7 @@ def _handle_exclude_nodes(func):
         elif not isinstance(_exclude_nodes, set):
             _exclude_nodes = set(_exclude_nodes)
 
-        kwargs['_exclude_nodes'] = _exclude_nodes
+        kwargs["_exclude_nodes"] = _exclude_nodes
         args, kwargs = sig.args_and_kwargs_from_kwargs(kwargs)
         return func(*args, **kwargs)
 
@@ -394,3 +395,31 @@ def topological_sort(g: Mapping):
             _topological_sort_helper(g, i, visited, stack)
 
     return stack
+
+
+T = TypeVar("T")
+
+
+def edge_reversed_graph(
+    g: Mapping[T, Iterable[T]],
+    dst_nodes_factory: Callable[[], Iterable[T]] = list,
+    dst_nodes_append: Callable[[Iterable[T], T], None] = list.append,
+) -> Mapping[T, Iterable[T]]:
+    """
+    >>> g = dict(a='c', b='cd', c='abd', e='')
+    >>> assert edge_reversed_graph(g) == {'c': ['a', 'b'], 'd': ['b', 'c'], 'a': ['c'], 'b': ['c'], 'e': []}
+    >>> reverse_g_with_sets = edge_reversed_graph(g, set, set.add)
+    >>> assert reverse_g_with_sets == {'c': {'a', 'b'}, 'd': {'b', 'c'}, 'a': {'c'}, 'b': {'c'}, 'e': set([])}
+
+    Testing border cases
+    >>> assert edge_reversed_graph(dict(e='', a='e')) == {'e': ['a'], 'a': []}
+    >>> assert edge_reversed_graph(dict(a='e', e='')) == {'e': ['a'], 'a': []}
+    """
+    # Pattern: Groupby logic
+
+    d = defaultdict(dst_nodes_factory)
+    for src, dst_nodes in g.items():
+        d.setdefault(src, dst_nodes_factory())  # add node if not present
+        for dst in dst_nodes:  # empty iterable does nothing
+            dst_nodes_append(d[dst], src)
+    return d

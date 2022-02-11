@@ -16,10 +16,7 @@ by an adjacency Mapping.
 
 """
 
-from meshed.itools import (
-    edges,
-    nodes,
-)
+
 
 from meshed.dag import (
     DAG,
