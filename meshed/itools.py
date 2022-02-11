@@ -2,7 +2,7 @@
 adjacency Mapping representation.
 
 """
-from typing import Any, Mapping, Sized, MutableMapping, Iterable, Callable
+from typing import Any, Mapping, Sized, MutableMapping, Iterable, Callable, TypeVar
 from itertools import product, chain
 from functools import wraps
 from collections import defaultdict
