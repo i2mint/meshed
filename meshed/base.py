@@ -429,7 +429,7 @@ def _bind_where_int_keys_repl_with_argname(bind: dict, names: Sequence[str]) -> 
     >>> bind = {0: 'a', 1: 'b', 'c': 'x', 'd': 'y'}
     >>> names = 'e f g h'.split()
     >>> _bind_where_int_keys_repl_with_argname(bind, names)
-    >>> {'e': 'a', 'f': 'b', 'c': 'x', 'd': 'y'}
+    {'e': 'a', 'f': 'b', 'c': 'x', 'd': 'y'}
     """
 
     def transformed_items():
