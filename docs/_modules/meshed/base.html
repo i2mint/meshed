@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.33 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.base &mdash; meshed 0.1.34 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -100,7 +100,7 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sized</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sized</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">call_somewhat_forgivingly</span>
 <span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">NameValidationError</span><span class="p">,</span> <span class="n">mk_func_name</span>
@@ -301,6 +301,8 @@
         <span class="c1"># when interfacing with it and the scope.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
 
+        <span class="c1"># replace integer bind keys with their corresponding name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">_bind_where_int_keys_repl_with_argname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
         <span class="c1"># complete bind with the argnames of the signature</span>
         <span class="n">_complete_dict_with_iterable_of_required_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_mapped_extraction</span><span class="p">,</span> <span class="n">to_extract</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span>
@@ -510,6 +512,31 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
+
+
+<span class="k">def</span> <span class="nf">_bind_where_int_keys_repl_with_argname</span><span class="p">(</span><span class="n">bind</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param bind: A bind dict, as used in FuncNode</span>
+<span class="sd">    :param names: A sequence of strings</span>
+<span class="sd">    :return: A bind dict where integer keys were replaced with the corresponding</span>
+<span class="sd">        name from names.</span>
+
+<span class="sd">    &gt;&gt;&gt; bind = {0: &#39;a&#39;, 1: &#39;b&#39;, &#39;c&#39;: &#39;x&#39;, &#39;d&#39;: &#39;y&#39;}</span>
+<span class="sd">    &gt;&gt;&gt; names = &#39;e f g h&#39;.split()</span>
+<span class="sd">    &gt;&gt;&gt; _bind_where_int_keys_repl_with_argname(bind, names)</span>
+<span class="sd">    {&#39;e&#39;: &#39;a&#39;, &#39;f&#39;: &#39;b&#39;, &#39;c&#39;: &#39;x&#39;, &#39;d&#39;: &#39;y&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">transformed_items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">argname</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="k">yield</span> <span class="n">argname</span><span class="p">,</span> <span class="n">v</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">transformed_items</span><span class="p">())</span>
 
 
 <span class="k">def</span> <span class="nf">_complete_dict_with_iterable_of_required_keys</span><span class="p">(</span>
