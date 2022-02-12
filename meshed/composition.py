@@ -29,7 +29,7 @@ def line_with_dag(*steps):
 
     step_counter = 0
     first_node = FuncNode(steps[0], out=f'step_{step_counter}')
-    funcnodes = [first_node]
+    func_nodes = [first_node]
     for step in steps[1:]:
         step_node = FuncNode(
             step,
@@ -37,6 +37,6 @@ def line_with_dag(*steps):
             bind={get_param(step): f'step_{step_counter}'},
         )
         step_counter += 1
-        funcnodes.append(step_node)
+        func_nodes.append(step_node)
 
-    return DAG(funcnodes)
+    return DAG(func_nodes)
