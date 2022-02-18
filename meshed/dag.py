@@ -583,6 +583,118 @@ class DAG:
     #     """
 
     def __getitem__(self, item):
+        """Get a sub-dag from a specification of (var or fun) input and output nodes.
+
+        ``dag[input_nodes:output_nodes]`` is the sub-dag made of intersection of all
+        descendants of ``input_nodes``
+        (inclusive) and ancestors of ``output_nodes`` (inclusive), where additionally,
+        when a func node is contained, it takes with it the input and output nodes
+        it needs.
+
+        >>> def f(a): ...
+        >>> def g(f): ...
+        >>> def h(g): ...
+        >>> def i(h): ...
+        >>> dag = DAG([f, g, h, i])
+
+        See what this dag looks like (it's a simple pipeline):
+
+        >>> dag = DAG([f, g, h, i])
+        >>> print(dag.synopsis_string())
+        a -> f_ -> f
+        f -> g_ -> g
+        g -> h_ -> h
+        h -> i_ -> i
+
+        Get a subdag from ``g_`` (indicates the function here) to the end of ``dag``
+
+        >>> subdag = dag['g_',:]
+        >>> print(subdag.synopsis_string())
+        f -> g_ -> g
+        g -> h_ -> h
+        h -> i_ -> i
+
+        From the beginning to ``h_``
+
+        >>> print(dag[:, 'h_'].synopsis_string())
+        a -> f_ -> f
+        f -> g_ -> g
+        g -> h_ -> h
+
+        From ``g_`` to ``h_`` (both inclusive)
+
+        >>> print(dag['g_', 'h_'].synopsis_string())
+        f -> g_ -> g
+        g -> h_ -> h
+
+        Above we used function (node names) to specify what we wanted, but we can also
+        use names of input/output var-nodes. Do note the difference though.
+        The nodes you specify to get a sub-dag are INCLUSIVE, but when you
+        specify function nodes, you also get the input and output nodes of these
+        functions.
+
+        The ``dag['g_', 'h_']`` give us a sub-dag starting at ``f`` (the input node),
+        but when we ask ``dag['g', 'h_']`` instead, ``g`` being the output node of
+        function node ``g_``, we only get ``g -> h_ -> h``:
+
+        >>> print(dag['g', 'h'].synopsis_string())
+        g -> h_ -> h
+
+        If we wanted to include ``f`` we'd have to specify it:
+
+        >>> print(dag['f', 'h'].synopsis_string())
+        f -> g_ -> g
+        g -> h_ -> h
+
+        Those were for simple pipelines, but let's now look at a more complex dag.
+
+        We'll let the following examples self-comment:
+
+        >>> def f(u, v): ...
+        >>> def g(f): ...
+        >>> def h(f, w): ...
+        >>> def i(g, h): ...
+        >>> def j(h, x): ...
+        >>> def k(i): ...
+        >>> def l(i, j): ...
+        >>> dag = DAG([f, g, h, i, j, k, l])
+        >>> print(dag.synopsis_string())
+        u,v -> f_ -> f
+        f,w -> h_ -> h
+        h,x -> j_ -> j
+        f -> g_ -> g
+        g,h -> i_ -> i
+        i,j -> l_ -> l
+        i -> k_ -> k
+
+        A little util to get consistent prints:
+
+        >>> def print_sorted_synopsis(dag):
+        ...     t = sorted(dag.synopsis_string().split('\\n'))
+        ...     print('\\n'.join(t))
+
+        >>> print_sorted_synopsis(dag[['u', 'f'], 'h'])
+        f,w -> h_ -> h
+        u,v -> f_ -> f
+        >>> print_sorted_synopsis(dag['u', 'h'])
+        f,w -> h_ -> h
+        u,v -> f_ -> f
+        >>> print_sorted_synopsis(dag[['u', 'f'], ['h', 'g']])
+        f -> g_ -> g
+        f,w -> h_ -> h
+        u,v -> f_ -> f
+        >>> print_sorted_synopsis(dag[['x', 'g'], 'k'])
+        g,h -> i_ -> i
+        i -> k_ -> k
+        >>> print_sorted_synopsis(dag[['x', 'g'], ['l', 'k']])
+        g,h -> i_ -> i
+        h,x -> j_ -> j
+        i -> k_ -> k
+        i,j -> l_ -> l
+
+        >>>
+
+        """
         return self._getitem(item)
 
     def _getitem(self, item):

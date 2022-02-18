@@ -167,3 +167,4 @@ def test_func_nodes_to_graph_dict(example_func_nodes):
     fnodes = example_func_nodes
     result = meshed.base._func_nodes_to_graph_dict(fnodes)
     assert True
+
