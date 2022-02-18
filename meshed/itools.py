@@ -195,8 +195,7 @@ def parents(g: Mapping, source: Iterable):
     set()
     """
     return children(edge_reversed_graph(g), source)
-
-
+    
 @_handle_exclude_nodes
 def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
     """Set of all nodes (not in source) reachable TO `source` in `g`.
@@ -214,13 +213,13 @@ def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
     """
     assert isinstance(source, Iterable)
     source = set(source) - _exclude_nodes
-    if source:
-        _parents = set(parents(g, source)) - _exclude_nodes
-        _exclude_nodes = _parents
-        _ancestors_of_parent = ancestors(g, _parents, _exclude_nodes)
-        return _parents | _ancestors_of_parent
-    else:
+    _parents = set(parents(g, source)) - _exclude_nodes
+    if not _parents:
         return set()
+    else:
+        _ancestors_of_parent = ancestors(g, _parents, _exclude_nodes)
+
+        return _parents | _ancestors_of_parent
 
 
 def descendants(g: Mapping, source: Iterable, _exclude_nodes=None):
