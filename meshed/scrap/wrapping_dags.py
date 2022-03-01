@@ -1,6 +1,5 @@
 """Wrapping dags"""
 
-from lined import Line
 from meshed import DAG
 
 
