@@ -4,7 +4,30 @@ from typing import Iterable, Callable, Optional, Union
 
 from i2 import Sig
 
-FunctionNamer = Callable[[Callable], str]
+
+def partialx(func, *args, __name__=None, rm_partialize=False, **kwargs):
+    """
+    Same as ``functools.partial``, with ``__name__ `` and ability to remove partialized.
+
+    >>> def f(a, b=2, c=3):
+    ...     return a + b * c
+    >>> curried_f = partialx(f, c=10, rm_partialize=True)
+    >>> curried_f.__name__
+    'f'
+    >>> from inspect import signature
+    >>> str(signature(curried_f))
+    '(a, b=2)'
+    """
+    f = partial(func, *args, **kwargs)
+    if rm_partialize:
+        sig = Sig(func)
+        partialized = list(
+            sig.kwargs_from_args_and_kwargs(args, kwargs, allow_partial=True)
+        )
+        sig = sig - partialized
+        f = sig(partial(f, *args, **kwargs))
+    f.__name__ = __name__ or name_of_obj(func)
+    return f
 
 
 class ModuleNotFoundIgnore:
@@ -59,6 +82,8 @@ def incremental_str_maker(str_format="{:03.f}"):
 
 lambda_name = incremental_str_maker(str_format="lambda_{:03.0f}")
 unnameable_func_name = incremental_str_maker(str_format="unnameable_func_{:03.0f}")
+
+FunctionNamer = Callable[[Callable], str]
 
 func_name: FunctionNamer
 
