@@ -2,7 +2,6 @@ import pytest
 
 
 from collections import Counter
-import numpy as np
 from sklearn.model_selection import train_test_split
 from meshed import FuncNode
 from meshed.dag import DAG
@@ -40,7 +39,7 @@ def prediction(predict_proba, threshold):
     array([False, False,  True,  True,  True,  True])
 
     """
-    return np.array(predict_proba) >= threshold
+    return list(map(lambda x: x >= threshold, predict_proba))
 
 
 def predict_proba(model, X_test):
