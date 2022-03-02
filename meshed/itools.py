@@ -17,7 +17,7 @@ def _handle_exclude_nodes(func):
     def _func(*args, **kwargs):
         kwargs = sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
         try:
-            _exclude_nodes = kwargs['_exclude_nodes']
+            _exclude_nodes = kwargs["_exclude_nodes"]
         except KeyError:
             raise RuntimeError(f"{func} doesn't have a _exclude_nodes argument")
 
@@ -26,7 +26,7 @@ def _handle_exclude_nodes(func):
         elif not isinstance(_exclude_nodes, set):
             _exclude_nodes = set(_exclude_nodes)
 
-        kwargs['_exclude_nodes'] = _exclude_nodes
+        kwargs["_exclude_nodes"] = _exclude_nodes
         args, kwargs = sig.args_and_kwargs_from_kwargs(kwargs)
         return func(*args, **kwargs)
 
@@ -195,7 +195,8 @@ def parents(g: Mapping, source: Iterable):
     set()
     """
     return children(edge_reversed_graph(g), source)
-    
+
+
 @_handle_exclude_nodes
 def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
     """Set of all nodes (not in source) reachable TO `source` in `g`.
@@ -213,7 +214,7 @@ def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
     """
     assert isinstance(source, Iterable)
     source = set(source) - _exclude_nodes
-    _parents = set(parents(g, source)) - _exclude_nodes
+    _parents = (set(parents(g, source)) - source) - _exclude_nodes
     if not _parents:
         return set()
     else:
@@ -397,7 +398,7 @@ def topological_sort(g: Mapping):
 
 from typing import TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def edge_reversed_graph(
