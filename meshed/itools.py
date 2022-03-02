@@ -204,7 +204,7 @@ def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
     >>> g = {
     ...     0: [1, 2],
     ...     1: [2, 3, 4],
-    ...     2: [1, 4],
+    ...     2: [4],
     ...     3: [4]
     ... }
     >>> ancestors(g, [2, 3])
@@ -229,11 +229,11 @@ def descendants(g: Mapping, source: Iterable, _exclude_nodes=None):
     >>> g = {
     ...     0: [1, 2],
     ...     1: [2, 3, 4],
-    ...     2: [1, 4],
+    ...     2: [4],
     ...     3: [4]
     ... }
     >>> descendants(g, [2, 3])
-    {1, 4}
+    {4}
     >>> descendants(g, [4])
     set()
     """
