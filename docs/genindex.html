@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; meshed 0.1.34 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Index &mdash; meshed 0.1.35 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
@@ -62,6 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_getitem.html">meshed.tests.test_getitem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_makers.html">meshed.tests.test_makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_util.html">meshed.tests.test_util</a></li>
@@ -154,12 +155,14 @@
       </ul></li>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.children">children() (in module meshed.itools)</a>
 </li>
+      <li><a href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.classifier_score">classifier_score() (in module meshed.tests.test_getitem)</a>
+</li>
       <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.compile">compile() (meshed.ext.gk.Network method)</a>
+</li>
+      <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.compose">compose (class in meshed.ext.gk)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.compose">compose (class in meshed.ext.gk)</a>
-</li>
       <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.compute">compute() (meshed.ext.gk.Network method)</a>
 
       <ul>
@@ -168,6 +171,10 @@
         <li><a href="module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Operation.compute">(meshed.scrap.gk_with_networkx.Operation method)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/meshed/util.html#meshed.util.ConditionalIterize">ConditionalIterize (class in meshed.util)</a>
+</li>
+      <li><a href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.confusion_count">confusion_count() (in module meshed.tests.test_getitem)</a>
+</li>
       <li><a href="module_docs/meshed/dag.html#meshed.dag.conservative_parameter_merge">conservative_parameter_merge() (in module meshed.dag)</a>
 </li>
   </ul></td>
@@ -186,15 +193,19 @@
       </ul></li>
       <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.DataPlaceholderNode">DataPlaceholderNode (class in meshed.ext.gk)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/scrap/wrapping_dags.html#meshed.scrap.wrapping_dags.DDag">DDag (class in meshed.scrap.wrapping_dags)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.DeleteInstruction">DeleteInstruction (class in meshed.ext.gk)</a>
 </li>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.descendants">descendants() (in module meshed.itools)</a>
 </li>
       <li><a href="module_docs/meshed/dag.html#meshed.dag.dot_lines_of_func_nodes">dot_lines_of_func_nodes() (in module meshed.dag)</a>
+</li>
+      <li><a href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.dot_product">dot_product() (in module meshed.tests.test_getitem)</a>
+</li>
+      <li><a href="module_docs/meshed/util.html#meshed.util.dot_to_ascii">dot_to_ascii() (in module meshed.util)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -270,6 +281,8 @@
 </li>
       <li><a href="module_docs/meshed/util.html#meshed.util.incremental_str_maker">incremental_str_maker() (in module meshed.util)</a>
 </li>
+      <li><a href="module_docs/meshed/util.html#meshed.util.instance_checker">instance_checker() (in module meshed.util)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/base.html#meshed.base.is_func_node">is_func_node() (in module meshed.base)</a>
@@ -277,6 +290,8 @@
       <li><a href="module_docs/meshed/base.html#meshed.base.is_not_func_node">is_not_func_node() (in module meshed.base)</a>
 </li>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.isolated_nodes">isolated_nodes() (in module meshed.itools)</a>
+</li>
+      <li><a href="module_docs/meshed/util.html#meshed.util.iterize">iterize() (in module meshed.util)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -449,13 +464,20 @@
         <li><a href="module_docs/meshed/tests/test_dag.html#module-meshed.tests.test_dag">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     meshed.tests.test_dag_2
 
       <ul>
         <li><a href="module_docs/meshed/tests/test_dag_2.html#module-meshed.tests.test_dag_2">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    meshed.tests.test_getitem
+
+      <ul>
+        <li><a href="module_docs/meshed/tests/test_getitem.html#module-meshed.tests.test_getitem">module</a>
 </li>
       </ul></li>
       <li>
@@ -541,6 +563,8 @@
 </li>
         <li><a href="module_docs/meshed/tests/test_dag_2.html#module-meshed.tests.test_dag_2">meshed.tests.test_dag_2</a>
 </li>
+        <li><a href="module_docs/meshed/tests/test_getitem.html#module-meshed.tests.test_getitem">meshed.tests.test_getitem</a>
+</li>
         <li><a href="module_docs/meshed/tests/test_itools.html#module-meshed.tests.test_itools">meshed.tests.test_itools</a>
 </li>
         <li><a href="module_docs/meshed/tests/test_makers.html#module-meshed.tests.test_makers">meshed.tests.test_makers</a>
@@ -552,6 +576,8 @@
         <li><a href="module_docs/meshed/util.html#module-meshed.util">meshed.util</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/meshed/util.html#meshed.util.my_isinstance">my_isinstance() (in module meshed.util)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -624,13 +650,19 @@
 </li>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.parents">parents() (in module meshed.itools)</a>
 </li>
+      <li><a href="module_docs/meshed/makers.html#meshed.makers.parsed_to_node_kwargs">parsed_to_node_kwargs() (in module meshed.makers)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/meshed/makers.html#meshed.makers.parsed_to_node_kwargs">parsed_to_node_kwargs() (in module meshed.makers)</a>
+      <li><a href="module_docs/meshed/util.html#meshed.util.partialx">partialx() (in module meshed.util)</a>
 </li>
       <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.plot">plot() (meshed.ext.gk.Network method)</a>
 </li>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.predecessors">predecessors() (in module meshed.itools)</a>
+</li>
+      <li><a href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.predict_proba">predict_proba() (in module meshed.tests.test_getitem)</a>
+</li>
+      <li><a href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.prediction">prediction() (in module meshed.tests.test_getitem)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.34 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.35 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -62,6 +62,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_getitem.html">meshed.tests.test_getitem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_makers.html">meshed.tests.test_makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_util.html">meshed.tests.test_util</a></li>
@@ -95,12 +96,299 @@
              
   <h1>Source code for meshed.util</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;util functions&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
 
-<span class="n">FunctionNamer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+
+<div class="viewcode-block" id="partialx"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.partialx">[docs]</a><span class="k">def</span> <span class="nf">partialx</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rm_partialize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Same as ``functools.partial``, with ``__name__ `` and ability to remove partialized.</span>
+
+<span class="sd">    &gt;&gt;&gt; def f(a, b=2, c=3):</span>
+<span class="sd">    ...     return a + b * c</span>
+<span class="sd">    &gt;&gt;&gt; curried_f = partialx(f, c=10, rm_partialize=True)</span>
+<span class="sd">    &gt;&gt;&gt; curried_f.__name__</span>
+<span class="sd">    &#39;f&#39;</span>
+<span class="sd">    &gt;&gt;&gt; from inspect import signature</span>
+<span class="sd">    &gt;&gt;&gt; str(signature(curried_f))</span>
+<span class="sd">    &#39;(a, b=2)&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rm_partialize</span><span class="p">:</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">partialized</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="n">sig</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">allow_partial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">sig</span> <span class="o">-</span> <span class="n">partialized</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">sig</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="vm">__name__</span> <span class="ow">or</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f</span></div>
+
+
+<span class="k">def</span> <span class="nf">extra_wraps</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc_prefix</span> <span class="o">+</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+
+<span class="k">def</span> <span class="nf">mywraps</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">wrapped</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">extra_wraps</span><span class="p">(</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">wrapped</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="n">doc_prefix</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<div class="viewcode-block" id="iterize"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.iterize">[docs]</a><span class="k">def</span> <span class="nf">iterize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;From an Input-&gt;Ouput function, makes a Iterator[Input]-&gt;Itertor[Output]</span>
+<span class="sd">    Some call this &quot;vectorization&quot;, but it&#39;s not really a vector, but an</span>
+<span class="sd">    iterable, thus the name.</span>
+
+<span class="sd">    `iterize` is a partial of `map`.</span>
+
+<span class="sd">    &gt;&gt;&gt; f = lambda x: x * 10</span>
+<span class="sd">    &gt;&gt;&gt; f(2)</span>
+<span class="sd">    20</span>
+<span class="sd">    &gt;&gt;&gt; iterized_f = iterize(f)</span>
+<span class="sd">    &gt;&gt;&gt; list(iterized_f(iter([1,2,3])))</span>
+<span class="sd">    [10, 20, 30]</span>
+
+<span class="sd">    Consider the following pipeline:</span>
+
+<span class="sd">    &gt;&gt;&gt; from i2 import Pipe</span>
+<span class="sd">    &gt;&gt;&gt; pipe = Pipe(lambda x: x * 2, lambda x: f&quot;hello {x}&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; pipe(1)</span>
+<span class="sd">    &#39;hello 2&#39;</span>
+
+<span class="sd">    But what if you wanted to use the pipeline on a &quot;stream&quot; of data. The</span>
+<span class="sd">    following wouldn&#39;t work:</span>
+
+<span class="sd">    &gt;&gt;&gt; try:</span>
+<span class="sd">    ...     pipe(iter([1,2,3]))</span>
+<span class="sd">    ... except TypeError as e:</span>
+<span class="sd">    ...     print(f&quot;{type(e).__name__}: {e}&quot;)</span>
+<span class="sd">    ...</span>
+<span class="sd">    ...</span>
+<span class="sd">    TypeError: unsupported operand type(s) for *: &#39;list_iterator&#39; and &#39;int&#39;</span>
+
+<span class="sd">    Remember that error: You&#39;ll surely encounter it at some point.</span>
+
+<span class="sd">    The solution to it is (often): ``iterize``,</span>
+<span class="sd">    which transforms a function that is meant to be applied to a single object,</span>
+<span class="sd">    into a function that is meant to be applied to an array, or any iterable</span>
+<span class="sd">    of such objects.</span>
+<span class="sd">    (You might be familiar (if you use `numpy` for example) with the related</span>
+<span class="sd">    concept of &quot;vectorization&quot;,</span>
+<span class="sd">    or [array programming](https://en.wikipedia.org/wiki/Array_programming).)</span>
+
+
+<span class="sd">    # from lined import Pipe, iterize</span>
+<span class="sd">    # from typing import Iterable</span>
+
+<span class="sd">    # pipe = ld.Pipe(ld.iterize(lambda x: x * 2),</span>
+<span class="sd">    #...                 ld.iterize(lambda x: f&quot;hello {x}&quot;))</span>
+<span class="sd">    # iterable = pipe([1, 2, 3])</span>
+<span class="sd">    # # see that the result is an iterable</span>
+<span class="sd">    # assert isinstance(iterable, Iterable)</span>
+<span class="sd">    # list(iterable)  # consume the iterable and gather it&#39;s items</span>
+<span class="sd">    #[&#39;hello 2&#39;, &#39;hello 4&#39;, &#39;hello 6&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: See if partialx can be used instead</span>
+    <span class="n">wrapper</span> <span class="o">=</span> <span class="n">mywraps</span><span class="p">(</span>
+        <span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;generator version of </span><span class="si">{</span><span class="n">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="si">}</span><span class="s1">:</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapper</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span></div>
+
+
+<span class="c1"># from typing import Callable, Any</span>
+<span class="c1"># from functools import wraps</span>
+<span class="c1"># from i2 import Sig, name_of_obj</span>
+
+
+<div class="viewcode-block" id="my_isinstance"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.my_isinstance">[docs]</a><span class="k">def</span> <span class="nf">my_isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Same as builtin instance, but without position only constraint.</span>
+<span class="sd">    Therefore, we can partialize class_or_tuple:</span>
+
+<span class="sd">    Otherwise, couldn&#39;t do:</span>
+
+<span class="sd">    &gt;&gt;&gt; isinstance_of_str = partial(my_isinstance, class_or_tuple=str)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance_of_str(&#39;asdf&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; isinstance_of_str(3)</span>
+<span class="sd">    False</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="instance_checker"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.instance_checker">[docs]</a><span class="k">def</span> <span class="nf">instance_checker</span><span class="p">(</span><span class="n">class_or_tuple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Makes a boolean function that checks the instance of an object</span>
+
+<span class="sd">    &gt;&gt;&gt; isinstance_of_str = instance_checker(str)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance_of_str(&#39;asdf&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; isinstance_of_str(3)</span>
+<span class="sd">    False</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">my_isinstance</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="o">=</span><span class="n">class_or_tuple</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConditionalIterize"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.ConditionalIterize">[docs]</a><span class="k">class</span> <span class="nc">ConditionalIterize</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    &gt;&gt;&gt; def foo(x, y=2):</span>
+<span class="sd">    ...     return x * y</span>
+
+<span class="sd">    The function does this:</span>
+
+<span class="sd">    &gt;&gt;&gt; foo(3)</span>
+<span class="sd">    6</span>
+<span class="sd">    &gt;&gt;&gt; foo(&#39;string&#39;)</span>
+<span class="sd">    &#39;stringstring&#39;</span>
+
+<span class="sd">    The iterized version of the function does this:</span>
+
+<span class="sd">    &gt;&gt;&gt; iterized_foo = iterize(foo)</span>
+<span class="sd">    &gt;&gt;&gt; list(iterized_foo([1, 2, 3]))</span>
+<span class="sd">    [2, 4, 6]</span>
+
+<span class="sd">    &gt;&gt;&gt; from typing import Iterable</span>
+<span class="sd">    &gt;&gt;&gt; new_foo = ConditionalIterize(foo, Iterable)</span>
+<span class="sd">    &gt;&gt;&gt; new_foo(3)</span>
+<span class="sd">    6</span>
+<span class="sd">    &gt;&gt;&gt; list(new_foo([1, 2, 3]))</span>
+<span class="sd">    [2, 4, 6]</span>
+
+<span class="sd">    See what happens if we do this:</span>
+
+<span class="sd">    &gt;&gt;&gt; list(new_foo(&#39;string&#39;))</span>
+<span class="sd">    [&#39;ss&#39;, &#39;tt&#39;, &#39;rr&#39;, &#39;ii&#39;, &#39;nn&#39;, &#39;gg&#39;]</span>
+
+<span class="sd">    Maybe you expected `&#39;stringstring&#39;` because you are thinking of `string` as a valid,</span>
+<span class="sd">    single input. But the condition of iterization is to be an Iterable, which a</span>
+<span class="sd">    string is, thus the (perhaps) unexpected result.</span>
+
+<span class="sd">    In fact, this problem is a general one:</span>
+<span class="sd">    If your base function doesn&#39;t process iterables, the ``isinstance(x, Iterable)``</span>
+<span class="sd">    is good enough -- but if it is supposed to process an iterable in the first place,</span>
+<span class="sd">    how can you distinguish whether to use the iterized version or not?</span>
+<span class="sd">    The solution depends on the situation and the iterface you want. You choose.</span>
+
+<span class="sd">    Since the situation where you&#39;ll want to iterize functions in the first place is when</span>
+<span class="sd">    you&#39;re building streaming pipelines, a good fallback choice is to iterize if and</span>
+<span class="sd">    only if the input is an iterator. This is condition will trigger the iterization</span>
+<span class="sd">    when the input has a ``__next__`` -- so things like generators, but not lists,</span>
+<span class="sd">    tuples, sets, etc.</span>
+
+<span class="sd">    See in the following that ``ConditionalIterize`` also has a ``wrap`` class method</span>
+<span class="sd">    that can be used to wrap a function at definition time.</span>
+
+<span class="sd">    &gt;&gt;&gt; @ConditionalIterize.wrap(Iterator)  # Iterator is the default, so no need here</span>
+<span class="sd">    ... def foo(x, y=2):</span>
+<span class="sd">    ...     return x * y</span>
+<span class="sd">    &gt;&gt;&gt; foo(3)</span>
+<span class="sd">    6</span>
+<span class="sd">    &gt;&gt;&gt; foo(&#39;string&#39;)</span>
+<span class="sd">    &#39;stringstring&#39;</span>
+
+<span class="sd">    If you want to process a &quot;stream&quot; of numbers 1, 2, 3, don&#39;t do it this way:</span>
+
+<span class="sd">    &gt;&gt;&gt; foo([1, 2, 3])</span>
+<span class="sd">    [1, 2, 3, 1, 2, 3]</span>
+
+<span class="sd">    Instead, you should explicitly wrap that iterable in an iterator, to trigger the</span>
+<span class="sd">    iterization:</span>
+
+<span class="sd">    &gt;&gt;&gt; list(foo(iter([1, 2, 3])))</span>
+<span class="sd">    [2, 4, 6]</span>
+
+<span class="sd">    So far, the only way we controlled the iterize condition is through a type.</span>
+<span class="sd">    Really, the condition that is used behind the scenes is</span>
+<span class="sd">    ``isinstance(obj, self.iterize_type)``.</span>
+<span class="sd">    If you need more complex conditions though, you can specify it through the</span>
+<span class="sd">    ``iterize_condition`` argument. The ``iterize_type`` is also used to</span>
+<span class="sd">    annotate the resulting wrapped function if it&#39;s first argument is annotated.</span>
+<span class="sd">    As a consequence, ``iterize_type`` needs to be a &quot;generic&quot; type.</span>
+
+<span class="sd">    &gt;&gt;&gt; @ConditionalIterize.wrap(Iterable, lambda x: isinstance(x, (list, tuple)))</span>
+<span class="sd">    ... def foo(x: int, y=2):</span>
+<span class="sd">    ...     return x * y</span>
+<span class="sd">    &gt;&gt;&gt; foo(3)</span>
+<span class="sd">    6</span>
+<span class="sd">    &gt;&gt;&gt; list(foo([1, 2, 3]))</span>
+<span class="sd">    [2, 4, 6]</span>
+<span class="sd">    &gt;&gt;&gt; from inspect import signature</span>
+
+<span class="sd">    We annotated ``x`` as ``int``, so see now the annotation of the wrapped function:</span>
+
+<span class="sd">    &gt;&gt;&gt; str(signature(foo))</span>
+<span class="sd">    &#39;(x: Union[int, Iterable[int]], y=2)&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">iterize_type</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">Iterator</span><span class="p">,</span>
+        <span class="n">iterize_condition</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param func:</span>
+<span class="sd">        :param iterize_type: The generic type to use for the new annotation</span>
+<span class="sd">        :param iterize_condition: The condition to use to check if we should use</span>
+<span class="sd">            the iterized version or not. If not given, will use</span>
+<span class="sd">            ``functools.partial(my_isinstance, iterize_type)``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterize_type</span> <span class="o">=</span> <span class="n">iterize_type</span>
+        <span class="k">if</span> <span class="n">iterize_condition</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">iterize_condition</span> <span class="o">=</span> <span class="n">instance_checker</span><span class="p">(</span><span class="n">iterize_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterize_condition</span> <span class="o">=</span> <span class="n">iterize_condition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterized_func</span> <span class="o">=</span> <span class="n">iterize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">wraps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_sig</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span>
+            <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">apply_defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_partial</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">first_arg</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterize_condition</span><span class="p">(</span><span class="n">first_arg</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterized_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;ConditionalIterize </span><span class="si">{</span><span class="n">name_of_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}{</span><span class="n">Sig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s1">&gt;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_new_sig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;You can only apply conditional iterization on functions that have &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;at least one input. This one had none: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+        <span class="n">first_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">new_sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span>  <span class="c1"># same sig by default</span>
+        <span class="k">if</span> <span class="n">first_param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">annotations</span><span class="p">:</span>
+            <span class="n">obj_annot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="n">first_param</span><span class="p">]</span>
+            <span class="n">new_sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">ch_annotations</span><span class="p">(</span>
+                <span class="o">**</span><span class="p">{</span><span class="n">first_param</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">obj_annot</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterize_type</span><span class="p">[</span><span class="n">obj_annot</span><span class="p">]]}</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_sig</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">iterize_type</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">Iterator</span><span class="p">,</span>
+        <span class="n">iterize_condition</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="p">,</span> <span class="n">iterize_type</span><span class="o">=</span><span class="n">iterize_type</span><span class="p">,</span> <span class="n">iterize_condition</span><span class="o">=</span><span class="n">iterize_condition</span>
+        <span class="p">)</span></div>
 
 
 <span class="k">class</span> <span class="nc">ModuleNotFoundIgnore</span><span class="p">:</span>
@@ -156,6 +444,8 @@
 <span class="n">lambda_name</span> <span class="o">=</span> <span class="n">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;lambda_</span><span class="si">{:03.0f}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">unnameable_func_name</span> <span class="o">=</span> <span class="n">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;unnameable_func_</span><span class="si">{:03.0f}</span><span class="s1">&#39;</span><span class="p">)</span>
 
+<span class="n">FunctionNamer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+
 <span class="n">func_name</span><span class="p">:</span> <span class="n">FunctionNamer</span>
 
 
@@ -204,9 +494,72 @@
     <span class="k">return</span> <span class="n">graph</span>
 
 
-<span class="k">def</span> <span class="nf">print_ascii_graph</span><span class="p">(</span><span class="n">funcs</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">lined.util</span> <span class="kn">import</span> <span class="n">dot_to_ascii</span>
+<div class="viewcode-block" id="dot_to_ascii"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.dot_to_ascii">[docs]</a><span class="k">def</span> <span class="nf">dot_to_ascii</span><span class="p">(</span><span class="n">dot</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fancy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a dot string to an ascii rendering of the diagram.</span>
 
+<span class="sd">    Needs a connection to the internet to work.</span>
+
+
+<span class="sd">    &gt;&gt;&gt; graph_dot = &#39;&#39;&#39;</span>
+<span class="sd">    ...     graph {</span>
+<span class="sd">    ...         rankdir=LR</span>
+<span class="sd">    ...         0 -- {1 2}</span>
+<span class="sd">    ...         1 -- {2}</span>
+<span class="sd">    ...         2 -&gt; {0 1 3}</span>
+<span class="sd">    ...         3</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... &#39;&#39;&#39;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; graph_ascii = dot_to_ascii(graph_dot)  # doctest: +SKIP</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; print(graph_ascii)  # doctest: +SKIP</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">                     ┌─────────┐</span>
+<span class="sd">                     ▼         │</span>
+<span class="sd">         ┌───┐     ┌───┐     ┌───┐     ┌───┐</span>
+<span class="sd">      ┌▶ │ 0 │ ─── │ 1 │ ─── │   │ ──▶ │ 3 │</span>
+<span class="sd">      │  └───┘     └───┘     │   │     └───┘</span>
+<span class="sd">      │    │                 │   │</span>
+<span class="sd">      │    └──────────────── │ 2 │</span>
+<span class="sd">      │                      │   │</span>
+<span class="sd">      │                      │   │</span>
+<span class="sd">      └───────────────────── │   │</span>
+<span class="sd">                             └───┘</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">requests</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://dot-to-ascii.ggerganov.com/dot-to-ascii.php&#39;</span>
+    <span class="n">boxart</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># use nice box drawing char instead of + , | , -</span>
+    <span class="k">if</span> <span class="n">fancy</span><span class="p">:</span>
+        <span class="n">boxart</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">stripped_dot_str</span> <span class="o">=</span> <span class="n">dot</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+        <span class="n">stripped_dot_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;graph&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">stripped_dot_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;digraph&#39;</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="n">dot</span> <span class="o">=</span> <span class="s1">&#39;graph {</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">dot</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">}&#39;</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;boxart&#39;</span><span class="p">:</span> <span class="n">boxart</span><span class="p">,</span>
+        <span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="n">dot</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;ConnectionError: You need the internet to convert dot into ascii!&#39;</span>
+
+    <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="s1">&#39;DOT string is not formatted correctly&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">response</span></div>
+
+
+<span class="k">def</span> <span class="nf">print_ascii_graph</span><span class="p">(</span><span class="n">funcs</span><span class="p">):</span>
     <span class="n">digraph</span> <span class="o">=</span> <span class="n">funcs_to_digraph</span><span class="p">(</span><span class="n">funcs</span><span class="p">)</span>
     <span class="n">dot_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">digraph</span><span class="o">.</span><span class="n">body</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">dot_to_ascii</span><span class="p">(</span><span class="n">dot_str</span><span class="p">))</span>
