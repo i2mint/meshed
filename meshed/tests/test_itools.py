@@ -105,7 +105,7 @@ def test_ancestors(digraph_children):
     assert set(ms.itools.ancestors(g, [0])) == set()
 
 
-def test_descendants(graph_children):
+def test_descendants(digraph_children):
     g = digraph_children
     assert set(ms.itools.descendants(g, [2, 3])) == {4}
     assert set(ms.itools.descendants(g, [4])) == set()
