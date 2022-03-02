@@ -22,11 +22,10 @@ def truth(y_test):  # to link up truth and test_y
 def confusion_count(prediction, truth):
     """Get a dict containing the counts of all combinations of predicction and corresponding truth values.
 
-    >>> confusion_count(
+    >>> cc = confusion_count(
     ... [0, 0, 1, 0, 1, 1, 1],
     ... [0, 0, 0, 1, 1, 1, 1]
     ... )
-    >>> cc = Counter({(0, 0): 2, (1, 0): 1, (0, 1): 1, (1, 1): 3})
     >>> sorted(cc.items())
     [((0, 0), 2), ((0, 1), 1), ((1, 0), 1), ((1, 1), 3)]
     """
@@ -37,8 +36,7 @@ def prediction(predict_proba, threshold):
     """Get an array of predictions from thresholding the scores of predict_proba array.
 
     >>> prediction([0.3, 0.4, 0.5, 0.6, 0.7, 0.8], threshold=0.5)
-    [False, False,  True,  True,  True,  True]
-
+    [False, False, True, True, True, True]
     """
     return list(map(lambda x: x >= threshold, predict_proba))
 
