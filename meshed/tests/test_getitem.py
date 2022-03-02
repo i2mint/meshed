@@ -2,7 +2,6 @@ import pytest
 
 
 from collections import Counter
-from sklearn.model_selection import train_test_split
 from meshed import FuncNode
 from meshed.dag import DAG
 from pytest import fixture
