@@ -86,16 +86,16 @@ def iterize(func, name=None):
     or [array programming](https://en.wikipedia.org/wiki/Array_programming).)
 
 
-    >>> import lined as ld
-    >>> from typing import Iterable
+    # from lined import Pipe, iterize
+    # from typing import Iterable
 
-    >>> pipe = ld.Pipe(ld.iterize(lambda x: x * 2),
-    ...                 ld.iterize(lambda x: f"hello {x}"))
-    >>> iterable = pipe([1, 2, 3])
-    >>> # see that the result is an iterable
-    >>> assert isinstance(iterable, Iterable)
-    >>> list(iterable)  # consume the iterable and gather it's items
-    ['hello 2', 'hello 4', 'hello 6']
+    # pipe = ld.Pipe(ld.iterize(lambda x: x * 2),
+    #...                 ld.iterize(lambda x: f"hello {x}"))
+    # iterable = pipe([1, 2, 3])
+    # # see that the result is an iterable
+    # assert isinstance(iterable, Iterable)
+    # list(iterable)  # consume the iterable and gather it's items
+    #['hello 2', 'hello 4', 'hello 6']
     """
     # TODO: See if partialx can be used instead
     wrapper = mywraps(
