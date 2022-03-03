@@ -721,13 +721,26 @@ class DAG:
         _roll_in_orphaned_nodes=False,
         **keyword_dflts,
     ):
-        if positional_dflts:
-            raise NotImplemented("Need to map positional_dflts to keyword_defaults")
+        """Get a curried version of the DAG.
+        Like ``functools.partial``, but returns a DAG (not just a callable) and allows
+        you to remove bound arguments as well as roll in orphaned_nodes.
+
+        """
+        keyword_dflts = Sig.kwargs_from_args_and_kwargs(
+            args=positional_dflts,
+            kwargs=keyword_dflts,
+            apply_defaults=False,
+            allow_excess=False,
+            ignore_kind=True
+        )
+        # if positional_dflts:
+        #     raise NotImplemented("Need to map positional_dflts to keyword_defaults")
         # TODO(mk_instance): What about other init args (cache_last_scope, ...)?
         mk_instance = type(self)
         func_nodes = partialized_funcnodes(self, **keyword_dflts)
         new_dag = mk_instance(func_nodes)
         if _remove_bound_arguments:
+            # from i2.wrapper import rm_params
             new_sig = Sig(new_dag).remove_names(list(keyword_dflts))
             new_sig(new_dag)  # Change the signature of new_dag with bound args removed
         if _roll_in_orphaned_nodes:
