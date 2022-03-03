@@ -200,6 +200,7 @@ class FuncNode:
     def __post_init__(self):
         _func_node_args_validation(func=self.func, name=self.name, out=self.out)
         self.name, self.out = self.names_maker(self.func, self.name, self.out)
+        self.__name__ = self.name
         # self.__name__ = self.name
         # The wrapped function's signature will be useful
         # when interfacing with it and the scope.
