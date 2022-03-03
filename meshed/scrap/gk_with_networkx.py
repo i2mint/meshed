@@ -47,7 +47,7 @@ class Operation:
                         argument must be pickelable.
     """
 
-    name: str = field(default='None')
+    name: str = field(default="None")
     needs: list = field(default=None)
     provides: list = field(default=None)
     params: dict = field(default_factory=dict)
@@ -67,7 +67,7 @@ class Operation:
         Operation equality is based on name of layer.
         (__eq__ and __hash__ must be overridden together)
         """
-        return bool(self.name is not None and self.name == getattr(other, 'name', None))
+        return bool(self.name is not None and self.name == getattr(other, "name", None))
 
     def __hash__(self):
         """
@@ -113,11 +113,11 @@ class Operation:
         result = {}
         # this check should get deprecated soon. its for downward compatibility
         # with earlier pickled operation objects
-        if hasattr(self, 'params'):
-            result['params'] = self.__dict__['params']
-        result['needs'] = self.__dict__['needs']
-        result['provides'] = self.__dict__['provides']
-        result['name'] = self.__dict__['name']
+        if hasattr(self, "params"):
+            result["params"] = self.__dict__["params"]
+        result["needs"] = self.__dict__["needs"]
+        result["provides"] = self.__dict__["provides"]
+        result["name"] = self.__dict__["name"]
 
         return result
 
@@ -133,7 +133,7 @@ class Operation:
         """
         Display more informative names for the Operation class
         """
-        return u"%s(name='%s', needs=%s, provides=%s)" % (
+        return "%s(name='%s', needs=%s, provides=%s)" % (
             self.__class__.__name__,
             self.name,
             self.needs,
@@ -143,11 +143,11 @@ class Operation:
 
 class NetworkOperation(Operation):
     def __init__(self, **kwargs):
-        self.net = kwargs.pop('net')
+        self.net = kwargs.pop("net")
         Operation.__init__(self, **kwargs)
 
         # set execution mode to single-threaded sequential by default
-        self._execution_method = 'sequential'
+        self._execution_method = "sequential"
 
     def _compute(self, named_inputs, outputs=None):
         return self.net.compute(outputs, named_inputs, method=self._execution_method)
@@ -163,7 +163,7 @@ class NetworkOperation(Operation):
                 If "parallel", execute graph operations concurrently
                 using a threadpool.
         """
-        options = ['parallel', 'sequential']
+        options = ["parallel", "sequential"]
         assert method in options
         self._execution_method = method
 
@@ -172,7 +172,7 @@ class NetworkOperation(Operation):
 
     def __getstate__(self):
         state = Operation.__getstate__(self)
-        state['net'] = self.__dict__['net']
+        state["net"] = self.__dict__["net"]
         return state
 
 
@@ -268,7 +268,7 @@ with suppress(ModuleNotFoundError, ImportError):
 
             # directed graph of layer instances and data-names defining the net.
             self.graph = nx.DiGraph()
-            self._debug = kwargs.get('debug', False)
+            self._debug = kwargs.get("debug", False)
 
             # this holds the timing information for eache layer
             self.times = {}
@@ -292,7 +292,7 @@ with suppress(ModuleNotFoundError, ImportError):
             """
 
             # assert layer and its data requirements are named.
-            assert operation.name, 'Operation must be named'
+            assert operation.name, "Operation must be named"
             assert operation.needs is not None, "Operation's 'needs' must be named"
             assert (
                 operation.provides is not None
@@ -301,7 +301,7 @@ with suppress(ModuleNotFoundError, ImportError):
             # assert layer is only added once to graph
             assert (
                 operation not in self.graph.nodes()
-            ), 'Operation may only be added once'
+            ), "Operation may only be added once"
 
             # add nodes and edges to graph describing the data needs for this layer
             for n in operation.needs:
@@ -315,16 +315,16 @@ with suppress(ModuleNotFoundError, ImportError):
             self.steps = []
 
         def list_layers(self):
-            assert self.steps, 'network must be compiled before listing layers.'
+            assert self.steps, "network must be compiled before listing layers."
             return [(s.name, s) for s in self.steps if isinstance(s, Operation)]
 
         def show_layers(self):
             """Shows info (name, needs, and provides) about all layers in this network."""
             for name, step in self.list_layers():
-                print('layer_name: ', name)
-                print('\t', 'needs: ', step.needs)
-                print('\t', 'provides: ', step.provides)
-                print('')
+                print("layer_name: ", name)
+                print("\t", "needs: ", step.needs)
+                print("\t", "provides: ", step.provides)
+                print("")
 
         def compile(self):
             """Create a set of steps for evaluating layers
@@ -352,7 +352,7 @@ with suppress(ModuleNotFoundError, ImportError):
                     # is no longer needed by future Operations.
                     for predecessor in self.graph.predecessors(node):
                         if self._debug:
-                            print('checking if node %s can be deleted' % predecessor)
+                            print("checking if node %s can be deleted" % predecessor)
                         predecessor_still_needed = False
                         for future_node in ordered_nodes[i + 1 :]:
                             if isinstance(future_node, Operation):
@@ -362,12 +362,12 @@ with suppress(ModuleNotFoundError, ImportError):
                         if not predecessor_still_needed:
                             if self._debug:
                                 print(
-                                    '  adding delete instruction for %s' % predecessor
+                                    "  adding delete instruction for %s" % predecessor
                                 )
                             self.steps.append(DeleteInstruction(predecessor))
 
                 else:
-                    raise TypeError('Unrecognized network graph node')
+                    raise TypeError("Unrecognized network graph node")
 
         def _find_necessary_steps(self, outputs, inputs):
             """
@@ -428,8 +428,8 @@ with suppress(ModuleNotFoundError, ImportError):
                 for output_name in outputs:
                     if not graph.has_node(output_name):
                         raise ValueError(
-                            'graphkit graph does not have an output '
-                            'node named %s' % output_name
+                            "graphkit graph does not have an output "
+                            "node named %s" % output_name
                         )
                     necessary_nodes |= nx.ancestors(graph, output_name)
 
@@ -463,13 +463,13 @@ with suppress(ModuleNotFoundError, ImportError):
             """
 
             # assert that network has been compiled
-            assert self.steps, 'network must be compiled before calling compute.'
+            assert self.steps, "network must be compiled before calling compute."
             assert (
                 isinstance(outputs, (list, tuple)) or outputs is None
-            ), 'The outputs argument must be a list'
+            ), "The outputs argument must be a list"
 
             # choose a method of execution
-            if method == 'parallel':
+            if method == "parallel":
                 return self._compute_thread_pool_barrier_method(named_inputs, outputs)
             else:
                 return self._compute_sequential_method(named_inputs, outputs)
@@ -485,7 +485,7 @@ with suppress(ModuleNotFoundError, ImportError):
             from multiprocessing.dummy import Pool
 
             # if we have not already created a thread_pool, create one
-            if not hasattr(self, '_thread_pool'):
+            if not hasattr(self, "_thread_pool"):
                 self._thread_pool = Pool(thread_pool_size)
             pool = self._thread_pool
 
@@ -557,8 +557,8 @@ with suppress(ModuleNotFoundError, ImportError):
                 if isinstance(step, Operation):
 
                     if self._debug:
-                        print('-' * 32)
-                        print('executing step: %s' % step.name)
+                        print("-" * 32)
+                        print("executing step: %s" % step.name)
 
                     # time execution...
                     t0 = time.time()
@@ -573,7 +573,7 @@ with suppress(ModuleNotFoundError, ImportError):
                     t_complete = round(time.time() - t0, 5)
                     self.times[step.name] = t_complete
                     if self._debug:
-                        print('step completion time: %s' % t_complete)
+                        print("step completion time: %s" % t_complete)
 
                 # Process DeleteInstructions by deleting the corresponding data
                 # if possible.
@@ -589,7 +589,7 @@ with suppress(ModuleNotFoundError, ImportError):
                             cache.pop(step)
 
                 else:
-                    raise TypeError('Unrecognized instruction.')
+                    raise TypeError("Unrecognized instruction.")
 
             if not outputs:
                 # Return the whole cache as output, including input and
@@ -632,14 +632,14 @@ with suppress(ModuleNotFoundError, ImportError):
                         return a
                     return a.name
 
-                g = pydot.Dot(graph_type='digraph')
+                g = pydot.Dot(graph_type="digraph")
 
                 # draw nodes
                 for nx_node in self.graph.nodes():
                     if isinstance(nx_node, DataPlaceholderNode):
-                        node = pydot.Node(name=nx_node, shape='rect')
+                        node = pydot.Node(name=nx_node, shape="rect")
                     else:
-                        node = pydot.Node(name=nx_node.name, shape='circle')
+                        node = pydot.Node(name=nx_node.name, shape="circle")
                     g.add_node(node)
 
                 # draw edges
@@ -652,20 +652,20 @@ with suppress(ModuleNotFoundError, ImportError):
                 # save plot
                 if filename:
                     basename, ext = os.path.splitext(filename)
-                    with open(filename, 'w') as fh:
-                        if ext.lower() == '.png':
+                    with open(filename, "w") as fh:
+                        if ext.lower() == ".png":
                             fh.write(g.create_png())
-                        elif ext.lower() == '.dot':
+                        elif ext.lower() == ".dot":
                             fh.write(g.to_string())
-                        elif ext.lower() in ['.jpg', '.jpeg']:
+                        elif ext.lower() in [".jpg", ".jpeg"]:
                             fh.write(g.create_jpeg())
-                        elif ext.lower() == '.pdf':
+                        elif ext.lower() == ".pdf":
                             fh.write(g.create_pdf())
-                        elif ext.lower() == '.svg':
+                        elif ext.lower() == ".svg":
                             fh.write(g.create_svg())
                         else:
                             raise Exception(
-                                'Unknown file format for saving graph: %s' % ext
+                                "Unknown file format for saving graph: %s" % ext
                             )
 
                 # display graph via matplotlib
@@ -673,7 +673,7 @@ with suppress(ModuleNotFoundError, ImportError):
                     png = g.create_png()
                     sio = StringIO(png)
                     img = mpimg.imread(sio)
-                    plt.imshow(img, aspect='equal')
+                    plt.imshow(img, aspect="equal")
                     plt.show()
 
                 return g
@@ -738,7 +738,7 @@ with suppress(ModuleNotFoundError, ImportError):
 
     class FunctionalOperation(Operation):
         def __init__(self, **kwargs):
-            self.fn = kwargs.pop('fn')
+            self.fn = kwargs.pop("fn")
             Operation.__init__(self, **kwargs)
 
         def _compute(self, named_inputs, outputs=None):
@@ -772,7 +772,7 @@ with suppress(ModuleNotFoundError, ImportError):
 
         def __getstate__(self):
             state = Operation.__getstate__(self)
-            state['fn'] = self.__dict__['fn']
+            state["fn"] = self.__dict__["fn"]
             return state
 
     class operation(Operation):
@@ -809,26 +809,26 @@ with suppress(ModuleNotFoundError, ImportError):
         def _normalize_kwargs(self, kwargs):
 
             # Allow single value for needs parameter
-            if 'needs' in kwargs and type(kwargs['needs']) == str:
-                assert kwargs['needs'], 'empty string provided for `needs` parameters'
-                kwargs['needs'] = [kwargs['needs']]
+            if "needs" in kwargs and type(kwargs["needs"]) == str:
+                assert kwargs["needs"], "empty string provided for `needs` parameters"
+                kwargs["needs"] = [kwargs["needs"]]
 
             # Allow single value for provides parameter
-            if 'provides' in kwargs and type(kwargs['provides']) == str:
+            if "provides" in kwargs and type(kwargs["provides"]) == str:
                 assert kwargs[
-                    'provides'
-                ], 'empty string provided for `needs` parameters'
-                kwargs['provides'] = [kwargs['provides']]
+                    "provides"
+                ], "empty string provided for `needs` parameters"
+                kwargs["provides"] = [kwargs["provides"]]
 
-            assert kwargs['name'], 'operation needs a name'
-            assert type(kwargs['needs']) == list, 'no `needs` parameter provided'
-            assert type(kwargs['provides']) == list, 'no `provides` parameter provided'
+            assert kwargs["name"], "operation needs a name"
+            assert type(kwargs["needs"]) == list, "no `needs` parameter provided"
+            assert type(kwargs["provides"]) == list, "no `provides` parameter provided"
             assert hasattr(
-                kwargs['fn'], '__call__'
-            ), 'operation was not provided with a callable'
+                kwargs["fn"], "__call__"
+            ), "operation was not provided with a callable"
 
-            if type(kwargs['params']) is not dict:
-                kwargs['params'] = {}
+            if type(kwargs["params"]) is not dict:
+                kwargs["params"] = {}
 
             return kwargs
 
@@ -869,7 +869,7 @@ with suppress(ModuleNotFoundError, ImportError):
             """
             Display more informative names for the Operation class
             """
-            return u"%s(name='%s', needs=%s, provides=%s, fn=%s)" % (
+            return "%s(name='%s', needs=%s, provides=%s, fn=%s)" % (
                 self.__class__.__name__,
                 self.name,
                 self.needs,
@@ -899,7 +899,7 @@ with suppress(ModuleNotFoundError, ImportError):
         """
 
         def __init__(self, name=None, merge=False):
-            assert name, 'compose needs a name'
+            assert name, "compose needs a name"
             self.name = name
             self.merge = merge
 
@@ -916,7 +916,7 @@ with suppress(ModuleNotFoundError, ImportError):
                 Returns a special type of operation class, which represents an
                 entire computation graph as a single operation.
             """
-            assert len(operations), 'no operations provided to compose'
+            assert len(operations), "no operations provided to compose"
 
             # If merge is desired, deduplicate operations before building network
             if self.merge:

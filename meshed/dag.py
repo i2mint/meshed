@@ -608,7 +608,7 @@ class DAG:
 
         Get a subdag from ``g_`` (indicates the function here) to the end of ``dag``
 
-        >>> subdag = dag['g_',:]
+        >>> subdag = dag['g_':]
         >>> print(subdag.synopsis_string())
         f -> g_ -> g
         g -> h_ -> h
@@ -616,14 +616,14 @@ class DAG:
 
         From the beginning to ``h_``
 
-        >>> print(dag[:, 'h_'].synopsis_string())
+        >>> print(dag[:'h_'].synopsis_string())
         a -> f_ -> f
         f -> g_ -> g
         g -> h_ -> h
 
         From ``g_`` to ``h_`` (both inclusive)
 
-        >>> print(dag['g_', 'h_'].synopsis_string())
+        >>> print(dag['g_':'h_'].synopsis_string())
         f -> g_ -> g
         g -> h_ -> h
 
@@ -637,12 +637,12 @@ class DAG:
         but when we ask ``dag['g', 'h_']`` instead, ``g`` being the output node of
         function node ``g_``, we only get ``g -> h_ -> h``:
 
-        >>> print(dag['g', 'h'].synopsis_string())
+        >>> print(dag['g':'h'].synopsis_string())
         g -> h_ -> h
 
         If we wanted to include ``f`` we'd have to specify it:
 
-        >>> print(dag['f', 'h'].synopsis_string())
+        >>> print(dag['f':'h'].synopsis_string())
         f -> g_ -> g
         g -> h_ -> h
 
@@ -673,20 +673,20 @@ class DAG:
         ...     t = sorted(dag.synopsis_string().split('\\n'))
         ...     print('\\n'.join(t))
 
-        >>> print_sorted_synopsis(dag[['u', 'f'], 'h'])
+        >>> print_sorted_synopsis(dag[['u', 'f']:'h'])
         f,w -> h_ -> h
         u,v -> f_ -> f
-        >>> print_sorted_synopsis(dag['u', 'h'])
+        >>> print_sorted_synopsis(dag['u':'h'])
         f,w -> h_ -> h
         u,v -> f_ -> f
-        >>> print_sorted_synopsis(dag[['u', 'f'], ['h', 'g']])
+        >>> print_sorted_synopsis(dag[['u', 'f']:['h', 'g']])
         f -> g_ -> g
         f,w -> h_ -> h
         u,v -> f_ -> f
-        >>> print_sorted_synopsis(dag[['x', 'g'], 'k'])
+        >>> print_sorted_synopsis(dag[['x', 'g']:'k'])
         g,h -> i_ -> i
         i -> k_ -> k
-        >>> print_sorted_synopsis(dag[['x', 'g'], ['l', 'k']])
+        >>> print_sorted_synopsis(dag[['x', 'g']:['l', 'k']])
         g,h -> i_ -> i
         h,x -> j_ -> j
         i -> k_ -> k
@@ -783,11 +783,14 @@ class DAG:
         return new_dag
 
     def process_item(self, item):
+        assert isinstance(item, slice), f"must be a slice, was: {item}"
+
+        input_names, outs = item.start, item.stop
 
         empty_slice = slice(None)
 
         def ensure_variable_list(obj):
-            if obj == empty_slice:
+            if obj is None:
                 return self.var_nodes
             if isinstance(obj, (str, Callable)):
                 return [self.get_node_matching(obj)]
@@ -796,8 +799,8 @@ class DAG:
             else:
                 raise ValidationError(f"Unrecognized variables specification: {obj}")
 
-        assert len(item) == 2, f"Only items of size 1 or 2 are supported"
-        input_names, outs = map(ensure_variable_list, item)
+        # assert len(item) == 2, f"Only items of size 1 or 2 are supported"
+        input_names, outs = map(ensure_variable_list, [input_names, outs])
         return input_names, outs
 
     def get_node_matching(self, pattern):

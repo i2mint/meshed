@@ -28,13 +28,13 @@ def line_with_dag(*steps):
     """
 
     step_counter = 0
-    first_node = FuncNode(steps[0], out=f'step_{step_counter}')
+    first_node = FuncNode(steps[0], out=f"step_{step_counter}")
     func_nodes = [first_node]
     for step in steps[1:]:
         step_node = FuncNode(
             step,
-            out=f'step_{step_counter + 1}',
-            bind={get_param(step): f'step_{step_counter}'},
+            out=f"step_{step_counter + 1}",
+            bind={get_param(step): f"step_{step_counter}"},
         )
         step_counter += 1
         func_nodes.append(step_node)

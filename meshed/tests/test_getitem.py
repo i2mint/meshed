@@ -81,6 +81,6 @@ def bigger_dag():
 
 
 def test_full_subgraph(bigger_dag):
-    result = bigger_dag[['truth', 'prediction'], 'confusion_count']
-    expected = 'DAG(func_nodes=[FuncNode(prediction,truth -> confusion_count_ -> confusion_count)], name=None)'
+    result = bigger_dag[["truth", "prediction"]:"confusion_count"]
+    expected = "DAG(func_nodes=[FuncNode(prediction,truth -> confusion_count_ -> confusion_count)], name=None)"
     assert result.__repr__() == expected
