@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.35 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.36 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -99,7 +99,7 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">name_of_obj</span>
 
 
 <div class="viewcode-block" id="partialx"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.partialx">[docs]</a><span class="k">def</span> <span class="nf">partialx</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rm_partialize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -183,16 +183,19 @@
 <span class="sd">    or [array programming](https://en.wikipedia.org/wiki/Array_programming).)</span>
 
 
-<span class="sd">    # from lined import Pipe, iterize</span>
-<span class="sd">    # from typing import Iterable</span>
-
-<span class="sd">    # pipe = ld.Pipe(ld.iterize(lambda x: x * 2),</span>
-<span class="sd">    #...                 ld.iterize(lambda x: f&quot;hello {x}&quot;))</span>
-<span class="sd">    # iterable = pipe([1, 2, 3])</span>
-<span class="sd">    # # see that the result is an iterable</span>
-<span class="sd">    # assert isinstance(iterable, Iterable)</span>
-<span class="sd">    # list(iterable)  # consume the iterable and gather it&#39;s items</span>
-<span class="sd">    #[&#39;hello 2&#39;, &#39;hello 4&#39;, &#39;hello 6&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; from i2 import Pipe</span>
+<span class="sd">    &gt;&gt;&gt; from meshed.util import iterize</span>
+<span class="sd">    &gt;&gt;&gt; from typing import Iterable</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; pipe = Pipe(</span>
+<span class="sd">    ...     iterize(lambda x: x * 2),</span>
+<span class="sd">    ...     iterize(lambda x: f&quot;hello {x}&quot;)</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; iterable = pipe([1, 2, 3])</span>
+<span class="sd">    &gt;&gt;&gt; # see that the result is an iterable</span>
+<span class="sd">    &gt;&gt;&gt; assert isinstance(iterable, Iterable)</span>
+<span class="sd">    &gt;&gt;&gt; list(iterable)  # consume the iterable and gather it&#39;s items</span>
+<span class="sd">    [&#39;hello 2&#39;, &#39;hello 4&#39;, &#39;hello 6&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: See if partialx can be used instead</span>
     <span class="n">wrapper</span> <span class="o">=</span> <span class="n">mywraps</span><span class="p">(</span>
@@ -401,34 +404,6 @@
         <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="name_of_obj"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.name_of_obj">[docs]</a><span class="k">def</span> <span class="nf">name_of_obj</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Tries to find the (or &quot;a&quot;) name for an object, even if `__name__` doesn&#39;t exist.</span>
-
-<span class="sd">    &gt;&gt;&gt; name_of_obj(map)</span>
-<span class="sd">    &#39;map&#39;</span>
-<span class="sd">    &gt;&gt;&gt; name_of_obj([1, 2, 3])</span>
-<span class="sd">    &#39;list&#39;</span>
-<span class="sd">    &gt;&gt;&gt; name_of_obj(print)</span>
-<span class="sd">    &#39;print&#39;</span>
-<span class="sd">    &gt;&gt;&gt; name_of_obj(lambda x: x)</span>
-<span class="sd">    &#39;&lt;lambda&gt;&#39;</span>
-<span class="sd">    &gt;&gt;&gt; from functools import partial</span>
-<span class="sd">    &gt;&gt;&gt; name_of_obj(partial(print, sep=&#39;,&#39;))</span>
-<span class="sd">    &#39;print&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">o</span><span class="o">.</span><span class="vm">__name__</span>
-    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s1">&#39;__class__&#39;</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;partial&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s1">&#39;func&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">name</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
-
-
 <div class="viewcode-block" id="incremental_str_maker"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.incremental_str_maker">[docs]</a><span class="k">def</span> <span class="nf">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;{:03.f}&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Make a function that will produce a (incrementally) new string at every call.&quot;&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -593,16 +568,14 @@
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
-<span class="k">def</span> <span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="mk_func_name"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.mk_func_name">[docs]</a><span class="k">def</span> <span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Makes a function name that doesn&#39;t clash with the exclude_names iterable.</span>
+<span class="sd">    Tries it&#39;s best to not be lazy, but instead extract a name from the function</span>
+<span class="sd">    itself.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;func&#39;</span>
     <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&lt;lambda&gt;&#39;</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">lambda_name</span><span class="p">()</span>  <span class="c1"># make a lambda name that is a unique identifier</span>
-    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NameValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can&#39;t make a name for func: </span><span class="si">{</span><span class="n">func</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">find_first_free_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">find_first_free_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">arg_names</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>

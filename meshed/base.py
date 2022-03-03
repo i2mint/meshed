@@ -345,11 +345,7 @@ def _keys_and_values_are_strings_validation(d: dict):
 
 
 def _func_node_args_validation(
-        *,
-        func: Callable = None,
-        name: str = None,
-        bind: dict = None,
-        out: str = None
+    *, func: Callable = None, name: str = None, bind: dict = None, out: str = None
 ):
     """Validates the four first arguments that are used to make a ``FuncNode``.
     Namely, if not ``None``,

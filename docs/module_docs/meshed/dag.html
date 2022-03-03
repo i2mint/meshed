@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.35 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.36 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -320,6 +320,14 @@ function.</p>
 <p>What <code class="docutils literal notranslate"><span class="pre">params_for_src</span></code> is, is the corresponding inverse map.
 The <code class="docutils literal notranslate"><span class="pre">{varnode_src_name:</span> <span class="pre">list_of_params}</span></code> gathered by scanning each
 <code class="docutils literal notranslate"><span class="pre">func_node</span></code> of the DAG.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="meshed.dag.DAG.partial">
+<code class="sig-name descname">partial</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">positional_dflts</span></em>, <em class="sig-param"><span class="n">_remove_bound_arguments</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">_roll_in_orphaned_nodes</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">keyword_dflts</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a curried version of the DAG.
+Like <code class="docutils literal notranslate"><span class="pre">functools.partial</span></code>, but returns a DAG (not just a callable) and allows
+you to remove bound arguments as well as roll in orphaned_nodes.</p>
 </dd></dl>
 
 </dd></dl>
