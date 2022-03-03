@@ -86,11 +86,14 @@ def iterize(func, name=None):
     or [array programming](https://en.wikipedia.org/wiki/Array_programming).)
 
 
-    >>> from lined import Pipe, iterize
+    >>> from i2 import Pipe
+    >>> from meshed.util import iterize
     >>> from typing import Iterable
     >>>
-    >>> pipe = Pipe(iterize(lambda x: x * 2),
-    ...                 iterize(lambda x: f"hello {x}"))
+    >>> pipe = Pipe(
+    ...     iterize(lambda x: x * 2),
+    ...     iterize(lambda x: f"hello {x}")
+    ... )
     >>> iterable = pipe([1, 2, 3])
     >>> # see that the result is an iterable
     >>> assert isinstance(iterable, Iterable)

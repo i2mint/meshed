@@ -67,7 +67,7 @@ def test_iterize_dag():
     # or numpy.array),
     # there's several choices...
 
-    # You could use lined.Line
+    # You could use i2.Pipe
 
     from i2 import Pipe
 
