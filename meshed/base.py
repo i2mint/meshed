@@ -61,7 +61,7 @@ def basic_node_validator(func_node):
 
     """
     _func_node_args_validation(
-        func_node.func, func_node.name, func_node.bind, func_node.out
+        func=func_node.func, name=func_node.name, bind=func_node.bind, out=func_node.out
     )
     names = [func_node.name, func_node.out, *func_node.bind.values()]
 
@@ -198,9 +198,9 @@ class FuncNode:
     node_validator: Callable = basic_node_validator
 
     def __post_init__(self):
-        _func_node_args_validation(self.func, self.name, self.bind, self.out)
+        _func_node_args_validation(func=self.func, name=self.name, out=self.out)
         self.name, self.out = self.names_maker(self.func, self.name, self.out)
-
+        # self.__name__ = self.name
         # The wrapped function's signature will be useful
         # when interfacing with it and the scope.
         self.sig = Sig(self.func)
@@ -209,6 +209,8 @@ class FuncNode:
         self.bind = _bind_where_int_keys_repl_with_argname(self.bind, self.sig.names)
         # complete bind with the argnames of the signature
         _complete_dict_with_iterable_of_required_keys(self.bind, self.sig.names)
+        _func_node_args_validation(bind=self.bind)
+
         self.extractor = partial(_mapped_extraction, to_extract=self.bind)
 
         self.node_validator(self)
@@ -342,7 +344,13 @@ def _keys_and_values_are_strings_validation(d: dict):
             raise ValidationError(f'Should be a str: {v}')
 
 
-def _func_node_args_validation(func: Callable, name: str, bind: dict, out: str):
+def _func_node_args_validation(
+        *,
+        func: Callable = None,
+        name: str = None,
+        bind: dict = None,
+        out: str = None
+):
     """Validates the four first arguments that are used to make a ``FuncNode``.
     Namely, if not ``None``,
 
@@ -350,7 +358,9 @@ def _func_node_args_validation(func: Callable, name: str, bind: dict, out: str):
 
     * ``name`` and ``out`` should be ``str``
 
-    * ``bind`` should be a ``Dict[str, str]``
+    * ``bind`` should be a ``Dict[str, str]``, ``Dict[int, str]`` or ``List[str]``
+
+    * ``out`` should be a str
 
     """
     if func is not None and not isinstance(func, Callable):
