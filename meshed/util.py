@@ -2,7 +2,7 @@
 from functools import partial, wraps
 from typing import Callable, Any, Union, Iterator, Optional
 
-from i2 import Sig
+from i2 import Sig, name_of_obj
 
 
 def partialx(func, *args, __name__=None, rm_partialize=False, **kwargs):
@@ -304,34 +304,6 @@ class ModuleNotFoundIgnore:
         return True
 
 
-def name_of_obj(o) -> Union[str, None]:
-    """
-    Tries to find the (or "a") name for an object, even if `__name__` doesn't exist.
-
-    >>> name_of_obj(map)
-    'map'
-    >>> name_of_obj([1, 2, 3])
-    'list'
-    >>> name_of_obj(print)
-    'print'
-    >>> name_of_obj(lambda x: x)
-    '<lambda>'
-    >>> from functools import partial
-    >>> name_of_obj(partial(print, sep=','))
-    'print'
-    """
-    if hasattr(o, "__name__"):
-        return o.__name__
-    elif hasattr(o, "__class__"):
-        name = name_of_obj(o.__class__)
-        if name == "partial":
-            if hasattr(o, "func"):
-                return name_of_obj(o.func)
-        return name
-    else:
-        return None
-
-
 def incremental_str_maker(str_format="{:03.f}"):
     """Make a function that will produce a (incrementally) new string at every call."""
     i = 0
@@ -497,14 +469,12 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
 
 
 def mk_func_name(func, exclude_names=()):
-    name = getattr(func, "__name__", "")
+    """Makes a function name that doesn't clash with the exclude_names iterable.
+    Tries it's best to not be lazy, but instead extract a name from the function
+    itself."""
+    name = name_of_obj(func) or 'func'
     if name == "<lambda>":
         name = lambda_name()  # make a lambda name that is a unique identifier
-    elif name == "":
-        if isinstance(func, partial):
-            return mk_func_name(func.func, exclude_names)
-        else:
-            raise NameValidationError(f"Can't make a name for func: {func}")
     return find_first_free_name(name, exclude_names)
 
 
