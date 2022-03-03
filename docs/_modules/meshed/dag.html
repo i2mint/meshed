@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.38 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.39 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -705,7 +705,7 @@
 
 <span class="sd">        Get a subdag from ``g_`` (indicates the function here) to the end of ``dag``</span>
 
-<span class="sd">        &gt;&gt;&gt; subdag = dag[&#39;g_&#39;,:]</span>
+<span class="sd">        &gt;&gt;&gt; subdag = dag[&#39;g_&#39;:]</span>
 <span class="sd">        &gt;&gt;&gt; print(subdag.synopsis_string())</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
@@ -713,14 +713,14 @@
 
 <span class="sd">        From the beginning to ``h_``</span>
 
-<span class="sd">        &gt;&gt;&gt; print(dag[:, &#39;h_&#39;].synopsis_string())</span>
+<span class="sd">        &gt;&gt;&gt; print(dag[:&#39;h_&#39;].synopsis_string())</span>
 <span class="sd">        a -&gt; f_ -&gt; f</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
 
 <span class="sd">        From ``g_`` to ``h_`` (both inclusive)</span>
 
-<span class="sd">        &gt;&gt;&gt; print(dag[&#39;g_&#39;, &#39;h_&#39;].synopsis_string())</span>
+<span class="sd">        &gt;&gt;&gt; print(dag[&#39;g_&#39;:&#39;h_&#39;].synopsis_string())</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
 
@@ -734,12 +734,12 @@
 <span class="sd">        but when we ask ``dag[&#39;g&#39;, &#39;h_&#39;]`` instead, ``g`` being the output node of</span>
 <span class="sd">        function node ``g_``, we only get ``g -&gt; h_ -&gt; h``:</span>
 
-<span class="sd">        &gt;&gt;&gt; print(dag[&#39;g&#39;, &#39;h&#39;].synopsis_string())</span>
+<span class="sd">        &gt;&gt;&gt; print(dag[&#39;g&#39;:&#39;h&#39;].synopsis_string())</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
 
 <span class="sd">        If we wanted to include ``f`` we&#39;d have to specify it:</span>
 
-<span class="sd">        &gt;&gt;&gt; print(dag[&#39;f&#39;, &#39;h&#39;].synopsis_string())</span>
+<span class="sd">        &gt;&gt;&gt; print(dag[&#39;f&#39;:&#39;h&#39;].synopsis_string())</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
 
@@ -770,20 +770,20 @@
 <span class="sd">        ...     t = sorted(dag.synopsis_string().split(&#39;\\n&#39;))</span>
 <span class="sd">        ...     print(&#39;\\n&#39;.join(t))</span>
 
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;u&#39;, &#39;f&#39;], &#39;h&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;u&#39;, &#39;f&#39;]:&#39;h&#39;])</span>
 <span class="sd">        f,w -&gt; h_ -&gt; h</span>
 <span class="sd">        u,v -&gt; f_ -&gt; f</span>
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[&#39;u&#39;, &#39;h&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[&#39;u&#39;:&#39;h&#39;])</span>
 <span class="sd">        f,w -&gt; h_ -&gt; h</span>
 <span class="sd">        u,v -&gt; f_ -&gt; f</span>
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;u&#39;, &#39;f&#39;], [&#39;h&#39;, &#39;g&#39;]])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;u&#39;, &#39;f&#39;]:[&#39;h&#39;, &#39;g&#39;]])</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        f,w -&gt; h_ -&gt; h</span>
 <span class="sd">        u,v -&gt; f_ -&gt; f</span>
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;x&#39;, &#39;g&#39;], &#39;k&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;x&#39;, &#39;g&#39;]:&#39;k&#39;])</span>
 <span class="sd">        g,h -&gt; i_ -&gt; i</span>
 <span class="sd">        i -&gt; k_ -&gt; k</span>
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;x&#39;, &#39;g&#39;], [&#39;l&#39;, &#39;k&#39;]])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;x&#39;, &#39;g&#39;]:[&#39;l&#39;, &#39;k&#39;]])</span>
 <span class="sd">        g,h -&gt; i_ -&gt; i</span>
 <span class="sd">        h,x -&gt; j_ -&gt; j</span>
 <span class="sd">        i -&gt; k_ -&gt; k</span>
@@ -880,11 +880,14 @@
         <span class="k">return</span> <span class="n">new_dag</span></div>
 
     <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">slice</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;must be a slice, was: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">stop</span>
 
         <span class="n">empty_slice</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">ensure_variable_list</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">obj</span> <span class="o">==</span> <span class="n">empty_slice</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">)):</span>
                 <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_node_matching</span><span class="p">(</span><span class="n">obj</span><span class="p">)]</span>
@@ -893,8 +896,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unrecognized variables specification: </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Only items of size 1 or 2 are supported&#39;</span>
-        <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">ensure_variable_list</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="c1"># assert len(item) == 2, f&quot;Only items of size 1 or 2 are supported&quot;</span>
+        <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">ensure_variable_list</span><span class="p">,</span> <span class="p">[</span><span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span>
 
     <span class="k">def</span> <span class="nf">get_node_matching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>

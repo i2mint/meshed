@@ -8,7 +8,7 @@ from i2 import Pipe
 import ast
 import inspect
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 # Some restrictions exist and need to be clarified or removed (i.e. more cases handled)
 # For example,
@@ -26,15 +26,15 @@ from typing import Tuple, Callable
 
 
 def attr_dict(obj):
-    return {a: getattr(obj, a) for a in dir(obj) if not a.startswith("_")}
+    return {a: getattr(obj, a) for a in dir(obj) if not a.startswith('_')}
 
 
 def is_from_ast_module(o):
-    return getattr(type(o), "__module__", "").startswith("_ast")
+    return getattr(type(o), '__module__', '').startswith('_ast')
 
 
 def _ast_info_str(x):
-    return f"lineno={x.lineno}"
+    return f'lineno={x.lineno}'
 
 
 # Note: generalize? glom?
@@ -46,14 +46,14 @@ def parse_assignment(body: ast.Assign) -> Tuple:
         raise ValueError(f"All commands should be assignments, this one wasn't: {info}")
 
     target = body.targets
-    assert len(target) == 1, f"Only one target allowed: {info}"
+    assert len(target) == 1, f'Only one target allowed: {info}'
     target = target[0]
     assert isinstance(
         target, (ast.Name, ast.Tuple)
-    ), f"Should be a ast.Name or ast.Tuple: {info}"
+    ), f'Should be a ast.Name or ast.Tuple: {info}'
 
     value = body.value
-    assert isinstance(value, ast.Call), f"Only one target allowed: {info}"
+    assert isinstance(value, ast.Call), f'Only one target allowed: {info}'
 
     return target, value
 
@@ -68,7 +68,7 @@ def parsed_to_node_kwargs(target_value) -> dict:
     # Note: ast.Tuple has names in 'elts' attribute,
     # and could be handled, but would need to lead to multiple nodes
     target, value = target_value
-    assert isinstance(target, ast.Name), f"Should be a ast.Name: {target}"
+    assert isinstance(target, ast.Name), f'Should be a ast.Name: {target}'
     args = value.args
     bind_from_args = {i: k.id for i, k in enumerate(args)}
     kwargs = {x.arg: x.value.id for x in value.keywords}
@@ -140,13 +140,13 @@ def simple_code_to_digraph(code):
             return getsource(code)
         return code
 
-    empty_spaces = re.compile("^\s*$")
+    empty_spaces = re.compile('^\s*$')
     simple_assignment_p = re.compile(
-        "(?P<output_vars>[^=]+)" "\s*=\s*" "(?P<func>\w+)" "\((?P<input_vars>.*)\)"
+        '(?P<output_vars>[^=]+)' '\s*=\s*' '(?P<func>\w+)' '\((?P<input_vars>.*)\)'
     )
 
     def get_lines(code_str):
-        for line in code_str.split("\n"):
+        for line in code_str.split('\n'):
             if not empty_spaces.match(line):
                 yield line.strip()
 

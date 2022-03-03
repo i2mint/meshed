@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.test_getitem &mdash; meshed 0.1.38 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.tests.test_getitem &mdash; meshed 0.1.39 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -178,7 +178,7 @@
 
 
 <span class="k">def</span> <span class="nf">test_full_subgraph</span><span class="p">(</span><span class="n">bigger_dag</span><span class="p">):</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">bigger_dag</span><span class="p">[[</span><span class="s1">&#39;truth&#39;</span><span class="p">,</span> <span class="s1">&#39;prediction&#39;</span><span class="p">],</span> <span class="s1">&#39;confusion_count&#39;</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">bigger_dag</span><span class="p">[[</span><span class="s1">&#39;truth&#39;</span><span class="p">,</span> <span class="s1">&#39;prediction&#39;</span><span class="p">]:</span><span class="s1">&#39;confusion_count&#39;</span><span class="p">]</span>
     <span class="n">expected</span> <span class="o">=</span> <span class="s1">&#39;DAG(func_nodes=[FuncNode(prediction,truth -&gt; confusion_count_ -&gt; confusion_count)], name=None)&#39;</span>
     <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span> <span class="o">==</span> <span class="n">expected</span>
 </pre></div>
