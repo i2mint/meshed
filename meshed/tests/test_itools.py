@@ -13,6 +13,11 @@ def graph_children():
 
 
 @pytest.fixture
+def digraph_children():
+    return {0: [1, 2], 1: [2, 3, 4], 2: [4], 3: [4]}
+
+
+@pytest.fixture
 def graph_dict():
     return dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
 
@@ -94,15 +99,15 @@ def test_parents(graph_children):
     assert set(ms.itools.parents(g, [0])) == set()
 
 
-def test_ancestors(graph_children):
-    g = graph_children
+def test_ancestors(digraph_children):
+    g = digraph_children
     assert set(ms.itools.ancestors(g, [2, 3])) == {0, 1}
     assert set(ms.itools.ancestors(g, [0])) == set()
 
 
-def test_descendants(graph_children):
-    g = graph_children
-    assert set(ms.itools.descendants(g, [2, 3])) == {1, 4}
+def test_descendants(digraph_children):
+    g = digraph_children
+    assert set(ms.itools.descendants(g, [2, 3])) == {4}
     assert set(ms.itools.descendants(g, [4])) == set()
 
 

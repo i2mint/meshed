@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.itools &mdash; meshed 0.1.34 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.itools &mdash; meshed 0.1.35 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -65,6 +65,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_getitem.html">meshed.tests.test_getitem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_itools.html">meshed.tests.test_itools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_makers.html">meshed.tests.test_makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_util.html">meshed.tests.test_util</a></li>
@@ -113,7 +114,7 @@ adjacency Mapping representation.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="p">{</span>
 <span class="gp">... </span>    <span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="mi">3</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
 <span class="gp">... </span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ancestors</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
@@ -149,11 +150,11 @@ adjacency Mapping representation.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="p">{</span>
 <span class="gp">... </span>    <span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="mi">3</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>
 <span class="gp">... </span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">descendants</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-<span class="go">{1, 4}</span>
+<span class="go">{4}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">descendants</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">])</span>
 <span class="go">set()</span>
 </pre></div>
