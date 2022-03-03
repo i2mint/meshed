@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.35 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.base &mdash; meshed 0.1.36 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -158,7 +158,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_func_node_args_validation</span><span class="p">(</span>
-        <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">out</span>
     <span class="p">)</span>
     <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="o">*</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
 
@@ -295,9 +295,9 @@
     <span class="n">node_validator</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">basic_node_validator</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">_func_node_args_validation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">_func_node_args_validation</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_maker</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">)</span>
-
+        <span class="c1"># self.__name__ = self.name</span>
         <span class="c1"># The wrapped function&#39;s signature will be useful</span>
         <span class="c1"># when interfacing with it and the scope.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
@@ -306,6 +306,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">_bind_where_int_keys_repl_with_argname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
         <span class="c1"># complete bind with the argnames of the signature</span>
         <span class="n">_complete_dict_with_iterable_of_required_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+        <span class="n">_func_node_args_validation</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_mapped_extraction</span><span class="p">,</span> <span class="n">to_extract</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">node_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -439,7 +441,9 @@
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be a str: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_func_node_args_validation</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bind</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_func_node_args_validation</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bind</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Validates the four first arguments that are used to make a ``FuncNode``.</span>
 <span class="sd">    Namely, if not ``None``,</span>
 
@@ -447,7 +451,9 @@
 
 <span class="sd">    * ``name`` and ``out`` should be ``str``</span>
 
-<span class="sd">    * ``bind`` should be a ``Dict[str, str]``</span>
+<span class="sd">    * ``bind`` should be a ``Dict[str, str]``, ``Dict[int, str]`` or ``List[str]``</span>
+
+<span class="sd">    * ``out`` should be a str</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
