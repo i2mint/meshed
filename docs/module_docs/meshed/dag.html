@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.37 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.38 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -324,10 +324,51 @@ The <code class="docutils literal notranslate"><span class="pre">{varnode_src_na
 
 <dl class="py method">
 <dt id="meshed.dag.DAG.partial">
-<code class="sig-name descname">partial</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">positional_dflts</span></em>, <em class="sig-param"><span class="n">_remove_bound_arguments</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">_roll_in_orphaned_nodes</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">keyword_dflts</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.partial" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a curried version of the DAG.
-Like <code class="docutils literal notranslate"><span class="pre">functools.partial</span></code>, but returns a DAG (not just a callable) and allows
+<code class="sig-name descname">partial</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">positional_dflts</span></em>, <em class="sig-param"><span class="n">_remove_bound_arguments</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">_consider_defaulted_arguments_as_bound</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">keyword_dflts</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.partial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.partial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a curried version of the DAG.</p>
+<p>Like <code class="docutils literal notranslate"><span class="pre">functools.partial</span></code>, but returns a DAG (not just a callable) and allows
 you to remove bound arguments as well as roll in orphaned_nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>positional_dflts</strong> – Bind arguments positionally</p></li>
+<li><p><strong>keyword_dflts</strong> – Bind arguments through their names</p></li>
+<li><p><strong>_remove_bound_arguments</strong> – False – set to True if you don’t want bound
+arguments to show up in the signature.</p></li>
+<li><p><strong>_consider_defaulted_arguments_as_bound</strong> – False – set to True if
+you want to also consider arguments that already had defaults as bound
+(and be removed).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">c</span> <span class="o">*</span> <span class="n">d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">h</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">g</span> <span class="o">-</span> <span class="n">f</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">dag</span><span class="p">))</span>
+<span class="go">&#39;(c, a, b, d=4)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># == (3 * 4) - (1 + 2) == 12 - 3 == 9</span>
+<span class="go">9</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># same as above</span>
+<span class="go">9</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_dag</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">new_dag</span><span class="p">,</span> <span class="n">DAG</span><span class="p">)</span>  <span class="c1"># it&#39;s a dag (not just a partialized callable!)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">new_dag</span><span class="p">))</span>
+<span class="go">&#39;(a, b, *, c=3, d=4)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># same as dag(c=3, a=1, b=2, d=4), so:</span>
+<span class="go">9</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>

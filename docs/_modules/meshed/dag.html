@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.37 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.38 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -811,37 +811,72 @@
             <span class="n">parameter_merge</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_merge</span><span class="p">,</span>
         <span class="p">)</span>
 
+    <span class="c1"># TODO: Think about adding a ``_roll_in_orphaned_nodes=False`` argument:</span>
+    <span class="c1">#   See https://github.com/i2mint/meshed/issues/14 for more information.</span>
 <div class="viewcode-block" id="DAG.partial"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.partial">[docs]</a>    <span class="k">def</span> <span class="nf">partial</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">positional_dflts</span><span class="p">,</span>
         <span class="n">_remove_bound_arguments</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">_roll_in_orphaned_nodes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">_consider_defaulted_arguments_as_bound</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">keyword_dflts</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a curried version of the DAG.</span>
+
 <span class="sd">        Like ``functools.partial``, but returns a DAG (not just a callable) and allows</span>
 <span class="sd">        you to remove bound arguments as well as roll in orphaned_nodes.</span>
 
+<span class="sd">        :param positional_dflts: Bind arguments positionally</span>
+<span class="sd">        :param keyword_dflts: Bind arguments through their names</span>
+<span class="sd">        :param _remove_bound_arguments: False -- set to True if you don&#39;t want bound</span>
+<span class="sd">            arguments to show up in the signature.</span>
+<span class="sd">        :param _consider_defaulted_arguments_as_bound: False -- set to True if</span>
+<span class="sd">            you want to also consider arguments that already had defaults as bound</span>
+<span class="sd">            (and be removed).</span>
+<span class="sd">        :return:</span>
+
+<span class="sd">        &gt;&gt;&gt; def f(a, b):</span>
+<span class="sd">        ...     return a + b</span>
+<span class="sd">        &gt;&gt;&gt; def g(c, d=4):</span>
+<span class="sd">        ...     return c * d</span>
+<span class="sd">        &gt;&gt;&gt; def h(f, g):</span>
+<span class="sd">        ...     return g - f</span>
+<span class="sd">        &gt;&gt;&gt; dag = DAG([f, g, h])</span>
+<span class="sd">        &gt;&gt;&gt; from inspect import signature</span>
+<span class="sd">        &gt;&gt;&gt; str(signature(dag))</span>
+<span class="sd">        &#39;(c, a, b, d=4)&#39;</span>
+<span class="sd">        &gt;&gt;&gt; dag(3, 1, 2, 4)  # == (3 * 4) - (1 + 2) == 12 - 3 == 9</span>
+<span class="sd">        9</span>
+<span class="sd">        &gt;&gt;&gt; dag(c=3, a=1, b=2, d=4)  # same as above</span>
+<span class="sd">        9</span>
+
+<span class="sd">        &gt;&gt;&gt; new_dag = dag.partial(c=3)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(new_dag, DAG)  # it&#39;s a dag (not just a partialized callable!)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; str(signature(new_dag))</span>
+<span class="sd">        &#39;(a, b, *, c=3, d=4)&#39;</span>
+<span class="sd">        &gt;&gt;&gt; new_dag(1, 2)  # same as dag(c=3, a=1, b=2, d=4), so:</span>
+<span class="sd">        9</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">keyword_dflts</span> <span class="o">=</span> <span class="n">Sig</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span>
+
+        <span class="n">keyword_dflts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span>
             <span class="n">args</span><span class="o">=</span><span class="n">positional_dflts</span><span class="p">,</span>
             <span class="n">kwargs</span><span class="o">=</span><span class="n">keyword_dflts</span><span class="p">,</span>
-            <span class="n">apply_defaults</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">apply_defaults</span><span class="o">=</span><span class="n">_consider_defaulted_arguments_as_bound</span><span class="p">,</span>
+            <span class="c1"># positional_dflts and keyword_dflts usually don&#39;t cover all arguments, so:</span>
+            <span class="n">allow_partial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="c1"># we prefer to let the user know if they&#39;re trying to bind arguments</span>
+            <span class="c1"># that don&#39;t exist, so:</span>
             <span class="n">allow_excess</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="c1"># we don&#39;t really care about kind, so:</span>
             <span class="n">ignore_kind</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1"># if positional_dflts:</span>
-        <span class="c1">#     raise NotImplemented(&quot;Need to map positional_dflts to keyword_defaults&quot;)</span>
-        <span class="c1"># TODO(mk_instance): What about other init args (cache_last_scope, ...)?</span>
+        <span class="c1"># TODO: mk_instance: What about other init args (cache_last_scope, ...)?</span>
         <span class="n">mk_instance</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">func_nodes</span> <span class="o">=</span> <span class="n">partialized_funcnodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">keyword_dflts</span><span class="p">)</span>
         <span class="n">new_dag</span> <span class="o">=</span> <span class="n">mk_instance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">_remove_bound_arguments</span><span class="p">:</span>
-            <span class="c1"># from i2.wrapper import rm_params</span>
             <span class="n">new_sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">new_dag</span><span class="p">)</span><span class="o">.</span><span class="n">remove_names</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">keyword_dflts</span><span class="p">))</span>
             <span class="n">new_sig</span><span class="p">(</span><span class="n">new_dag</span><span class="p">)</span>  <span class="c1"># Change the signature of new_dag with bound args removed</span>
-        <span class="k">if</span> <span class="n">_roll_in_orphaned_nodes</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;_roll_in_orphaned_nodes=True to be implemented&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_dag</span></div>
 
     <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
