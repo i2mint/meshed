@@ -901,6 +901,19 @@ class DAG:
 
     # TODO: Give more control (merge with lined)
     def dot_digraph_body(self, start_lines=()):
+        """Make lines for dot (graphviz) specification of DAG
+
+        >>> def add(a, b=1): return a + b
+        >>> def mult(x, y=3): return x * y
+        >>> def exp(mult, a): return mult ** a
+        >>> func_nodes = [
+        ...     FuncNode(add, out='x'), FuncNode(mult, name='the_product'), FuncNode(exp)
+        ... ]
+
+        #
+        # >>> assert list(DAG(func_nodes).dot_digraph_body()) == [
+        # ]
+        """
         yield from dot_lines_of_func_nodes(self.func_nodes, start_lines=start_lines)
 
     @wraps(dot_digraph_body)
@@ -956,21 +969,24 @@ def call_func(func, kwargs):
 def dot_lines_of_func_parameters(
     parameters: Iterable[Parameter],
     out: str,
-    func_name: str,
+    func_id: str,
+    *,
+    func_label: str = None,
     output_shape: str = dflt_configs['vnode_shape'],
     func_shape: str = dflt_configs['fnode_shape'],
 ) -> Iterable[str]:
-    assert func_name != out, (
-        f"Your func and output name shouldn't be the " f'same: {out=} {func_name=}'
+    assert func_id != out, (
+        f"Your func and output name shouldn't be the " f'same: {out=} {func_id=}'
     )
+    func_label = func_label or func_id
     yield f'{out} [label="{out}" shape="{output_shape}"]'
-    yield f'{func_name} [label="{func_name}" shape="{func_shape}"]'
-    yield f'{func_name} -> {out}'
+    yield f'{func_id} [label="{func_label}" shape="{func_shape}"]'
+    yield f'{func_id} -> {out}'
     # args -> func
     for p in parameters:
         yield from param_to_dot_definition(p)
     for p in parameters:
-        yield f'{p.name} -> {func_name}'
+        yield f'{p.name} -> {func_id}'
 
 
 def _parameters_and_names_from_sig(
@@ -1076,15 +1092,16 @@ def dot_lines_of_func_nodes(func_nodes: Iterable[FuncNode], start_lines=()):
 def dot_lines_of_func_node(func_node: FuncNode):
 
     out = func_node.out
-    func_name = func_node.display_name  # func_node.name
-    if out == func_name:  # though forbidden in default FuncNode validation
-        func_name = '_' + func_name
+    func_id = func_node.name
+    func_label = getattr(func_node, 'func_label', func_id)
+    if out == func_id:  # though forbidden in default FuncNode validation
+        func_id = '_' + func_id
 
     # Get the Parameter objects for sig, with names changed to bind ones
     params = func_node.sig.ch_names(**func_node.bind).params
 
     yield from dot_lines_of_func_parameters(
-        params, out=out, func_name=func_name,
+        params, out=out, func_id=func_id, func_label=func_label
     )
 
 

@@ -193,7 +193,7 @@ class FuncNode:
     name: str = field(default=None)
     bind: dict = field(default_factory=dict)
     out: str = field(default=None)
-    display_name: str = field(default=None)  # TODO: Integrate more
+    func_label: str = field(default=None)  # TODO: Integrate more
     write_output_into_scope: bool = True  # TODO: Do we really want to allow False?
     names_maker: Callable = underscore_func_node_names_maker
     node_validator: Callable = basic_node_validator
@@ -215,8 +215,8 @@ class FuncNode:
 
         self.extractor = partial(_mapped_extraction, to_extract=self.bind)
 
-        if self.display_name is None:
-            self.display_name = self.name
+        if self.func_label is None:
+            self.func_label = self.name
 
         self.node_validator(self)
 
@@ -303,7 +303,7 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
 def _mk_func_nodes(func_nodes):
     # TODO: Take care of names (or track and take care if collision)
     for func_node in func_nodes:
-        if isinstance(func_node, FuncNode):
+        if is_func_node(func_node):
             yield func_node
         elif isinstance(func_node, Callable):
             yield FuncNode(func_node)
@@ -328,7 +328,17 @@ def is_func_node(obj) -> bool:
     >>> is_func_node("I am not a FuncNode: I'm a string")
     False
     """
-    return isinstance(obj, FuncNode)
+    # A weaker check than an isinstance(obj, FuncNode), which fails when we're
+    # developing (therefore changing) FuncNode definition (without relaunching python
+    # kernel). This is to be used instead, at least during development times
+    # TODO: Replace with isinstance(obj, FuncNode) is this when development
+    #  stabalizes
+    # return isinstance(obj, FuncNode)
+    cls = type(obj)
+    if cls is not type:
+        return any(getattr(x, '__name__', '') == 'FuncNode' for x in cls.mro())
+    else:
+        return False
 
 
 def is_not_func_node(obj) -> bool:

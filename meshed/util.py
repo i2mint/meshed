@@ -348,7 +348,7 @@ from typing import Iterable, Callable, Optional
 def args_funcnames(
     funcs: Iterable[Callable], name_of_func: Optional[FunctionNamer] = func_name
 ):
-    """Generates (arg_name, func_name) pairs from the iterable of functions"""
+    """Generates (arg_name, func_id) pairs from the iterable of functions"""
     from inspect import signature, Parameter
 
     for func in funcs:
