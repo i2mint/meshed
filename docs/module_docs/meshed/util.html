@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.39 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.40 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -345,6 +345,44 @@ or [array programming](<a class="reference external" href="https://en.wikipedia.
 <dd><p>Makes a function name that doesn’t clash with the exclude_names iterable.
 Tries it’s best to not be lazy, but instead extract a name from the function
 itself.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.util.mk_place_holder_func">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">mk_place_holder_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arg_names_or_sig</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">defaults</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">annotations</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#mk_place_holder_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.mk_place_holder_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make (working and picklable) function with a specific signature.</p>
+<p>This is useful for testing as well as injecting compliant functions in DAG templates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arg_names_or_sig</strong> – Anything that i2.Sig can accept as it’s first input.
+(Such as a string of argument(s), function, signature, etc.)</p></li>
+<li><p><strong>name</strong> – The <code class="docutils literal notranslate"><span class="pre">__name__</span></code> to give the function.</p></li>
+<li><p><strong>defaults</strong> – If you want to add/change defaults</p></li>
+<li><p><strong>annotations</strong> – If you want to add/change annotations</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A (working and picklable) function with a specific signature</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">mk_place_holder_func</span><span class="p">(</span><span class="s1">&#39;a b&#39;</span><span class="p">,</span> <span class="s1">&#39;my_func&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">&#39;my_func(a=1, b=2)&#39;</span>
+</pre></div>
+</div>
+<p>The first argument can be any expression of a signature that <code class="docutils literal notranslate"><span class="pre">i2.Sig</span></code> can
+understand. For instance, it could be a function itself.
+See how the function takes on <code class="docutils literal notranslate"><span class="pre">mk_place_holder_func</span></code>’s signature and name in the
+following example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">mk_place_holder_func</span><span class="p">(</span><span class="n">mk_place_holder_func</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>  <span class="c1"># should give the same signature as mk_place_holder_func</span>
+<span class="go">&#39;(arg_names_or_sig, name=None, defaults=(), annotations=())&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">defaults</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">&#39;mk_place_holder_func(arg_names_or_sig=1, name=2, defaults=3, annotations=4)&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">

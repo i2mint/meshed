@@ -517,13 +517,11 @@ def named_partial(func, *args, __name__=None, **keywords):
 
 def _place_holder_func(*args, _sig=None, **kwargs):
     _kwargs = _sig.kwargs_from_args_and_kwargs(args, kwargs)
-    _kwargs_str = ", ".join(f"{k}={v}" for k, v in _kwargs.items())
-    return f"{_sig.name}({_kwargs_str})"
+    _kwargs_str = ', '.join(f'{k}={v}' for k, v in _kwargs.items())
+    return f'{_sig.name}({_kwargs_str})'
 
 
-def mk_place_holder_func(
-        arg_names_or_sig, name=None, defaults=(), annotations=()
-):
+def mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=()):
     """Make (working and picklable) function with a specific signature.
 
     This is useful for testing as well as injecting compliant functions in DAG templates.

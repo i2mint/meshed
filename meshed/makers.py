@@ -22,6 +22,7 @@ T = TypeVar('T')
 # Further other cases are not handled, but we don't want to handle ALL of python
 # -- just a sufficiently expressive subset.
 
+
 def attr_dict(obj):
     return {a: getattr(obj, a) for a in dir(obj) if not a.startswith('_')}
 
@@ -130,11 +131,9 @@ def src_to_func_node_factory(src, names_used_so_far=None):
         node_kwargs['display_name'] = node_kwargs['name']
         if node_kwargs['name'] in names_used_so_far:
             # need to keep names uniques, so add a prefix to (hope) to get uniqueness
-            node_kwargs['name'] += f"_{i:02.0f}"
+            node_kwargs['name'] += f'_{i:02.0f}'
         names_used_so_far.add(node_kwargs['name'])
         yield node_kwargs_to_func_node_factory(node_kwargs)
-
-
 
 
 # TODO: Rewrite body to use ast tools above!

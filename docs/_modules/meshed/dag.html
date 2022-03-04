@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.39 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.40 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -1173,7 +1173,7 @@
 <span class="k">def</span> <span class="nf">dot_lines_of_func_node</span><span class="p">(</span><span class="n">func_node</span><span class="p">:</span> <span class="n">FuncNode</span><span class="p">):</span>
 
     <span class="n">out</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span>
-    <span class="n">func_name</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">display_name</span>  <span class="c1"># func_node.name</span>
     <span class="k">if</span> <span class="n">out</span> <span class="o">==</span> <span class="n">func_name</span><span class="p">:</span>  <span class="c1"># though forbidden in default FuncNode validation</span>
         <span class="n">func_name</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">func_name</span>
 
