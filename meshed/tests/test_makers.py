@@ -10,4 +10,3 @@ def user_story_01():
     chks = chain(chks_iter)
     fvs = map(featurizer, chks)
     model_outputs = map(model, fvs)
-

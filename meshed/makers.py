@@ -155,7 +155,7 @@ from meshed.base import FuncNode
 from meshed.util import mk_place_holder_func
 
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 # Some restrictions exist and need to be clarified or removed (i.e. more cases handled)
 # For example,
@@ -169,15 +169,15 @@ T = TypeVar("T")
 
 
 def attr_dict(obj):
-    return {a: getattr(obj, a) for a in dir(obj) if not a.startswith("_")}
+    return {a: getattr(obj, a) for a in dir(obj) if not a.startswith('_')}
 
 
 def is_from_ast_module(o):
-    return getattr(type(o), "__module__", "").startswith("_ast")
+    return getattr(type(o), '__module__', '').startswith('_ast')
 
 
 def _ast_info_str(x):
-    return f"lineno={x.lineno}"
+    return f'lineno={x.lineno}'
 
 
 # Note: generalize? glom?
@@ -189,14 +189,14 @@ def parse_assignment(body: ast.Assign) -> Tuple:
         raise ValueError(f"All commands should be assignments, this one wasn't: {info}")
 
     target = body.targets
-    assert len(target) == 1, f"Only one target allowed: {info}"
+    assert len(target) == 1, f'Only one target allowed: {info}'
     target = target[0]
     assert isinstance(
         target, (ast.Name, ast.Tuple)
-    ), f"Should be a ast.Name or ast.Tuple: {info}"
+    ), f'Should be a ast.Name or ast.Tuple: {info}'
 
     value = body.value
-    assert isinstance(value, ast.Call), f"Only one target allowed: {info}"
+    assert isinstance(value, ast.Call), f'Only one target allowed: {info}'
 
     return target, value
 
@@ -211,7 +211,7 @@ def parsed_to_node_kwargs(target_value) -> dict:
     # Note: ast.Tuple has names in 'elts' attribute,
     # and could be handled, but would need to lead to multiple nodes
     target, value = target_value
-    assert isinstance(target, ast.Name), f"Should be a ast.Name: {target}"
+    assert isinstance(target, ast.Name), f'Should be a ast.Name: {target}'
     args = value.args
     bind_from_args = {i: k.id for i, k in enumerate(args)}
     kwargs = {x.arg: x.value.id for x in value.keywords}
@@ -279,11 +279,11 @@ def src_to_func_node_factory(src, names_used_so_far=None) -> Iterator[FuncNodeFa
     names_used_so_far = names_used_so_far or set()
     for i, target_value in enumerate(parse_assignment_steps(src), 1):
         node_kwargs = parsed_to_node_kwargs(target_value)
-        node_kwargs["func_label"] = node_kwargs["name"]
-        if node_kwargs["name"] in names_used_so_far:
+        node_kwargs['func_label'] = node_kwargs['name']
+        if node_kwargs['name'] in names_used_so_far:
             # need to keep names uniques, so add a prefix to (hope) to get uniqueness
-            node_kwargs["name"] += f"_{i:02.0f}"
-        names_used_so_far.add(node_kwargs["name"])
+            node_kwargs['name'] += f'_{i:02.0f}'
+        names_used_so_far.add(node_kwargs['name'])
         yield node_kwargs_to_func_node_factory(node_kwargs)
 
 
@@ -300,17 +300,17 @@ def dlft_factory_to_func(
 
     factory_kwargs = factory.keywords
     name = (
-        factory_kwargs["func_label"] or factory_kwargs["name"] or factory_kwargs["out"]
+        factory_kwargs['func_label'] or factory_kwargs['name'] or factory_kwargs['out']
     )
     if name in name_to_func_map:
         return name_to_func_map[name]
     elif use_place_holder_fallback:
         arg_names = [
-            k if isinstance(k, str) else v for k, v in factory_kwargs["bind"].items()
+            k if isinstance(k, str) else v for k, v in factory_kwargs['bind'].items()
         ]
         return mk_place_holder_func(arg_names, name=name)
     else:
-        raise KeyError(f"name not found in name_to_func_map: {name}")
+        raise KeyError(f'name not found in name_to_func_map: {name}')
 
 
 def mk_fnodes_from_fn_factories(
@@ -348,13 +348,13 @@ def simple_code_to_digraph(code):
             return getsource(code)
         return code
 
-    empty_spaces = re.compile("^\s*$")
+    empty_spaces = re.compile('^\s*$')
     simple_assignment_p = re.compile(
-        "(?P<output_vars>[^=]+)" "\s*=\s*" "(?P<func>\w+)" "\((?P<input_vars>.*)\)"
+        '(?P<output_vars>[^=]+)' '\s*=\s*' '(?P<func>\w+)' '\((?P<input_vars>.*)\)'
     )
 
     def get_lines(code_str):
-        for line in code_str.split("\n"):
+        for line in code_str.split('\n'):
             if not empty_spaces.match(line):
                 yield line.strip()
 
