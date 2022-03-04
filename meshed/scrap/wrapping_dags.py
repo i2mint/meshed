@@ -30,7 +30,7 @@ def test_ddag():
     assert d(1, 2, 3) == 9  # can call
     from i2 import Sig
 
-    assert str(Sig(d)) == "(a, b=2, c=3)"  # has correct signature
+    assert str(Sig(d)) == '(a, b=2, c=3)'  # has correct signature
 
     def dec(func):
         def _dec(*args, **kwargs):
