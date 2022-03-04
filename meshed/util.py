@@ -513,3 +513,54 @@ def named_partial(func, *args, __name__=None, **keywords):
     f = partial(func, *args, **keywords)
     f.__name__ = __name__ or func.__name__
     return f
+
+
+def _place_holder_func(*args, _sig=None, **kwargs):
+    _kwargs = _sig.kwargs_from_args_and_kwargs(args, kwargs)
+    _kwargs_str = ", ".join(f"{k}={v}" for k, v in _kwargs.items())
+    return f"{_sig.name}({_kwargs_str})"
+
+
+def mk_place_holder_func(
+        arg_names_or_sig, name=None, defaults=(), annotations=()
+):
+    """Make (working and picklable) function with a specific signature.
+
+    This is useful for testing as well as injecting compliant functions in DAG templates.
+
+    :param arg_names_or_sig: Anything that i2.Sig can accept as it's first input.
+        (Such as a string of argument(s), function, signature, etc.)
+    :param name: The ``__name__`` to give the function.
+    :param defaults: If you want to add/change defaults
+    :param annotations: If you want to add/change annotations
+    :return: A (working and picklable) function with a specific signature
+
+
+    >>> f = mk_place_holder_func('a b', 'my_func')
+    >>> f(1,2)
+    'my_func(a=1, b=2)'
+
+    The first argument can be any expression of a signature that ``i2.Sig`` can
+    understand. For instance, it could be a function itself.
+    See how the function takes on ``mk_place_holder_func``'s signature and name in the
+    following example:
+
+    >>> g = mk_place_holder_func(mk_place_holder_func)
+    >>> from inspect import signature
+    >>> str(signature(g))  # should give the same signature as mk_place_holder_func
+    '(arg_names_or_sig, name=None, defaults=(), annotations=())'
+    >>> g(1,2,defaults=3, annotations=4)
+    'mk_place_holder_func(arg_names_or_sig=1, name=2, defaults=3, annotations=4)'
+
+    """
+    defaults = dict(defaults)
+    sig = Sig(arg_names_or_sig)
+    sig = sig.ch_defaults(**dict(defaults))
+    sig = sig.ch_annotations(**dict(annotations))
+
+    sig.name = name or sig.name or 'place_holder_func'
+
+    func = sig(partial(_place_holder_func, _sig=sig))
+    func.__name__ = sig.name
+
+    return func

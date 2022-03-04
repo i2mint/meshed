@@ -1,12 +1,14 @@
 """Makers"""
 
-from contextlib import suppress
-from functools import partial
-from typing import Mapping, Iterable, TypeVar, Callable
-from meshed import FuncNode
-from i2 import Pipe
+
 import ast
 import inspect
+from typing import Tuple, Callable, Mapping, Iterable, TypeVar, Callable
+from contextlib import suppress
+from functools import partial
+from meshed import FuncNode
+from i2 import Pipe
+
 
 T = TypeVar("T")
 
@@ -19,11 +21,6 @@ T = TypeVar("T")
 # think...):
 # Further other cases are not handled, but we don't want to handle ALL of python
 # -- just a sufficiently expressive subset.
-
-import ast
-import inspect
-from typing import Tuple, Callable
-
 
 def attr_dict(obj):
     return {a: getattr(obj, a) for a in dir(obj) if not a.startswith("_")}
@@ -122,6 +119,23 @@ targval_to_func_node_factory = Pipe(
 src_to_func_node_factory = Pipe(
     parse_assignment_steps, iterize(targval_to_func_node_factory)
 )
+
+
+def src_to_func_node_factory(src, names_used_so_far=None):
+    """A generator of FuncNode factories from a src (string or object).
+    """
+    names_used_so_far = names_used_so_far or set()
+    for i, target_value in enumerate(parse_assignment_steps(src), 1):
+        node_kwargs = parsed_to_node_kwargs(target_value)
+        node_kwargs['display_name'] = node_kwargs['name']
+        if node_kwargs['name'] in names_used_so_far:
+            # need to keep names uniques, so add a prefix to (hope) to get uniqueness
+            node_kwargs['name'] += f"_{i:02.0f}"
+        names_used_so_far.add(node_kwargs['name'])
+        yield node_kwargs_to_func_node_factory(node_kwargs)
+
+
+
 
 # TODO: Rewrite body to use ast tools above!
 # TODO: This function should really be a DAG where we can choose if we want parsed lines,

@@ -1078,7 +1078,7 @@ def dot_lines_of_func_nodes(func_nodes: Iterable[FuncNode], start_lines=()):
 def dot_lines_of_func_node(func_node: FuncNode):
 
     out = func_node.out
-    func_name = func_node.name
+    func_name = func_node.display_name  # func_node.name
     if out == func_name:  # though forbidden in default FuncNode validation
         func_name = "_" + func_name
 

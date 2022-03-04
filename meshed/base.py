@@ -193,6 +193,7 @@ class FuncNode:
     name: str = field(default=None)
     bind: dict = field(default_factory=dict)
     out: str = field(default=None)
+    display_name: str = field(default=None)  # TODO: Integrate more
     write_output_into_scope: bool = True  # TODO: Do we really want to allow False?
     names_maker: Callable = underscore_func_node_names_maker
     node_validator: Callable = basic_node_validator
@@ -213,6 +214,9 @@ class FuncNode:
         _func_node_args_validation(bind=self.bind)
 
         self.extractor = partial(_mapped_extraction, to_extract=self.bind)
+
+        if self.display_name is None:
+            self.display_name = self.name
 
         self.node_validator(self)
 
