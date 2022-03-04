@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.39 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.40 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -610,6 +610,55 @@
     <span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="vm">__name__</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="k">return</span> <span class="n">f</span></div>
+
+
+<span class="k">def</span> <span class="nf">_place_holder_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">_sig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">_kwargs</span> <span class="o">=</span> <span class="n">_sig</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">_kwargs_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_sig</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="n">_kwargs_str</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+
+<div class="viewcode-block" id="mk_place_holder_func"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.mk_place_holder_func">[docs]</a><span class="k">def</span> <span class="nf">mk_place_holder_func</span><span class="p">(</span><span class="n">arg_names_or_sig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">(),</span> <span class="n">annotations</span><span class="o">=</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Make (working and picklable) function with a specific signature.</span>
+
+<span class="sd">    This is useful for testing as well as injecting compliant functions in DAG templates.</span>
+
+<span class="sd">    :param arg_names_or_sig: Anything that i2.Sig can accept as it&#39;s first input.</span>
+<span class="sd">        (Such as a string of argument(s), function, signature, etc.)</span>
+<span class="sd">    :param name: The ``__name__`` to give the function.</span>
+<span class="sd">    :param defaults: If you want to add/change defaults</span>
+<span class="sd">    :param annotations: If you want to add/change annotations</span>
+<span class="sd">    :return: A (working and picklable) function with a specific signature</span>
+
+
+<span class="sd">    &gt;&gt;&gt; f = mk_place_holder_func(&#39;a b&#39;, &#39;my_func&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; f(1,2)</span>
+<span class="sd">    &#39;my_func(a=1, b=2)&#39;</span>
+
+<span class="sd">    The first argument can be any expression of a signature that ``i2.Sig`` can</span>
+<span class="sd">    understand. For instance, it could be a function itself.</span>
+<span class="sd">    See how the function takes on ``mk_place_holder_func``&#39;s signature and name in the</span>
+<span class="sd">    following example:</span>
+
+<span class="sd">    &gt;&gt;&gt; g = mk_place_holder_func(mk_place_holder_func)</span>
+<span class="sd">    &gt;&gt;&gt; from inspect import signature</span>
+<span class="sd">    &gt;&gt;&gt; str(signature(g))  # should give the same signature as mk_place_holder_func</span>
+<span class="sd">    &#39;(arg_names_or_sig, name=None, defaults=(), annotations=())&#39;</span>
+<span class="sd">    &gt;&gt;&gt; g(1,2,defaults=3, annotations=4)</span>
+<span class="sd">    &#39;mk_place_holder_func(arg_names_or_sig=1, name=2, defaults=3, annotations=4)&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">arg_names_or_sig</span><span class="p">)</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">ch_defaults</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">defaults</span><span class="p">))</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">ch_annotations</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">annotations</span><span class="p">))</span>
+
+    <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s1">&#39;place_holder_func&#39;</span>
+
+    <span class="n">func</span> <span class="o">=</span> <span class="n">sig</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">_place_holder_func</span><span class="p">,</span> <span class="n">_sig</span><span class="o">=</span><span class="n">sig</span><span class="p">))</span>
+    <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">return</span> <span class="n">func</span></div>
 </pre></div>
 
            </div>
