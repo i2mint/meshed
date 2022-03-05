@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.41 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.42 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -242,14 +242,27 @@
 
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span><span class="p">,</span> <span class="n">attrgetter</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Iterator</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">TypeVar</span><span class="p">,</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Pipe</span>
 
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
+
+<span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
 <span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="n">FuncNode</span>
-<span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">mk_place_holder_func</span>
+<span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">mk_place_holder_func</span><span class="p">,</span> <span class="n">partialx</span>
 
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
@@ -277,6 +290,15 @@
     <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;lineno=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s1">&#39;</span>
 
 
+<span class="k">def</span> <span class="nf">_itemgetter</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">item_keys</span><span class="o">=</span><span class="p">()):</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">item_keys</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="signed_itemgetter"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.signed_itemgetter">[docs]</a><span class="k">def</span> <span class="nf">signed_itemgetter</span><span class="p">(</span><span class="o">*</span><span class="n">item_keys</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Like ``operator.itemgetter``, except has a signature, which we needed&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">partialx</span><span class="p">(</span><span class="n">_itemgetter</span><span class="p">,</span> <span class="n">item_keys</span><span class="o">=</span><span class="n">item_keys</span><span class="p">,</span> <span class="n">rm_partialize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
 <span class="c1"># Note: generalize? glom?</span>
 <span class="k">def</span> <span class="nf">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
     <span class="c1"># TODO: Make this validation better (at least more help in raised error)</span>
@@ -298,21 +320,65 @@
     <span class="k">return</span> <span class="n">target</span><span class="p">,</span> <span class="n">value</span>
 
 
-<div class="viewcode-block" id="parsed_to_node_kwargs"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.parsed_to_node_kwargs">[docs]</a><span class="k">def</span> <span class="nf">parsed_to_node_kwargs</span><span class="p">(</span><span class="n">target_value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="c1"># TODO: Evolve this: Perhaps it can be used to centralize this concern:</span>
+<span class="k">def</span> <span class="nf">_extract_value_from_ast_element</span><span class="p">(</span><span class="n">ast_element</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ast_element</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ast_element</span><span class="o">.</span><span class="n">id</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ast_element</span><span class="o">.</span><span class="n">value</span>
+
+
+<div class="viewcode-block" id="parsed_to_node_kwargs"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.parsed_to_node_kwargs">[docs]</a><span class="k">def</span> <span class="nf">parsed_to_node_kwargs</span><span class="p">(</span><span class="n">target_value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Extract FuncNode kwargs (name, out, and bind) from ast (target,value) pairs</span>
 
 <span class="sd">    :param target_value: A (target, value) pair</span>
 <span class="sd">    :return: A ``{name:..., out:..., bind:...}`` dict (meant to be used to curry FuncNode</span>
 
+<span class="sd">    Where can you make make target_values? With the ``parse_assignment_steps`` function.</span>
+
+<span class="sd">    &gt;&gt;&gt; from meshed.makers import parse_assignment_steps</span>
+<span class="sd">    &gt;&gt;&gt; def foo():</span>
+<span class="sd">    ...     x = func1(a, b=2)</span>
+<span class="sd">    ...     y = func2(x, func1, c=3, d=x)</span>
+<span class="sd">    &gt;&gt;&gt; for target_value in parse_assignment_steps(foo):</span>
+<span class="sd">    ...     for d in parsed_to_node_kwargs(target_value):</span>
+<span class="sd">    ...         print(d)</span>
+<span class="sd">    {&#39;name&#39;: &#39;func1&#39;, &#39;out&#39;: &#39;x&#39;, &#39;bind&#39;: {0: &#39;a&#39;, &#39;b&#39;: 2}}</span>
+<span class="sd">    {&#39;name&#39;: &#39;func2&#39;, &#39;out&#39;: &#39;y&#39;, &#39;bind&#39;: {0: &#39;x&#39;, 1: &#39;func1&#39;, &#39;c&#39;: 3, &#39;d&#39;: &#39;x&#39;}}</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Note: ast.Tuple has names in &#39;elts&#39; attribute,</span>
     <span class="c1"># and could be handled, but would need to lead to multiple nodes</span>
     <span class="n">target</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">target_value</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Should be a ast.Name: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">args</span>
     <span class="n">bind_from_args</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">args</span><span class="p">)}</span>
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">arg</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">keywords</span><span class="p">}</span>
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">bind_from_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">arg</span><span class="p">:</span> <span class="n">_extract_value_from_ast_element</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">keywords</span><span class="p">}</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">bind_from_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">):</span>
+        <span class="n">assign_to_names</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">),</span> <span class="n">target</span><span class="o">.</span><span class="n">elts</span><span class="p">))</span>
+        <span class="c1"># yield the function call information, assigning to a single variable</span>
+        <span class="c1"># TODO: Long. Better way? (careful: need global uniqueness!)</span>
+        <span class="n">func_output_name</span> <span class="o">=</span> <span class="s1">&#39;__&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">assign_to_names</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">out</span><span class="o">=</span><span class="n">func_output_name</span><span class="p">,</span>
+            <span class="n">bind</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">bind_from_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># then, yield instructions to extract variable into several</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">assign_to_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">assign_to_names</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">func</span><span class="o">=</span><span class="n">signed_itemgetter</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">assign_to_name</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">out</span><span class="o">=</span><span class="n">assign_to_name</span><span class="p">,</span>
+                <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">func_output_name</span><span class="p">},</span>
+                <span class="n">func_label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="c1"># raise ValueError(f&quot;You&#39;re here: {target=}&quot;)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be a ast.Name or ast.Tuple. Was: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
 <span class="n">FuncNodeFactory</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">FuncNode</span><span class="p">]</span>
@@ -341,57 +407,85 @@
     <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">store</span>
 
 
-<span class="k">def</span> <span class="nf">parse_assignment_steps</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_assignment_steps"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.parse_assignment_steps">[docs]</a><span class="k">def</span> <span class="nf">parse_assignment_steps</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse source code and generate tuples of information about it.</span>
+
+<span class="sd">    :param src: The source string or a python object whose code string can be extracted.</span>
+<span class="sd">    :return: And generator of &quot;target_values&quot;</span>
+
+<span class="sd">    &gt;&gt;&gt; from meshed.makers import parse_assignment_steps</span>
+<span class="sd">    &gt;&gt;&gt; def foo():</span>
+<span class="sd">    ...     x = func1(a, b=2)</span>
+<span class="sd">    ...     y = func2(x, c=3)</span>
+<span class="sd">    &gt;&gt;&gt; target_values = list(parse_assignment_steps(foo))</span>
+
+<span class="sd">    Let&#39;s look at the first target_value to see what it contains:</span>
+
+<span class="sd">    &gt;&gt;&gt; name, call = target_values[0]  # a 2-tuple</span>
+<span class="sd">    &gt;&gt;&gt; assert isinstance(name, ast.Name)  # the first element is a ast Name object</span>
+<span class="sd">    &gt;&gt;&gt; sorted(vars(name))</span>
+<span class="sd">    [&#39;col_offset&#39;, &#39;ctx&#39;, &#39;end_col_offset&#39;, &#39;end_lineno&#39;, &#39;id&#39;, &#39;lineno&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; name.id</span>
+<span class="sd">    &#39;x&#39;</span>
+<span class="sd">    &gt;&gt;&gt; assert isinstance(call, ast.Call)  # the first element is a ast Call object</span>
+<span class="sd">    &gt;&gt;&gt; sorted(vars(call))</span>
+<span class="sd">    [&#39;args&#39;, &#39;col_offset&#39;, &#39;end_col_offset&#39;, &#39;end_lineno&#39;, &#39;func&#39;, &#39;keywords&#39;, &#39;lineno&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; call.args[0].id</span>
+<span class="sd">    &#39;a&#39;</span>
+<span class="sd">    &gt;&gt;&gt; call.keywords[0].arg</span>
+<span class="sd">    &#39;b&#39;</span>
+<span class="sd">    &gt;&gt;&gt; call.keywords[0].value.value</span>
+<span class="sd">    2</span>
+
+<span class="sd">    Basically, these ast objects contain all we need to know about the (parsed) source.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
         <span class="n">src</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="n">func_body</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="c1"># TODO, work with func_body.args to get info on interface (name, args, kwargs,</span>
+    <span class="c1"># TODO: work with func_body.args to get info on interface (name, args, kwargs,</span>
     <span class="c1">#  return etc.)</span>
     <span class="c1">#     return func_body</span>
     <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">func_body</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="n">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">)</span></div>
 
 
 <span class="n">iterize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
 
-<span class="n">targval_to_func_node_factory</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span>
-    <span class="n">parsed_to_node_kwargs</span><span class="p">,</span> <span class="n">node_kwargs_to_func_node_factory</span>
-<span class="p">)</span>
-<span class="n">src_to_func_node_factory</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span>
-    <span class="n">parse_assignment_steps</span><span class="p">,</span> <span class="n">iterize</span><span class="p">(</span><span class="n">targval_to_func_node_factory</span><span class="p">)</span>
-<span class="p">)</span>
 
 <span class="n">FuncNodeFactory</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">FuncNode</span><span class="p">]</span>
 <span class="n">FactoryToFunc</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">FuncNodeFactory</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="src_to_func_node_factory"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.src_to_func_node_factory">[docs]</a><span class="k">def</span> <span class="nf">src_to_func_node_factory</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">names_used_so_far</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">FuncNodeFactory</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;A generator of FuncNode factories from a src (string or object).</span>
-
-
-
-<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="src_to_func_node_factory"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.src_to_func_node_factory">[docs]</a><span class="k">def</span> <span class="nf">src_to_func_node_factory</span><span class="p">(</span>
+    <span class="n">src</span><span class="p">,</span> <span class="n">names_used_so_far</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">,</span> <span class="n">FuncNodeFactory</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;A generator of FuncNode factories from a src (string or object).&quot;&quot;&quot;</span>
     <span class="n">names_used_so_far</span> <span class="o">=</span> <span class="n">names_used_so_far</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">target_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parse_assignment_steps</span><span class="p">(</span><span class="n">src</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">node_kwargs</span> <span class="o">=</span> <span class="n">parsed_to_node_kwargs</span><span class="p">(</span><span class="n">target_value</span><span class="p">)</span>
-        <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;func_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">names_used_so_far</span><span class="p">:</span>
-            <span class="c1"># need to keep names uniques, so add a prefix to (hope) to get uniqueness</span>
-            <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02.0f</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="n">names_used_so_far</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
-        <span class="k">yield</span> <span class="n">node_kwargs_to_func_node_factory</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">node_kwargs</span> <span class="ow">in</span> <span class="n">parsed_to_node_kwargs</span><span class="p">(</span><span class="n">target_value</span><span class="p">):</span>
+            <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;func_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">names_used_so_far</span><span class="p">:</span>
+                <span class="c1"># need to keep names uniques, so add a prefix to (hope) to get uniqueness</span>
+                <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02.0f</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">names_used_so_far</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="k">yield</span> <span class="n">node_kwargs_to_func_node_factory</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">)</span></div>
 
 
 <span class="n">dlft_factory_to_func</span><span class="p">:</span> <span class="n">FactoryToFunc</span>
 
 
-<span class="k">def</span> <span class="nf">dlft_factory_to_func</span><span class="p">(</span>
+<span class="c1"># TODO: A bit strange to ask a factory for information to get a func that it needs</span>
+<span class="c1">#  to make itself. Do we gain much over simply saying &quot;factory, make yourself&quot;?</span>
+<div class="viewcode-block" id="dlft_factory_to_func"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.dlft_factory_to_func">[docs]</a><span class="k">def</span> <span class="nf">dlft_factory_to_func</span><span class="p">(</span>
     <span class="n">factory</span><span class="p">:</span> <span class="n">partial</span><span class="p">,</span>
     <span class="n">name_to_func_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a function for the given factory, using&quot;&quot;&quot;</span>
     <span class="c1"># TODO: Add extra validation (like n_args of return func against bind)</span>
     <span class="n">name_to_func_map</span> <span class="o">=</span> <span class="n">name_to_func_map</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
 
@@ -407,7 +501,7 @@
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">mk_place_holder_func</span><span class="p">(</span><span class="n">arg_names</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;name not found in name_to_func_map: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;name not found in name_to_func_map: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="mk_fnodes_from_fn_factories"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.mk_fnodes_from_fn_factories">[docs]</a><span class="k">def</span> <span class="nf">mk_fnodes_from_fn_factories</span><span class="p">(</span>
@@ -423,18 +517,54 @@
 <span class="sd">        what kind of function to make).</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO: Might be a cleaner design for this...</span>
     <span class="k">for</span> <span class="n">fnode_factory</span> <span class="ow">in</span> <span class="n">fnodes_factories</span><span class="p">:</span>
-        <span class="n">func</span> <span class="o">=</span> <span class="n">factory_to_func</span><span class="p">(</span><span class="n">fnode_factory</span><span class="p">)</span>
-        <span class="k">yield</span> <span class="n">fnode_factory</span><span class="p">(</span><span class="n">func</span><span class="p">)</span></div>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">fnode_factory</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">n_required</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;func&#39;</span><span class="p">:</span>
+            <span class="c1"># first making sure the fnode_factory is exactly as expected for this case,</span>
+            <span class="c1"># get a function for this fnode_factory, then use it to make the fnode</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">factory_to_func</span><span class="p">(</span><span class="n">fnode_factory</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">fnode_factory</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">sig</span><span class="o">.</span><span class="n">n_required</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># if fnode_factory has no (required) arguments, just call the factory:</span>
+            <span class="k">yield</span> <span class="n">fnode_factory</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if couldn&#39;t figure it out from the last two cases, freak out!</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The fnode_factory didn&#39;t have the expected format, so I&#39;m freaking &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;out. It&#39;s supposed to be a no-arguments-required-callable or a &quot;</span>
+                <span class="sa">f</span><span class="s1">&#39;functools.partial that needs only a func to make the func node. &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;This is the offending fnode_factory: </span><span class="si">{</span><span class="n">fnode_factory</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span></div>
 
 
-<span class="c1"># TODO: Rewrite body to use ast tools above!</span>
-<span class="c1"># TODO: This function should really be a DAG where we can choose if we want parsed lines,</span>
-<span class="c1">#   digraph dot commands, the graphviz.Digraph object itself etc.</span>
-<span class="c1"># TODO: The function below is meant to evolve into a tool that can take python code,</span>
-<span class="c1">#  (possibly written with some style constraints) and produce an equivalent DAG.</span>
-<span class="c1">#   Here, it just produces a graphviz.Digraph of the code.</span>
-<div class="viewcode-block" id="simple_code_to_digraph"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.simple_code_to_digraph">[docs]</a><span class="k">def</span> <span class="nf">simple_code_to_digraph</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_code_to_fnodes</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="o">=</span><span class="n">dlft_factory_to_func</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="n">name_to_func_map</span> <span class="o">=</span> <span class="n">func_src</span>
+        <span class="n">func_src</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="n">dlft_factory_to_func</span><span class="p">,</span>
+            <span class="n">name_to_func_map</span><span class="o">=</span><span class="n">name_to_func_map</span><span class="p">,</span>
+            <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">Callable</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;func_src should be callable, or a mapping&#39;</span>
+    <span class="n">fnodes_factories</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">src_to_func_node_factory</span><span class="p">(</span><span class="n">src</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">mk_fnodes_from_fn_factories</span><span class="p">(</span><span class="n">fnodes_factories</span><span class="p">,</span> <span class="n">func_src</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="code_to_dag"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.code_to_dag">[docs]</a><span class="k">def</span> <span class="nf">code_to_dag</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="o">=</span><span class="n">dlft_factory_to_func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a ``meshed.DAG`` from src code&quot;&quot;&quot;</span>
+    <span class="n">fnodes</span> <span class="o">=</span> <span class="n">_code_to_fnodes</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="n">fnodes</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">code_to_digraph</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+
+
+<span class="n">simple_code_to_digraph</span> <span class="o">=</span> <span class="n">code_to_digraph</span>  <span class="c1"># back-compatability alias</span>
+
+
+<span class="k">def</span> <span class="nf">_old_simple_code_to_digraph_with_regex</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Make a graphviz.Digraph object based on code (string or function&#39;s body)&quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">re</span>
     <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getsource</span>
@@ -474,7 +604,7 @@
 
     <span class="n">code_str</span> <span class="o">=</span> <span class="n">get_code_str</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
     <span class="n">dot_lines</span> <span class="o">=</span> <span class="n">parsed_lines_to_dot</span><span class="p">(</span><span class="n">parsed_lines</span><span class="p">(</span><span class="n">code_str</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">Digraph</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">dot_lines</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">Digraph</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">dot_lines</span><span class="p">)</span>
 
 
 <span class="c1"># TODO: Replace using builtin random</span>

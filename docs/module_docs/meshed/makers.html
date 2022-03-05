@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.41 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.42 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -243,6 +243,18 @@ of the dag signature, names, and relationships between these names:</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt id="meshed.makers.code_to_dag">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">code_to_dag</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">func_src=&lt;function dlft_factory_to_func&gt;</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#code_to_dag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.code_to_dag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a <code class="docutils literal notranslate"><span class="pre">meshed.DAG</span></code> from src code</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.makers.dlft_factory_to_func">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">dlft_factory_to_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">factory</span><span class="p">:</span> <span class="n">functools.partial</span></em>, <em class="sig-param"><span class="n">name_to_func_map</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>Callable<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#dlft_factory_to_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.dlft_factory_to_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a function for the given factory, using</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="meshed.makers.mk_fnodes_from_fn_factories">
 <code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">mk_fnodes_from_fn_factories</code><span class="sig-paren">(</span><em class="sig-param">fnodes_factories: Iterable[Callable[[...], meshed.base.FuncNode]], factory_to_func: Callable[[Callable[[...], meshed.base.FuncNode]], Callable] = &lt;function dlft_factory_to_func&gt;</em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#mk_fnodes_from_fn_factories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.mk_fnodes_from_fn_factories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make func nodes from func node factories and a specification of how to make the
@@ -263,8 +275,48 @@ what kind of function to make).</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="meshed.makers.parse_assignment_steps">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">parse_assignment_steps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#parse_assignment_steps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.parse_assignment_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse source code and generate tuples of information about it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>src</strong> – The source string or a python object whose code string can be extracted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>And generator of “target_values”</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">parse_assignment_steps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">func1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">func2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_assignment_steps</span><span class="p">(</span><span class="n">foo</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Let’s look at the first target_value to see what it contains:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">name</span><span class="p">,</span> <span class="n">call</span> <span class="o">=</span> <span class="n">target_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># a 2-tuple</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>  <span class="c1"># the first element is a ast Name object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+<span class="go">[&#39;col_offset&#39;, &#39;ctx&#39;, &#39;end_col_offset&#39;, &#39;end_lineno&#39;, &#39;id&#39;, &#39;lineno&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">name</span><span class="o">.</span><span class="n">id</span>
+<span class="go">&#39;x&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">call</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">)</span>  <span class="c1"># the first element is a ast Call object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">call</span><span class="p">))</span>
+<span class="go">[&#39;args&#39;, &#39;col_offset&#39;, &#39;end_col_offset&#39;, &#39;end_lineno&#39;, &#39;func&#39;, &#39;keywords&#39;, &#39;lineno&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">call</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+<span class="go">&#39;a&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">call</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">arg</span>
+<span class="go">&#39;b&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">call</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>Basically, these ast objects contain all we need to know about the (parsed) source.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="meshed.makers.parsed_to_node_kwargs">
-<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">parsed_to_node_kwargs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target_value</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="../../_modules/meshed/makers.html#parsed_to_node_kwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.parsed_to_node_kwargs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">parsed_to_node_kwargs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target_value</span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>dict<span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#parsed_to_node_kwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.parsed_to_node_kwargs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract FuncNode kwargs (name, out, and bind) from ast (target,value) pairs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -274,17 +326,29 @@ what kind of function to make).</p></li>
 <dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">{name:...,</span> <span class="pre">out:...,</span> <span class="pre">bind:...}</span></code> dict (meant to be used to curry FuncNode</p>
 </dd>
 </dl>
+<p>Where can you make make target_values? With the <code class="docutils literal notranslate"><span class="pre">parse_assignment_steps</span></code> function.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">parse_assignment_steps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">func1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">func2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">func1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">target_value</span> <span class="ow">in</span> <span class="n">parse_assignment_steps</span><span class="p">(</span><span class="n">foo</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">parsed_to_node_kwargs</span><span class="p">(</span><span class="n">target_value</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="go">{&#39;name&#39;: &#39;func1&#39;, &#39;out&#39;: &#39;x&#39;, &#39;bind&#39;: {0: &#39;a&#39;, &#39;b&#39;: 2}}</span>
+<span class="go">{&#39;name&#39;: &#39;func2&#39;, &#39;out&#39;: &#39;y&#39;, &#39;bind&#39;: {0: &#39;x&#39;, 1: &#39;func1&#39;, &#39;c&#39;: 3, &#39;d&#39;: &#39;x&#39;}}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
-<dt id="meshed.makers.simple_code_to_digraph">
-<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">simple_code_to_digraph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">code</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#simple_code_to_digraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.simple_code_to_digraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a graphviz.Digraph object based on code (string or function’s body)</p>
+<dt id="meshed.makers.signed_itemgetter">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">signed_itemgetter</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">item_keys</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#signed_itemgetter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.signed_itemgetter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like <code class="docutils literal notranslate"><span class="pre">operator.itemgetter</span></code>, except has a signature, which we needed</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="meshed.makers.src_to_func_node_factory">
-<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">src_to_func_node_factory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">names_used_so_far</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>Callable<span class="p">[</span><span class="p">[</span><span class="p">…</span><span class="p">]</span><span class="p">, </span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#src_to_func_node_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.src_to_func_node_factory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">src_to_func_node_factory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">names_used_so_far</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>Union<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">, </span>Callable<span class="p">[</span><span class="p">[</span><span class="p">…</span><span class="p">]</span><span class="p">, </span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#src_to_func_node_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.src_to_func_node_factory" title="Permalink to this definition">¶</a></dt>
 <dd><p>A generator of FuncNode factories from a src (string or object).</p>
 </dd></dl>
 
