@@ -161,7 +161,7 @@ from contextlib import suppress
 from functools import partial
 
 
-from i2 import Sig
+from i2 import Sig, name_of_obj
 
 from meshed.dag import DAG
 from meshed.base import FuncNode
@@ -456,6 +456,11 @@ def _code_to_fnodes(src, func_src=dlft_factory_to_func):
 
 def code_to_dag(src, func_src=dlft_factory_to_func, name=None):
     """Get a ``meshed.DAG`` from src code"""
+    if name is None:
+        if isinstance(src, str):
+            name = 'dag_made_from_code_parsing'
+        else:
+            name = name_of_obj(src)
     fnodes = _code_to_fnodes(src, func_src)
     return DAG(fnodes, name=name)
 
