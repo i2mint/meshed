@@ -145,14 +145,27 @@ But see below that the dag is now using the functions we specified:
 
 import ast
 import inspect
-from typing import Tuple, Optional, Iterator, Iterable, TypeVar, Callable, Dict
+from operator import itemgetter, attrgetter
+from typing import (
+    Tuple,
+    Optional,
+    Iterator,
+    Iterable,
+    TypeVar,
+    Callable,
+    Dict,
+    Mapping,
+    Union,
+)
 from contextlib import suppress
 from functools import partial
 
-from i2 import Pipe
 
+from i2 import Sig
+
+from meshed.dag import DAG
 from meshed.base import FuncNode
-from meshed.util import mk_place_holder_func
+from meshed.util import mk_place_holder_func, partialx
 
 
 T = TypeVar("T")
@@ -180,6 +193,15 @@ def _ast_info_str(x):
     return f"lineno={x.lineno}"
 
 
+def _itemgetter(items, item_keys=()):
+    return tuple(items[i] for i in item_keys)
+
+
+def signed_itemgetter(*item_keys):
+    """Like ``operator.itemgetter``, except has a signature, which we needed"""
+    return partialx(_itemgetter, item_keys=item_keys, rm_partialize=True)
+
+
 # Note: generalize? glom?
 def parse_assignment(body: ast.Assign) -> Tuple:
     # TODO: Make this validation better (at least more help in raised error)
@@ -201,21 +223,65 @@ def parse_assignment(body: ast.Assign) -> Tuple:
     return target, value
 
 
-def parsed_to_node_kwargs(target_value) -> dict:
+# TODO: Evolve this: Perhaps it can be used to centralize this concern:
+def _extract_value_from_ast_element(ast_element):
+    if isinstance(ast_element, ast.Name):
+        return ast_element.id
+    else:
+        return ast_element.value
+
+
+def parsed_to_node_kwargs(target_value) -> Iterator[dict]:
     """Extract FuncNode kwargs (name, out, and bind) from ast (target,value) pairs
 
     :param target_value: A (target, value) pair
     :return: A ``{name:..., out:..., bind:...}`` dict (meant to be used to curry FuncNode
 
+    Where can you make make target_values? With the ``parse_assignment_steps`` function.
+
+    >>> from meshed.makers import parse_assignment_steps
+    >>> def foo():
+    ...     x = func1(a, b=2)
+    ...     y = func2(x, func1, c=3, d=x)
+    >>> for target_value in parse_assignment_steps(foo):
+    ...     for d in parsed_to_node_kwargs(target_value):
+    ...         print(d)
+    {'name': 'func1', 'out': 'x', 'bind': {0: 'a', 'b': 2}}
+    {'name': 'func2', 'out': 'y', 'bind': {0: 'x', 1: 'func1', 'c': 3, 'd': 'x'}}
+
     """
     # Note: ast.Tuple has names in 'elts' attribute,
     # and could be handled, but would need to lead to multiple nodes
     target, value = target_value
-    assert isinstance(target, ast.Name), f"Should be a ast.Name: {target}"
     args = value.args
     bind_from_args = {i: k.id for i, k in enumerate(args)}
-    kwargs = {x.arg: x.value.id for x in value.keywords}
-    return dict(name=value.func.id, out=target.id, bind=dict(bind_from_args, **kwargs))
+    kwargs = {x.arg: _extract_value_from_ast_element(x.value) for x in value.keywords}
+    if isinstance(target, ast.Name):
+        yield dict(
+            name=value.func.id, out=target.id, bind=dict(bind_from_args, **kwargs)
+        )
+    elif isinstance(target, ast.Tuple):
+        assign_to_names = tuple(map(attrgetter("id"), target.elts))
+        # yield the function call information, assigning to a single variable
+        # TODO: Long. Better way? (careful: need global uniqueness!)
+        func_output_name = "__".join(assign_to_names)
+        yield dict(
+            name=value.func.id,
+            out=func_output_name,
+            bind=dict(bind_from_args, **kwargs),
+        )
+        # then, yield instructions to extract variable into several
+        for i, assign_to_name in enumerate(assign_to_names):
+            yield dict(
+                func=signed_itemgetter(i),
+                name=f"{assign_to_name}__{i}",
+                out=assign_to_name,
+                bind={0: func_output_name},
+                func_label=f"[{i}]",
+            )
+        # raise ValueError(f"You're here: {target=}")
+    else:
+        raise TypeError(f"Should be a ast.Name or ast.Tuple. Was: {target}")
 
 
 FuncNodeFactory = Callable[[Callable], FuncNode]
@@ -245,12 +311,44 @@ def retrieve_assignments(src):
 
 
 def parse_assignment_steps(src):
+    """Parse source code and generate tuples of information about it.
+
+    :param src: The source string or a python object whose code string can be extracted.
+    :return: And generator of "target_values"
+
+    >>> from meshed.makers import parse_assignment_steps
+    >>> def foo():
+    ...     x = func1(a, b=2)
+    ...     y = func2(x, c=3)
+    >>> target_values = list(parse_assignment_steps(foo))
+
+    Let's look at the first target_value to see what it contains:
+
+    >>> name, call = target_values[0]  # a 2-tuple
+    >>> assert isinstance(name, ast.Name)  # the first element is a ast Name object
+    >>> sorted(vars(name))
+    ['col_offset', 'ctx', 'end_col_offset', 'end_lineno', 'id', 'lineno']
+    >>> name.id
+    'x'
+    >>> assert isinstance(call, ast.Call)  # the first element is a ast Call object
+    >>> sorted(vars(call))
+    ['args', 'col_offset', 'end_col_offset', 'end_lineno', 'func', 'keywords', 'lineno']
+    >>> call.args[0].id
+    'a'
+    >>> call.keywords[0].arg
+    'b'
+    >>> call.keywords[0].value.value
+    2
+
+    Basically, these ast objects contain all we need to know about the (parsed) source.
+
+    """
     if callable(src):
         src = inspect.getsource(src)
     root = ast.parse(src)
     assert len(root.body) == 1
     func_body = root.body[0]
-    # TODO, work with func_body.args to get info on interface (name, args, kwargs,
+    # TODO: work with func_body.args to get info on interface (name, args, kwargs,
     #  return etc.)
     #     return func_body
     for body in func_body.body:
@@ -259,42 +357,37 @@ def parse_assignment_steps(src):
 
 iterize = lambda func: partial(map, func)
 
-targval_to_func_node_factory = Pipe(
-    parsed_to_node_kwargs, node_kwargs_to_func_node_factory
-)
-src_to_func_node_factory = Pipe(
-    parse_assignment_steps, iterize(targval_to_func_node_factory)
-)
 
 FuncNodeFactory = Callable[..., FuncNode]
 FactoryToFunc = Callable[[FuncNodeFactory], Callable]
 
 
-def src_to_func_node_factory(src, names_used_so_far=None) -> Iterator[FuncNodeFactory]:
-    """A generator of FuncNode factories from a src (string or object).
-
-
-
-    """
+def src_to_func_node_factory(
+    src, names_used_so_far=None
+) -> Iterator[Union[FuncNode, FuncNodeFactory]]:
+    """A generator of FuncNode factories from a src (string or object)."""
     names_used_so_far = names_used_so_far or set()
     for i, target_value in enumerate(parse_assignment_steps(src), 1):
-        node_kwargs = parsed_to_node_kwargs(target_value)
-        node_kwargs["func_label"] = node_kwargs["name"]
-        if node_kwargs["name"] in names_used_so_far:
-            # need to keep names uniques, so add a prefix to (hope) to get uniqueness
-            node_kwargs["name"] += f"_{i:02.0f}"
-        names_used_so_far.add(node_kwargs["name"])
-        yield node_kwargs_to_func_node_factory(node_kwargs)
+        for node_kwargs in parsed_to_node_kwargs(target_value):
+            node_kwargs["func_label"] = node_kwargs["name"]
+            if node_kwargs["name"] in names_used_so_far:
+                # need to keep names uniques, so add a prefix to (hope) to get uniqueness
+                node_kwargs["name"] += f"_{i:02.0f}"
+            names_used_so_far.add(node_kwargs["name"])
+            yield node_kwargs_to_func_node_factory(node_kwargs)
 
 
 dlft_factory_to_func: FactoryToFunc
 
 
+# TODO: A bit strange to ask a factory for information to get a func that it needs
+#  to make itself. Do we gain much over simply saying "factory, make yourself"?
 def dlft_factory_to_func(
     factory: partial,
     name_to_func_map: Optional[Dict[str, Callable]] = None,
     use_place_holder_fallback=True,
 ):
+    """Get a function for the given factory, using"""
     # TODO: Add extra validation (like n_args of return func against bind)
     name_to_func_map = name_to_func_map or dict()
 
@@ -326,18 +419,54 @@ def mk_fnodes_from_fn_factories(
         what kind of function to make).
     :return:
     """
+    # TODO: Might be a cleaner design for this...
     for fnode_factory in fnodes_factories:
-        func = factory_to_func(fnode_factory)
-        yield fnode_factory(func)
+        sig = Sig(fnode_factory)
+        if sig.n_required == 1 and sig.names[0] == "func":
+            # first making sure the fnode_factory is exactly as expected for this case,
+            # get a function for this fnode_factory, then use it to make the fnode
+            func = factory_to_func(fnode_factory)
+            yield fnode_factory(func)
+        elif sig.n_required == 0:
+            # if fnode_factory has no (required) arguments, just call the factory:
+            yield fnode_factory()
+        else:
+            # if couldn't figure it out from the last two cases, freak out!
+            raise ValueError(
+                f"The fnode_factory didn't have the expected format, so I'm freaking "
+                f"out. It's supposed to be a no-arguments-required-callable or a "
+                f"functools.partial that needs only a func to make the func node. "
+                f"This is the offending fnode_factory: {fnode_factory}"
+            )
 
 
-# TODO: Rewrite body to use ast tools above!
-# TODO: This function should really be a DAG where we can choose if we want parsed lines,
-#   digraph dot commands, the graphviz.Digraph object itself etc.
-# TODO: The function below is meant to evolve into a tool that can take python code,
-#  (possibly written with some style constraints) and produce an equivalent DAG.
-#   Here, it just produces a graphviz.Digraph of the code.
-def simple_code_to_digraph(code):
+def _code_to_fnodes(src, func_src=dlft_factory_to_func):
+    if isinstance(func_src, Mapping):
+        name_to_func_map = func_src
+        func_src = partial(
+            dlft_factory_to_func,
+            name_to_func_map=name_to_func_map,
+            use_place_holder_fallback=False,
+        )
+    assert isinstance(func_src, Callable), f"func_src should be callable, or a mapping"
+    fnodes_factories = list(src_to_func_node_factory(src))
+    return mk_fnodes_from_fn_factories(fnodes_factories, func_src)
+
+
+def code_to_dag(src, func_src=dlft_factory_to_func, name=None):
+    """Get a ``meshed.DAG`` from src code"""
+    fnodes = _code_to_fnodes(src, func_src)
+    return DAG(fnodes, name=name)
+
+
+def code_to_digraph(src):
+    return code_to_dag(src).dot_digraph()
+
+
+simple_code_to_digraph = code_to_digraph  # back-compatability alias
+
+
+def _old_simple_code_to_digraph_with_regex(code):
     """Make a graphviz.Digraph object based on code (string or function's body)"""
     import re
     from inspect import getsource
