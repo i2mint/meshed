@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.40 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.41 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -100,10 +100,167 @@
   <section id="module-meshed.makers">
 <span id="meshed-makers"></span><h1>meshed.makers<a class="headerlink" href="#module-meshed.makers" title="Permalink to this headline">¶</a></h1>
 <p>Makers</p>
+<p>This module contains tools to make meshed objects in different ways.</p>
+<p>Let’s start with an example where we have some code representing a user story:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">user_story</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="n">wfs</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span><span class="n">src_to_wf</span><span class="p">,</span> <span class="n">data_src</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">chks_iter</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">chunker</span><span class="p">,</span> <span class="n">wfs</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">chks</span> <span class="o">=</span> <span class="n">chain</span><span class="p">(</span><span class="n">chks_iter</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">fvs</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">featurizer</span><span class="p">,</span> <span class="n">chks</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">model_outputs</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">fvs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the code is compliant (has only function calls and assignments of their result),
+we can extract <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> factories from these lines (uses AST behind the scenes).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">src_to_func_node_factory</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fnodes_factories</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">src_to_func_node_factory</span><span class="p">(</span><span class="n">user_story</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Each factory is a curried version of <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code>, set up to be able to make a <code class="docutils literal notranslate"><span class="pre">DAG</span></code>
+equivalent to the user story, once we provide the necessary functions (<code class="docutils literal notranslate"><span class="pre">call</span></code>,
+<code class="docutils literal notranslate"><span class="pre">map</span></code>, and <code class="docutils literal notranslate"><span class="pre">chain</span></code>).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+<span class="gp">... </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">partial</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">FuncNode</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fnodes_factories</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See that the <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> factories are all set up with
+<code class="docutils literal notranslate"><span class="pre">name</span></code> (id),
+<code class="docutils literal notranslate"><span class="pre">out</span></code> (output variable name),
+<code class="docutils literal notranslate"><span class="pre">bind</span></code> (names of the variables where the function will source it’s arguments), and
+<code class="docutils literal notranslate"><span class="pre">func_label</span></code> (which can be used when displaying the DAG, or as a key to the function
+to use).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">keywords</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fnodes_factories</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+<span class="gp">... </span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;call&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="s1">&#39;wfs&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;src_to_wf&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;data_src&#39;</span><span class="p">},</span>
+<span class="gp">... </span>  <span class="s1">&#39;func_label&#39;</span><span class="p">:</span> <span class="s1">&#39;call&#39;</span><span class="p">},</span>
+<span class="gp">... </span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;map&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="s1">&#39;chks_iter&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;chunker&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;wfs&#39;</span><span class="p">},</span>
+<span class="gp">... </span>  <span class="s1">&#39;func_label&#39;</span><span class="p">:</span> <span class="s1">&#39;map&#39;</span><span class="p">},</span>
+<span class="gp">... </span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;chain&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="s1">&#39;chks&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;chks_iter&#39;</span><span class="p">},</span>
+<span class="gp">... </span>  <span class="s1">&#39;func_label&#39;</span><span class="p">:</span> <span class="s1">&#39;chain&#39;</span><span class="p">},</span>
+<span class="gp">... </span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;map_04&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="s1">&#39;fvs&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;featurizer&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;chks&#39;</span><span class="p">},</span>
+<span class="gp">... </span>  <span class="s1">&#39;func_label&#39;</span><span class="p">:</span> <span class="s1">&#39;map&#39;</span><span class="p">},</span>
+<span class="gp">... </span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;map_05&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="s1">&#39;model_outputs&#39;</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;fvs&#39;</span><span class="p">},</span>
+<span class="gp">... </span>  <span class="s1">&#39;func_label&#39;</span><span class="p">:</span> <span class="s1">&#39;map&#39;</span><span class="p">}</span>
+<span class="gp">... </span><span class="p">]</span>
+</pre></div>
+</div>
+<p>What can we do with that?</p>
+<p>Well, provide the functions, so the DAG can actually compute.</p>
+<p>You can do it yourself, or get a little help with <code class="docutils literal notranslate"><span class="pre">mk_fnodes_from_fn_factories</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">mk_fnodes_from_fn_factories</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fnodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mk_fnodes_from_fn_factories</span><span class="p">(</span><span class="n">fnodes_factories</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">fnodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+<span class="go">src_to_wf,data_src -&gt; call -&gt; wfs</span>
+<span class="go">chunker,wfs -&gt; map -&gt; chks_iter</span>
+<span class="go">chks_iter -&gt; chain -&gt; chks</span>
+<span class="go">featurizer,chks -&gt; map_04 -&gt; fvs</span>
+<span class="go">model,fvs -&gt; map_05 -&gt; model_outputs</span>
+</pre></div>
+</div>
+<p>Wait! But we didn’t actually provide the functions we wanted to use!
+What happened?!?
+What happened is that <code class="docutils literal notranslate"><span class="pre">mk_fnodes_from_fn_factories</span></code> just made some for us.
+It used the convenient <code class="docutils literal notranslate"><span class="pre">meshed.util.mk_place_holder_func</span></code> which makes a function
+(that happens to actually compute something and be picklable).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">dag</span><span class="p">))</span>
+<span class="go">&#39;(src_to_wf, data_src, chunker, featurizer, model)&#39;</span>
+</pre></div>
+</div>
+<p>We can actually call the <code class="docutils literal notranslate"><span class="pre">dag</span></code> and get something meaningful:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">&#39;map(model=5, fvs=map(featurizer=4, chks=chain(chks_iter=map(chunker=3, wfs=call(src_to_wf=1, data_src=2)))))&#39;</span>
+</pre></div>
+</div>
+<p>If you don’t want <code class="docutils literal notranslate"><span class="pre">mk_fnodes_from_fn_factories</span></code> to do that (because you are in
+prod and need to make sure as much as possible is explicitly as expected, you can
+simply use a different <code class="docutils literal notranslate"><span class="pre">factory_to_func</span></code> argument. The default one is:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">dlft_factory_to_func</span>
+</pre></div>
+</div>
+<p>which you can also reuse to make your own.
+See below how we provide a <code class="docutils literal notranslate"><span class="pre">name_to_func_map</span></code> to specify how <code class="docutils literal notranslate"><span class="pre">func_label``s</span> <span class="pre">should</span>
+<span class="pre">map</span> <span class="pre">to</span> <span class="pre">actual</span> <span class="pre">functions,</span> <span class="pre">and</span> <span class="pre">set</span> <span class="pre">``use_place_holder_fallback=False</span></code> to make
+sure that we don’t ever fallback on a placeholder function as we did above.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="c1"># would use operator.methodcaller(&#39;__call__&#39;) but doesn&#39;t have a __name__</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">_chain</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">factory_to_func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dlft_factory_to_func</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">name_to_func_map</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;map&#39;</span><span class="p">:</span> <span class="n">_map</span><span class="p">,</span> <span class="s1">&#39;chain&#39;</span><span class="p">:</span> <span class="n">_chain</span><span class="p">,</span> <span class="s1">&#39;call&#39;</span><span class="p">:</span> <span class="n">_call</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fnodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mk_fnodes_from_fn_factories</span><span class="p">(</span><span class="n">fnodes_factories</span><span class="p">,</span> <span class="n">factory_to_func</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">fnodes</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On the surface, we get the same dag as we had before – at least from the point of view
+of the dag signature, names, and relationships between these names:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+<span class="go">src_to_wf,data_src -&gt; call -&gt; wfs</span>
+<span class="go">chunker,wfs -&gt; map -&gt; chks_iter</span>
+<span class="go">chks_iter -&gt; chain -&gt; chks</span>
+<span class="go">featurizer,chks -&gt; map_04 -&gt; fvs</span>
+<span class="go">model,fvs -&gt; map_05 -&gt; model_outputs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">dag</span><span class="p">))</span>
+<span class="go">&#39;(src_to_wf, data_src, chunker, featurizer, model)&#39;</span>
+</pre></div>
+</div>
+<p>But see below that the dag is now using the functions we specified:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># dag(src_to_wf=1, data_src=2, chunker=3, featurizer=4, model=5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># will trigger this:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># src_to_wf=1, data_src=2 -&gt; call -&gt; wfs == 1 + 2 == 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># chunker=3 , wfs=3 -&gt; map -&gt; chks_iter == [3, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># chks_iter=6 -&gt; chain -&gt; chks == 3 + 3 == 6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># featurizer=4, chks=6 -&gt; map_04 -&gt; fvs == [4, 6]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># model=5, fvs=[4, 6] -&gt; map_05 -&gt; model_outputs == [5, [4, 6]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">[5, [4, 6]]</span>
+</pre></div>
+</div>
 <dl class="py class">
 <dt id="meshed.makers.AssignNodeVisitor">
 <em class="property">class </em><code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">AssignNodeVisitor</code><a class="reference internal" href="../../_modules/meshed/makers.html#AssignNodeVisitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.AssignNodeVisitor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt id="meshed.makers.mk_fnodes_from_fn_factories">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">mk_fnodes_from_fn_factories</code><span class="sig-paren">(</span><em class="sig-param">fnodes_factories: Iterable[Callable[[...], meshed.base.FuncNode]], factory_to_func: Callable[[Callable[[...], meshed.base.FuncNode]], Callable] = &lt;function dlft_factory_to_func&gt;</em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#mk_fnodes_from_fn_factories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.mk_fnodes_from_fn_factories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make func nodes from func node factories and a specification of how to make the
+nodes from these.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fnodes_factories</strong> – An iterable of FuncNodeFactory</p></li>
+<li><p><strong>factory_to_func</strong> – A function that will give you a function given a
+FuncNodeFactory input (where it will draw the information it needs to know
+what kind of function to make).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="meshed.makers.parsed_to_node_kwargs">
@@ -127,7 +284,7 @@
 
 <dl class="py function">
 <dt id="meshed.makers.src_to_func_node_factory">
-<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">src_to_func_node_factory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">names_used_so_far</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#src_to_func_node_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.src_to_func_node_factory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">src_to_func_node_factory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">names_used_so_far</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>Callable<span class="p">[</span><span class="p">[</span><span class="p">…</span><span class="p">]</span><span class="p">, </span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#src_to_func_node_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.src_to_func_node_factory" title="Permalink to this definition">¶</a></dt>
 <dd><p>A generator of FuncNode factories from a src (string or object).</p>
 </dd></dl>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.40 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.41 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -276,6 +276,57 @@ an actual interface method. Additional control/constraints on read and writes
 can be implemented by providing a custom scope for that. For example, one could
 log read and/or writes to specific keys, or disallow overwriting to an existing
 key (useful for pipeline sanity), etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="meshed.dag.DAG.dot_digraph">
+<code class="sig-name descname">dot_digraph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.dot_digraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.dot_digraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make lines for dot (graphviz) specification of DAG</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span> <span class="k">return</span> <span class="n">mult</span> <span class="o">**</span> <span class="n">a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func_nodes</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;the_product&#39;</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">]</span>
+</pre></div>
+</div>
+<p>#
+# &gt;&gt;&gt; assert list(DAG(func_nodes).dot_digraph_body()) == [
+# ]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="meshed.dag.DAG.dot_digraph_ascii">
+<code class="sig-name descname">dot_digraph_ascii</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.dot_digraph_ascii"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.dot_digraph_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make lines for dot (graphviz) specification of DAG</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span> <span class="k">return</span> <span class="n">mult</span> <span class="o">**</span> <span class="n">a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func_nodes</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;the_product&#39;</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">]</span>
+</pre></div>
+</div>
+<p>#
+# &gt;&gt;&gt; assert list(DAG(func_nodes).dot_digraph_body()) == [
+# ]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="meshed.dag.DAG.dot_digraph_body">
+<code class="sig-name descname">dot_digraph_body</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.dot_digraph_body"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.dot_digraph_body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make lines for dot (graphviz) specification of DAG</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span> <span class="k">return</span> <span class="n">mult</span> <span class="o">**</span> <span class="n">a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func_nodes</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;the_product&#39;</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">]</span>
+</pre></div>
+</div>
+<p>#
+# &gt;&gt;&gt; assert list(DAG(func_nodes).dot_digraph_body()) == [
+# ]</p>
 </dd></dl>
 
 <dl class="py method">
