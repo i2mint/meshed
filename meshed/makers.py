@@ -311,7 +311,8 @@ def retrieve_assignments(src):
 
 
 def parse_assignment_steps(src):
-    """Parse source code and generate tuples of information about it.
+    """
+    Parse source code and generate tuples of information about it.
 
     :param src: The source string or a python object whose code string can be extracted.
     :return: And generator of "target_values"
