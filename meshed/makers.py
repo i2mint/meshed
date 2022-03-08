@@ -199,7 +199,7 @@ def _itemgetter(items, item_keys=()):
 
 def signed_itemgetter(*item_keys):
     """Like ``operator.itemgetter``, except has a signature, which we needed"""
-    return partialx(_itemgetter, item_keys=item_keys, rm_partialize=True)
+    return partialx(_itemgetter, item_keys=item_keys, _rm_partialize=True)
 
 
 # Note: generalize? glom?

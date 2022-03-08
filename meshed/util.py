@@ -5,13 +5,15 @@ from typing import Callable, Any, Union, Iterator, Optional
 from i2 import Sig, name_of_obj
 
 
-def partialx(func, *args, __name__=None, rm_partialize=False, **kwargs):
+def partialx(
+        func, *args, __name__=None, _rm_partialize=False, **kwargs
+):
     """
     Same as ``functools.partial``, with ``__name__ `` and ability to remove partialized.
 
     >>> def f(a, b=2, c=3):
     ...     return a + b * c
-    >>> curried_f = partialx(f, c=10, rm_partialize=True)
+    >>> curried_f = partialx(f, c=10, _rm_partialize=True)
     >>> curried_f.__name__
     'f'
     >>> from inspect import signature
@@ -19,7 +21,7 @@ def partialx(func, *args, __name__=None, rm_partialize=False, **kwargs):
     '(a, b=2)'
     """
     f = partial(func, *args, **kwargs)
-    if rm_partialize:
+    if _rm_partialize:
         sig = Sig(func)
         partialized = list(
             sig.kwargs_from_args_and_kwargs(args, kwargs, allow_partial=True)

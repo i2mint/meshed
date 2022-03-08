@@ -433,14 +433,45 @@ def modified_func_node(func_node, **modifications) -> FuncNode:
     return FuncNode(**dict(original_func_node_kwargs, **modifications))
 
 
+from i2.wrapper import include_exclude
+
+
+def move_to_right(all_keys, selected_keys):
+    # replaced removed def with
+    removed = [x for x in all_keys if x not in selected_keys]
+    # because what's below will change order more than we need to
+    # removed = set(all_keys).difference(selected_keys)
+    return list(removed) + selected_keys
+
+
+def to_string(letters):
+    return " ".join(letters)
+
+
+def move_right_partial(partial_func):
+    partial_names = list(partial_func.keywords.keys())
+    func = partial_func.func
+    initial_names = Sig(func).names
+    reordered_names = move_to_right(initial_names, partial_names)
+    reordered = to_string(reordered_names)
+    wrapped_func = include_exclude(partial_func, include=reordered)
+    return wrapped_func
+
+
 def partialized_funcnodes(func_nodes, **keyword_defaults):
     for func_node in func_nodes:
         if argnames_to_be_bound := set(keyword_defaults).intersection(
             func_node.sig.names
         ):
             bindings = dict(extract_items(keyword_defaults, argnames_to_be_bound))
+            # partialize the func and move defaulted args to end
+            partialized_func = move_right_partial(partial(func_node.func, **bindings))
+            # all the code we wrote is replaced with (the existing method I forgot
+            # about):
+            nice_kinds_sig = Sig(partialized_func).ch_kinds_to_position_or_keyword()
+            nice_kinds_partialized_func = nice_kinds_sig(partialized_func)
             yield modified_func_node(
-                func_node, func=partial(func_node.func, **bindings)
+                func_node, func=nice_kinds_partialized_func
             )  # TODO: Try without partial?
         else:
             yield func_node

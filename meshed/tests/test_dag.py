@@ -189,3 +189,30 @@ def test_binding_to_a_root_node():
     # In production, it's advised to implement a more careful merging policy, possibly
     # specifying (in the `parameter_merge` callable itself) explicitly what to do for
     # every situation that we encounter.
+
+
+def test_dag_partialize():
+    from functools import partial
+    from i2 import Sig
+    from meshed import DAG, FuncNode
+
+    def foo(a, b):
+        return a - b
+
+    f = DAG([foo])
+    assert str(Sig(f)) == '(a, b)'
+
+    # if we give ``b`` a default:
+    ff = f.partial(b=9)
+    assert str(Sig(ff)) == '(a, b=9)'
+    # note that the Sig of the partial of foo is '(a, *, b=9)' though
+    assert str(Sig(partial(foo, b=9))) == '(a, *, b=9)'
+    assert ff(10) == ff(a=10) == 1
+
+    # if we give ``a`` (the first arg) a default but not ``b`` (the second arg)
+    fff = f.partial(a=4)  # fixing a, which is before b
+    # note that this fixing a reorders the parameters (so we have a valid signature!)
+    assert str(Sig(fff)) == '(b, a=4)'
+
+    fn = fff.func_nodes[0]
+    fn(dict(b=3))
