@@ -754,7 +754,7 @@ class DAG:
         >>> isinstance(new_dag, DAG)  # it's a dag (not just a partialized callable!)
         True
         >>> str(signature(new_dag))
-        '(a, b, *, c=3, d=4)'
+        '(a, b, c=3, d=4)'
         >>> new_dag(1, 2)  # same as dag(c=3, a=1, b=2, d=4), so:
         9
         """

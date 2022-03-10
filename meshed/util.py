@@ -1,6 +1,6 @@
 """util functions"""
 from functools import partial, wraps
-from typing import Callable, Any, Union, Iterator, Optional
+from typing import Callable, Any, Union, Iterator, Optional, Iterable
 
 from i2 import Sig, name_of_obj
 from i2.wrapper import include_exclude
@@ -10,7 +10,13 @@ def partialx(
     func, *args, __name__=None, _rm_partialize=False, _allow_reordering=False, **kwargs
 ):
     """
-    Same as ``functools.partial``, with ``__name__ `` and ability to remove partialized.
+    Extends the functionality of builtin ``functools.partial`` with the ability to
+
+    - set ``__name__ ``
+
+    - remove partialized arguments from signature
+
+    - reorder params (so that defaults are at the end)
 
     >>> def f(a, b=2, c=3):
     ...     return a + b * c
@@ -20,6 +26,24 @@ def partialx(
     >>> from inspect import signature
     >>> str(signature(curried_f))
     '(a, b=2)'
+
+    >>> def f(a, b, c=3):
+    ...     return a + b * c
+
+    Note that ``a`` gets a default, but ``b`` does not, yet is after ``a``.
+    This is allowed because these parameters all became KEYWORD_ONLY.
+
+    >>> g = partialx(f, a=1)
+    >>> str(Sig(g))
+    '(*, a=1, b, c=3)'
+
+    If you wanted to reorder the parameters to have all defaulted kinds be at the end,
+    as usual, you can do so using ``_allow_reordering=True``
+
+    >>> g = partialx(f, a=1, _allow_reordering=True)
+    >>> str(Sig(g))
+    '(*, b, a=1, c=3)'
+
     """
     f = partial(func, *args, **kwargs)
     if _rm_partialize:
@@ -30,34 +54,64 @@ def partialx(
         sig = sig - partialized
         f = sig(partial(f, *args, **kwargs))
     if _allow_reordering:
-        f = move_right_partial(f)
+        # TODO: Instead of Sig(f).defaults, move only params that need to move
+        # TODO: + Change signature so that the number of params that become keyword-only
+        #   is minimize.
+        f = move_params_to_the_end(f, Sig(f).defaults)
     f.__name__ = __name__ or name_of_obj(func)
     return f
 
 
-# TODO: doctests
-def move_to_the_end(names, names_to_move_to_the_end):
+def move_params_to_the_end(
+    func: Callable, names_to_move: Union[Callable, Iterable[str]]
+):
+    """
+    Choose args from func, according to choice_args_func and move them
+    to the right
+
+    >>> from functools import partial
+    >>> from i2 import Sig
+    >>> def foo(a, b, c):
+    ...     return a + b + c
+    >>> g = partial(foo, b=4)  # fixing a, which is before b
+    >>> h = move_params_to_the_end(g, Sig(g).defaults)
+    >>> assert str(Sig(g)) == '(a, *, b=4, c)'
+    >>> assert str(Sig(h)) == '(a, *, c, b=4)'
+
+    """
+    if callable(names_to_move):
+        names_to_move = names_to_move(func)
+    assert isinstance(names_to_move, Iterable), (
+        f"names_to_move must be an iterable of names "
+        f"or a callable producing one from a function. Was {names_to_move}"
+    )
+
+    names = Sig(func).names
+    reordered = move_names_to_the_end(names, names_to_move)
+    wrapped_func = include_exclude(func, include=reordered)
+    return wrapped_func
+
+
+def move_names_to_the_end(names, names_to_move_to_the_end):
+    """
+    Remove the items of ``names_to_move_to_the_end`` from ``names``
+    and append to the right of names
+
+    >>> names = ['a','c','d','e']
+    >>> names_to_move_to_the_end = ['c','e']
+    >>> move_names_to_the_end(names, names_to_move_to_the_end)
+    ['a', 'd', 'c', 'e']
+    >>> names_to_move_to_the_end = 'c e'
+    >>> move_names_to_the_end(names, names_to_move_to_the_end)
+    ['a', 'd', 'c', 'e']
+
+    """
     if isinstance(names_to_move_to_the_end, str):
         names_to_move_to_the_end = names_to_move_to_the_end.split()
     else:
         names_to_move_to_the_end = list(names_to_move_to_the_end)
     removed = [x for x in names if x not in names_to_move_to_the_end]
     return list(removed) + names_to_move_to_the_end
-
-
-# TODO: doctests
-def move_right_partial(partial_func):
-    # TODO: This function is indirectly bound to partial functions, but could apply to
-    #   any function that has defaulted args followed with required args.
-    #   We'd solve the current problem but make the function more reusable if we
-    #   use this looser definition of what should be moved.
-    #   When doing so, should change from move_right_partial to something more relevant
-    partial_names = list(partial_func.keywords.keys())
-    func = partial_func.func
-    initial_names = Sig(func).names
-    reordered_names = move_to_the_end(initial_names, partial_names)
-    wrapped_func = include_exclude(partial_func, include=reordered_names)
-    return wrapped_func
 
 
 def extra_wraps(func, name=None, doc_prefix=""):
