@@ -424,3 +424,21 @@ def edge_reversed_graph(
         for dst in dst_nodes:  # empty iterable does nothing
             dst_nodes_append(d[dst], src)
     return d
+
+
+# A possibly faster way to find descendant of a node in a directed ACYCLIC graph
+#
+# def find_descendants(d, key):
+#     """
+#     >>> g = dict(a='c', b='ce', c='de', e=['z'], x=['y', 'w'], tt='y')
+#     >>> sorted(find_descendants(g, 'a'))
+#     ['a', 'c', 'd', 'e', 'z']
+#     """
+#
+#     yield key
+#     try:
+#         direct_neighbors = d[key]
+#         for n in direct_neighbors:
+#             yield from find_descendants(d, n)
+#     except KeyError:
+#         pass
