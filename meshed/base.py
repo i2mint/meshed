@@ -255,6 +255,12 @@ class FuncNode:
     def __hash__(self):
         return hash(self._hash_str())
 
+    def __lt__(self, other):
+        return hash(self) < hash(other)
+
+    def __gt__(self, other):
+        return hash(self) > hash(other)
+
     def __call__(self, scope):
         """Deprecated: Don't use. Might be a normal function with a signature"""
         return self.call_on_scope(scope)
