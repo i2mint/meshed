@@ -159,6 +159,25 @@ def predecessors(g: Mapping, node):
     yield from successors(edge_reversed_graph(g), node)
 
 
+def _split_if_str(x):
+    """
+    If source is a string, the `str.split()` of it will be returned.
+
+    This is to be used in situations where we deal with lists of strings and
+    want to avoid mistaking a single string input with an iterable of characters.
+
+    For example, if a user specifies ``'abc'`` as an argument, this could have the
+    same effect as specifying  ``['a', 'b', 'c']``,
+    which often not what's intended, but rather ``['abc']`` is intended).
+
+    If the user actually wants ``['a', 'b', 'c']``, they can specify it by doing
+    ``list('abc')`` explicitly.
+    """
+    if isinstance(x, str):
+        return x.split()
+    else:
+        return x
+
 def children(g: Mapping, source: Iterable):
     """Set of all nodes (not in source) adjacent FROM 'source' in 'g'
 
@@ -173,6 +192,7 @@ def children(g: Mapping, source: Iterable):
     >>> children(g, [4])
     set()
     """
+    source = _split_if_str(source)
     source = set(source)
     _children = set()
     for node in source:
@@ -212,6 +232,7 @@ def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
     >>> ancestors(g, [0])
     set()
     """
+    source = _split_if_str(source)
     assert isinstance(source, Iterable)
     source = set(source) - _exclude_nodes
     _parents = (set(parents(g, source)) - source) - _exclude_nodes
@@ -269,7 +290,7 @@ def leaf_nodes(g: Mapping):
 
 def isolated_nodes(g: Mapping):
     """Nodes that
-    >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
+    >>> g = dict(a='c', b='ce', c=list('abde'), d='c', e=['c', 'z'], f={})
     >>> set(isolated_nodes(g))
     {'f'}
     """
@@ -283,7 +304,7 @@ def isolated_nodes(g: Mapping):
 def find_path(g: Mapping, src, dst, path=None):
     """find a path from src to dst nodes in graph
 
-    >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
+    >>> g = dict(a='c', b='ce', c=list('abde'), d='c', e=['c', 'z'], f={})
     >>> find_path(g, 'a', 'c')
     ['a', 'c']
     >>> find_path(g, 'a', 'b')
@@ -335,6 +356,7 @@ def in_degrees(g: Mapping):
 
 
 def copy_of_g_with_some_keys_removed(g: Mapping, keys: Iterable):
+    keys = _split_if_str(keys)
     return {k: v for k, v in g.items() if k not in keys}
 
 
@@ -372,6 +394,8 @@ def topological_sort(g: Mapping):
 
     Here's an ascii art of the graph, to verify that the topological sort is
     indeed as expected.
+
+    .. code-block::
     ┌───┐     ┌───┐     ┌───┐     ┌───┐
     │ 0 │ ──▶ │ 2 │ ──▶ │ 3 │ ──▶ │ 1 │
     └───┘     └───┘     └───┘     └───┘
