@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.44 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.base &mdash; meshed 0.1.47 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -446,6 +446,47 @@
 <span class="sd">    True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="ow">not</span> <span class="n">FuncNode</span><span class="o">.</span><span class="n">has_as_instance</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_init_params_of_instance"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.get_init_params_of_instance">[docs]</a><span class="k">def</span> <span class="nf">get_init_params_of_instance</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get names of instance object ``obj`` that are also parameters of the</span>
+<span class="sd">    ``__init__`` of its class&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">Sig</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span><span class="o">.</span><span class="n">names</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="ch_func_node_attrs"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.ch_func_node_attrs">[docs]</a><span class="k">def</span> <span class="nf">ch_func_node_attrs</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">**</span><span class="n">new_attrs_values</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a copy of the func node with some of it&#39;s attributes changed</span>
+
+<span class="sd">    &gt;&gt;&gt; def plus(a, b):</span>
+<span class="sd">    ...     return a + b</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; def minus(a, b):</span>
+<span class="sd">    ...     return a - b</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; fn = FuncNode(func=plus, out=&#39;sum&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fn.func == plus</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; fn.name == &#39;plus&#39;</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; new_fn = ch_func_node_attrs(fn, func=minus)</span>
+<span class="sd">    &gt;&gt;&gt; new_fn.func == minus</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; new_fn.synopsis_string() == &#39;a,b -&gt; plus -&gt; sum&#39;</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; newer_fn = ch_func_node_attrs(fn, func=minus, name=&#39;sub&#39;, out=&#39;difference&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; newer_fn.synopsis_string() == &#39;a,b -&gt; sub -&gt; difference&#39;</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">init_params</span> <span class="o">=</span> <span class="n">get_init_params_of_instance</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">params_that_are_not_init_params</span> <span class="o">:=</span> <span class="p">(</span><span class="n">new_attrs_values</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_params</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;These are not params of </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">params_that_are_not_init_params</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+    <span class="n">fn_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">init_params</span><span class="p">,</span> <span class="o">**</span><span class="n">new_attrs_values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span><span class="o">**</span><span class="n">fn_kwargs</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_keys_and_values_are_strings_validation</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>

@@ -194,7 +194,8 @@ def test_binding_to_a_root_node():
 def test_dag_partialize():
     from functools import partial
     from i2 import Sig
-    from meshed import DAG, FuncNode
+    from meshed import DAG
+    from inspect import signature
 
     def foo(a, b):
         return a - b
@@ -215,4 +216,19 @@ def test_dag_partialize():
     assert str(Sig(fff)) == '(b, a=4)'
 
     fn = fff.func_nodes[0]
-    fn(dict(b=3))
+    assert fn(dict(b=3)) == 1
+
+    def f(a, b):
+        return a + b
+
+    def g(c, d=4):
+        return c * d
+
+    def h(f, g):
+        return g - f
+
+    larger_dag = DAG([f, g, h])
+
+    new_dag = larger_dag.partial(c=3, a=1)
+    assert new_dag(b=5, d=6) == 12
+    assert str(signature(new_dag)) == '(b, a=1, c=3, d=4)'
