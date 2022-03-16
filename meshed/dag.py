@@ -460,6 +460,11 @@ Scope = dict
 VarNames = Iterable[str]
 DagOutput = Any
 
+
+def _name_attr_or_x(x):
+    return getattr(x, 'name', x)
+
+
 # TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
 #  concern. Perhaps a more general form would be to define a cache factory defaulting
 #  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)
@@ -895,6 +900,16 @@ class DAG:
                 # by default, strict (everything needs to be the same, or
                 # ``parameter_merge`` with raise an error.
                 yield self.parameter_merge(params_with_name_changed_to_src_name)
+
+    @property
+    def graph_ids(self):
+        """The dict representing the ``{from_node: to_nodes}`` graph.
+        Like ``.graph``, but with node ids (names).
+        """
+        return {
+            _name_attr_or_x(k): list(map(_name_attr_or_x, v))
+            for k, v in self.graph.items()
+        }
 
     # ------------ display --------------------------------------------------------------
 
