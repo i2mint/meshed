@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.itools &mdash; meshed 0.1.48 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.itools &mdash; meshed 0.1.49 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -189,7 +189,7 @@ adjacency Mapping representation.</p>
 <dt id="meshed.itools.find_path">
 <code class="sig-prename descclassname">meshed.itools.</code><code class="sig-name descname">find_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span></em>, <em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">dst</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/itools.html#find_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.itools.find_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>find a path from src to dst nodes in graph</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">&#39;ce&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;abde&#39;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">&#39;ce&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;abde&#39;</span><span class="p">),</span> <span class="n">d</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">find_path</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span>
 <span class="go">[&#39;a&#39;, &#39;c&#39;]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">find_path</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
@@ -252,7 +252,7 @@ the values of the <code class="docutils literal notranslate"><span class="pre">g
 <dt id="meshed.itools.isolated_nodes">
 <code class="sig-prename descclassname">meshed.itools.</code><code class="sig-name descname">isolated_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/itools.html#isolated_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.itools.isolated_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Nodes that
-&gt;&gt;&gt; g = dict(a=’c’, b=’ce’, c=’abde’, d=’c’, e=[‘c’, ‘z’], f={})
+&gt;&gt;&gt; g = dict(a=’c’, b=’ce’, c=list(‘abde’), d=’c’, e=[‘c’, ‘z’], f={})
 &gt;&gt;&gt; set(isolated_nodes(g))
 {‘f’}</p>
 </dd></dl>
@@ -379,8 +379,11 @@ root and leaf nodes both.</p>
 </pre></div>
 </div>
 <p>Here’s an ascii art of the graph, to verify that the topological sort is
-indeed as expected.
-┌───┐     ┌───┐     ┌───┐     ┌───┐
+indeed as expected.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>┌───┐     ┌───┐     ┌───┐     ┌───┐
 │ 0 │ ──▶ │ 2 │ ──▶ │ 3 │ ──▶ │ 1 │
 └───┘     └───┘     └───┘     └───┘</p>
 <blockquote>

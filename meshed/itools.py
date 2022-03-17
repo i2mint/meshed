@@ -178,6 +178,7 @@ def _split_if_str(x):
     else:
         return x
 
+
 def children(g: Mapping, source: Iterable):
     """Set of all nodes (not in source) adjacent FROM 'source' in 'g'
 
