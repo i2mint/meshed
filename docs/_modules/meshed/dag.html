@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.48 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.49 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -557,6 +557,11 @@
 <span class="n">VarNames</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="n">DagOutput</span> <span class="o">=</span> <span class="n">Any</span>
 
+
+<span class="k">def</span> <span class="nf">_name_attr_or_x</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+
 <span class="c1"># TODO: caching last scope isn&#39;t really the DAG&#39;s direct concern -- it&#39;s a debugging</span>
 <span class="c1">#  concern. Perhaps a more general form would be to define a cache factory defaulting</span>
 <span class="c1">#  to a dict, but that could be a &quot;dict&quot; that logs writes (even to an attribute of self)</span>
@@ -992,6 +997,16 @@
                 <span class="c1"># by default, strict (everything needs to be the same, or</span>
                 <span class="c1"># ``parameter_merge`` with raise an error.</span>
                 <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_merge</span><span class="p">(</span><span class="n">params_with_name_changed_to_src_name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">graph_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The dict representing the ``{from_node: to_nodes}`` graph.</span>
+<span class="sd">        Like ``.graph``, but with node ids (names).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">_name_attr_or_x</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_name_attr_or_x</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
 
     <span class="c1"># ------------ display --------------------------------------------------------------</span>
 
