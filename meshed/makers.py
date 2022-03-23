@@ -161,11 +161,11 @@ from contextlib import suppress
 from functools import partial
 
 
-from i2 import Sig, name_of_obj
+from i2 import Sig, name_of_obj, partialx
 
 from meshed.dag import DAG
 from meshed.base import FuncNode
-from meshed.util import mk_place_holder_func, partialx
+from meshed.util import mk_place_holder_func
 
 
 T = TypeVar('T')

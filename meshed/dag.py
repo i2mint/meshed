@@ -433,7 +433,7 @@ def modified_func_node(func_node, **modifications) -> FuncNode:
     return FuncNode(**dict(original_func_node_kwargs, **modifications))
 
 
-from meshed.util import partialx
+from i2 import partialx
 
 # TODO: doctests
 def partialized_funcnodes(func_nodes, **keyword_defaults):
