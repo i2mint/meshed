@@ -265,6 +265,10 @@ class FuncNode:
         """Deprecated: Don't use. Might be a normal function with a signature"""
         return self.call_on_scope(scope)
 
+    # See https://github.com/i2mint/meshed/issues/21
+    # def __eq__(self, other):
+    #     return hash(self) == hash(other)
+
     @classmethod
     def has_as_instance(cls, obj):
         """Verify if ``obj`` is an instance of a FuncNode (or specific sub-class).
