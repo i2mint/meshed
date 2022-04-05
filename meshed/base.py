@@ -533,3 +533,55 @@ def _complete_dict_with_iterable_of_required_keys(
     for required_key in complete_with:
         if required_key not in keys_already_covered:
             to_complete[required_key] = required_key
+
+
+from typing import NewType, Dict, Tuple, Mapping
+
+# TODO: Make a type where ``isinstance(s, Identifier) == s.isidentifier()``
+Identifier = NewType('Identifier', str)  # + should satisfy str.isidentifier
+Bind = NewType(
+    'Bind',
+    Union[
+        str,  # Identifier or ' '.join(Iterable[Identifier])
+        Dict[Identifier, Identifier],
+        Sequence[Union[Identifier, Tuple[Identifier, Identifier]]],
+    ],
+)
+IdentifierMapping = Dict[Identifier, Identifier]
+
+
+def identifier_mapping(x: Bind) -> IdentifierMapping:
+    """Get an ``IdentifierMapping`` dict from a more loosely defined ``Bind``.
+
+    You can get an identifier mapping (that is, an explicit for for a ``bind`` argument)
+    from...
+
+    ... a single space-separated string
+
+    >>> identifier_mapping('x a_b yz')  #
+    {'x': 'x', 'a_b': 'a_b', 'yz': 'yz'}
+
+    ... an iterable of strings or pairs of strings
+
+    >>> identifier_mapping(['foo', ('bar', 'mitzvah')])
+    {'foo': 'foo', 'bar': 'mitzvah'}
+
+    ... a dict will be considered to be the mapping itself
+
+    >>> identifier_mapping({'x': 'y', 'a': 'b'})
+    {'x': 'y', 'a': 'b'}
+    """
+    if isinstance(x, str):
+        x = x.split()
+    if not isinstance(x, Mapping):
+
+        def gen():
+            for item in x:
+                if isinstance(item, str):
+                    yield item, item
+                else:
+                    yield item
+
+        return dict(gen())
+    else:
+        return dict(**x)
