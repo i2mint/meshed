@@ -879,12 +879,13 @@ class DAG:
         return dict(d)
 
     def src_name_params(self, src_names: Optional[Iterable[str]] = None):
+        """Generate Parameter instances that are needed to compute ``src_names``"""
         # see params_for_src property to see what d is
         d = self.params_for_src
         if src_names is None:  # if no src_names given, use the names of all var_nodes
             src_names = set(d)
 
-        # For every src_name of the DAG that is in ``src_name``...
+        # For every src_name of the DAG that is in ``src_names``...
         for src_name in filter(src_names.__contains__, d):
             params = d[src_name]  # consider all the params that use it
             # make version of these params that have the same name (namely src_name)
@@ -892,13 +893,13 @@ class DAG:
                 p.replace(name=src_name) for p in params
             ]
             if len(params_with_name_changed_to_src_name) == 1:
-                # if there's only one param, return it (there can be no conflict)
+                # if there's only one param, yield it (there can be no conflict)
                 yield params_with_name_changed_to_src_name[0]
             else:  # if there's more than one param, merge them
                 # How to resolve conflicts (different defaults, annotations or kinds)
                 # is determined by what ``parameter_merge`` specified, which is,
                 # by default, strict (everything needs to be the same, or
-                # ``parameter_merge`` with raise an error.
+                # ``parameter_merge`` with raise an error.)
                 yield self.parameter_merge(params_with_name_changed_to_src_name)
 
     @property
