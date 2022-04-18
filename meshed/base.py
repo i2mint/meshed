@@ -220,11 +220,39 @@ class FuncNode:
 
         self.node_validator(self)
 
-    def synopsis_string(self):
-        return f"{','.join(self.bind.values())} -> {self.name} " f'-> {self.out}'
+    def synopsis_string(self, bind_info='values'):
+        """
+
+        :param bind_info:
+        :return:
+
+        >>> fn = FuncNode(
+        ...     func=lambda y, c: None , name='h', bind={'y': 'b', 'c': 'c'}, out='d'
+        ... )
+        >>> fn.synopsis_string()
+        'b,c -> h -> d'
+        >>> fn.synopsis_string(bind_info='keys')
+        'y,c -> h -> d'
+        >>> fn.synopsis_string(bind_info='hybrid')
+        'y=b,c -> h -> d'
+        """
+        if bind_info in {'values', 'varnodes', 'var_nodes'}:
+            return f"{','.join(self.bind.values())} -> {self.name} " f'-> {self.out}'
+        elif bind_info == 'hybrid':
+
+            def gen():
+                for k, v in self.bind.items():
+                    if k == v:
+                        yield k
+                    else:
+                        yield f'{k}={v}'
+
+            return f"{','.join(gen())} -> {self.name} " f'-> {self.out}'
+        elif bind_info in {'keys', 'params'}:
+            return f"{','.join(self.bind.keys())} -> {self.name} " f'-> {self.out}'
 
     def __repr__(self):
-        return f'FuncNode({self.synopsis_string()})'
+        return f'FuncNode({self.synopsis_string(bind_info="hybrid")})'
 
     def call_on_scope(self, scope: MutableMapping):
         """Call the function using the given scope both to source arguments and write
