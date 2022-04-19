@@ -2,7 +2,7 @@
 Base functionality of meshed
 """
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from functools import partial
 from typing import Callable, MutableMapping, Iterable, Union, Sized, Sequence
 
@@ -89,8 +89,11 @@ def basic_node_validator(func_node):
     )
 
 
-# TODO: Think of the hash more carefully.
-@dataclass
+# TODO: When 3.10, look into and possibly use match_args in to_dict and from_dict
+# TODO: Make FuncNode immutable (is there a way to use frozen=True with post_init?)
+# TODO: How to get a safe hash? Needs to be immutable only?
+# @dataclass(eq=True, order=True, unsafe_hash=True)
+@dataclass(order=True)
 class FuncNode:
     """A function wrapper that makes the function amenable to operating in a network.
 
@@ -134,7 +137,7 @@ class FuncNode:
     ...     func=multiply,
     ...     bind={'x': 'item_price', 'y': 'num_of_items'})
     >>> func_node
-    FuncNode(item_price,num_of_items -> multiply_ -> multiply)
+    FuncNode(x=item_price,y=num_of_items -> multiply_ -> multiply)
 
     Note the `bind` is a mapping **from** the variable names of the wrapped function
     **to** the names of the scope.
@@ -277,25 +280,28 @@ class FuncNode:
         and space are used, so could possibly encode as int (for __hash__ method)
         in a way that is reverse-decodable and with reasonable int size.
         """
-        return ';'.join(self.bind) + '::' + self.out
+        return self.synopsis_string(bind_info='hybrid')
+        # return ';'.join(self.bind) + '::' + self.out
 
-    # TODO: Find a better one
+    # TODO: Find a better one. Need to have guidance on hash and eq methods dos-&-donts
     def __hash__(self):
         return hash(self._hash_str())
 
-    def __lt__(self, other):
-        return hash(self) < hash(other)
-
-    def __gt__(self, other):
-        return hash(self) > hash(other)
+    def __eq__(self, other):
+        return hash(self) == hash(other)
 
     def __call__(self, scope):
         """Deprecated: Don't use. Might be a normal function with a signature"""
         return self.call_on_scope(scope)
 
-    # See https://github.com/i2mint/meshed/issues/21 (not 12!)
-    # def __eq__(self, other):
-    #     return hash(self) == hash(other)
+    def to_dict(self):
+        """The inverse of from_dict: FuncNode.from_dict(fn.to_dict()) == fn"""
+        return {x.name: getattr(self, x.name) for x in fields(self)}
+
+    @classmethod
+    def from_dict(cls, dictionary: dict):
+        """The inverse of to_dict: Make a ``FuncNode`` from a dictionary of init args"""
+        return cls(**dictionary)
 
     @classmethod
     def has_as_instance(cls, obj):

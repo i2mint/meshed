@@ -117,7 +117,9 @@ def instance_checker(class_or_tuple):
 
 
 class ConditionalIterize:
-    """
+    """A decorator that "iterizes" a function call if input satisfies a condition.
+    That is, apply ``map(func, input)`` (iterize) or ``func(input)`` according to some
+    conidition on ``input``.
 
     >>> def foo(x, y=2):
     ...     return x * y

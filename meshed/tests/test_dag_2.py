@@ -121,7 +121,8 @@ def test_FuncNode():
         func=multiply, bind={'x': 'item_price', 'y': 'num_of_items'},
     )
     assert (
-        str(func_node) == 'FuncNode(item_price,num_of_items -> multiply_ -> multiply)'
+        str(func_node) == 'FuncNode(x=item_price,y=num_of_items -> multiply_ -> '
+                          'multiply)'
     )
     scope = {'item_price': 3.5, 'num_of_items': 2}
     assert func_node(scope) == 7.0
@@ -135,7 +136,7 @@ def test_FuncNode():
                 bind={'x': 'item_price', 'y': 'num_of_items'},
             )
         )
-        == 'FuncNode(item_price,num_of_items -> total_price -> _total_price)'
+        == 'FuncNode(x=item_price,y=num_of_items -> total_price -> _total_price)'
     )
     # rename the function and the output
     assert (
@@ -147,7 +148,7 @@ def test_FuncNode():
                 out='daily_expense',
             )
         )
-        == 'FuncNode(item_price,num_of_items -> total_price -> daily_expense)'
+        == 'FuncNode(x=item_price,y=num_of_items -> total_price -> daily_expense)'
     )
 
 
