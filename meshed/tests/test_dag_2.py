@@ -122,7 +122,7 @@ def test_FuncNode():
     )
     assert (
         str(func_node) == 'FuncNode(x=item_price,y=num_of_items -> multiply_ -> '
-                          'multiply)'
+        'multiply)'
     )
     scope = {'item_price': 3.5, 'num_of_items': 2}
     assert func_node(scope) == 7.0
