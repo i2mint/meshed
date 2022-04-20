@@ -44,7 +44,7 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
         return name, '_' + name
     elif name is None:
         if name_of_func == out:
-            name_of_func += "_"
+            name_of_func += '_'
         return name_of_func, out
 
 
