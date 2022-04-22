@@ -489,8 +489,8 @@ class DAG:
     >>>
     >>> dag = DAG((this, that, combine))
     >>> print(dag.synopsis_string())
-    x,b -> that_ -> that
     a,b -> this_ -> this
+    x,b -> that_ -> that
     this,that -> combine_ -> combine
 
     But what does it do?
