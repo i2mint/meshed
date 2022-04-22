@@ -766,10 +766,10 @@ class DAG:
         >>> from inspect import signature
         >>> str(signature(dag))
         '(a, b, c, d=4)'
-        >>> dag(3, 1, 2, 4)  # == (2 * 4) - (3 + 1) == 8 - 3 == 5
-        5
+        >>> dag(3, 1, 2, 4)  # == (2 * 4) - (3 + 1) == 8 - 4 == 4
+        4
         >>> dag(c=2, a=3, b=1, d=4)  # same as above
-        5
+        4
 
         >>> new_dag = dag.partial(c=3)
         >>> isinstance(new_dag, DAG)  # it's a dag (not just a partialized callable!)
