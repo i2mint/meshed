@@ -498,15 +498,15 @@ class DAG:
     It's a callable, with a signature:
 
     >>> Sig(dag)  # doctest: +SKIP
-    <Sig (a, x, b=1)>
+    <Sig (x, a, b=1)>
 
     And when you call it, it executes the dag from the root values you give it and
     returns the leaf output values.
 
-    >>> dag(1, 2, 3)  # (a+b,x*b) == (1+3,2*3) == (4, 6)
-    (4, 6)
-    >>> dag(1, 2)  # (a+b,x*b) == (1+1,2*1) == (2, 2)
-    (2, 2)
+    >>> dag(1, 2, 3)  # (a+b,x*b) == (2+3,1*3) == (5, 3)
+    (5, 3)
+    >>> dag(1, 2)  # (a+b,x*b) == (2+1,1*1) == (3, 1)
+    (3, 1)
 
     The above DAG was created straight from the functions, using only the names of the
     functions and their arguments to define how to hook the network up.
