@@ -535,12 +535,13 @@ class DAG:
 
     def __post_init__(self):
         init_nodes = self.func_nodes
-        self.func_nodes = tuple(_mk_func_nodes(init_nodes))
-        self.graph = _func_nodes_to_graph_dict(self.func_nodes)
+        fnodes = tuple(_mk_func_nodes(init_nodes))
+        self.graph = _func_nodes_to_graph_dict(fnodes)
         self.nodes = topological_sort(self.graph)
-        self.nodes = order_subset_from_list(init_nodes, self.nodes)
         # reorder the nodes to fit topological order
         self.func_nodes, self.var_nodes = _separate_func_nodes_and_var_nodes(self.nodes)
+        self.func_nodes = order_subset_from_list(list(fnodes), list(self.func_nodes))
+
         # self.sig = Sig(dict(extract_items(sig.parameters, 'xz')))
         self.sig = Sig(  # make a signature
             sort_params(  # with the sorted params (sorted to satisfy kind/default order)
@@ -1171,3 +1172,22 @@ with suppress(ModuleNotFoundError, ImportError):
 
         for func, operation in zip(funcs, funcs_to_operations(funcs, exclude_names)):
             yield operation(func)
+
+
+if __name__ == "__main__":
+    from meshed import DAG
+
+    def f(u, v):
+        pass
+
+    def g(f):
+        pass
+
+    def h(f, w):
+        pass
+
+    def i(g, h):
+        pass
+
+    dag = DAG([f, g, h, i])
+    print(dag)
