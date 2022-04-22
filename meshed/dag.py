@@ -689,8 +689,8 @@ class DAG:
         ...     print('\\n'.join(t))
 
         >>> print_sorted_synopsis(dag[['u', 'f']:'h'])
-        u,v -> f_ -> f
         f,w -> h_ -> h
+        u,v -> f_ -> f
 
         >>> print_sorted_synopsis(dag['u':'h'])
         u,v -> f_ -> f
