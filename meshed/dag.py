@@ -689,8 +689,8 @@ class DAG:
         ...     print('\\n'.join(t))
 
         >>> print_sorted_synopsis(dag[['u', 'f']:'h'])
-        f,w -> h_ -> h
         u,v -> f_ -> f
+        f,w -> h_ -> h
         >>> print_sorted_synopsis(dag['u':'h'])
         u,v -> f_ -> f
         f,w -> h_ -> h
@@ -764,11 +764,11 @@ class DAG:
         >>> dag = DAG([f, g, h])
         >>> from inspect import signature
         >>> str(signature(dag))
-        '(a, b, c, d=4)'
-        >>> dag(3, 1, 2, 4)  # == (2 * 4) - (3 + 1) == 8 - 3 == 5
-        5
-        >>> dag(c=2, a=3, b=1, d=4)  # same as above
-        5
+        '(c, a, b, d=4)'
+        >>> dag(3, 1, 2, 4)  # == (3 * 4) - (1 + 2) == 12 - 3 == 9
+        9
+        >>> dag(c=3, a=1, b=2, d=4)  # same as above
+        9
 
         >>> new_dag = dag.partial(c=3)
         >>> isinstance(new_dag, DAG)  # it's a dag (not just a partialized callable!)
