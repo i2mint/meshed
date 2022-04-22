@@ -17,8 +17,8 @@ In it's simplest form, consider this:
 >>>
 >>> dag = DAG((this, that, combine))
 >>> print(dag.synopsis_string())
-x,b -> that_ -> that
 a,b -> this_ -> this
+x,b -> that_ -> that
 this,that -> combine_ -> combine
 
 But don't be fooled: There's much more to it!
