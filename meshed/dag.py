@@ -675,12 +675,12 @@ class DAG:
         >>> dag = DAG([f, g, h, i, j, k, l])
         >>> print(dag.synopsis_string())
         u,v -> f_ -> f
-        f -> g_ -> g
         f,w -> h_ -> h
-        g,h -> i_ -> i
         h,x -> j_ -> j
-        i -> k_ -> k
+        f -> g_ -> g
+        g,h -> i_ -> i
         i,j -> l_ -> l
+        i -> k_ -> k
 
         A little util to get consistent prints:
 
@@ -689,15 +689,15 @@ class DAG:
         ...     print('\\n'.join(t))
 
         >>> print_sorted_synopsis(dag[['u', 'f']:'h'])
-        u,v -> f_ -> f
         f,w -> h_ -> h
+        u,v -> f_ -> f
         >>> print_sorted_synopsis(dag['u':'h'])
-        u,v -> f_ -> f
         f,w -> h_ -> h
-        >>> print_sorted_synopsis(dag[['u', 'f']:['h', 'g']])
         u,v -> f_ -> f
+        >>> print_sorted_synopsis(dag[['u', 'f']:['h', 'g']])
         f -> g_ -> g
         f,w -> h_ -> h
+        u,v -> f_ -> f
         >>> print_sorted_synopsis(dag[['x', 'g']:'k'])
         g,h -> i_ -> i
         i -> k_ -> k
