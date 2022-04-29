@@ -539,3 +539,28 @@ def mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=(
     func.__name__ = sig.name
 
     return func
+
+
+# utils to reorder funcnodes
+
+
+def pairs(xs):
+    if len(xs) <= 1:
+        return xs
+    else:
+        pairs = list(zip(xs, xs[1:]))
+    return pairs
+
+
+def curry(func):
+    def res(*args):
+        return func(tuple(args))
+
+    return res
+
+
+def uncurry(func):
+    def res(tup):
+        return func(*tup)
+
+    return res

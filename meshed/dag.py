@@ -188,6 +188,17 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
             i += 1
 
 
+def mk_mock_funcnode(arg, out):
+    @Sig(arg)
+    def func():
+        pass
+
+    # name = "_mock_" + str(arg) + "_" + str(out)  # f-string
+    name = f'_mock_{str(arg)}_{str(out)}'  # f-string
+
+    return FuncNode(func=func, out=out, name=name)
+
+
 def mk_func_name(func, exclude_names=()):
     name = getattr(func, '__name__', '')
     if name == '<lambda>':
@@ -1164,3 +1175,25 @@ with suppress(ModuleNotFoundError, ImportError):
 
         for func, operation in zip(funcs, funcs_to_operations(funcs, exclude_names)):
             yield operation(func)
+
+
+# reordering funcnodes
+from meshed.util import uncurry, pairs
+
+mk_mock_funcnode_from_tuple = uncurry(mk_mock_funcnode)
+
+
+def funcnodes_from_pairs(pairs):
+    return list(map(mk_mock_funcnode_from_tuple, pairs))
+
+
+def reorder_on_constraints(funcnodes, outs):
+    extra_nodes = funcnodes_from_pairs(pairs(outs))
+    funcnodes += extra_nodes
+    graph = _func_nodes_to_graph_dict(funcnodes)
+    nodes = topological_sort(graph)
+    print('after ordering:', nodes)
+    ordered_nodes = [node for node in nodes if node not in extra_nodes]
+    func_nodes, var_nodes = _separate_func_nodes_and_var_nodes(ordered_nodes)
+
+    return func_nodes, var_nodes
