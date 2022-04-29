@@ -3,9 +3,6 @@ from functools import partial, wraps
 from typing import Callable, Any, Union, Iterator, Optional, Iterable
 
 from i2 import Sig, name_of_obj
-from meshed.base import _func_nodes_to_graph_dict
-from meshed.dag import _separate_func_nodes_and_var_nodes
-from meshed.itools import topological_sort
 
 
 def extra_wraps(func, name=None, doc_prefix=""):
@@ -555,10 +552,6 @@ def pairs(xs):
     return pairs
 
 
-def funcnodes_from_pairs(pairs):
-    return list(map(mk_mock_funcnode_from_tuple, pairs))
-
-
 def curry(func):
     def res(*args):
         return func(tuple(args))
@@ -571,18 +564,3 @@ def uncurry(func):
         return func(*tup)
 
     return res
-
-
-mk_mock_funcnode_from_tuple = uncurry(mk_mock_funcnode)
-
-
-def reorder_on_constraints(funcnodes, outs):
-    extra_nodes = funcnodes_from_pairs(pairs(outs))
-    funcnodes += extra_nodes
-    graph = _func_nodes_to_graph_dict(funcnodes)
-    nodes = topological_sort(graph)
-    print("after ordering:", nodes)
-    ordered_nodes = [node for node in nodes if node not in extra_nodes]
-    func_nodes, var_nodes = _separate_func_nodes_and_var_nodes(ordered_nodes)
-
-    return func_nodes, var_nodes

@@ -1180,3 +1180,25 @@ with suppress(ModuleNotFoundError, ImportError):
 
         for func, operation in zip(funcs, funcs_to_operations(funcs, exclude_names)):
             yield operation(func)
+
+
+# reordering funcnodes
+from meshed.util import uncurry, pairs
+
+mk_mock_funcnode_from_tuple = uncurry(mk_mock_funcnode)
+
+
+def funcnodes_from_pairs(pairs):
+    return list(map(mk_mock_funcnode_from_tuple, pairs))
+
+
+def reorder_on_constraints(funcnodes, outs):
+    extra_nodes = funcnodes_from_pairs(pairs(outs))
+    funcnodes += extra_nodes
+    graph = _func_nodes_to_graph_dict(funcnodes)
+    nodes = topological_sort(graph)
+    print("after ordering:", nodes)
+    ordered_nodes = [node for node in nodes if node not in extra_nodes]
+    func_nodes, var_nodes = _separate_func_nodes_and_var_nodes(ordered_nodes)
+
+    return func_nodes, var_nodes
