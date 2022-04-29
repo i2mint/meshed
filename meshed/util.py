@@ -3,7 +3,6 @@ from functools import partial, wraps
 from typing import Callable, Any, Union, Iterator, Optional, Iterable
 
 from i2 import Sig, name_of_obj
-from meshed import FuncNode
 from meshed.base import _func_nodes_to_graph_dict
 from meshed.dag import _separate_func_nodes_and_var_nodes
 from meshed.itools import topological_sort
@@ -554,17 +553,6 @@ def pairs(xs):
     else:
         pairs = list(zip(xs, xs[1:]))
     return pairs
-
-
-def mk_mock_funcnode(arg, out):
-    @Sig(arg)
-    def func():
-        pass
-
-    # name = "_mock_" + str(arg) + "_" + str(out)  # f-string
-    name = f"_mock_{str(arg)}_{str(out)}"  # f-string
-
-    return FuncNode(func=func, out=out, name=name)
 
 
 def funcnodes_from_pairs(pairs):
