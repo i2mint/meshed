@@ -5,13 +5,13 @@ from typing import Callable, Any, Union, Iterator, Optional, Iterable
 from i2 import Sig, name_of_obj
 
 
-def extra_wraps(func, name=None, doc_prefix=""):
+def extra_wraps(func, name=None, doc_prefix=''):
     func.__name__ = name or func_name(func)
-    func.__doc__ = doc_prefix + getattr(func, "__name__", "")
+    func.__doc__ = doc_prefix + getattr(func, '__name__', '')
     return func
 
 
-def mywraps(func, name=None, doc_prefix=""):
+def mywraps(func, name=None, doc_prefix=''):
     def wrapper(wrapped):
         return extra_wraps(wraps(func)(wrapped), name=name, doc_prefix=doc_prefix)
 
@@ -77,7 +77,7 @@ def iterize(func, name=None):
     """
     # TODO: See if partialx can be used instead
     wrapper = mywraps(
-        func, name=name, doc_prefix=f"generator version of {func_name(func)}:\n"
+        func, name=name, doc_prefix=f'generator version of {func_name(func)}:\n'
     )
     return wrapper(partial(map, func))
 
@@ -246,13 +246,13 @@ class ConditionalIterize:
             return self.func(*args, **kwargs)
 
     def __repr__(self):
-        return f"<ConditionalIterize {name_of_obj(self)}{Sig(self)}>"
+        return f'<ConditionalIterize {name_of_obj(self)}{Sig(self)}>'
 
     def _new_sig(self):
         if len(self.sig.names) == 0:
             raise TypeError(
-                f"You can only apply conditional iterization on functions that have "
-                f"at least one input. This one had none: {self.func}"
+                f'You can only apply conditional iterization on functions that have '
+                f'at least one input. This one had none: {self.func}'
             )
         first_param = self.sig.names[0]
         new_sig = self.sig  # same sig by default
@@ -284,7 +284,7 @@ class ModuleNotFoundIgnore:
         return True
 
 
-def incremental_str_maker(str_format="{:03.f}"):
+def incremental_str_maker(str_format='{:03.f}'):
     """Make a function that will produce a (incrementally) new string at every call."""
     i = 0
 
@@ -296,8 +296,8 @@ def incremental_str_maker(str_format="{:03.f}"):
     return mk_next_str
 
 
-lambda_name = incremental_str_maker(str_format="lambda_{:03.0f}")
-unnameable_func_name = incremental_str_maker(str_format="unnameable_func_{:03.0f}")
+lambda_name = incremental_str_maker(str_format='lambda_{:03.0f}')
+unnameable_func_name = incremental_str_maker(str_format='unnameable_func_{:03.0f}')
 
 FunctionNamer = Callable[[Callable], str]
 
@@ -309,7 +309,7 @@ def func_name(func) -> str:
     To make one, it calls unamed_func_name which produces incremental names to reduce the chances of clashing"""
     try:
         name = func.__name__
-        if name == "<lambda>":
+        if name == '<lambda>':
             return lambda_name()
         return name
     except AttributeError:
@@ -331,11 +331,11 @@ def args_funcnames(
     for func in funcs:
         sig = signature(func)
         for param in sig.parameters.values():
-            arg_name = ""  # initialize
+            arg_name = ''  # initialize
             if param.kind == Parameter.VAR_POSITIONAL:
-                arg_name += "*"
+                arg_name += '*'
             elif param.kind == Parameter.VAR_KEYWORD:
-                arg_name += "**"
+                arg_name += '**'
             arg_name += param.name  # append name of param
             yield arg_name, name_of_func(func)
 
@@ -345,7 +345,7 @@ def funcs_to_digraph(funcs, graph=None):
 
     graph = graph or Digraph()
     graph.edges(list(args_funcnames(funcs)))
-    graph.body.extend([", ".join(func.__name__ for func in funcs) + " [shape=box]"])
+    graph.body.extend([', '.join(func.__name__ for func in funcs) + ' [shape=box]'])
     return graph
 
 
@@ -385,7 +385,7 @@ def dot_to_ascii(dot: str, fancy: bool = True):
     """
     import requests
 
-    url = "https://dot-to-ascii.ggerganov.com/dot-to-ascii.php"
+    url = 'https://dot-to-ascii.ggerganov.com/dot-to-ascii.php'
     boxart = 0
 
     # use nice box drawing char instead of + , | , -
@@ -394,29 +394,29 @@ def dot_to_ascii(dot: str, fancy: bool = True):
 
     stripped_dot_str = dot.strip()
     if not (
-        stripped_dot_str.startswith("graph") or stripped_dot_str.startswith("digraph")
+        stripped_dot_str.startswith('graph') or stripped_dot_str.startswith('digraph')
     ):
-        dot = "graph {\n" + dot + "\n}"
+        dot = 'graph {\n' + dot + '\n}'
 
     params = {
-        "boxart": boxart,
-        "src": dot,
+        'boxart': boxart,
+        'src': dot,
     }
 
     try:
         response = requests.get(url, params=params).text
     except requests.exceptions.ConnectionError:
-        return "ConnectionError: You need the internet to convert dot into ascii!"
+        return 'ConnectionError: You need the internet to convert dot into ascii!'
 
-    if response == "":
-        raise SyntaxError("DOT string is not formatted correctly")
+    if response == '':
+        raise SyntaxError('DOT string is not formatted correctly')
 
     return response
 
 
 def print_ascii_graph(funcs):
     digraph = funcs_to_digraph(funcs)
-    dot_str = "\n".join(map(lambda x: x[1:], digraph.body[:-1]))
+    dot_str = '\n'.join(map(lambda x: x[1:], digraph.body[:-1]))
     print(dot_to_ascii(dot_str))
 
 
@@ -442,7 +442,7 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
     else:
         i = start_at
         while True:
-            name = f"{prefix}__{i}"
+            name = f'{prefix}__{i}'
             if name not in exclude_names:
                 return name
             i += 1
@@ -452,8 +452,8 @@ def mk_func_name(func, exclude_names=()):
     """Makes a function name that doesn't clash with the exclude_names iterable.
     Tries it's best to not be lazy, but instead extract a name from the function
     itself."""
-    name = name_of_obj(func) or "func"
-    if name == "<lambda>":
+    name = name_of_obj(func) or 'func'
+    if name == '<lambda>':
         name = lambda_name()  # make a lambda name that is a unique identifier
     return find_first_free_name(name, exclude_names)
 
@@ -468,7 +468,7 @@ def arg_names(func, func_name, exclude_names=()):
                 yield name
             else:
                 found_name = find_first_free_name(
-                    f"{func_name}__{name}", _exclude_names
+                    f'{func_name}__{name}', _exclude_names
                 )
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
@@ -494,8 +494,8 @@ def named_partial(func, *args, __name__=None, **keywords):
 
 def _place_holder_func(*args, _sig=None, **kwargs):
     _kwargs = _sig.kwargs_from_args_and_kwargs(args, kwargs)
-    _kwargs_str = ", ".join(f"{k}={v}" for k, v in _kwargs.items())
-    return f"{_sig.name}({_kwargs_str})"
+    _kwargs_str = ', '.join(f'{k}={v}' for k, v in _kwargs.items())
+    return f'{_sig.name}({_kwargs_str})'
 
 
 def mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=()):
@@ -533,7 +533,7 @@ def mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=(
     sig = sig.ch_defaults(**dict(defaults))
     sig = sig.ch_annotations(**dict(annotations))
 
-    sig.name = name or sig.name or "place_holder_func"
+    sig.name = name or sig.name or 'place_holder_func'
 
     func = sig(partial(_place_holder_func, _sig=sig))
     func.__name__ = sig.name
