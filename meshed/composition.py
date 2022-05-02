@@ -38,8 +38,7 @@ def func_node_transformer(
 def is_func_node_kwargs_trans(func: Callable) -> bool:
     """Returns True iff the only required params of func are FuncNode field names.
     This ensures that the func will be able to be bound to FuncNode fields and
-    therefore used
-    as a func_node (kwargs) transformer.
+    therefore used as a func_node (kwargs) transformer.
     """
     return _func_node_fields.issuperset(Sig(func).required_names)
 
@@ -61,7 +60,13 @@ def func_node_name_trans(
     *,
     also_apply_to_func_label: bool = False,
 ):
-    sig = Sig(name_trans)
+    """
+
+    :param name_trans: A function taking a str and returning a str, or None (to indicate
+        that no transformation should take place).
+    :param also_apply_to_func_label:
+    :return:
+    """
     if not is_func_node_kwargs_trans(name_trans):
         if Sig(name_trans).n_required <= 1:
 
@@ -85,17 +90,115 @@ def _suffix():
         i += 1
 
 
+def _add_suffix(x, suffix):
+    return f"{x}{suffix}"
+
+
+_incremental_suffixes = _suffix()
+_renamers = (lambda x: f'{x}{suffix}' for suffix in _incremental_suffixes)
+
 # TODO: Postelize? Work with func_nodes or dag?
+# TODO: Extract  ingress/egress boilerplate to wrapper
 def suffix_ids(
     func_nodes, suffix: Optional[str] = None, *, also_apply_to_func_label: bool = False
 ):
+    if isinstance(func_nodes, DAG):
+        egress = DAG
+    else:
+        egress = list
     if suffix is None:
-        suffix = next(_suffix)
+        suffix = next(_incremental_suffixes)
     func_node_trans = func_node_name_trans(
         lambda name: f'{name}{suffix}',
         also_apply_to_func_label=also_apply_to_func_label,
     )
-    return list(map(func_node_trans, func_nodes))
+    return egress(map(func_node_trans, func_nodes))
+
+
+def _if_none_return_input(func):
+    """Wraps a function so that when the original func outputs None, the wrapped will
+    return the original input instead.
+
+    >>> def func(x):
+    ...     if x % 2 == 0:
+    ...         return None
+    ...     else:
+    ...         return x * 10
+    >>> wfunc = _if_none_return_input(func)
+    >>> func(3)
+    30
+    >>> wfunc(3)
+    30
+    >>> assert func(4) is None
+    >>> wfunc(4)
+    4
+    """
+    def _func(input_val):
+        if (output_val := func(input_val)) is not None:
+            return output_val
+        else:
+            return input_val
+
+    return _func
+
+
+def _rename_vars(fn_kwargs, renamer=None):
+    if renamer is None:
+        renamer = next(_renamers)
+    fn_kwargs = fn_kwargs.copy()
+    renamer = _if_none_return_input(renamer)  # if renamer returns None, return input
+    fn_kwargs['name'] = renamer(fn_kwargs['name'])
+    fn_kwargs['out'] = renamer(fn_kwargs['out'])
+    fn_kwargs['bind'] = {
+        param: renamer(var_id) for param, var_id in fn_kwargs['bind'].items()
+    }
+    return fn_kwargs
+
+
+# TODO: Postelize? Work with func_nodes or dag?
+# TODO: Extract ingress/egress boilerplate to wrapper
+def rename_vars(func_nodes: DagAble, renamer=None):
+    """Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.
+
+    :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``
+    :param renamer:
+    :return:
+
+    >>> from meshed.makers import code_to_dag
+    >>>
+    >>> @code_to_dag
+    ... def dag():
+    ...     b = f(a)
+    ...     c = g(x=a)
+    ...     d = h(b, y=c)
+    ...
+    >>> print(dag.synopsis_string(bind_info='hybrid'))
+    x=a -> g -> c
+    a -> f -> b
+    b,y=c -> h -> d
+    >>> print(rename_vars(dag, renamer='_2').synopsis_string(bind_info='hybrid'))
+    a=a_2 -> f_2 -> b_2
+    x=a_2 -> g_2 -> c_2
+    b=b_2,y=c_2 -> h_2 -> d_2
+    >>> new_func_nodes = rename_vars(dag.func_nodes, renamer=lambda x: f"{x}_2")
+    >>> [fn.synopsis_string(bind_info='hybrid') for fn in new_func_nodes]
+    ['x=a_2 -> g_2 -> c_2', 'a=a_2 -> f_2 -> b_2', 'b=b_2,y=c_2 -> h_2 -> d_2']
+    """
+    if isinstance(func_nodes, DAG):
+        egress = DAG
+    else:
+        egress = list
+    if renamer is None:
+        renamer = next(_incremental_suffixes)
+    if isinstance(renamer, str):
+        renamer = partial(_add_suffix, suffix=renamer)
+
+    ktrans = partial(_rename_vars, renamer=renamer)
+    func_node_trans = partial(
+        func_node_transformer,
+        kwargs_transformers=ktrans
+    )
+    return egress(map(func_node_trans, func_nodes))
 
 
 # ---------------------------------------------------------------------------------------

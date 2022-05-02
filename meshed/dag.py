@@ -935,8 +935,10 @@ class DAG:
 
     # ------------ display --------------------------------------------------------------
 
-    def synopsis_string(self):
-        return '\n'.join(func_node.synopsis_string() for func_node in self.func_nodes)
+    def synopsis_string(self, bind_info='values'):
+        return '\n'.join(
+            func_node.synopsis_string(bind_info) for func_node in self.func_nodes
+        )
 
     # TODO: Give more control (merge with lined)
     def dot_digraph_body(self, start_lines=()):
