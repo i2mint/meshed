@@ -1155,6 +1155,10 @@ def _add_new_line_if_none(s: str):
     return s
 
 
+def print_dag_string(dag: DAG, bind_info: str = 'hybrid'):
+    print(dag.synopsis_string(bind_info=bind_info))
+
+
 # ---------- with ext.gk -------------------------------------------------------
 
 with suppress(ModuleNotFoundError, ImportError):

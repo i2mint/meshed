@@ -1,12 +1,14 @@
 """Specific use of FuncNode and DAG"""
 
+import re
 from dataclasses import fields
 from inspect import signature
-from typing import Callable, Union, Iterable, Optional
+from typing import Callable, Union, Iterable
 from functools import partial
 
-from meshed import FuncNode, DAG
 from i2 import Sig, kwargs_trans
+from meshed.base import FuncNode
+from meshed.dag import DAG
 
 _func_node_fields = {x.name for x in fields(FuncNode)}
 
@@ -83,34 +85,41 @@ def func_node_name_trans(
     )
 
 
-def _suffix():
-    i = 0
-    while True:
-        yield f'_{i}'
-        i += 1
+def numbered_suffix_renamer(name, sep='_'):
+    """
+    >>> numbered_suffix_renamer('item')
+    'item_1'
+    >>> numbered_suffix_renamer('item_1')
+    'item_2'
+    """
+    p = re.compile(sep + r'(\d+)$')
+    m = p.search(name)
+    if m is None:
+        return f'{name}{sep}1'
+    else:
+        num = int(m.group(1)) + 1
+        return p.sub(f'{sep}{num}', name)
 
 
-def _add_suffix(x, suffix):
-    return f"{x}{suffix}"
+Renamer = Callable[[str], str]
 
-
-_incremental_suffixes = _suffix()
-_renamers = (lambda x: f'{x}{suffix}' for suffix in _incremental_suffixes)
-
-# TODO: Postelize? Work with func_nodes or dag?
 # TODO: Extract  ingress/egress boilerplate to wrapper
 def suffix_ids(
-    func_nodes, suffix: Optional[str] = None, *, also_apply_to_func_label: bool = False
+    func_nodes,
+    renamer: Union[Renamer, str] = numbered_suffix_renamer,
+    *,
+    also_apply_to_func_label: bool = False,
 ):
     if isinstance(func_nodes, DAG):
         egress = DAG
     else:
         egress = list
-    if suffix is None:
-        suffix = next(_incremental_suffixes)
+    if isinstance(renamer, str):
+        suffix = renamer
+        renamer = lambda name: f'{name}{suffix}'
+    assert callable(suffix), f'suffix needs to be callable'
     func_node_trans = func_node_name_trans(
-        lambda name: f'{name}{suffix}',
-        also_apply_to_func_label=also_apply_to_func_label,
+        renamer, also_apply_to_func_label=also_apply_to_func_label,
     )
     return egress(map(func_node_trans, func_nodes))
 
@@ -133,6 +142,7 @@ def _if_none_return_input(func):
     >>> wfunc(4)
     4
     """
+
     def _func(input_val):
         if (output_val := func(input_val)) is not None:
             return output_val
@@ -142,11 +152,10 @@ def _if_none_return_input(func):
     return _func
 
 
-def _rename_vars(fn_kwargs, renamer=None):
-    if renamer is None:
-        renamer = next(_renamers)
+def _rename_nodes(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
     fn_kwargs = fn_kwargs.copy()
-    renamer = _if_none_return_input(renamer)  # if renamer returns None, return input
+    # decorate renamer so if the original returns None the decorated will return input
+    renamer = _if_none_return_input(renamer)
     fn_kwargs['name'] = renamer(fn_kwargs['name'])
     fn_kwargs['out'] = renamer(fn_kwargs['out'])
     fn_kwargs['bind'] = {
@@ -157,14 +166,17 @@ def _rename_vars(fn_kwargs, renamer=None):
 
 # TODO: Postelize? Work with func_nodes or dag?
 # TODO: Extract ingress/egress boilerplate to wrapper
-def rename_vars(func_nodes: DagAble, renamer=None):
+def rename_nodes(func_nodes: DagAble, renamer: Renamer = numbered_suffix_renamer):
     """Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.
 
     :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``
-    :param renamer:
-    :return:
+    :param renamer: A function taking an old name and returning the new one.
+    :return: func_nodes with some or all identifiers changed. If the input ``func_nodes``
+    is an iterable of ``FuncNodes``, a list of func_nodes will be returned, and if the
+    input ``func_nodes`` is a ``DAG`` instance, a ``DAG`` will be returned.
 
     >>> from meshed.makers import code_to_dag
+    >>> from meshed.dag import print_dag_string
     >>>
     >>> @code_to_dag
     ... def dag():
@@ -172,32 +184,75 @@ def rename_vars(func_nodes: DagAble, renamer=None):
     ...     c = g(x=a)
     ...     d = h(b, y=c)
     ...
-    >>> print(dag.synopsis_string(bind_info='hybrid'))
+
+    This is what the dag looks like:
+
+    >>> print_dag_string(dag)
     x=a -> g -> c
     a -> f -> b
     b,y=c -> h -> d
-    >>> print(rename_vars(dag, renamer='_2').synopsis_string(bind_info='hybrid'))
-    a=a_2 -> f_2 -> b_2
+
+    Now, if rename the vars of the ``dag`` without further specifying how, all of our
+    nodes (names) will be suffixed with a ``_1``
+
+    >>> new_dag = rename_nodes(dag)
+    >>> print_dag_string(new_dag)
+    a=a_1 -> f_1 -> b_1
+    x=a_1 -> g_1 -> c_1
+    b=b_1,y=c_1 -> h_1 -> d_1
+
+    If any nodes are already suffixed by ``_`` followed by a number, the default
+    renamer (``numbered_suffix_renamer``) will increment that number:
+
+    >>> another_new_data = rename_nodes(new_dag)
+    >>> print_dag_string(another_new_data)
     x=a_2 -> g_2 -> c_2
+    a=a_2 -> f_2 -> b_2
     b=b_2,y=c_2 -> h_2 -> d_2
-    >>> new_func_nodes = rename_vars(dag.func_nodes, renamer=lambda x: f"{x}_2")
-    >>> [fn.synopsis_string(bind_info='hybrid') for fn in new_func_nodes]
-    ['x=a_2 -> g_2 -> c_2', 'a=a_2 -> f_2 -> b_2', 'b=b_2,y=c_2 -> h_2 -> d_2']
+
+    If we specify a string for the ``renamer`` argument, it will be used to suffix all
+    the nodes.
+
+    >>> print_dag_string(rename_nodes(dag, renamer='_copy'))
+    a=a_copy -> f_copy -> b_copy
+    x=a_copy -> g_copy -> c_copy
+    b=b_copy,y=c_copy -> h_copy -> d_copy
+
+    Finally, for full functionality on renaming, you can use a function
+
+    >>> print_dag_string(rename_nodes(dag, renamer=lambda x: f"{x.upper()}"))
+    a=A -> F -> B
+    x=A -> G -> C
+    b=B,y=C -> H -> D
+
+    In all the above our input was a ``DAG`` so we got a ``DAG`` back, but if we enter
+    an iterable of ``FuncNode`` instances, we'll get a list of the same back.
+    Also, know that if your function returns ``None`` for a given identifier, it will
+    have the effect of not changing that identifier.
+
+    >>> rename_nodes(dag.func_nodes, renamer=lambda x: x.upper() if x in 'abc' else None)
+    [FuncNode(x=A -> g -> C), FuncNode(a=A -> f -> B), FuncNode(b=B,y=C -> h -> d)]
+
+    Recipe: If you want to rename the nodes with an explicit mapping, you can do so by
+    using the ``dict.get`` method of a dictionnary.
+
+    >>> d = {'a': 'alpha', 'b': 'bravo'}
+    >>> print_dag_string(rename_nodes(dag, renamer=d.get))
+    a=alpha -> f -> bravo
+    x=alpha -> g -> c
+    b=bravo,y=c -> h -> d
+
     """
     if isinstance(func_nodes, DAG):
         egress = DAG
     else:
         egress = list
-    if renamer is None:
-        renamer = next(_incremental_suffixes)
     if isinstance(renamer, str):
-        renamer = partial(_add_suffix, suffix=renamer)
-
-    ktrans = partial(_rename_vars, renamer=renamer)
-    func_node_trans = partial(
-        func_node_transformer,
-        kwargs_transformers=ktrans
-    )
+        suffix = renamer
+        renamer = lambda name: f'{name}{suffix}'
+    assert callable(renamer), f'Should be callable: {renamer}'
+    ktrans = partial(_rename_nodes, renamer=renamer)
+    func_node_trans = partial(func_node_transformer, kwargs_transformers=ktrans)
     return egress(map(func_node_trans, func_nodes))
 
 
