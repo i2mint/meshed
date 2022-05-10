@@ -350,6 +350,10 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
 
 def _mk_func_nodes(func_nodes):
     # TODO: Take care of names (or track and take care if collision)
+    if callable(func_nodes) and not isinstance(func_nodes, Iterable):
+        # if input is a single function, make it a list containing that function
+        single_func = func_nodes
+        func_nodes = [single_func]
     for func_node in func_nodes:
         if is_func_node(func_node):
             yield func_node
