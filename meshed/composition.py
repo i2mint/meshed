@@ -166,10 +166,7 @@ def _rename_nodes(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
 
 # TODO: Postelize? Work with func_nodes or dag?
 # TODO: Extract ingress/egress boilerplate to wrapper
-def rename_nodes(
-        func_nodes: DagAble,
-        renamer: Renamer = numbered_suffix_renamer
-):
+def rename_nodes(func_nodes: DagAble, renamer: Renamer = numbered_suffix_renamer):
     """Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.
 
     :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``
