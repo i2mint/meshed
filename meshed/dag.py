@@ -933,6 +933,24 @@ class DAG:
             for k, v in self.graph.items()
         }
 
+    def __add__(self, other):
+        """A union of DAGs.
+
+        :param other: Another DAG or a valid object to make one with ``DAG(other)``.
+
+        >>> dag = DAG(list) + DAG(tuple)
+        >>> print(dag.synopsis_string(bind_info='hybrid'))
+        iterable -> tuple_ -> tuple
+        iterable -> list_ -> list
+        >>> dag([1,2,3])
+        ((1, 2, 3), [1, 2, 3])
+        """
+        if isinstance(other, DAG):
+            other = list(other.func_nodes)
+        else:
+            other = list(DAG(other).func_nodes)
+        return DAG(list(self.func_nodes) + other)
+
     # ------------ display --------------------------------------------------------------
 
     def synopsis_string(self, bind_info='values'):

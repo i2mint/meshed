@@ -454,7 +454,7 @@ def _code_to_fnodes(src, func_src=dlft_factory_to_func):
     return mk_fnodes_from_fn_factories(fnodes_factories, func_src)
 
 
-def code_to_dag(src, func_src=dlft_factory_to_func, name=None):
+def code_to_dag(src, func_src=dlft_factory_to_func, name=None) -> DAG:
     """Get a ``meshed.DAG`` from src code"""
     if name is None:
         if isinstance(src, str):
