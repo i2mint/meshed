@@ -3,7 +3,7 @@
 import re
 from dataclasses import fields
 from inspect import signature
-from typing import Callable, Union, Iterable
+from typing import Callable, Union, Iterable, Mapping
 from functools import partial
 
 from i2 import Sig, kwargs_trans
@@ -101,7 +101,7 @@ def numbered_suffix_renamer(name, sep='_'):
         return p.sub(f'{sep}{num}', name)
 
 
-Renamer = Callable[[str], str]
+Renamer = Union[Callable[[str], str], str, Mapping[str, str]]
 
 # TODO: Extract  ingress/egress boilerplate to wrapper
 def suffix_ids(
@@ -166,11 +166,16 @@ def _rename_nodes(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
 
 # TODO: Postelize? Work with func_nodes or dag?
 # TODO: Extract ingress/egress boilerplate to wrapper
-def rename_nodes(func_nodes: DagAble, renamer: Renamer = numbered_suffix_renamer):
+def rename_nodes(
+        func_nodes: DagAble,
+        renamer: Renamer = numbered_suffix_renamer
+):
     """Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.
 
     :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``
-    :param renamer: A function taking an old name and returning the new one.
+    :param renamer: A function taking an old name and returning the new one, or:
+        - A dictionary ``{old_name: new_name, ...}`` mapping old names to new ones
+        - A string, which will be appended to all identifiers of the ``func_nodes``
     :return: func_nodes with some or all identifiers changed. If the input ``func_nodes``
     is an iterable of ``FuncNodes``, a list of func_nodes will be returned, and if the
     input ``func_nodes`` is a ``DAG`` instance, a ``DAG`` will be returned.
@@ -233,11 +238,11 @@ def rename_nodes(func_nodes: DagAble, renamer: Renamer = numbered_suffix_renamer
     >>> rename_nodes(dag.func_nodes, renamer=lambda x: x.upper() if x in 'abc' else None)
     [FuncNode(x=A -> g -> C), FuncNode(a=A -> f -> B), FuncNode(b=B,y=C -> h -> d)]
 
-    Recipe: If you want to rename the nodes with an explicit mapping, you can do so by
-    using the ``dict.get`` method of a dictionnary.
+    If you want to rename the nodes with an explicit mapping, you can do so by
+    specifying this mapping as your renamer
 
-    >>> d = {'a': 'alpha', 'b': 'bravo'}
-    >>> print_dag_string(rename_nodes(dag, renamer=d.get))
+    >>> substitutions = {'a': 'alpha', 'b': 'bravo'}
+    >>> print_dag_string(rename_nodes(dag, renamer=substitutions))
     a=alpha -> f -> bravo
     x=alpha -> g -> c
     b=bravo,y=c -> h -> d
@@ -250,7 +255,10 @@ def rename_nodes(func_nodes: DagAble, renamer: Renamer = numbered_suffix_renamer
     if isinstance(renamer, str):
         suffix = renamer
         renamer = lambda name: f'{name}{suffix}'
-    assert callable(renamer), f'Should be callable: {renamer}'
+    elif isinstance(renamer, Mapping):
+        old_to_new_map = dict(renamer)
+        renamer = old_to_new_map.get
+    assert callable(renamer), f'Could not be resolved into a callable: {renamer}'
     ktrans = partial(_rename_nodes, renamer=renamer)
     func_node_trans = partial(func_node_transformer, kwargs_transformers=ktrans)
     return egress(map(func_node_trans, func_nodes))
