@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.50 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.base &mdash; meshed 0.1.58 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -59,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
@@ -99,7 +100,7 @@
 <span class="sd">Base functionality of meshed</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">fields</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sized</span><span class="p">,</span> <span class="n">Sequence</span>
 
@@ -122,6 +123,8 @@
 <span class="sd">    that argument has the the function&#39;s (output) name.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">out</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span>
         <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">out</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -138,6 +141,8 @@
     <span class="k">elif</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span>
     <span class="k">elif</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name_of_func</span> <span class="o">==</span> <span class="n">out</span><span class="p">:</span>
+            <span class="n">name_of_func</span> <span class="o">+=</span> <span class="s1">&#39;_&#39;</span>
         <span class="k">return</span> <span class="n">name_of_func</span><span class="p">,</span> <span class="n">out</span></div>
 
 
@@ -186,8 +191,11 @@
     <span class="p">)</span></div>
 
 
-<span class="c1"># TODO: Think of the hash more carefully.</span>
-<div class="viewcode-block" id="FuncNode"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode">[docs]</a><span class="nd">@dataclass</span>
+<span class="c1"># TODO: When 3.10, look into and possibly use match_args in to_dict and from_dict</span>
+<span class="c1"># TODO: Make FuncNode immutable (is there a way to use frozen=True with post_init?)</span>
+<span class="c1"># TODO: How to get a safe hash? Needs to be immutable only?</span>
+<span class="c1"># @dataclass(eq=True, order=True, unsafe_hash=True)</span>
+<div class="viewcode-block" id="FuncNode"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">FuncNode</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A function wrapper that makes the function amenable to operating in a network.</span>
 
@@ -231,7 +239,7 @@
 <span class="sd">    ...     func=multiply,</span>
 <span class="sd">    ...     bind={&#39;x&#39;: &#39;item_price&#39;, &#39;y&#39;: &#39;num_of_items&#39;})</span>
 <span class="sd">    &gt;&gt;&gt; func_node</span>
-<span class="sd">    FuncNode(item_price,num_of_items -&gt; multiply_ -&gt; multiply)</span>
+<span class="sd">    FuncNode(x=item_price,y=num_of_items -&gt; multiply_ -&gt; multiply)</span>
 
 <span class="sd">    Note the `bind` is a mapping **from** the variable names of the wrapped function</span>
 <span class="sd">    **to** the names of the scope.</span>
@@ -317,11 +325,39 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">node_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s1">&#39;-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span>
+<div class="viewcode-block" id="FuncNode.synopsis_string"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.synopsis_string">[docs]</a>    <span class="k">def</span> <span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_info</span><span class="o">=</span><span class="s1">&#39;values&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param bind_info:</span>
+<span class="sd">        :return:</span>
+
+<span class="sd">        &gt;&gt;&gt; fn = FuncNode(</span>
+<span class="sd">        ...     func=lambda y, c: None , name=&#39;h&#39;, bind={&#39;y&#39;: &#39;b&#39;, &#39;c&#39;: &#39;c&#39;}, out=&#39;d&#39;</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; fn.synopsis_string()</span>
+<span class="sd">        &#39;b,c -&gt; h -&gt; d&#39;</span>
+<span class="sd">        &gt;&gt;&gt; fn.synopsis_string(bind_info=&#39;keys&#39;)</span>
+<span class="sd">        &#39;y,c -&gt; h -&gt; d&#39;</span>
+<span class="sd">        &gt;&gt;&gt; fn.synopsis_string(bind_info=&#39;hybrid&#39;)</span>
+<span class="sd">        &#39;y=b,c -&gt; h -&gt; d&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">bind_info</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;values&#39;</span><span class="p">,</span> <span class="s1">&#39;varnodes&#39;</span><span class="p">,</span> <span class="s1">&#39;var_nodes&#39;</span><span class="p">}:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s1">&#39;-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="n">bind_info</span> <span class="o">==</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">k</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s1">&#39;-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="n">bind_info</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;keys&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">}:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s1">&#39;-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;FuncNode(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;FuncNode(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="s2">&quot;hybrid&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span>
 
 <div class="viewcode-block" id="FuncNode.call_on_scope"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.call_on_scope">[docs]</a>    <span class="k">def</span> <span class="nf">call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call the function using the given scope both to source arguments and write</span>
@@ -346,21 +382,28 @@
 <span class="sd">        and space are used, so could possibly encode as int (for __hash__ method)</span>
 <span class="sd">        in a way that is reverse-decodable and with reasonable int size.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s1">&#39;;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;::&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="s1">&#39;hybrid&#39;</span><span class="p">)</span>
+        <span class="c1"># return &#39;;&#39;.join(self.bind) + &#39;::&#39; + self.out</span>
 
-    <span class="c1"># TODO: Find a better one</span>
+    <span class="c1"># TODO: Find a better one. Need to have guidance on hash and eq methods dos-&amp;-donts</span>
     <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash_str</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Deprecated: Don&#39;t use. Might be a normal function with a signature&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FuncNode.to_dict"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The inverse of from_dict: FuncNode.from_dict(fn.to_dict()) == fn&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)}</span></div>
+
+<div class="viewcode-block" id="FuncNode.from_dict"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.from_dict">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The inverse of to_dict: Make a ``FuncNode`` from a dictionary of init args&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">dictionary</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FuncNode.has_as_instance"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.has_as_instance">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">has_as_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
@@ -405,6 +448,10 @@
 
 <span class="k">def</span> <span class="nf">_mk_func_nodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">):</span>
     <span class="c1"># TODO: Take care of names (or track and take care if collision)</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+        <span class="c1"># if input is a single function, make it a list containing that function</span>
+        <span class="n">single_func</span> <span class="o">=</span> <span class="n">func_nodes</span>
+        <span class="n">func_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">single_func</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">is_func_node</span><span class="p">(</span><span class="n">func_node</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">func_node</span>
@@ -626,6 +673,58 @@
     <span class="k">for</span> <span class="n">required_key</span> <span class="ow">in</span> <span class="n">complete_with</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">required_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keys_already_covered</span><span class="p">:</span>
             <span class="n">to_complete</span><span class="p">[</span><span class="n">required_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">required_key</span>
+
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Mapping</span>
+
+<span class="c1"># TODO: Make a type where ``isinstance(s, Identifier) == s.isidentifier()``</span>
+<span class="n">Identifier</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">&#39;Identifier&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># + should satisfy str.isidentifier</span>
+<span class="n">Bind</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span>
+    <span class="s1">&#39;Bind&#39;</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">[</span>
+        <span class="nb">str</span><span class="p">,</span>  <span class="c1"># Identifier or &#39; &#39;.join(Iterable[Identifier])</span>
+        <span class="n">Dict</span><span class="p">[</span><span class="n">Identifier</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">],</span>
+        <span class="n">Sequence</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Identifier</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Identifier</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">]]],</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="n">IdentifierMapping</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Identifier</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="identifier_mapping"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.identifier_mapping">[docs]</a><span class="k">def</span> <span class="nf">identifier_mapping</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Bind</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IdentifierMapping</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Get an ``IdentifierMapping`` dict from a more loosely defined ``Bind``.</span>
+
+<span class="sd">    You can get an identifier mapping (that is, an explicit for for a ``bind`` argument)</span>
+<span class="sd">    from...</span>
+
+<span class="sd">    ... a single space-separated string</span>
+
+<span class="sd">    &gt;&gt;&gt; identifier_mapping(&#39;x a_b yz&#39;)  #</span>
+<span class="sd">    {&#39;x&#39;: &#39;x&#39;, &#39;a_b&#39;: &#39;a_b&#39;, &#39;yz&#39;: &#39;yz&#39;}</span>
+
+<span class="sd">    ... an iterable of strings or pairs of strings</span>
+
+<span class="sd">    &gt;&gt;&gt; identifier_mapping([&#39;foo&#39;, (&#39;bar&#39;, &#39;mitzvah&#39;)])</span>
+<span class="sd">    {&#39;foo&#39;: &#39;foo&#39;, &#39;bar&#39;: &#39;mitzvah&#39;}</span>
+
+<span class="sd">    ... a dict will be considered to be the mapping itself</span>
+
+<span class="sd">    &gt;&gt;&gt; identifier_mapping({&#39;x&#39;: &#39;y&#39;, &#39;a&#39;: &#39;b&#39;})</span>
+<span class="sd">    {&#39;x&#39;: &#39;y&#39;, &#39;a&#39;: &#39;b&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">item</span><span class="p">,</span> <span class="n">item</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">item</span>
+
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="o">**</span><span class="n">x</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
