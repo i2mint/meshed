@@ -627,3 +627,19 @@ def identifier_mapping(x: Bind) -> IdentifierMapping:
         return dict(gen())
     else:
         return dict(**x)
+
+
+FuncNodeAble = Union[FuncNode, Callable]
+
+
+def func_node_transformer(
+    fn: FuncNode, kwargs_transformers=(),
+):
+    """Get a modified ``FuncNode`` from an iterable of ``kwargs_trans`` modifiers."""
+    func_node_kwargs = fn.to_dict()
+    if callable(kwargs_transformers):
+        kwargs_transformers = [kwargs_transformers]
+    for trans in kwargs_transformers:
+        if (new_kwargs := trans(func_node_kwargs)) is not None:
+            func_node_kwargs = new_kwargs
+    return FuncNode.from_dict(func_node_kwargs)

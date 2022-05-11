@@ -1,6 +1,7 @@
 """util functions"""
+import re
 from functools import partial, wraps
-from typing import Callable, Any, Union, Iterator, Optional, Iterable
+from typing import Callable, Any, Union, Iterator, Optional, Iterable, Mapping
 
 from i2 import Sig, name_of_obj
 
@@ -564,3 +565,70 @@ def uncurry(func):
         return func(*tup)
 
     return res
+
+
+Renamer = Union[Callable[[str], str], str, Mapping[str, str]]
+
+
+def _if_none_return_input(func):
+    """Wraps a function so that when the original func outputs None, the wrapped will
+    return the original input instead.
+
+    >>> def func(x):
+    ...     if x % 2 == 0:
+    ...         return None
+    ...     else:
+    ...         return x * 10
+    >>> wfunc = _if_none_return_input(func)
+    >>> func(3)
+    30
+    >>> wfunc(3)
+    30
+    >>> assert func(4) is None
+    >>> wfunc(4)
+    4
+    """
+
+    def _func(input_val):
+        if (output_val := func(input_val)) is not None:
+            return output_val
+        else:
+            return input_val
+
+    return _func
+
+
+def numbered_suffix_renamer(name, sep='_'):
+    """
+    >>> numbered_suffix_renamer('item')
+    'item_1'
+    >>> numbered_suffix_renamer('item_1')
+    'item_2'
+    """
+    p = re.compile(sep + r'(\d+)$')
+    m = p.search(name)
+    if m is None:
+        return f'{name}{sep}1'
+    else:
+        num = int(m.group(1)) + 1
+        return p.sub(f'{sep}{num}', name)
+
+
+class InvalidFunctionParameters(ValueError):
+    """To be used when a function's parameters are not compliant with some rule about
+    them."""
+
+
+def _suffix(start=0):
+    i = start
+    while True:
+        yield f'_{i}'
+        i += 1
+
+
+def _add_suffix(x, suffix):
+    return f'{x}{suffix}'
+
+
+incremental_suffixes = _suffix()
+_renamers = (lambda x: f'{x}{suffix}' for suffix in incremental_suffixes)

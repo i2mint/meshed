@@ -132,11 +132,20 @@ That said it is your responsiblity to use the right policy for your particular c
 """
 
 from contextlib import suppress
-from functools import partial, wraps
+from functools import partial, wraps, cached_property
 from collections import Counter, defaultdict
 
 from dataclasses import dataclass, field
-from typing import Callable, MutableMapping, Sized, Union, Optional, Iterable, Any
+from typing import (
+    Callable,
+    MutableMapping,
+    Sized,
+    Union,
+    Optional,
+    Iterable,
+    Any,
+    Mapping,
+)
 
 from i2.signatures import (
     call_somewhat_forgivingly,
@@ -151,6 +160,8 @@ from meshed.base import (
     _mk_func_nodes,
     _func_nodes_to_graph_dict,
     is_func_node,
+    FuncNodeAble,
+    func_node_transformer,
 )
 
 from meshed.util import (
@@ -159,6 +170,9 @@ from meshed.util import (
     NotUniqueError,
     NotFound,
     NameValidationError,
+    Renamer,
+    _if_none_return_input,
+    numbered_suffix_renamer,
 )
 from meshed.itools import (
     topological_sort,
@@ -821,9 +835,9 @@ class DAG:
             if isinstance(obj, str):
                 obj = obj.split()
             if isinstance(obj, (str, Callable)):
-                return [self.get_node_matching(obj)]
+                return [self._func_node_for[obj]]
             elif isinstance(obj, Iterable):
-                return list(map(self.get_node_matching, obj))
+                return list(map(self._func_node_for.get, obj))
             else:
                 raise ValidationError(f'Unrecognized variables specification: {obj}')
 
@@ -831,24 +845,73 @@ class DAG:
         input_names, outs = map(ensure_variable_list, [input_names, outs])
         return input_names, outs
 
-    def get_node_matching(self, pattern):
-        if isinstance(pattern, str):
-            if pattern in self.var_nodes:
-                return pattern
-            return self.func_node_for_name(pattern)
-        elif isinstance(pattern, Callable):
-            return self.func_node_for_func(pattern)
-        raise NotFound(f'No matching node: {pattern}')
+    # TODO: Reflect: Should we include functions as keys here? Makes existence of the
+    #  item depend on unicity of the function in the DAG, therefore dynamic, so instable?
+    @cached_property
+    def _func_node_for(self):
+        """A dictionary mapping identifiers and functions to their FuncNode instances
+        in the DAG. The keys of this dictionary will include:
 
-    def func_node_for_name(self, name):
-        return _find_unique_element(
-            name, self.func_nodes, lambda name, fn: name == fn.name
-        )
+        - identifiers (names) of the ``FuncNode`` instances
+        - ``out`` of ``FuncNode`` instances
+        - The ``.func`` of the ``FuncNode`` instances if it's unique.
 
-    def func_node_for_func(self, func):
-        return _find_unique_element(
-            func, self.func_nodes, lambda func, fn: func == fn.func
-        )
+        >>> def foo(x): return x + 1
+        >>> def bar(x): return x * 2
+        >>> dag = DAG([
+        ...     FuncNode(foo, out='foo_output'),
+        ...     FuncNode(bar, name='B', out='b', bind={'x': 'foo_output'}),
+        ... ])
+
+        A ``FuncNode`` instance is indexed by both its identifier (``.name``) as well as
+        the identifier of it's output (``.out``):
+
+        >>> dag._func_node_for['foo_output']
+        FuncNode(x -> foo -> foo_output)
+        >>> dag._func_node_for['foo']
+        FuncNode(x -> foo -> foo_output)
+        >>> dag._func_node_for['b']
+        FuncNode(x=foo_output -> B -> b)
+        >>> dag._func_node_for['B']
+        FuncNode(x=foo_output -> B -> b)
+
+        If the function is hashable (most are) and unique within the ``DAG``, you
+        can also find the ``FuncNode`` via the ``.func`` it's wrapping:
+
+        >>> dag._func_node_for[foo]
+        FuncNode(x -> foo -> foo_output)
+        >>> dag._func_node_for[bar]
+        FuncNode(x=foo_output -> B -> b)
+
+        A word of warning though: The function index is provided as a convenience, but
+        using identifiers is preferable since referencing via the function object
+        depends on the other functions of the DAG, so could change if we add nodes.
+        
+        """
+        d = dict()
+        for func_node in self.func_nodes:
+            d[func_node.out] = func_node
+            d[func_node.name] = func_node
+
+            try:
+                if func_node.func not in d:
+                    # if .func not in d already, remember the link
+                    d[func_node.func] = func_node
+                else:
+                    # if .func was already in there, mark it for removal
+                    # (but leaving the key present so that we know about the duplication)
+                    d[func_node.func] = None
+            except TypeError:
+                # ignore (and don't include func) if not hashable
+                pass
+
+        # remove the items marked for removal and return
+        return {k: v for k, v in d.items() if v is not None}
+
+    def find_func_node(self, node):
+        if isinstance(node, FuncNode):
+            return node
+        return self._func_node_for[node]
 
     def __iter__(self):
         """Yields the self.func_nodes
@@ -923,10 +986,27 @@ class DAG:
                 # ``parameter_merge`` with raise an error.)
                 yield self.parameter_merge(params_with_name_changed_to_src_name)
 
+    # TODO: Find more representative (and possibly shorter) doctest:
     @property
     def graph_ids(self):
         """The dict representing the ``{from_node: to_nodes}`` graph.
         Like ``.graph``, but with node ids (names).
+
+        >>> from meshed.dag import DAG
+        >>> def add(a, b=1): return a + b
+        >>> def mult(x, y=3): return x * y
+        >>> def exp(mult, a): return mult ** a
+        >>> assert DAG([add, mult, exp]).graph_ids == {
+        ...     'a': ['add_', 'exp_'],
+        ...     'b': ['add_'],
+        ...     'add_': ['add'],
+        ...     'x': ['mult_'],
+        ...     'y': ['mult_'],
+        ...     'mult_': ['mult'],
+        ...     'mult': ['exp_'],
+        ...     'exp_': ['exp']
+        ... }
+
         """
         return {
             _name_attr_or_x(k): list(map(_name_attr_or_x, v))
@@ -951,6 +1031,9 @@ class DAG:
             other = list(DAG(other).func_nodes)
         return DAG(list(self.func_nodes) + other)
 
+    def copy(self, renamer=numbered_suffix_renamer):
+        return DAG(rename_nodes(self.func_nodes, renamer=renamer))
+
     # ------------ display --------------------------------------------------------------
 
     def synopsis_string(self, bind_info='values'):
@@ -973,6 +1056,8 @@ class DAG:
         # >>> assert list(DAG(func_nodes).dot_digraph_body()) == [
         # ]
         """
+        if isinstance(start_lines, str):
+            start_lines = start_lines.split()
         yield from dot_lines_of_func_nodes(self.func_nodes, start_lines=start_lines)
 
     @wraps(dot_digraph_body)
@@ -1221,3 +1306,114 @@ def reorder_on_constraints(funcnodes, outs):
     func_nodes, var_nodes = _separate_func_nodes_and_var_nodes(ordered_nodes)
 
     return func_nodes, var_nodes
+
+
+DagAble = Union[DAG, Iterable[FuncNodeAble]]
+
+
+def rename_nodes(func_nodes: DagAble, renamer: Renamer = numbered_suffix_renamer):
+    """Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.
+
+    :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``
+    :param renamer: A function taking an old name and returning the new one, or:
+        - A dictionary ``{old_name: new_name, ...}`` mapping old names to new ones
+        - A string, which will be appended to all identifiers of the ``func_nodes``
+    :return: func_nodes with some or all identifiers changed. If the input ``func_nodes``
+    is an iterable of ``FuncNodes``, a list of func_nodes will be returned, and if the
+    input ``func_nodes`` is a ``DAG`` instance, a ``DAG`` will be returned.
+
+    >>> from meshed.makers import code_to_dag
+    >>> from meshed.dag import print_dag_string
+    >>>
+    >>> @code_to_dag
+    ... def dag():
+    ...     b = f(a)
+    ...     c = g(x=a)
+    ...     d = h(b, y=c)
+    ...
+
+    This is what the dag looks like:
+
+    >>> print_dag_string(dag)
+    x=a -> g -> c
+    a -> f -> b
+    b,y=c -> h -> d
+
+    Now, if rename the vars of the ``dag`` without further specifying how, all of our
+    nodes (names) will be suffixed with a ``_1``
+
+    >>> new_dag = rename_nodes(dag)
+    >>> print_dag_string(new_dag)
+    a=a_1 -> f_1 -> b_1
+    x=a_1 -> g_1 -> c_1
+    b=b_1,y=c_1 -> h_1 -> d_1
+
+    If any nodes are already suffixed by ``_`` followed by a number, the default
+    renamer (``numbered_suffix_renamer``) will increment that number:
+
+    >>> another_new_data = rename_nodes(new_dag)
+    >>> print_dag_string(another_new_data)
+    x=a_2 -> g_2 -> c_2
+    a=a_2 -> f_2 -> b_2
+    b=b_2,y=c_2 -> h_2 -> d_2
+
+    If we specify a string for the ``renamer`` argument, it will be used to suffix all
+    the nodes.
+
+    >>> print_dag_string(rename_nodes(dag, renamer='_copy'))
+    a=a_copy -> f_copy -> b_copy
+    x=a_copy -> g_copy -> c_copy
+    b=b_copy,y=c_copy -> h_copy -> d_copy
+
+    Finally, for full functionality on renaming, you can use a function
+
+    >>> print_dag_string(rename_nodes(dag, renamer=lambda x: f"{x.upper()}"))
+    a=A -> F -> B
+    x=A -> G -> C
+    b=B,y=C -> H -> D
+
+    In all the above our input was a ``DAG`` so we got a ``DAG`` back, but if we enter
+    an iterable of ``FuncNode`` instances, we'll get a list of the same back.
+    Also, know that if your function returns ``None`` for a given identifier, it will
+    have the effect of not changing that identifier.
+
+    >>> rename_nodes(dag.func_nodes, renamer=lambda x: x.upper() if x in 'abc' else None)
+    [FuncNode(x=A -> g -> C), FuncNode(a=A -> f -> B), FuncNode(b=B,y=C -> h -> d)]
+
+    If you want to rename the nodes with an explicit mapping, you can do so by
+    specifying this mapping as your renamer
+
+    >>> substitutions = {'a': 'alpha', 'b': 'bravo'}
+    >>> print_dag_string(rename_nodes(dag, renamer=substitutions))
+    a=alpha -> f -> bravo
+    x=alpha -> g -> c
+    b=bravo,y=c -> h -> d
+
+    """
+    if isinstance(func_nodes, DAG):
+        egress = DAG
+    else:
+        egress = list
+    renamer = renamer or numbered_suffix_renamer
+    if isinstance(renamer, str):
+        suffix = renamer
+        renamer = lambda name: f'{name}{suffix}'
+    elif isinstance(renamer, Mapping):
+        old_to_new_map = dict(renamer)
+        renamer = old_to_new_map.get
+    assert callable(renamer), f'Could not be resolved into a callable: {renamer}'
+    ktrans = partial(_rename_nodes, renamer=renamer)
+    func_node_trans = partial(func_node_transformer, kwargs_transformers=ktrans)
+    return egress(map(func_node_trans, func_nodes))
+
+
+def _rename_nodes(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
+    fn_kwargs = fn_kwargs.copy()
+    # decorate renamer so if the original returns None the decorated will return input
+    renamer = _if_none_return_input(renamer)
+    fn_kwargs['name'] = renamer(fn_kwargs['name'])
+    fn_kwargs['out'] = renamer(fn_kwargs['out'])
+    fn_kwargs['bind'] = {
+        param: renamer(var_id) for param, var_id in fn_kwargs['bind'].items()
+    }
+    return fn_kwargs
