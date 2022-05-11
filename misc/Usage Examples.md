@@ -1,4 +1,50 @@
 
+# Copying and adding
+
+```python
+from meshed import code_to_dag
+
+@code_to_dag
+def f():
+    b = f(a)
+    c = g(b)
+    d = h(c)
+    
+f.dot_digraph('rankdir="LR"')
+```
+
+<img width="662" alt="image" src="https://user-images.githubusercontent.com/1906276/167921265-eb40cc3d-91a9-474c-b4cd-2e7b417b23e9.png">
+
+
+Add a copy of f to f:
+
+```python
+(f + f.copy()).dot_digraph('rankdir="LR"')
+```
+
+<img width="692" alt="image" src="https://user-images.githubusercontent.com/1906276/167921351-5167fc66-e2e5-4efb-aeb1-5aed612a676d.png">
+
+
+Add a copy of f to f, but controlling the renaming function:
+
+```python
+(f + f.copy(str.upper)).dot_digraph('rankdir="LR"')
+```
+
+<img width="678" alt="image" src="https://user-images.githubusercontent.com/1906276/167921744-1f2398de-a0da-47b7-9c50-6c4d071ad266.png">
+
+
+Same as above, but further rename the `A` node to be `a`, to connect the two pipelines:
+
+```python
+(f + f.copy(str.upper).copy({'A': 'a'})).dot_digraph('rankdir="LR"')
+```
+
+<img width="675" alt="image" src="https://user-images.githubusercontent.com/1906276/167921780-a1db1501-3a21-4b46-bba4-c0ee7bf3f96c.png">
+
+
+
+
 # Sub-DAGs
 
 ``dag[input_nodes:output_nodes]`` is the sub-dag made of intersection of all
