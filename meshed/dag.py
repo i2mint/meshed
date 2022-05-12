@@ -133,13 +133,12 @@ That said it is your responsiblity to use the right policy for your particular c
 
 from contextlib import suppress
 from functools import partial, wraps, cached_property
-from collections import Counter, defaultdict
+from collections import defaultdict
 
 from dataclasses import dataclass, field
 from typing import (
     Callable,
     MutableMapping,
-    Sized,
     Union,
     Optional,
     Iterable,
@@ -172,7 +171,7 @@ from meshed.util import (
     NameValidationError,
     Renamer,
     _if_none_return_input,
-    numbered_suffix_renamer,
+    numbered_suffix_renamer, replace_item_in_iterable, InvalidFunctionParameters,
 )
 from meshed.itools import (
     topological_sort,
@@ -546,7 +545,7 @@ class DAG:
 
     """
 
-    func_nodes: Iterable[Union[FuncNode, Callable]]
+    func_nodes: Iterable[Union[FuncNode, Callable]] = ()
     cache_last_scope: bool = field(default=True, repr=False)
     parameter_merge: ParameterMerger = field(
         default=conservative_parameter_merge, repr=False
@@ -908,10 +907,10 @@ class DAG:
         # remove the items marked for removal and return
         return {k: v for k, v in d.items() if v is not None}
 
-    def find_func_node(self, node):
+    def find_func_node(self, node, default=None):
         if isinstance(node, FuncNode):
             return node
-        return self._func_node_for[node]
+        return self._func_node_for.get(node, default)
 
     def __iter__(self):
         """Yields the self.func_nodes
@@ -1033,6 +1032,144 @@ class DAG:
 
     def copy(self, renamer=numbered_suffix_renamer):
         return DAG(rename_nodes(self.func_nodes, renamer=renamer))
+
+    def add_edge(self, from_node, to_node, to_param=None):
+        """Add an e
+
+        :param from_node:
+        :param to_node:
+        :param to_param:
+        :return: A new DAG with the edge added
+
+        >>> def f(a, b): return a + b
+        >>> def g(c, d=1): return c * d
+        >>> def h(x, y=1): return x ** y
+        >>>
+        >>> three_funcs = DAG([f, g, h])
+        >>> assert (
+        ...     three_funcs(x=1, c=2, a=3, b=4)
+        ...     == (1, 2, 7)
+        ...     == (h(x=1), g(c=2), f(a=3, b=4))
+        ...     == (1 ** 1, 2 * 1, 3 + 4)
+        ... )
+        >>> print(three_funcs.synopsis_string())
+        x,y -> h_ -> h
+        c,d -> g_ -> g
+        a,b -> f_ -> f
+        >>> hg = three_funcs.add_edge('h', 'g')
+        >>> assert (
+        ...     hg(a=3, b=4, x=1)
+        ...     == (7, 1)
+        ...     == (f(a=3, b=4), g(c=h(x=1)))
+        ...     == (3 + 4, 1 * (1 ** 1))
+        ... )
+        >>> print(hg.synopsis_string())
+        a,b -> f_ -> f
+        x,y -> h_ -> h
+        h,d -> g_ -> g
+        >>>
+        >>> fhg = three_funcs.add_edge('h', 'g').add_edge('f', 'h')
+        >>> assert (
+        ...     fhg(a=3, b=4)
+        ...     == 7
+        ...     == g(h(f(3, 4)))
+        ...     == ((3 + 4) * 1) ** 1
+        ... )
+        >>> print(fhg.synopsis_string())
+        a,b -> f_ -> f
+        f,y -> h_ -> h
+        h,d -> g_ -> g
+
+        The from and to nodes can be expressed by the ``FuncNode`` ``name`` (identifier)
+        or ``out``, or even the function itself if it's used only once in the ``DAG``.
+
+        >>> fhg = three_funcs.add_edge(h, 'g').add_edge('f_', 'h')
+        >>> assert fhg(a=3, b=4) == 7
+
+        By default, the edge will be added from ``from_node.out`` to the first
+        parameter of the function of ``to_node``.
+        But if you want otherwise, you can specify the parameter the edge should be
+        connected to.
+        For example, see below how we connect the outputs of ``g`` and ``h`` to the
+        parameters ``a`` and ``b`` of ``f`` respectively:
+
+        >>> f_of_g_and_h = (
+        ...     DAG([f, g, h])
+        ...     .add_edge(g, f, to_param='a')
+        ...     .add_edge(h, f, 'b')
+        ... )
+        >>> assert (
+        ...     f_of_g_and_h(x=2, c=3, y=2, d=2)
+        ...     == 10
+        ...     == f(g(c=3, d=2), h(x=2, y=2))
+        ...     == 3 * 2 + 2 ** 2
+        ... )
+        >>>
+        >>> print(f_of_g_and_h.synopsis_string())
+        x,y -> h_ -> h
+        c,d -> g_ -> g
+        g,h -> f_ -> f
+
+        See Also ``DAG.add_edges`` to add multiple edges at once
+
+        """
+        # resolve from_node and to_node into FuncNodes
+        from_node, to_node = map(self.find_func_node, (from_node, to_node))
+        if to_node is None and callable(to_node):
+            to_node = FuncNode(
+                to_node
+            )  # TODO: Automatically avoid clashing with dag identifiers (?)
+
+        # if to_param is None, take the first parameter of to_node as the one
+        if to_param is None:
+            if not to_node.bind:
+                raise InvalidFunctionParameters(
+                    "You can't add an edge TO a FuncNode whose function has no "
+                    'parameters. '
+                    f'You attempted to add an edge between {from_node=} and {to_node=}.'
+                )
+            else:
+                # first param of .func (i.e. first key of .bind)
+                to_param = next(iter(to_node.bind))
+
+        existing_bind = to_node.bind[to_param]
+        if any(existing_bind == fn.out for fn in self.func_nodes):
+            raise ValueError(
+                f"The {to_node} node is already sourcing '{to_param}' from '"
+                f"{existing_bind}'."
+                'Delete that edge to be able before you add a new one'
+            )
+
+        new_to_node_dict = to_node.to_dict()
+        new_bind = new_to_node_dict['bind'].copy()
+        new_bind[to_param] = from_node.out  # this is the actual edge creation
+        new_to_node = FuncNode.from_dict(dict(new_to_node_dict, bind=new_bind))
+        return DAG(
+            replace_item_in_iterable(
+                self.func_nodes,
+                condition=lambda x: x == to_node,
+                replacement=lambda x: new_to_node,
+            )
+        )
+
+    # TODO: There are optimization and pre-validation opportunities here!
+    def add_edges(self, edges):
+        """Adds multiple edges by applying ``DAG.add_edge`` multiple times.
+
+        :param edges: An iterable of ``(from_node, to_node)`` pairs or
+            ``(from_node, to_node, param)`` triples.
+        :return: A new dag with the said edges added.
+
+        >>> def f(a, b): return a + b
+        >>> def g(c, d=1): return c * d
+        >>> def h(x, y=1): return x ** y
+        >>> fhg = DAG([f, g, h]).add_edges([(h, 'g'), ('f_', 'h')])
+        >>> assert fhg(a=3, b=4) == 7
+        """
+        dag = self
+        for edge in edges:
+            dag = dag.add_edge(*edge)
+        return dag
 
     # ------------ display --------------------------------------------------------------
 

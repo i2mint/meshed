@@ -1,9 +1,18 @@
 """util functions"""
 import re
 from functools import partial, wraps
-from typing import Callable, Any, Union, Iterator, Optional, Iterable, Mapping
+from typing import Callable, Any, Union, Iterator, Optional, Iterable, Mapping, TypeVar
 
 from i2 import Sig, name_of_obj
+
+T = TypeVar('T')
+
+
+class Literal:
+    """An object to indicate that the value should be considered literally"""
+
+    def __init__(self, val):
+        self.val = val
 
 
 def extra_wraps(func, name=None, doc_prefix=''):
@@ -632,3 +641,107 @@ def _add_suffix(x, suffix):
 
 incremental_suffixes = _suffix()
 _renamers = (lambda x: f'{x}{suffix}' for suffix in incremental_suffixes)
+
+
+def _return_val(first_arg, val):
+    return val
+
+
+def _equality_checker(x, val):
+    return x == val
+
+
+def _not_callable(obj):
+    return not callable(obj)
+
+
+# TODO: Replace
+def conditional_trans(
+    obj: T, condition: Callable[[T], bool], trans: Callable[[T], Any]
+):
+    """Conditionally transform an object unless it is marked as a literal.
+
+    >>> from functools import partial
+    >>> trans = partial(
+    ...     conditional_trans, condition=str.isnumeric, trans=float
+    ... )
+    >>> trans('not a number')
+    'not a number'
+    >>> trans('10')
+    10.0
+
+    To use this function but tell it to not transform some a specific input no matter
+    what, wrap the input with ``Literal``
+
+    >>> # from meshed import Literal
+    >>> conditional_trans(Literal('10'), str.isnumeric, float)
+    '10'
+
+    """
+    # TODO: Maybe make Literal checking less sensitive to isinstance checks, using
+    #   hasattr instead for example.
+    if isinstance(obj, Literal):  # If val is a Literal, return it's value as is
+        return obj.val
+    elif condition(obj):  # If obj satisfies condition, return the alternative_obj
+        return trans(obj)
+    else:  # If not, just return object
+        return obj
+
+
+def replace_item_in_iterable(iterable, condition, replacement, *, egress=None):
+    """Returns a list where all items satisfying ``condition(item)`` were replaced
+    with ``replacement(item)``.
+
+    If ``condition`` is not a callable, it will be considered as a value to check
+    against using ``==``.
+
+    If ``replacement`` is not a callable, it will be considered as the actual
+    value to replace by.
+
+    :param iterable: Input iterable of items
+    :param condition: Condition to apply to item to see if it should be replaced
+    :param replacement: (Conditional) replacement value or function
+    :param egress: The function to apply to transformed iterable
+
+    >>> replace_item_in_iterable([1,2,3,4,5], condition=2, replacement = 'two')
+    [1, 'two', 3, 4, 5]
+    >>> is_even = lambda x: x % 2 == 0
+    >>> replace_item_in_iterable([1,2,3,4,5], condition=is_even, replacement = 'even')
+    [1, 'even', 3, 'even', 5]
+    >>> replace_item_in_iterable([1,2,3,4,5], is_even, replacement=lambda x: x * 10)
+    [1, 20, 3, 40, 5]
+
+    Note that if the input iterable is not a ``list``, ``tuple``, or ``set``,
+    your output will be an iterator that you'll have to iterate through to gather
+    transformed items.
+
+    >>> g = replace_item_in_iterable(iter([1,2,3,4,5]), condition=2, replacement = 'two')
+    >>> isinstance(g, Iterator)
+    True
+
+    Unless you specify an egress of your choice:
+
+    >>> replace_item_in_iterable(
+    ... iter([1,2,3,4,5]), is_even, lambda x: x * 10, egress=sorted
+    ... )
+    [1, 3, 5, 20, 40]
+
+    """
+    # If condition or replacement are not callable, make them so
+    condition = conditional_trans(
+        condition, _not_callable, lambda val: partial(_equality_checker, val=val)
+    )
+    replacement = conditional_trans(
+        replacement, _not_callable, lambda val: partial(_return_val, val=val)
+    )
+    # Handle the egress argument
+    if egress is None:
+        if isinstance(iterable, (list, tuple, set)):
+            egress = type(iterable)
+        else:
+            egress = lambda x: x  # that is return "as is"
+
+    # Make the item replacer
+    item_replacer = partial(conditional_trans, condition=condition, trans=replacement)
+
+    return egress(map(item_replacer, iterable))

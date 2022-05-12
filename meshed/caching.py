@@ -3,14 +3,7 @@
 from functools import cached_property
 from inspect import signature
 
-from meshed.util import func_name
-
-
-class Literal:
-    """An object to indicate that the value should be considered literally"""
-
-    def __init__(self, val):
-        self.val = val
+from meshed.util import func_name, Literal
 
 
 def set_cached_property_attr(obj, name, value):
