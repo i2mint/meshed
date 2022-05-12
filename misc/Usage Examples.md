@@ -43,6 +43,97 @@ Same as above, but further rename the `A` node to be `a`, to connect the two pip
 <img width="675" alt="image" src="https://user-images.githubusercontent.com/1906276/167921780-a1db1501-3a21-4b46-bba4-c0ee7bf3f96c.png">
 
 
+# Adding edges
+
+Let's first make a `DAG` with the nodes we want.
+
+```python
+from meshed import DAG
+
+def f(a, b): return a + b
+def g(c, d=1): return c * d
+def h(x, y=1): return x ** y
+
+three_funcs = DAG([f, g, h])
+
+assert (
+    three_funcs(x=1, c=2, a=3, b=4) 
+    == (1, 2, 7) 
+    == (h(x=1), g(c=2), f(a=3, b=4)) 
+    == (1 ** 1, 2 * 1, 3 + 4)
+)
+three_funcs.dot_digraph()
+```
+
+<img width="455" alt="image" src="https://user-images.githubusercontent.com/1906276/167974316-90cfddaa-6679-4823-887c-90e997993db3.png">
+
+See that we indeed have a `DAG` that uses all three functions, except they share no inputs, nor do they use each other's outputs. 
+We can change that by added edges.
+
+```python
+hg = three_funcs.add_edge('h', 'g')
+assert (
+    hg(a=3, b=4, x=1)
+    == (7, 1) 
+    == (f(a=3, b=4), g(c=h(x=1))) 
+    == (3 + 4, 1 * (1 ** 1))
+)
+hg.dot_digraph()
+```
+
+<img width="340" alt="image" src="https://user-images.githubusercontent.com/1906276/167974510-35b69cf6-9520-4c34-a1bd-409306d80b1a.png">
+
+
+```python
+fhg = three_funcs.add_edge('h', 'g').add_edge('f', 'h')
+assert (
+    fhg(a=3, b=4)
+    == 7
+    == g(h(f(3, 4)))
+    == ((3 + 4) * 1) ** 1
+)
+fhg.dot_digraph()
+```
+
+<img width="216" alt="image" src="https://user-images.githubusercontent.com/1906276/167974558-f376b58d-f19b-4335-8e5e-67c8cbb78acf.png">
+
+
+The from and to nodes can be expressed by the `FuncNode` `name` (identifier) or `out`, or even the function 
+itself if it's used only once in the `DAG`.
+
+```python
+fhg = three_funcs.add_edge(h, 'g').add_edge('f_', 'h')
+assert fhg(a=3, b=4) == 7
+```
+
+By default, the edge will be added from `from_node.out` to the first
+parameter of the function of `to_node`.
+But if you want otherwise, you can specify the parameter the edge should be
+connected to.
+For example, see below how we connect the outputs of `g` and `h` to the
+parameters `a` and `b` of `f` respectively:
+
+```python
+f_of_g_and_h = DAG([f, g, h]).add_edge(g, f, to_param='a').add_edge(h, f, 'b')
+assert (
+    f_of_g_and_h(x=2, c=3, y=2, d=2)
+    == 10
+    == f(g(c=3, d=2), h(x=2, y=2))
+    == 3 * 2 + 2 ** 2
+)
+f_of_g_and_h.dot_digraph()
+```
+
+<img width="285" alt="image" src="https://user-images.githubusercontent.com/1906276/167974725-895c0798-a6e5-4052-8272-518f2a3fdc33.png">
+
+
+You can also add multiple edges with the `DAG.add_edges` method:
+
+```python
+fhg = DAG([f, g, h]).add_edges([(h, 'g'), ('f_', 'h')])
+assert fhg(a=3, b=4) == 7
+```
+
 
 
 # Sub-DAGs
