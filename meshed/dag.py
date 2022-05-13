@@ -839,15 +839,36 @@ class DAG:
             if isinstance(obj, str):
                 obj = obj.split()
             if isinstance(obj, (str, Callable)):
-                return [self._func_node_for[obj]]
+                # TODO: See if we can use _func_node_for instead
+                return [self.get_node_matching(obj)]
             elif isinstance(obj, Iterable):
-                return list(map(self._func_node_for.get, obj))
+                # TODO: See if we can use _func_node_for instead
+                return list(map(self.get_node_matching, obj))
             else:
                 raise ValidationError(f'Unrecognized variables specification: {obj}')
 
         # assert len(item) == 2, f"Only items of size 1 or 2 are supported"
         input_names, outs = map(ensure_variable_list, [input_names, outs])
         return input_names, outs
+
+    def get_node_matching(self, pattern):
+        if isinstance(pattern, str):
+            if pattern in self.var_nodes:
+                return pattern
+            return self.func_node_for_name(pattern)
+        elif isinstance(pattern, Callable):
+            return self.func_node_for_func(pattern)
+        raise NotFound(f'No matching node: {pattern}')
+
+    def func_node_for_name(self, name):
+        return _find_unique_element(
+            name, self.func_nodes, lambda name, fn: name == fn.name
+        )
+
+    def func_node_for_func(self, func):
+        return _find_unique_element(
+            func, self.func_nodes, lambda func, fn: func == fn.func
+        )
 
     # TODO: Reflect: Should we include functions as keys here? Makes existence of the
     #  item depend on unicity of the function in the DAG, therefore dynamic, so instable?
@@ -1457,6 +1478,7 @@ def _validate_func_src(func_src, func_nodes: DagAble):
         raise ValueError(f"These values of func_src weren't callable: {not_callable}")
 
 
+# TODO: extract egress functionality to decorator
 @double_up_as_factory
 def change_funcs(func_nodes: DagAble = None, *, func_src=(), strict=False):
     if isinstance(func_nodes, DAG):
@@ -1481,6 +1503,7 @@ def change_funcs(func_nodes: DagAble = None, *, func_src=(), strict=False):
     return egress(gen())
 
 
+# TODO: extract egress functionality to decorator
 @double_up_as_factory
 def rename_nodes(
     func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_renamer
