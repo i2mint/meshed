@@ -17,7 +17,7 @@ by an adjacency Mapping.
 """
 
 
-from meshed.dag import DAG
+from meshed.dag import DAG, ch_funcs, ch_names
 from meshed.base import FuncNode
 from meshed.makers import code_to_dag
 from meshed.util import Literal

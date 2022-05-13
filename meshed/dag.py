@@ -1057,7 +1057,7 @@ class DAG:
         return DAG(list(self.func_nodes) + other)
 
     def copy(self, renamer=numbered_suffix_renamer):
-        return DAG(rename_nodes(self.func_nodes, renamer=renamer))
+        return DAG(ch_names(self.func_nodes, renamer=renamer))
 
     def add_edge(self, from_node, to_node, to_param=None):
         """Add an e
@@ -1480,7 +1480,7 @@ def _validate_func_src(func_src, func_nodes: DagAble):
 
 # TODO: extract egress functionality to decorator
 @double_up_as_factory
-def change_funcs(func_nodes: DagAble = None, *, func_src=(), strict=False):
+def ch_funcs(func_nodes: DagAble = None, *, func_src=(), strict=False):
     if isinstance(func_nodes, DAG):
         egress = DAG
     else:
@@ -1503,9 +1503,12 @@ def change_funcs(func_nodes: DagAble = None, *, func_src=(), strict=False):
     return egress(gen())
 
 
+change_funcs = ch_funcs  # back-compatibility
+
+
 # TODO: extract egress functionality to decorator
 @double_up_as_factory
-def rename_nodes(
+def ch_names(
     func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_renamer
 ):
     """Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.
@@ -1538,7 +1541,7 @@ def rename_nodes(
     Now, if rename the vars of the ``dag`` without further specifying how, all of our
     nodes (names) will be suffixed with a ``_1``
 
-    >>> new_dag = rename_nodes(dag)
+    >>> new_dag = ch_names(dag)
     >>> print_dag_string(new_dag)
     a=a_1 -> f_1 -> b_1
     x=a_1 -> g_1 -> c_1
@@ -1547,7 +1550,7 @@ def rename_nodes(
     If any nodes are already suffixed by ``_`` followed by a number, the default
     renamer (``numbered_suffix_renamer``) will increment that number:
 
-    >>> another_new_data = rename_nodes(new_dag)
+    >>> another_new_data = ch_names(new_dag)
     >>> print_dag_string(another_new_data)
     x=a_2 -> g_2 -> c_2
     a=a_2 -> f_2 -> b_2
@@ -1556,14 +1559,14 @@ def rename_nodes(
     If we specify a string for the ``renamer`` argument, it will be used to suffix all
     the nodes.
 
-    >>> print_dag_string(rename_nodes(dag, renamer='_copy'))
+    >>> print_dag_string(ch_names(dag, renamer='_copy'))
     a=a_copy -> f_copy -> b_copy
     x=a_copy -> g_copy -> c_copy
     b=b_copy,y=c_copy -> h_copy -> d_copy
 
     Finally, for full functionality on renaming, you can use a function
 
-    >>> print_dag_string(rename_nodes(dag, renamer=lambda x: f"{x.upper()}"))
+    >>> print_dag_string(ch_names(dag, renamer=lambda x: f"{x.upper()}"))
     a=A -> F -> B
     x=A -> G -> C
     b=B,y=C -> H -> D
@@ -1573,14 +1576,14 @@ def rename_nodes(
     Also, know that if your function returns ``None`` for a given identifier, it will
     have the effect of not changing that identifier.
 
-    >>> rename_nodes(dag.func_nodes, renamer=lambda x: x.upper() if x in 'abc' else None)
+    >>> ch_names(dag.func_nodes, renamer=lambda x: x.upper() if x in 'abc' else None)
     [FuncNode(x=A -> g -> C), FuncNode(a=A -> f -> B), FuncNode(b=B,y=C -> h -> d)]
 
     If you want to rename the nodes with an explicit mapping, you can do so by
     specifying this mapping as your renamer
 
     >>> substitutions = {'a': 'alpha', 'b': 'bravo'}
-    >>> print_dag_string(rename_nodes(dag, renamer=substitutions))
+    >>> print_dag_string(ch_names(dag, renamer=substitutions))
     a=alpha -> f -> bravo
     x=alpha -> g -> c
     b=bravo,y=c -> h -> d
@@ -1613,3 +1616,6 @@ def _rename_node(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
         param: renamer(var_id) for param, var_id in fn_kwargs['bind'].items()
     }
     return fn_kwargs
+
+
+rename_nodes = ch_names  # back-compatibility
