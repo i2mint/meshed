@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.61 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.62 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -1601,11 +1601,12 @@
     <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
 
 
+<span class="n">change_funcs</span> <span class="o">=</span> <span class="n">ch_funcs</span>  <span class="c1"># back-compatibility</span>
+
+
 <span class="c1"># TODO: extract egress functionality to decorator</span>
 <span class="nd">@double_up_as_factory</span>
-<span class="k">def</span> <span class="nf">ch_names</span><span class="p">(</span>
-    <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span>
-<span class="p">):</span>
+<span class="k">def</span> <span class="nf">ch_names</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.</span>
 
 <span class="sd">    :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``</span>
@@ -1711,6 +1712,9 @@
         <span class="n">param</span><span class="p">:</span> <span class="n">renamer</span><span class="p">(</span><span class="n">var_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">var_id</span> <span class="ow">in</span> <span class="n">fn_kwargs</span><span class="p">[</span><span class="s1">&#39;bind&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">fn_kwargs</span>
+
+
+<span class="n">rename_nodes</span> <span class="o">=</span> <span class="n">ch_names</span>  <span class="c1"># back-compatibility</span>
 </pre></div>
 
            </div>
