@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; meshed 0.1.59 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Index &mdash; meshed 0.1.60 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
@@ -123,6 +123,12 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.add_edge">add_edge() (in module meshed.itools)</a>
+
+      <ul>
+        <li><a href="module_docs/meshed/dag.html#meshed.dag.DAG.add_edge">(meshed.dag.DAG method)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/meshed/dag.html#meshed.dag.DAG.add_edges">add_edges() (meshed.dag.DAG method)</a>
 </li>
       <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.add_op">add_op() (meshed.ext.gk.Network method)</a>
 </li>
@@ -133,6 +139,8 @@
       <li><a href="module_docs/meshed/util.html#meshed.util.args_funcnames">args_funcnames() (in module meshed.util)</a>
 </li>
       <li><a href="module_docs/meshed/makers.html#meshed.makers.AssignNodeVisitor">AssignNodeVisitor (class in meshed.makers)</a>
+</li>
+      <li><a href="module_docs/meshed/dag.html#meshed.dag.attribute_vals">attribute_vals() (in module meshed.dag)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -160,14 +168,12 @@
 </li>
       <li><a href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.classifier_score">classifier_score() (in module meshed.tests.test_getitem)</a>
 </li>
-      <li><a href="module_docs/meshed/makers.html#meshed.makers.code_to_dag">code_to_dag() (in module meshed.makers)</a>
-</li>
       <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.compile">compile() (meshed.ext.gk.Network method)</a>
+</li>
+      <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.compose">compose (class in meshed.ext.gk)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.compose">compose (class in meshed.ext.gk)</a>
-</li>
       <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.compute">compute() (meshed.ext.gk.Network method)</a>
 
       <ul>
@@ -176,6 +182,8 @@
         <li><a href="module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Operation.compute">(meshed.scrap.gk_with_networkx.Operation method)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/meshed/util.html#meshed.util.conditional_trans">conditional_trans() (in module meshed.util)</a>
+</li>
       <li><a href="module_docs/meshed/util.html#meshed.util.ConditionalIterize">ConditionalIterize (class in meshed.util)</a>
 </li>
       <li><a href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.confusion_count">confusion_count() (in module meshed.tests.test_getitem)</a>
@@ -250,17 +258,13 @@
 </li>
       <li><a href="module_docs/meshed/util.html#meshed.util.func_name">func_name() (in module meshed.util)</a>
 </li>
-      <li><a href="module_docs/meshed/composition.html#meshed.composition.func_node_name_trans">func_node_name_trans() (in module meshed.composition)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/meshed/composition.html#meshed.composition.func_node_transformer">func_node_transformer() (in module meshed.composition)</a>
+      <li><a href="module_docs/meshed/composition.html#meshed.composition.func_node_name_trans">func_node_name_trans() (in module meshed.composition)</a>
+</li>
+      <li><a href="module_docs/meshed/base.html#meshed.base.func_node_transformer">func_node_transformer() (in module meshed.base)</a>
 </li>
       <li><a href="module_docs/meshed/base.html#meshed.base.FuncNode">FuncNode (class in meshed.base)</a>
-</li>
-      <li><a href="module_docs/meshed/dag.html#meshed.dag.funcs_to_operations">funcs_to_operations() (in module meshed.dag)</a>
-</li>
-      <li><a href="module_docs/meshed/dag.html#meshed.dag.funcs_to_operators">funcs_to_operators() (in module meshed.dag)</a>
 </li>
       <li><a href="module_docs/meshed/ext/gk.html#meshed.ext.gk.FunctionalOperation">FunctionalOperation (class in meshed.ext.gk)</a>
 </li>
@@ -308,7 +312,7 @@
 </li>
       <li><a href="module_docs/meshed/util.html#meshed.util.instance_checker">instance_checker() (in module meshed.util)</a>
 </li>
-      <li><a href="module_docs/meshed/composition.html#meshed.composition.InvalidFunctionParameters">InvalidFunctionParameters</a>
+      <li><a href="module_docs/meshed/util.html#meshed.util.InvalidFunctionParameters">InvalidFunctionParameters</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -338,7 +342,7 @@
 </li>
       <li><a href="module_docs/meshed/composition.html#meshed.composition.line_with_dag">line_with_dag() (in module meshed.composition)</a>
 </li>
-      <li><a href="module_docs/meshed/caching.html#meshed.caching.Literal">Literal (class in meshed.caching)</a>
+      <li><a href="module_docs/meshed/util.html#meshed.util.Literal">Literal (class in meshed.util)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -634,6 +638,8 @@
         <li><a href="module_docs/meshed/util.html#meshed.util.named_partial">(in module meshed.util)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/meshed/dag.html#meshed.dag.names_and_outs">names_and_outs() (in module meshed.dag)</a>
+</li>
       <li><a href="module_docs/meshed/base.html#meshed.base.FuncNode.names_maker">names_maker() (meshed.base.FuncNode method)</a>
 </li>
       <li><a href="module_docs/meshed/util.html#meshed.util.NameValidationError">NameValidationError</a>
@@ -658,7 +664,7 @@
 </li>
       <li><a href="module_docs/meshed/util.html#meshed.util.NotUniqueError">NotUniqueError</a>
 </li>
-      <li><a href="module_docs/meshed/composition.html#meshed.composition.numbered_suffix_renamer">numbered_suffix_renamer() (in module meshed.composition)</a>
+      <li><a href="module_docs/meshed/util.html#meshed.util.numbered_suffix_renamer">numbered_suffix_renamer() (in module meshed.util)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -722,7 +728,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/meshed/composition.html#meshed.composition.rename_nodes">rename_nodes() (in module meshed.composition)</a>
+      <li><a href="module_docs/meshed/util.html#meshed.util.replace_item_in_iterable">replace_item_in_iterable() (in module meshed.util)</a>
 </li>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.root_nodes">root_nodes() (in module meshed.itools)</a>
 </li>

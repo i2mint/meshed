@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.composition &mdash; meshed 0.1.59 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.composition &mdash; meshed 0.1.60 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -98,41 +98,21 @@
   <h1>Source code for meshed.composition</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Specific use of FuncNode and DAG&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">fields</span>
 <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
 <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">kwargs_trans</span>
-<span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="n">FuncNode</span>
+<span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="n">func_node_transformer</span>
 <span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">Renamer</span><span class="p">,</span> <span class="n">numbered_suffix_renamer</span><span class="p">,</span> <span class="n">InvalidFunctionParameters</span>
 
 <span class="n">_func_node_fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">)}</span>
 
 <span class="c1"># TODO: How to enforce that it only has keys from _func_node_fields?</span>
 <span class="n">FuncNodeKwargs</span> <span class="o">=</span> <span class="nb">dict</span>
 <span class="n">FuncNodeKwargsTrans</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">FuncNodeKwargs</span><span class="p">],</span> <span class="n">FuncNodeKwargs</span><span class="p">]</span>
-<span class="n">FuncNodeAble</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
-<span class="n">DagAble</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">DAG</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNodeAble</span><span class="p">]]</span>
-
-
-<div class="viewcode-block" id="InvalidFunctionParameters"><a class="viewcode-back" href="../../module_docs/meshed/composition.html#meshed.composition.InvalidFunctionParameters">[docs]</a><span class="k">class</span> <span class="nc">InvalidFunctionParameters</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;To be used when a function&#39;s parameters are not compliant with some rule about</span>
-<span class="sd">    them.&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="func_node_transformer"><a class="viewcode-back" href="../../module_docs/meshed/composition.html#meshed.composition.func_node_transformer">[docs]</a><span class="k">def</span> <span class="nf">func_node_transformer</span><span class="p">(</span>
-    <span class="n">fn</span><span class="p">:</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="n">kwargs_transformers</span><span class="o">=</span><span class="p">(),</span>
-<span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get a modified ``FuncNode`` from an iterable of ``kwargs_trans`` modifiers.&quot;&quot;&quot;</span>
-    <span class="n">func_node_kwargs</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">kwargs_transformers</span><span class="p">):</span>
-        <span class="n">kwargs_transformers</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs_transformers</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">kwargs_transformers</span><span class="p">:</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">new_kwargs</span> <span class="o">:=</span> <span class="n">trans</span><span class="p">(</span><span class="n">func_node_kwargs</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">func_node_kwargs</span> <span class="o">=</span> <span class="n">new_kwargs</span>
-    <span class="k">return</span> <span class="n">FuncNode</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">func_node_kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="is_func_node_kwargs_trans"><a class="viewcode-back" href="../../module_docs/meshed/composition.html#meshed.composition.is_func_node_kwargs_trans">[docs]</a><span class="k">def</span> <span class="nf">is_func_node_kwargs_trans</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -183,24 +163,6 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="numbered_suffix_renamer"><a class="viewcode-back" href="../../module_docs/meshed/composition.html#meshed.composition.numbered_suffix_renamer">[docs]</a><span class="k">def</span> <span class="nf">numbered_suffix_renamer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &gt;&gt;&gt; numbered_suffix_renamer(&#39;item&#39;)</span>
-<span class="sd">    &#39;item_1&#39;</span>
-<span class="sd">    &gt;&gt;&gt; numbered_suffix_renamer(&#39;item_1&#39;)</span>
-<span class="sd">    &#39;item_2&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">sep</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;(\d+)$&#39;</span><span class="p">)</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">sep</span><span class="si">}</span><span class="s1">1&#39;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sep</span><span class="si">}{</span><span class="n">num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
-
-
-<span class="n">Renamer</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
-
 <span class="c1"># TODO: Extract  ingress/egress boilerplate to wrapper</span>
 <span class="k">def</span> <span class="nf">suffix_ids</span><span class="p">(</span>
     <span class="n">func_nodes</span><span class="p">,</span>
@@ -220,143 +182,6 @@
         <span class="n">renamer</span><span class="p">,</span> <span class="n">also_apply_to_func_label</span><span class="o">=</span><span class="n">also_apply_to_func_label</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">func_node_trans</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">_if_none_return_input</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Wraps a function so that when the original func outputs None, the wrapped will</span>
-<span class="sd">    return the original input instead.</span>
-
-<span class="sd">    &gt;&gt;&gt; def func(x):</span>
-<span class="sd">    ...     if x % 2 == 0:</span>
-<span class="sd">    ...         return None</span>
-<span class="sd">    ...     else:</span>
-<span class="sd">    ...         return x * 10</span>
-<span class="sd">    &gt;&gt;&gt; wfunc = _if_none_return_input(func)</span>
-<span class="sd">    &gt;&gt;&gt; func(3)</span>
-<span class="sd">    30</span>
-<span class="sd">    &gt;&gt;&gt; wfunc(3)</span>
-<span class="sd">    30</span>
-<span class="sd">    &gt;&gt;&gt; assert func(4) is None</span>
-<span class="sd">    &gt;&gt;&gt; wfunc(4)</span>
-<span class="sd">    4</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">_func</span><span class="p">(</span><span class="n">input_val</span><span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">output_val</span> <span class="o">:=</span> <span class="n">func</span><span class="p">(</span><span class="n">input_val</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">output_val</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">input_val</span>
-
-    <span class="k">return</span> <span class="n">_func</span>
-
-
-<span class="k">def</span> <span class="nf">_rename_nodes</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
-    <span class="n">fn_kwargs</span> <span class="o">=</span> <span class="n">fn_kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="c1"># decorate renamer so if the original returns None the decorated will return input</span>
-    <span class="n">renamer</span> <span class="o">=</span> <span class="n">_if_none_return_input</span><span class="p">(</span><span class="n">renamer</span><span class="p">)</span>
-    <span class="n">fn_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamer</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
-    <span class="n">fn_kwargs</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamer</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">])</span>
-    <span class="n">fn_kwargs</span><span class="p">[</span><span class="s1">&#39;bind&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">param</span><span class="p">:</span> <span class="n">renamer</span><span class="p">(</span><span class="n">var_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">var_id</span> <span class="ow">in</span> <span class="n">fn_kwargs</span><span class="p">[</span><span class="s1">&#39;bind&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">fn_kwargs</span>
-
-
-<span class="c1"># TODO: Postelize? Work with func_nodes or dag?</span>
-<span class="c1"># TODO: Extract ingress/egress boilerplate to wrapper</span>
-<div class="viewcode-block" id="rename_nodes"><a class="viewcode-back" href="../../module_docs/meshed/composition.html#meshed.composition.rename_nodes">[docs]</a><span class="k">def</span> <span class="nf">rename_nodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.</span>
-
-<span class="sd">    :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``</span>
-<span class="sd">    :param renamer: A function taking an old name and returning the new one, or:</span>
-<span class="sd">        - A dictionary ``{old_name: new_name, ...}`` mapping old names to new ones</span>
-<span class="sd">        - A string, which will be appended to all identifiers of the ``func_nodes``</span>
-<span class="sd">    :return: func_nodes with some or all identifiers changed. If the input ``func_nodes``</span>
-<span class="sd">    is an iterable of ``FuncNodes``, a list of func_nodes will be returned, and if the</span>
-<span class="sd">    input ``func_nodes`` is a ``DAG`` instance, a ``DAG`` will be returned.</span>
-
-<span class="sd">    &gt;&gt;&gt; from meshed.makers import code_to_dag</span>
-<span class="sd">    &gt;&gt;&gt; from meshed.dag import print_dag_string</span>
-<span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; @code_to_dag</span>
-<span class="sd">    ... def dag():</span>
-<span class="sd">    ...     b = f(a)</span>
-<span class="sd">    ...     c = g(x=a)</span>
-<span class="sd">    ...     d = h(b, y=c)</span>
-<span class="sd">    ...</span>
-
-<span class="sd">    This is what the dag looks like:</span>
-
-<span class="sd">    &gt;&gt;&gt; print_dag_string(dag)</span>
-<span class="sd">    x=a -&gt; g -&gt; c</span>
-<span class="sd">    a -&gt; f -&gt; b</span>
-<span class="sd">    b,y=c -&gt; h -&gt; d</span>
-
-<span class="sd">    Now, if rename the vars of the ``dag`` without further specifying how, all of our</span>
-<span class="sd">    nodes (names) will be suffixed with a ``_1``</span>
-
-<span class="sd">    &gt;&gt;&gt; new_dag = rename_nodes(dag)</span>
-<span class="sd">    &gt;&gt;&gt; print_dag_string(new_dag)</span>
-<span class="sd">    a=a_1 -&gt; f_1 -&gt; b_1</span>
-<span class="sd">    x=a_1 -&gt; g_1 -&gt; c_1</span>
-<span class="sd">    b=b_1,y=c_1 -&gt; h_1 -&gt; d_1</span>
-
-<span class="sd">    If any nodes are already suffixed by ``_`` followed by a number, the default</span>
-<span class="sd">    renamer (``numbered_suffix_renamer``) will increment that number:</span>
-
-<span class="sd">    &gt;&gt;&gt; another_new_data = rename_nodes(new_dag)</span>
-<span class="sd">    &gt;&gt;&gt; print_dag_string(another_new_data)</span>
-<span class="sd">    x=a_2 -&gt; g_2 -&gt; c_2</span>
-<span class="sd">    a=a_2 -&gt; f_2 -&gt; b_2</span>
-<span class="sd">    b=b_2,y=c_2 -&gt; h_2 -&gt; d_2</span>
-
-<span class="sd">    If we specify a string for the ``renamer`` argument, it will be used to suffix all</span>
-<span class="sd">    the nodes.</span>
-
-<span class="sd">    &gt;&gt;&gt; print_dag_string(rename_nodes(dag, renamer=&#39;_copy&#39;))</span>
-<span class="sd">    a=a_copy -&gt; f_copy -&gt; b_copy</span>
-<span class="sd">    x=a_copy -&gt; g_copy -&gt; c_copy</span>
-<span class="sd">    b=b_copy,y=c_copy -&gt; h_copy -&gt; d_copy</span>
-
-<span class="sd">    Finally, for full functionality on renaming, you can use a function</span>
-
-<span class="sd">    &gt;&gt;&gt; print_dag_string(rename_nodes(dag, renamer=lambda x: f&quot;{x.upper()}&quot;))</span>
-<span class="sd">    a=A -&gt; F -&gt; B</span>
-<span class="sd">    x=A -&gt; G -&gt; C</span>
-<span class="sd">    b=B,y=C -&gt; H -&gt; D</span>
-
-<span class="sd">    In all the above our input was a ``DAG`` so we got a ``DAG`` back, but if we enter</span>
-<span class="sd">    an iterable of ``FuncNode`` instances, we&#39;ll get a list of the same back.</span>
-<span class="sd">    Also, know that if your function returns ``None`` for a given identifier, it will</span>
-<span class="sd">    have the effect of not changing that identifier.</span>
-
-<span class="sd">    &gt;&gt;&gt; rename_nodes(dag.func_nodes, renamer=lambda x: x.upper() if x in &#39;abc&#39; else None)</span>
-<span class="sd">    [FuncNode(x=A -&gt; g -&gt; C), FuncNode(a=A -&gt; f -&gt; B), FuncNode(b=B,y=C -&gt; h -&gt; d)]</span>
-
-<span class="sd">    If you want to rename the nodes with an explicit mapping, you can do so by</span>
-<span class="sd">    specifying this mapping as your renamer</span>
-
-<span class="sd">    &gt;&gt;&gt; substitutions = {&#39;a&#39;: &#39;alpha&#39;, &#39;b&#39;: &#39;bravo&#39;}</span>
-<span class="sd">    &gt;&gt;&gt; print_dag_string(rename_nodes(dag, renamer=substitutions))</span>
-<span class="sd">    a=alpha -&gt; f -&gt; bravo</span>
-<span class="sd">    x=alpha -&gt; g -&gt; c</span>
-<span class="sd">    b=bravo,y=c -&gt; h -&gt; d</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">DAG</span><span class="p">):</span>
-        <span class="n">egress</span> <span class="o">=</span> <span class="n">DAG</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">egress</span> <span class="o">=</span> <span class="nb">list</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">renamer</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="n">renamer</span>
-        <span class="n">renamer</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">renamer</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
-        <span class="n">old_to_new_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">renamer</span><span class="p">)</span>
-        <span class="n">renamer</span> <span class="o">=</span> <span class="n">old_to_new_map</span><span class="o">.</span><span class="n">get</span>
-    <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">renamer</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Could not be resolved into a callable: </span><span class="si">{</span><span class="n">renamer</span><span class="si">}</span><span class="s1">&#39;</span>
-    <span class="n">ktrans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_rename_nodes</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
-    <span class="n">func_node_trans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">func_node_transformer</span><span class="p">,</span> <span class="n">kwargs_transformers</span><span class="o">=</span><span class="n">ktrans</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">func_node_trans</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">))</span></div>
 
 
 <span class="c1"># ---------------------------------------------------------------------------------------</span>
