@@ -1,4 +1,92 @@
 
+# Changing the functions of a DAG
+
+Here we'll see how we can change the functions of an existing graph. This can be used to:
+- Use a DAG as a template and produce several instances of it with different functions inhabiting its nodes
+- Work on the structure of the DAG first, and insert the needed functions later
+
+from meshed import code_to_dag
+
+```python
+@code_to_dag
+def dag():
+    w = f(a, b)
+    ww = g(c=w)
+    www = h(x=ww)
+
+dag.dot_digraph('rankdir="LR"')
+
+```
+
+![image](https://user-images.githubusercontent.com/1906276/168346035-38453fdf-442c-4178-84aa-3f69267d3a41.png)
+
+
+Notice that this dag can compute stuff, but what it computes is probably not interesting to us.
+
+```python
+assert dag(1,2) == 'h(x=g(c=f(a=1, b=2)))'
+```
+
+
+That's because the functions `f`, `g` and `h` are just place holders made by `code_to_dag` to have **some** function that satisfies the desired interface. Really, this is meant to be used as a template to generate the actual dag or dags we're actually interested in. We can do so using `change_funcs`.
+
+```python
+from meshed.dag import change_funcs
+
+def f(a, b): return a + b
+def g(c, d=3): return c * d
+def h(x, y=2): return x ** y
+
+dag2 = change_funcs(dag, func_src={'f': f, 'g': g, 'h': h})
+
+assert dag2(1, 2) == 81 == h(g(f(1, 2))) == ((1 + 2) * 3) ** 2
+```
+
+Note that since `g` and `h` bring new arguments with them (`d` and `y`), unlike `dag` which had only two arguments, `dag2` has four!
+
+```python
+from inspect import signature
+assert str(signature(dag2)) == '(a, b, d=3, y=2)'
+
+assert dag2(1,2,2,1) == 6
+```
+
+One trick to be able to source the functions automatically from the current namespace is to specify `locals()` as the `func_src`. 
+
+```python
+dag3 = change_funcs(dag, func_src=locals())
+assert dag3(1, 2) == 81 == h(g(f(1, 2))) == ((1 + 2) * 3) ** 2
+```
+
+Since the `out` of a `FuncNode` is unique, you can also specify the mapping via those identifiers.
+
+```python
+dag3 = change_funcs(dag, func_src={'w': f, 'ww': g, 'www': h})
+
+assert dag3(1, 2) == 81 == h(g(f(1, 2))) == ((1 + 2) * 3) ** 2
+```
+
+You can use `change_funcs` as a decorator too:
+
+```python
+@change_funcs(func_src=locals())
+@code_to_dag
+def dag():
+    w = f(a, b)
+    ww = g(c=w)
+    www = h(x=ww)
+    
+assert dag(1, 2) == 81 == h(g(f(1, 2))) == ((1 + 2) * 3) ** 2
+```
+
+
+This mechanism of injecting functions in the `DAG` allows us to use the same structural templates to create many dags of the same kind. We can change all or only one of the functions.
+
+```python
+dag4 = change_funcs(dag, func_src={'f': lambda a, b: a + b * 2})
+dag4(1,2)
+```
+
 # Copying and adding
 
 ```python
