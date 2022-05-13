@@ -161,7 +161,7 @@ from contextlib import suppress
 from functools import partial
 
 
-from i2 import Sig, name_of_obj, partialx
+from i2 import Sig, name_of_obj, partialx, double_up_as_factory
 
 from meshed.dag import DAG
 from meshed.base import FuncNode
@@ -454,7 +454,8 @@ def _code_to_fnodes(src, func_src=dlft_factory_to_func):
     return mk_fnodes_from_fn_factories(fnodes_factories, func_src)
 
 
-def code_to_dag(src, func_src=dlft_factory_to_func, name=None) -> DAG:
+@double_up_as_factory
+def code_to_dag(src=None, *, func_src=dlft_factory_to_func, name=None) -> DAG:
     """Get a ``meshed.DAG`` from src code"""
     if name is None:
         if isinstance(src, str):

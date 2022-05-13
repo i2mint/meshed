@@ -136,6 +136,8 @@ from functools import partial, wraps, cached_property
 from collections import defaultdict
 
 from dataclasses import dataclass, field
+from itertools import chain
+from operator import attrgetter
 from typing import (
     Callable,
     MutableMapping,
@@ -146,6 +148,7 @@ from typing import (
     Mapping,
 )
 
+from i2 import double_up_as_factory
 from i2.signatures import (
     call_somewhat_forgivingly,
     Parameter,
@@ -171,7 +174,9 @@ from meshed.util import (
     NameValidationError,
     Renamer,
     _if_none_return_input,
-    numbered_suffix_renamer, replace_item_in_iterable, InvalidFunctionParameters,
+    numbered_suffix_renamer,
+    replace_item_in_iterable,
+    InvalidFunctionParameters,
 )
 from meshed.itools import (
     topological_sort,
@@ -1399,31 +1404,9 @@ def print_dag_string(dag: DAG, bind_info: str = 'hybrid'):
     print(dag.synopsis_string(bind_info=bind_info))
 
 
-# ---------- with ext.gk -------------------------------------------------------
-
-with suppress(ModuleNotFoundError, ImportError):
-    from meshed.ext.gk import operation, Operation
-
-    def funcs_to_operations(*funcs, exclude_names=()) -> Operation:
-        """Get an operation from a callable"""
-
-        for func in funcs:
-            _func_name = mk_func_name(func, exclude_names)
-            exclude_names = exclude_names + (_func_name,)
-            needs = arg_names(func, _func_name, exclude_names)
-            exclude_names = exclude_names + tuple(needs)
-            yield operation(
-                func, name=_func_name, needs=needs, provides=_func_name,
-            )
-
-    def funcs_to_operators(*funcs, exclude_names=()) -> Operation:
-        """Get an operation from a callable"""
-
-        for func, operation in zip(funcs, funcs_to_operations(funcs, exclude_names)):
-            yield operation(func)
-
-
+# ---------------------------------------------------------------------------------------
 # reordering funcnodes
+
 from meshed.util import uncurry, pairs
 
 mk_mock_funcnode_from_tuple = uncurry(mk_mock_funcnode)
@@ -1445,10 +1428,63 @@ def reorder_on_constraints(funcnodes, outs):
     return func_nodes, var_nodes
 
 
+def attribute_vals(objs: Iterable, attrs: Iterable[str], egress=None):
+    """Extract attributes from an iterable of objects
+    >>> list(attribute_vals([print, map], attrs=['__name__', '__module__']))
+    [('print', 'builtins'), ('map', 'builtins')]
+    """
+    if isinstance(attrs, str):
+        attrs = attrs.split()
+    val_tuples = map(attrgetter(*attrs), objs)
+    if egress:
+        return egress(val_tuples)
+    else:
+        return val_tuples
+
+
+names_and_outs = partial(attribute_vals, attrs=('name', 'out'), egress=chain)
+
 DagAble = Union[DAG, Iterable[FuncNodeAble]]
 
 
-def rename_nodes(func_nodes: DagAble, renamer: Renamer = numbered_suffix_renamer):
+def _validate_func_src(func_src, func_nodes: DagAble):
+    allowed_identifiers = set(names_and_outs(DAG(func_nodes).func_nodes))
+    if not_allowed := (func_src.keys() - allowed_identifiers):
+        raise ValueError(
+            f"These identifiers weren't found in func_nodes: {not_allowed}"
+        )
+    if not_callable := set(filter(lambda x: not callable(x), func_src.values())):
+        raise ValueError(f"These values of func_src weren't callable: {not_callable}")
+
+
+@double_up_as_factory
+def change_funcs(func_nodes: DagAble = None, *, func_src=(), strict=False):
+    if isinstance(func_nodes, DAG):
+        egress = DAG
+    else:
+        egress = list
+
+    func_src = dict(func_src)
+    if strict:
+        _validate_func_src(func_src, func_nodes)
+
+    def gen():
+        for fn in func_nodes:
+            if (
+                new_func := func_src.get(fn.out, func_src.get(fn.name, None))
+            ) is not None:
+                new_fn_kwargs = dict(fn.to_dict(), func=new_func)
+                yield FuncNode.from_dict(new_fn_kwargs)
+            else:
+                yield fn
+
+    return egress(gen())
+
+
+@double_up_as_factory
+def rename_nodes(
+    func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_renamer
+):
     """Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.
 
     :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``
@@ -1539,12 +1575,12 @@ def rename_nodes(func_nodes: DagAble, renamer: Renamer = numbered_suffix_renamer
         old_to_new_map = dict(renamer)
         renamer = old_to_new_map.get
     assert callable(renamer), f'Could not be resolved into a callable: {renamer}'
-    ktrans = partial(_rename_nodes, renamer=renamer)
+    ktrans = partial(_rename_node, renamer=renamer)
     func_node_trans = partial(func_node_transformer, kwargs_transformers=ktrans)
     return egress(map(func_node_trans, func_nodes))
 
 
-def _rename_nodes(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
+def _rename_node(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
     fn_kwargs = fn_kwargs.copy()
     # decorate renamer so if the original returns None the decorated will return input
     renamer = _if_none_return_input(renamer)
