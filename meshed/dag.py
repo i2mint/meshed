@@ -851,24 +851,14 @@ class DAG:
         input_names, outs = map(ensure_variable_list, [input_names, outs])
         return input_names, outs
 
-    def get_node_matching(self, pattern):
-        if isinstance(pattern, str):
-            if pattern in self.var_nodes:
-                return pattern
-            return self.func_node_for_name(pattern)
-        elif isinstance(pattern, Callable):
-            return self.func_node_for_func(pattern)
-        raise NotFound(f'No matching node: {pattern}')
-
-    def func_node_for_name(self, name):
-        return _find_unique_element(
-            name, self.func_nodes, lambda name, fn: name == fn.name
-        )
-
-    def func_node_for_func(self, func):
-        return _find_unique_element(
-            func, self.func_nodes, lambda func, fn: func == fn.func
-        )
+    def get_node_matching(self, idx):
+        if isinstance(idx, str):
+            if idx in self.var_nodes:
+                return idx
+            return self._func_node_for[idx]
+        elif isinstance(idx, Callable):
+            return self._func_node_for[idx]
+        raise NotFound(f'No matching node for idx: {idx}')
 
     # TODO: Reflect: Should we include functions as keys here? Makes existence of the
     #  item depend on unicity of the function in the DAG, therefore dynamic, so instable?
@@ -1220,7 +1210,7 @@ class DAG:
         # ]
         """
         if isinstance(start_lines, str):
-            start_lines = start_lines.split()
+            start_lines = start_lines.split()  # TODO: really? split on space?
         yield from dot_lines_of_func_nodes(self.func_nodes, start_lines=start_lines)
 
     @wraps(dot_digraph_body)
@@ -1529,7 +1519,7 @@ def ch_names(
     ...     b = f(a)
     ...     c = g(x=a)
     ...     d = h(b, y=c)
-    ...
+
 
     This is what the dag looks like:
 
