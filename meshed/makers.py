@@ -157,7 +157,6 @@ from typing import (
     Mapping,
     Union,
 )
-from contextlib import suppress
 from functools import partial
 
 
@@ -172,7 +171,6 @@ T = TypeVar('T')
 
 # Some restrictions exist and need to be clarified or removed (i.e. more cases handled)
 # For example,
-# * tuple assignment not handled (x, y = func(...))
 # * can't reuse a variable (would lead to same node)
 # * x = y (or x, y = tup) not handled (but could easily by binding)
 # We don't need these cases to be handled, only x = func(...) forms lead to Turing (I
@@ -218,7 +216,9 @@ def parse_assignment(body: ast.Assign) -> Tuple:
     ), f'Should be a ast.Name or ast.Tuple: {info}'
 
     value = body.value
-    assert isinstance(value, ast.Call), f'Only one target allowed: {info}'
+    assert isinstance(value, ast.Call), (
+        f'Only assigned function calls are allowed:' f' {info}'
+    )
 
     return target, value
 
@@ -289,25 +289,6 @@ FuncNodeFactory = Callable[[Callable], FuncNode]
 
 def node_kwargs_to_func_node_factory(node_kwargs) -> FuncNodeFactory:
     return partial(FuncNode, **node_kwargs)
-
-
-class AssignNodeVisitor(ast.NodeVisitor):
-    def __init__(self):
-        self.store = []
-
-    def visit_Assign(self, node):
-        self.store.append(parse_assignment(node))
-        return node
-
-
-def retrieve_assignments(src):
-    if callable(src):
-        src = inspect.getsource(src)
-    nodes = ast.parse(src)
-    visitor = AssignNodeVisitor()
-    visitor.visit(nodes)
-
-    return visitor.store
 
 
 def parse_assignment_steps(src):
@@ -457,11 +438,14 @@ def _code_to_fnodes(src, func_src=dlft_factory_to_func):
 @double_up_as_factory
 def code_to_dag(src=None, *, func_src=dlft_factory_to_func, name=None) -> DAG:
     """Get a ``meshed.DAG`` from src code"""
+    # Get a name for the dag (if src is a str
     if name is None:
         if isinstance(src, str):
+            # TODO: Get name from FunctionDef.name instead
             name = 'dag_made_from_code_parsing'
         else:
             name = name_of_obj(src)
+    # Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG
     fnodes = _code_to_fnodes(src, func_src)
     return DAG(fnodes, name=name)
 
@@ -473,61 +457,38 @@ def code_to_digraph(src):
 simple_code_to_digraph = code_to_digraph  # back-compatability alias
 
 
-def _old_simple_code_to_digraph_with_regex(code):
-    """Make a graphviz.Digraph object based on code (string or function's body)"""
-    import re
-    from inspect import getsource
-    from graphviz import Digraph
-
-    def get_code_str(code) -> str:
-        if not isinstance(code, str):
-            return getsource(code)
-        return code
-
-    empty_spaces = re.compile('^\s*$')
-    simple_assignment_p = re.compile(
-        '(?P<output_vars>[^=]+)' '\s*=\s*' '(?P<func>\w+)' '\((?P<input_vars>.*)\)'
-    )
-
-    def get_lines(code_str):
-        for line in code_str.split('\n'):
-            if not empty_spaces.match(line):
-                yield line.strip()
-
-    def groupdict_parser(s, pattern):
-        pattern = re.compile(pattern)
-        m = pattern.search(s)
-        if m:
-            return m.groupdict()
-        return None
-
-    def parsed_lines(
-        code_str, line_parser=partial(groupdict_parser, pattern=simple_assignment_p)
-    ):
-        yield from filter(None, map(line_parser, get_lines(code_str)))
-
-    def parsed_lines_to_dot(parsed_lines):
-        for d in parsed_lines:
-            yield f"{d['func']} [shape=box]"
-            yield f"{d['input_vars']} -> {d['func']} -> {d['output_vars']}"
-
-    code_str = get_code_str(code)
-    dot_lines = parsed_lines_to_dot(parsed_lines(code_str))
-    return Digraph(body=dot_lines)
+from random import sample, randint
+from numpy.random import randint
 
 
-# TODO: Replace using builtin random
-with suppress(ModuleNotFoundError, ImportError):
-    from numpy.random import randint, choice
+def random_graph_(n_nodes=7):
+    """Get a random graph"""
+    nodes = range(n_nodes)
 
-    def random_graph(n_nodes=7):
-        """Get a random graph"""
-        nodes = range(n_nodes)
+    def gen():
+        for src in nodes:
+            n_dst = randint(0, n_nodes - 1)
+            dst = sample(nodes, n_dst)
+            yield src, list(dst)
 
-        def gen():
-            for src in nodes:
-                n_dst = randint(0, n_nodes - 1)
-                dst = choice(n_nodes, n_dst, replace=False)
-                yield src, list(dst)
+    return dict(gen())
 
-        return dict(gen())
+
+# SB stuff, not used, so comment-out deprecating
+# class AssignNodeVisitor(ast.NodeVisitor):
+#     def __init__(self):
+#         self.store = []
+#
+#     def visit_Assign(self, node):
+#         self.store.append(parse_assignment(node))
+#         return node
+#
+#
+# def retrieve_assignments(src):
+#     if callable(src):
+#         src = inspect.getsource(src)
+#     nodes = ast.parse(src)
+#     visitor = AssignNodeVisitor()
+#     visitor.visit(nodes)
+#
+#     return visitor.store
