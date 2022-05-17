@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.62 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.63 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -949,24 +949,14 @@
         <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">ensure_variable_list</span><span class="p">,</span> <span class="p">[</span><span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span>
 
-    <span class="k">def</span> <span class="nf">get_node_matching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">pattern</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_node_for_name</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_node_for_func</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No matching node: </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">func_node_for_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_find_unique_element</span><span class="p">(</span>
-            <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">name</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">name</span> <span class="o">==</span> <span class="n">fn</span><span class="o">.</span><span class="n">name</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">func_node_for_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">_find_unique_element</span><span class="p">(</span>
-            <span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">func</span> <span class="o">==</span> <span class="n">fn</span><span class="o">.</span><span class="n">func</span>
-        <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_node_matching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">idx</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No matching node for idx: </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># TODO: Reflect: Should we include functions as keys here? Makes existence of the</span>
     <span class="c1">#  item depend on unicity of the function in the DAG, therefore dynamic, so instable?</span>
@@ -1318,7 +1308,7 @@
 <span class="sd">        # ]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_lines</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">start_lines</span> <span class="o">=</span> <span class="n">start_lines</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">start_lines</span> <span class="o">=</span> <span class="n">start_lines</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># TODO: really? split on space?</span>
         <span class="k">yield from</span> <span class="n">dot_lines_of_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">start_lines</span><span class="o">=</span><span class="n">start_lines</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DAG.dot_digraph_ascii"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.dot_digraph_ascii">[docs]</a>    <span class="nd">@wraps</span><span class="p">(</span><span class="n">dot_digraph_body</span><span class="p">)</span>
@@ -1625,7 +1615,7 @@
 <span class="sd">    ...     b = f(a)</span>
 <span class="sd">    ...     c = g(x=a)</span>
 <span class="sd">    ...     d = h(b, y=c)</span>
-<span class="sd">    ...</span>
+
 
 <span class="sd">    This is what the dag looks like:</span>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.caching &mdash; meshed 0.1.62 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.caching &mdash; meshed 0.1.63 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -108,7 +108,25 @@
 <dl class="py class">
 <dt id="meshed.caching.LazyProps.Literal">
 <em class="property">class </em><code class="sig-name descname">Literal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.caching.LazyProps.Literal" title="Permalink to this definition">¶</a></dt>
-<dd><p>An object to indicate that the value should be considered literally</p>
+<dd><p>An object to indicate that the value should be considered literally.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">get_val</span><span class="p">()</span>
+<span class="go">42</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="p">()</span>
+<span class="go">42</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="meshed.caching.LazyProps.Literal.get_val">
+<code class="sig-name descname">get_val</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#meshed.caching.LazyProps.Literal.get_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value wrapped by Literal instance.</p>
+<p>One might want to use <code class="docutils literal notranslate"><span class="pre">literal.get_val()</span></code> instead <code class="docutils literal notranslate"><span class="pre">literal()</span></code> to get the
+value a <code class="docutils literal notranslate"><span class="pre">Literal</span></code> is wrapping because <code class="docutils literal notranslate"><span class="pre">.get_val</span></code> is more explicit.</p>
+<p>That said, with a bit of hesitation, we allow the <code class="docutils literal notranslate"><span class="pre">literal()</span></code> form as well
+since it is useful in situations where we need to use a callback function to
+get a value.</p>
+</dd></dl>
+
 </dd></dl>
 
 </dd></dl>

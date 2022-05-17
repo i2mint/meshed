@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.itools &mdash; meshed 0.1.62 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.itools &mdash; meshed 0.1.63 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -104,8 +104,34 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">chain</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">sample</span><span class="p">,</span> <span class="n">randint</span>
 
 <span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="n">Sig</span>
+
+
+<div class="viewcode-block" id="random_graph"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.random_graph">[docs]</a><span class="k">def</span> <span class="nf">random_graph</span><span class="p">(</span><span class="n">n_nodes</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a random graph.</span>
+
+<span class="sd">    &gt;&gt;&gt; random_graph()  # doctest: +SKIP</span>
+<span class="sd">    {0: [6, 3, 5, 2],</span>
+<span class="sd">     1: [3, 2, 0, 6],</span>
+<span class="sd">     2: [5, 6, 4, 0],</span>
+<span class="sd">     3: [1, 0, 5, 6, 3],</span>
+<span class="sd">     4: [],</span>
+<span class="sd">     5: [1, 5, 3, 6],</span>
+<span class="sd">     6: [4, 3, 1]}</span>
+<span class="sd">    &gt;&gt;&gt; random_graph(3)  # doctest: +SKIP</span>
+<span class="sd">    {0: [0], 1: [0], 2: []}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="n">n_dst</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">dst</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">n_dst</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">src</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span></div>
 
 
 <span class="k">def</span> <span class="nf">_handle_exclude_nodes</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.62 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.63 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -255,7 +255,6 @@
     <span class="n">Mapping</span><span class="p">,</span>
     <span class="n">Union</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
 
@@ -270,7 +269,6 @@
 
 <span class="c1"># Some restrictions exist and need to be clarified or removed (i.e. more cases handled)</span>
 <span class="c1"># For example,</span>
-<span class="c1"># * tuple assignment not handled (x, y = func(...))</span>
 <span class="c1"># * can&#39;t reuse a variable (would lead to same node)</span>
 <span class="c1"># * x = y (or x, y = tup) not handled (but could easily by binding)</span>
 <span class="c1"># We don&#39;t need these cases to be handled, only x = func(...) forms lead to Turing (I</span>
@@ -316,7 +314,9 @@
     <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Should be a ast.Name or ast.Tuple: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="n">value</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">value</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Only one target allowed: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">),</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s1">&#39;Only assigned function calls are allowed:&#39;</span> <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">target</span><span class="p">,</span> <span class="n">value</span>
 
@@ -387,25 +387,6 @@
 
 <span class="k">def</span> <span class="nf">node_kwargs_to_func_node_factory</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncNodeFactory</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">,</span> <span class="o">**</span><span class="n">node_kwargs</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="AssignNodeVisitor"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.AssignNodeVisitor">[docs]</a><span class="k">class</span> <span class="nc">AssignNodeVisitor</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">NodeVisitor</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">def</span> <span class="nf">visit_Assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parse_assignment</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">node</span></div>
-
-
-<span class="k">def</span> <span class="nf">retrieve_assignments</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
-        <span class="n">src</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
-    <span class="n">nodes</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
-    <span class="n">visitor</span> <span class="o">=</span> <span class="n">AssignNodeVisitor</span><span class="p">()</span>
-    <span class="n">visitor</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">store</span>
 
 
 <div class="viewcode-block" id="parse_assignment_steps"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.parse_assignment_steps">[docs]</a><span class="k">def</span> <span class="nf">parse_assignment_steps</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
@@ -555,11 +536,14 @@
 <span class="nd">@double_up_as_factory</span>
 <span class="k">def</span> <span class="nf">code_to_dag</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_src</span><span class="o">=</span><span class="n">dlft_factory_to_func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get a ``meshed.DAG`` from src code&quot;&quot;&quot;</span>
+    <span class="c1"># Get a name for the dag (if src is a str</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># TODO: Get name from FunctionDef.name instead</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;dag_made_from_code_parsing&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="c1"># Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG</span>
     <span class="n">fnodes</span> <span class="o">=</span> <span class="n">_code_to_fnodes</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="n">fnodes</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
@@ -571,64 +555,24 @@
 <span class="n">simple_code_to_digraph</span> <span class="o">=</span> <span class="n">code_to_digraph</span>  <span class="c1"># back-compatability alias</span>
 
 
-<span class="k">def</span> <span class="nf">_old_simple_code_to_digraph_with_regex</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Make a graphviz.Digraph object based on code (string or function&#39;s body)&quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">re</span>
-    <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getsource</span>
-    <span class="kn">from</span> <span class="nn">graphviz</span> <span class="kn">import</span> <span class="n">Digraph</span>
-
-    <span class="k">def</span> <span class="nf">get_code_str</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">getsource</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">code</span>
-
-    <span class="n">empty_spaces</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^\s*$&#39;</span><span class="p">)</span>
-    <span class="n">simple_assignment_p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-        <span class="s1">&#39;(?P&lt;output_vars&gt;[^=]+)&#39;</span> <span class="s1">&#39;\s*=\s*&#39;</span> <span class="s1">&#39;(?P&lt;func&gt;\w+)&#39;</span> <span class="s1">&#39;\((?P&lt;input_vars&gt;.*)\)&#39;</span>
-    <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">get_lines</span><span class="p">(</span><span class="n">code_str</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">code_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">empty_spaces</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
-                <span class="k">yield</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">groupdict_parser</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="k">def</span> <span class="nf">parsed_lines</span><span class="p">(</span>
-        <span class="n">code_str</span><span class="p">,</span> <span class="n">line_parser</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">groupdict_parser</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="n">simple_assignment_p</span><span class="p">)</span>
-    <span class="p">):</span>
-        <span class="k">yield from</span> <span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">line_parser</span><span class="p">,</span> <span class="n">get_lines</span><span class="p">(</span><span class="n">code_str</span><span class="p">)))</span>
-
-    <span class="k">def</span> <span class="nf">parsed_lines_to_dot</span><span class="p">(</span><span class="n">parsed_lines</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">parsed_lines</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> [shape=box]&quot;</span>
-            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;input_vars&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;output_vars&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-
-    <span class="n">code_str</span> <span class="o">=</span> <span class="n">get_code_str</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
-    <span class="n">dot_lines</span> <span class="o">=</span> <span class="n">parsed_lines_to_dot</span><span class="p">(</span><span class="n">parsed_lines</span><span class="p">(</span><span class="n">code_str</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">Digraph</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">dot_lines</span><span class="p">)</span>
-
-
-<span class="c1"># TODO: Replace using builtin random</span>
-<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">randint</span><span class="p">,</span> <span class="n">choice</span>
-
-    <span class="k">def</span> <span class="nf">random_graph</span><span class="p">(</span><span class="n">n_nodes</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a random graph&quot;&quot;&quot;</span>
-        <span class="n">nodes</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">)</span>
-
-        <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
-                <span class="n">n_dst</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_nodes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="n">dst</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">n_nodes</span><span class="p">,</span> <span class="n">n_dst</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                <span class="k">yield</span> <span class="n">src</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+<span class="c1"># SB stuff, not used, so comment-out deprecating</span>
+<span class="c1"># class AssignNodeVisitor(ast.NodeVisitor):</span>
+<span class="c1">#     def __init__(self):</span>
+<span class="c1">#         self.store = []</span>
+<span class="c1">#</span>
+<span class="c1">#     def visit_Assign(self, node):</span>
+<span class="c1">#         self.store.append(parse_assignment(node))</span>
+<span class="c1">#         return node</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def retrieve_assignments(src):</span>
+<span class="c1">#     if callable(src):</span>
+<span class="c1">#         src = inspect.getsource(src)</span>
+<span class="c1">#     nodes = ast.parse(src)</span>
+<span class="c1">#     visitor = AssignNodeVisitor()</span>
+<span class="c1">#     visitor.visit(nodes)</span>
+<span class="c1">#</span>
+<span class="c1">#     return visitor.store</span>
 </pre></div>
 
            </div>

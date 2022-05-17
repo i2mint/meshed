@@ -25,6 +25,5 @@ from meshed.util import (
     iterize,
     ConditionalIterize,
     instance_checker,
-    replace_item_in_iterable
+    replace_item_in_iterable,
 )
-
