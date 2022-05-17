@@ -1498,9 +1498,7 @@ change_funcs = ch_funcs  # back-compatibility
 
 # TODO: extract egress functionality to decorator
 @double_up_as_factory
-def ch_names(
-    func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_renamer
-):
+def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_renamer):
     """Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.
 
     :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``
