@@ -20,4 +20,11 @@ by an adjacency Mapping.
 from meshed.dag import DAG, ch_funcs, ch_names
 from meshed.base import FuncNode
 from meshed.makers import code_to_dag
-from meshed.util import Literal
+from meshed.itools import random_graph, topological_sort
+from meshed.util import (
+    iterize,
+    ConditionalIterize,
+    instance_checker,
+    replace_item_in_iterable
+)
+

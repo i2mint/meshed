@@ -457,23 +457,6 @@ def code_to_digraph(src):
 simple_code_to_digraph = code_to_digraph  # back-compatability alias
 
 
-from random import sample, randint
-from numpy.random import randint
-
-
-def random_graph_(n_nodes=7):
-    """Get a random graph"""
-    nodes = range(n_nodes)
-
-    def gen():
-        for src in nodes:
-            n_dst = randint(0, n_nodes - 1)
-            dst = sample(nodes, n_dst)
-            yield src, list(dst)
-
-    return dict(gen())
-
-
 # SB stuff, not used, so comment-out deprecating
 # class AssignNodeVisitor(ast.NodeVisitor):
 #     def __init__(self):

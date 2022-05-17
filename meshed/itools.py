@@ -6,8 +6,34 @@ from typing import Any, Mapping, Sized, MutableMapping, Iterable, Callable, Type
 from itertools import product, chain
 from functools import wraps
 from collections import defaultdict
+from random import sample, randint
 
 from i2.signatures import Sig
+
+
+def random_graph(n_nodes=7):
+    """Get a random graph.
+
+    >>> random_graph()  # doctest: +SKIP
+    {0: [6, 3, 5, 2],
+     1: [3, 2, 0, 6],
+     2: [5, 6, 4, 0],
+     3: [1, 0, 5, 6, 3],
+     4: [],
+     5: [1, 5, 3, 6],
+     6: [4, 3, 1]}
+    >>> random_graph(3)  # doctest: +SKIP
+    {0: [0], 1: [0], 2: []}
+    """
+    nodes = range(n_nodes)
+
+    def gen():
+        for src in nodes:
+            n_dst = randint(0, n_nodes - 1)
+            dst = sample(nodes, n_dst)
+            yield src, list(dst)
+
+    return dict(gen())
 
 
 def _handle_exclude_nodes(func):

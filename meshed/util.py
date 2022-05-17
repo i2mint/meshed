@@ -3,16 +3,9 @@ import re
 from functools import partial, wraps
 from typing import Callable, Any, Union, Iterator, Optional, Iterable, Mapping, TypeVar
 
-from i2 import Sig, name_of_obj
+from i2 import Sig, name_of_obj, Literal
 
 T = TypeVar('T')
-
-
-class Literal:
-    """An object to indicate that the value should be considered literally"""
-
-    def __init__(self, val):
-        self.val = val
 
 
 def extra_wraps(func, name=None, doc_prefix=''):
