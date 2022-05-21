@@ -68,10 +68,12 @@ def add_edge(g: MutableMapping, node1, node2):
 
 
 def edges(g: Mapping):
-    """
+    """Generates edges of graph, i.e. ``(from_node, to_node)`` tuples.
+
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
-    >>> sorted(edges(g))
-    [('a', 'c'), ('b', 'c'), ('b', 'e'), ('c', 'a'), ('c', 'b'), ('c', 'd'), ('c', 'e'), ('d', 'c'), ('e', 'c'), ('e', 'z')]
+    >>> assert sorted(edges(g)) == [
+    ...     ('a', 'c'), ('b', 'c'), ('b', 'e'), ('c', 'a'), ('c', 'b'), ('c', 'd'),
+    ...     ('c', 'e'), ('d', 'c'), ('e', 'c'), ('e', 'z')]
     """
     for src in g:
         for dst in g[src]:
@@ -357,6 +359,16 @@ def find_path(g: Mapping, src, dst, path=None):
 
 
 def reverse_edges(g: Mapping):
+    """Generator of reversed edges. Like edges but with inverted edges.
+
+    >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
+    >>> assert sorted(reverse_edges(g)) == [
+    ...     ('a', 'c'), ('b', 'c'), ('c', 'a'), ('c', 'b'), ('c', 'd'), ('c', 'e'),
+    ...     ('d', 'c'), ('e', 'b'), ('e', 'c'), ('z', 'e')]
+
+    NOTE: Not to be confused with  ``edge_reversed_graph`` which inverts the direction
+    of edges.
+    """
     for src, dst_nodes in g.items():
         yield from product(dst_nodes, src)
 
@@ -457,11 +469,14 @@ def edge_reversed_graph(
     dst_nodes_factory: Callable[[], Iterable[T]] = list,
     dst_nodes_append: Callable[[Iterable[T], T], None] = list.append,
 ) -> Mapping[T, Iterable[T]]:
-    """
+    """Invert the from/to direction of the edges of the graph.
+
     >>> g = dict(a='c', b='cd', c='abd', e='')
-    >>> assert edge_reversed_graph(g) == {'c': ['a', 'b'], 'd': ['b', 'c'], 'a': ['c'], 'b': ['c'], 'e': []}
+    >>> assert edge_reversed_graph(g) == {
+    ...     'c': ['a', 'b'], 'd': ['b', 'c'], 'a': ['c'], 'b': ['c'], 'e': []}
     >>> reverse_g_with_sets = edge_reversed_graph(g, set, set.add)
-    >>> assert reverse_g_with_sets == {'c': {'a', 'b'}, 'd': {'b', 'c'}, 'a': {'c'}, 'b': {'c'}, 'e': set([])}
+    >>> assert reverse_g_with_sets == {
+    ...     'c': {'a', 'b'}, 'd': {'b', 'c'}, 'a': {'c'}, 'b': {'c'}, 'e': set([])}
 
     Testing border cases
     >>> assert edge_reversed_graph(dict(e='', a='e')) == {'e': ['a'], 'a': []}
