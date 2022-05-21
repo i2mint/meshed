@@ -131,7 +131,6 @@ That said it is your responsiblity to use the right policy for your particular c
 
 """
 
-from contextlib import suppress
 from functools import partial, wraps, cached_property
 from collections import defaultdict
 
@@ -177,6 +176,10 @@ from meshed.util import (
     numbered_suffix_renamer,
     replace_item_in_iterable,
     InvalidFunctionParameters,
+    extract_values,
+    extract_items,
+    ParameterMerger,
+    conservative_parameter_merge,
 )
 from meshed.itools import (
     topological_sort,
@@ -312,66 +315,6 @@ def hook_up(func, variables: MutableMapping, output_name=None):
     return source_from_decorated
 
 
-def _complete_dict_with_iterable_of_required_keys(
-    to_complete: dict, complete_with: Iterable
-):
-    """Complete `to_complete` (in place) with `complete_with`
-    `complete_with` contains values that must be covered by `to_complete`
-    Those values that are not covered will be inserted in to_complete,
-    with key=val
-
-    >>> d = {'a': 'A', 'c': 'C'}
-    >>> _complete_dict_with_iterable_of_required_keys(d, 'abc')
-    >>> d
-    {'a': 'A', 'c': 'C', 'b': 'b'}
-
-    """
-    keys_already_covered = set(to_complete)
-    for required_key in complete_with:
-        if required_key not in keys_already_covered:
-            to_complete[required_key] = required_key
-
-
-def _inverse_dict_asserting_losslessness(d: dict):
-    inv_d = {v: k for k, v in d.items()}
-    assert len(inv_d) == len(d), (
-        f"can't invert: You have some duplicate values in this dict: " f'{d}'
-    )
-    return inv_d
-
-
-def _extract_values(d: dict, keys: Iterable):
-    """generator of values extracted from d for keys"""
-    for k in keys:
-        yield d[k]
-
-
-def extract_values(d: dict, keys: Iterable):
-    """Extract values from dict ``d``, returning them:
-
-    - as a tuple if len(keys) > 1
-
-    - a single value if len(keys) == 1
-
-    - None if not
-
-    This is used as the default extractor in DAG
-    """
-    tup = tuple(_extract_values(d, keys))
-    if len(tup) > 1:
-        return tup
-    elif len(tup) == 1:
-        return tup[0]
-    else:
-        return None
-
-
-def extract_items(d: dict, keys: Iterable):
-    """generator of (k, v) pairs extracted from d for keys"""
-    for k in keys:
-        yield k, d[k]
-
-
 def _separate_func_nodes_and_var_nodes(nodes):
     func_nodes = list()
     var_nodes = list()
@@ -398,61 +341,6 @@ def _find_unique_element(item, search_iterable, key: Callable[[Any, Any], bool])
         if the_next_match is not _not_found:
             raise NotUniqueError(f"{item} wasn't unique")
     return first
-
-
-ParameterMerger = Callable[[Iterable[Parameter]], Parameter]
-conservative_parameter_merge: ParameterMerger
-
-
-def conservative_parameter_merge(
-    params, same_kind=True, same_default=True, same_annotation=True
-):
-    """Validates that all the params are exactly the same, returning the first if so.
-
-    This is used when hooking up functions that use the same parameters (i.e. arg
-    names). When the name of an argument is used more than once, which kind, default,
-    and annotation should be used in the interface of the DAG?
-
-    If they're all the same, there's no problem.
-
-    But if they're not the same, we need to provide control on which to ignore.
-
-    """
-    suggestion_on_error = '''To resolve this you have several choices:
-    
-    - Change the properties of the param (kind, default, annotation) to be those you 
-      want. For example, you can use ``i2.Sig.ch_param_attrs`` 
-      (or ``i2.Sig.ch_defaults``, ``i2.Sig.ch_kinds``, ``i2.Sig.ch_annotations``)
-      to get a function decorator that will do that for you.
-    - If you're making a DAG, consider specifying a different ``parameter_merge``.
-      For example you can use ``functools.partial`` on 
-      ``i2.dag.conservative_parameter_merge``, fixing ``same_kind``, ``same_default``, 
-      and/or ``same_annotation`` to ``False`` to get a more lenient version of it.
-      
-    See https://github.com/i2mint/meshed/issues/7 (description and comments) for more
-    info.
-    '''
-    first_param, *_ = params
-    if not all(p.name == first_param.name for p in params):
-        raise ValidationError(
-            f"Some params didn't have the same name: {params}\n{suggestion_on_error}"
-        )
-    if same_kind and not all(p.kind == first_param.kind for p in params):
-        raise ValidationError(
-            f"Some params didn't have the same kind: {params}\n{suggestion_on_error}"
-        )
-    if same_default and not all(p.default == first_param.default for p in params):
-        raise ValidationError(
-            f"Some params didn't have the same default: {params}\n{suggestion_on_error}"
-        )
-    if same_annotation and not all(
-        p.annotation == first_param.annotation for p in params
-    ):
-        raise ValidationError(
-            f"Some params didn't have the same annotation: "
-            f'{params}\n{suggestion_on_error}'
-        )
-    return first_param
 
 
 def modified_func_node(func_node, **modifications) -> FuncNode:

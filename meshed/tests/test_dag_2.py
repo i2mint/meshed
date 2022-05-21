@@ -74,7 +74,7 @@ def test_complete_dict_with_iterable_of_required_keys():
 
 def test_inverse_dict_asserting_losslessness():
     d = {'w': 2, 'x': 3, 'y': 4, 'formula1': 20}
-    d_inv = ms.dag._inverse_dict_asserting_losslessness(d)
+    d_inv = meshed.util.inverse_dict_asserting_losslessness(d)
     assert d_inv == {2: 'w', 3: 'x', 4: 'y', 20: 'formula1'}
 
 
