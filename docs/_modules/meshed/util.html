@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.64 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.65 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -100,6 +100,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;util functions&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">name_of_obj</span><span class="p">,</span> <span class="n">Literal</span>
@@ -120,7 +121,7 @@
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
-<div class="viewcode-block" id="iterize"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.iterize">[docs]</a><span class="k">def</span> <span class="nf">iterize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="iterize"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.iterize">[docs]</a><span class="k">def</span> <span class="nf">iterize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;From an Input-&gt;Ouput function, makes a Iterator[Input]-&gt;Itertor[Output]</span>
 <span class="sd">    Some call this &quot;vectorization&quot;, but it&#39;s not really a vector, but an</span>
 <span class="sd">    iterable, thus the name.</span>
@@ -189,7 +190,7 @@
 <span class="c1"># from i2 import Sig, name_of_obj</span>
 
 
-<div class="viewcode-block" id="my_isinstance"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.my_isinstance">[docs]</a><span class="k">def</span> <span class="nf">my_isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="p">):</span>
+<div class="viewcode-block" id="my_isinstance"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.my_isinstance">[docs]</a><span class="k">def</span> <span class="nf">my_isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Same as builtin instance, but without position only constraint.</span>
 <span class="sd">    Therefore, we can partialize class_or_tuple:</span>
 
@@ -205,7 +206,7 @@
     <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="instance_checker"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.instance_checker">[docs]</a><span class="k">def</span> <span class="nf">instance_checker</span><span class="p">(</span><span class="n">class_or_tuple</span><span class="p">):</span>
+<div class="viewcode-block" id="instance_checker"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.instance_checker">[docs]</a><span class="k">def</span> <span class="nf">instance_checker</span><span class="p">(</span><span class="n">class_or_tuple</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Makes a boolean function that checks the instance of an object</span>
 
 <span class="sd">    &gt;&gt;&gt; isinstance_of_str = instance_checker(str)</span>
@@ -218,7 +219,7 @@
     <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">my_isinstance</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="o">=</span><span class="n">class_or_tuple</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ConditionalIterize"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.ConditionalIterize">[docs]</a><span class="k">class</span> <span class="nc">ConditionalIterize</span><span class="p">:</span>
+<div class="viewcode-block" id="ConditionalIterize"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.ConditionalIterize">[docs]</a><span class="k">class</span> <span class="nc">ConditionalIterize</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A decorator that &quot;iterizes&quot; a function call if input satisfies a condition.</span>
 <span class="sd">    That is, apply ``map(func, input)`` (iterize) or ``func(input)`` according to some</span>
 <span class="sd">    conidition on ``input``.</span>
@@ -386,7 +387,7 @@
         <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="incremental_str_maker"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.incremental_str_maker">[docs]</a><span class="k">def</span> <span class="nf">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;{:03.f}&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="incremental_str_maker"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.incremental_str_maker">[docs]</a><span class="k">def</span> <span class="nf">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;{:03.f}&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Make a function that will produce a (incrementally) new string at every call.&quot;&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -406,7 +407,7 @@
 <span class="n">func_name</span><span class="p">:</span> <span class="n">FunctionNamer</span>
 
 
-<div class="viewcode-block" id="func_name"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.func_name">[docs]</a><span class="k">def</span> <span class="nf">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="func_name"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.func_name">[docs]</a><span class="k">def</span> <span class="nf">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;The func.__name__ of a callable func, or makes and returns one if that fails.</span>
 <span class="sd">    To make one, it calls unamed_func_name which produces incremental names to reduce the chances of clashing&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -424,7 +425,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
 
 
-<div class="viewcode-block" id="args_funcnames"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.args_funcnames">[docs]</a><span class="k">def</span> <span class="nf">args_funcnames</span><span class="p">(</span>
+<div class="viewcode-block" id="args_funcnames"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.args_funcnames">[docs]</a><span class="k">def</span> <span class="nf">args_funcnames</span><span class="p">(</span>
     <span class="n">funcs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">name_of_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FunctionNamer</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_name</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generates (arg_name, func_id) pairs from the iterable of functions&quot;&quot;&quot;</span>
@@ -451,7 +452,7 @@
     <span class="k">return</span> <span class="n">graph</span>
 
 
-<div class="viewcode-block" id="dot_to_ascii"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.dot_to_ascii">[docs]</a><span class="k">def</span> <span class="nf">dot_to_ascii</span><span class="p">(</span><span class="n">dot</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fancy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="dot_to_ascii"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.dot_to_ascii">[docs]</a><span class="k">def</span> <span class="nf">dot_to_ascii</span><span class="p">(</span><span class="n">dot</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fancy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert a dot string to an ascii rendering of the diagram.</span>
 
 <span class="sd">    Needs a connection to the internet to work.</span>
@@ -522,19 +523,19 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">dot_to_ascii</span><span class="p">(</span><span class="n">dot_str</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="ValidationError"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.ValidationError">[docs]</a><span class="k">class</span> <span class="nc">ValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<div class="viewcode-block" id="ValidationError"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.ValidationError">[docs]</a><span class="k">class</span> <span class="nc">ValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Error that is raised when an object&#39;s validation failed&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="NotUniqueError"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.NotUniqueError">[docs]</a><span class="k">class</span> <span class="nc">NotUniqueError</span><span class="p">(</span><span class="n">ValidationError</span><span class="p">):</span>
+<div class="viewcode-block" id="NotUniqueError"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.NotUniqueError">[docs]</a><span class="k">class</span> <span class="nc">NotUniqueError</span><span class="p">(</span><span class="n">ValidationError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Error to be raised when unicity is expected, but violated&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="NotFound"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.NotFound">[docs]</a><span class="k">class</span> <span class="nc">NotFound</span><span class="p">(</span><span class="n">ValidationError</span><span class="p">):</span>
+<div class="viewcode-block" id="NotFound"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.NotFound">[docs]</a><span class="k">class</span> <span class="nc">NotFound</span><span class="p">(</span><span class="n">ValidationError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;To be raised when something is expected to exist, but doesn&#39;t&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="NameValidationError"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.NameValidationError">[docs]</a><span class="k">class</span> <span class="nc">NameValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<div class="viewcode-block" id="NameValidationError"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.NameValidationError">[docs]</a><span class="k">class</span> <span class="nc">NameValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Use to indicate that there&#39;s a problem with a name or generating a valid name&quot;&quot;&quot;</span></div>
 
 
@@ -550,7 +551,7 @@
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
-<div class="viewcode-block" id="mk_func_name"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.mk_func_name">[docs]</a><span class="k">def</span> <span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
+<div class="viewcode-block" id="mk_func_name"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.mk_func_name">[docs]</a><span class="k">def</span> <span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
     <span class="sd">&quot;&quot;&quot;Makes a function name that doesn&#39;t clash with the exclude_names iterable.</span>
 <span class="sd">    Tries it&#39;s best to not be lazy, but instead extract a name from the function</span>
 <span class="sd">    itself.&quot;&quot;&quot;</span>
@@ -578,7 +579,7 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
 
 
-<div class="viewcode-block" id="named_partial"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.named_partial">[docs]</a><span class="k">def</span> <span class="nf">named_partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
+<div class="viewcode-block" id="named_partial"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.named_partial">[docs]</a><span class="k">def</span> <span class="nf">named_partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;functools.partial, but with a __name__</span>
 
 <span class="sd">    &gt;&gt;&gt; f = named_partial(print, sep=&#39;\\n&#39;)</span>
@@ -600,7 +601,7 @@
     <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_sig</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="n">_kwargs_str</span><span class="si">}</span><span class="s1">)&#39;</span>
 
 
-<div class="viewcode-block" id="mk_place_holder_func"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.mk_place_holder_func">[docs]</a><span class="k">def</span> <span class="nf">mk_place_holder_func</span><span class="p">(</span><span class="n">arg_names_or_sig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">(),</span> <span class="n">annotations</span><span class="o">=</span><span class="p">()):</span>
+<div class="viewcode-block" id="mk_place_holder_func"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.mk_place_holder_func">[docs]</a><span class="k">def</span> <span class="nf">mk_place_holder_func</span><span class="p">(</span><span class="n">arg_names_or_sig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">(),</span> <span class="n">annotations</span><span class="o">=</span><span class="p">()):</span>
     <span class="sd">&quot;&quot;&quot;Make (working and picklable) function with a specific signature.</span>
 
 <span class="sd">    This is useful for testing as well as injecting compliant functions in DAG templates.</span>
@@ -699,7 +700,7 @@
     <span class="k">return</span> <span class="n">_func</span>
 
 
-<div class="viewcode-block" id="numbered_suffix_renamer"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.numbered_suffix_renamer">[docs]</a><span class="k">def</span> <span class="nf">numbered_suffix_renamer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="numbered_suffix_renamer"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.numbered_suffix_renamer">[docs]</a><span class="k">def</span> <span class="nf">numbered_suffix_renamer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; numbered_suffix_renamer(&#39;item&#39;)</span>
 <span class="sd">    &#39;item_1&#39;</span>
@@ -715,7 +716,7 @@
         <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sep</span><span class="si">}{</span><span class="n">num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="InvalidFunctionParameters"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.InvalidFunctionParameters">[docs]</a><span class="k">class</span> <span class="nc">InvalidFunctionParameters</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<div class="viewcode-block" id="InvalidFunctionParameters"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.InvalidFunctionParameters">[docs]</a><span class="k">class</span> <span class="nc">InvalidFunctionParameters</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;To be used when a function&#39;s parameters are not compliant with some rule about</span>
 <span class="sd">    them.&quot;&quot;&quot;</span></div>
 
@@ -748,7 +749,7 @@
 
 
 <span class="c1"># TODO: Replace</span>
-<div class="viewcode-block" id="conditional_trans"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.conditional_trans">[docs]</a><span class="k">def</span> <span class="nf">conditional_trans</span><span class="p">(</span>
+<div class="viewcode-block" id="conditional_trans"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.conditional_trans">[docs]</a><span class="k">def</span> <span class="nf">conditional_trans</span><span class="p">(</span>
     <span class="n">obj</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span> <span class="n">trans</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Conditionally transform an object unless it is marked as a literal.</span>
@@ -780,7 +781,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 
-<div class="viewcode-block" id="replace_item_in_iterable"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.util.replace_item_in_iterable">[docs]</a><span class="k">def</span> <span class="nf">replace_item_in_iterable</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">replacement</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">egress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="replace_item_in_iterable"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.replace_item_in_iterable">[docs]</a><span class="k">def</span> <span class="nf">replace_item_in_iterable</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">replacement</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">egress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a list where all items satisfying ``condition(item)`` were replaced</span>
 <span class="sd">    with ``replacement(item)``.</span>
 
@@ -837,6 +838,122 @@
     <span class="n">item_replacer</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">conditional_trans</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">condition</span><span class="p">,</span> <span class="n">trans</span><span class="o">=</span><span class="n">replacement</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">item_replacer</span><span class="p">,</span> <span class="n">iterable</span><span class="p">))</span></div>
+
+
+<span class="k">def</span> <span class="nf">_complete_dict_with_iterable_of_required_keys</span><span class="p">(</span>
+    <span class="n">to_complete</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">complete_with</span><span class="p">:</span> <span class="n">Iterable</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Complete `to_complete` (in place) with `complete_with`</span>
+<span class="sd">    `complete_with` contains values that must be covered by `to_complete`</span>
+<span class="sd">    Those values that are not covered will be inserted in to_complete,</span>
+<span class="sd">    with key=val</span>
+
+<span class="sd">    &gt;&gt;&gt; d = {&#39;a&#39;: &#39;A&#39;, &#39;c&#39;: &#39;C&#39;}</span>
+<span class="sd">    &gt;&gt;&gt; _complete_dict_with_iterable_of_required_keys(d, &#39;abc&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; d</span>
+<span class="sd">    {&#39;a&#39;: &#39;A&#39;, &#39;c&#39;: &#39;C&#39;, &#39;b&#39;: &#39;b&#39;}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">keys_already_covered</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">to_complete</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">required_key</span> <span class="ow">in</span> <span class="n">complete_with</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">required_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keys_already_covered</span><span class="p">:</span>
+            <span class="n">to_complete</span><span class="p">[</span><span class="n">required_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">required_key</span>
+
+
+<span class="k">def</span> <span class="nf">inverse_dict_asserting_losslessness</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="n">inv_d</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">inv_d</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;can&#39;t invert: You have some duplicate values in this dict: &quot;</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">inv_d</span>
+
+
+<span class="k">def</span> <span class="nf">_extract_values</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;generator of values extracted from d for keys&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="extract_values"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.extract_values">[docs]</a><span class="k">def</span> <span class="nf">extract_values</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract values from dict ``d``, returning them:</span>
+
+<span class="sd">    - as a tuple if len(keys) &gt; 1</span>
+
+<span class="sd">    - a single value if len(keys) == 1</span>
+
+<span class="sd">    - None if not</span>
+
+<span class="sd">    This is used as the default extractor in DAG</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tup</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_extract_values</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">keys</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tup</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="extract_items"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.extract_items">[docs]</a><span class="k">def</span> <span class="nf">extract_items</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;generator of (k, v) pairs extracted from d for keys&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span></div>
+
+
+<span class="n">ParameterMerger</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Parameter</span><span class="p">]],</span> <span class="n">Parameter</span><span class="p">]</span>
+
+<span class="n">conservative_parameter_merge</span><span class="p">:</span> <span class="n">ParameterMerger</span>
+
+
+<div class="viewcode-block" id="conservative_parameter_merge"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.conservative_parameter_merge">[docs]</a><span class="k">def</span> <span class="nf">conservative_parameter_merge</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">,</span> <span class="n">same_kind</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_annotation</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validates that all the params are exactly the same, returning the first if so.</span>
+
+<span class="sd">    This is used when hooking up functions that use the same parameters (i.e. arg</span>
+<span class="sd">    names). When the name of an argument is used more than once, which kind, default,</span>
+<span class="sd">    and annotation should be used in the interface of the DAG?</span>
+
+<span class="sd">    If they&#39;re all the same, there&#39;s no problem.</span>
+
+<span class="sd">    But if they&#39;re not the same, we need to provide control on which to ignore.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">suggestion_on_error</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;To resolve this you have several choices:</span>
+
+<span class="s1">    - Change the properties of the param (kind, default, annotation) to be those you </span>
+<span class="s1">      want. For example, you can use ``i2.Sig.ch_param_attrs`` </span>
+<span class="s1">      (or ``i2.Sig.ch_defaults``, ``i2.Sig.ch_kinds``, ``i2.Sig.ch_annotations``)</span>
+<span class="s1">      to get a function decorator that will do that for you.</span>
+<span class="s1">    - If you&#39;re making a DAG, consider specifying a different ``parameter_merge``.</span>
+<span class="s1">      For example you can use ``functools.partial`` on </span>
+<span class="s1">      ``i2.dag.conservative_parameter_merge``, fixing ``same_kind``, ``same_default``, </span>
+<span class="s1">      and/or ``same_annotation`` to ``False`` to get a more lenient version of it.</span>
+
+<span class="s1">    See https://github.com/i2mint/meshed/issues/7 (description and comments) for more</span>
+<span class="s1">    info.</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+    <span class="n">first_param</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same name: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">suggestion_on_error</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">same_kind</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">kind</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same kind: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">suggestion_on_error</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">same_default</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">default</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same default: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">suggestion_on_error</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">same_annotation</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">annotation</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">annotation</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same annotation: &quot;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">suggestion_on_error</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">first_param</span></div>
 </pre></div>
 
            </div>
