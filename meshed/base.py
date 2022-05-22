@@ -201,7 +201,7 @@ class FuncNode:
     bind: dict = field(default_factory=dict)
     out: str = field(default=None)
     func_label: str = field(default=None)  # TODO: Integrate more
-    write_output_into_scope: bool = True  # TODO: Do we really want to allow False?
+    # write_output_into_scope: bool = True  # TODO: Do we really want to allow False?
     names_maker: Callable = underscore_func_node_names_maker
     node_validator: Callable = basic_node_validator
 
@@ -261,7 +261,7 @@ class FuncNode:
     def __repr__(self):
         return f'FuncNode({self.synopsis_string(bind_info="hybrid")})'
 
-    def call_on_scope(self, scope: MutableMapping):
+    def call_on_scope(self, scope: MutableMapping, write_output_into_scope=True):
         """Call the function using the given scope both to source arguments and write
         results.
 
@@ -273,7 +273,7 @@ class FuncNode:
         output = call_somewhat_forgivingly(
             self.func, args, kwargs, enforce_sig=self.sig
         )
-        if self.write_output_into_scope:
+        if write_output_into_scope:
             scope[self.out] = output
         return output
 
