@@ -60,7 +60,7 @@ class CachedDag:
         if intersection := (input_kwargs.keys() & self.cache.keys()):
             raise ValueError(
                 f"input_kwargs can't contain any keys that are already in cache! "
-                f"These names were in both: {intersection}"
+                f'These names were in both: {intersection}'
             )
         _cache = ChainMap(input_kwargs, self._cache)
         if k in _cache:
