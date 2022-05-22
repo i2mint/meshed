@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.66 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.base &mdash; meshed 0.1.67 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -57,6 +57,7 @@
 <li class="toctree-l1"><a class="reference internal" href="itools.html">meshed.itools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="makers.html">meshed.makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
@@ -104,7 +105,7 @@
 <p>Base functionality of meshed</p>
 <dl class="py class">
 <dt id="meshed.base.FuncNode">
-<em class="property">class </em><code class="sig-prename descclassname">meshed.base.</code><code class="sig-name descname">FuncNode</code><span class="sig-paren">(</span><em class="sig-param">func: Callable</em>, <em class="sig-param">name: str = None</em>, <em class="sig-param">bind: dict = &lt;factory&gt;</em>, <em class="sig-param">out: str = None</em>, <em class="sig-param">func_label: str = None</em>, <em class="sig-param">write_output_into_scope: bool = True</em>, <em class="sig-param">names_maker: Callable = &lt;function underscore_func_node_names_maker&gt;</em>, <em class="sig-param">node_validator: Callable = &lt;function basic_node_validator&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#FuncNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.FuncNode" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">meshed.base.</code><code class="sig-name descname">FuncNode</code><span class="sig-paren">(</span><em class="sig-param">func: Callable</em>, <em class="sig-param">name: str = None</em>, <em class="sig-param">bind: dict = &lt;factory&gt;</em>, <em class="sig-param">out: str = None</em>, <em class="sig-param">func_label: str = None</em>, <em class="sig-param">names_maker: Callable = &lt;function underscore_func_node_names_maker&gt;</em>, <em class="sig-param">node_validator: Callable = &lt;function basic_node_validator&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#FuncNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.FuncNode" title="Permalink to this definition">¶</a></dt>
 <dd><p>A function wrapper that makes the function amenable to operating in a network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -197,7 +198,7 @@ you’ll <strong>need</strong> to give it a custom name because the functions ar
 this name in the network.</p>
 <dl class="py method">
 <dt id="meshed.base.FuncNode.call_on_scope">
-<code class="sig-name descname">call_on_scope</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#FuncNode.call_on_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.FuncNode.call_on_scope" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">call_on_scope</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span></em>, <em class="sig-param"><span class="n">write_output_into_scope</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#FuncNode.call_on_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.FuncNode.call_on_scope" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the function using the given scope both to source arguments and write
 results.</p>
 <p>Note: This method is only meant to be used as a backend to __call__, not as

@@ -16,6 +16,7 @@
    module_docs/meshed/itools
    module_docs/meshed/makers
    module_docs/meshed/scrap
+   module_docs/meshed/scrap/cached_dag
    module_docs/meshed/scrap/dask_graph_language
    module_docs/meshed/scrap/gk_with_networkx
    module_docs/meshed/scrap/misc_utils
