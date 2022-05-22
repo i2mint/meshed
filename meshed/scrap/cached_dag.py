@@ -57,6 +57,14 @@ class CachedDag:
 
     def __call__(self, k, input_kwargs=()):
         #         print(f"Calling ({k=},{input_kwargs=})\t{self.cache=}")
+        if intersection := (input_kwargs.keys() & self.cache.keys()):
+            raise ValueError(
+                f"input_kwargs can't contain any keys that are already in cache! "
+                f"These names were in both: {intersection}"
+            )
+        _cache = ChainMap(input_kwargs, self._cache)
+        if k in _cache:
+            return _cache[k]
         input_kwargs = dict(input_kwargs)
         func_node_id = self.func_node_id(k)
         #         print(f"{func_node_id=}")
@@ -71,7 +79,7 @@ class CachedDag:
                 #                 inputs = dict(input_sources, **input_kwargs)  #
                 #                 TODO: do we need to include **self.defaults in the
                 #                  middle?
-                inputs = ChainMap(input_kwargs, input_sources)
+                inputs = ChainMap(_cache, input_sources)
                 #                 print(f"Computing {func_node_id}: ", end=" ")
                 output = func_node.call_on_scope(inputs, write_output_into_scope=False)
                 self.cache[func_node_id] = output
