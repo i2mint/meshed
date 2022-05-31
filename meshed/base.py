@@ -7,6 +7,7 @@ from functools import partial
 from typing import Callable, MutableMapping, Iterable, Union, Sized, Sequence
 
 from i2 import Sig, call_somewhat_forgivingly
+from i2.signatures import ch_variadics_to_non_variadic_kind
 from meshed.util import ValidationError, NameValidationError, mk_func_name
 from meshed.itools import add_edge
 
@@ -26,7 +27,7 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     """
     if name is not None and out is not None:
         if name == out:
-            name = name + '_'
+            name = name + "_"
         return name, out
 
     try:
@@ -34,17 +35,17 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     except NameValidationError as err:
         err_msg = err.args[0]
         err_msg += (
-            f'\nSuggestion: You might want to specify a name explicitly in '
-            f'FuncNode(func, name=name) instead of just giving me the func as is.'
+            f"\nSuggestion: You might want to specify a name explicitly in "
+            f"FuncNode(func, name=name) instead of just giving me the func as is."
         )
         raise NameValidationError(err_msg)
     if name is None and out is None:
-        return name_of_func + '_', name_of_func
+        return name_of_func + "_", name_of_func
     elif out is None:
-        return name, '_' + name
+        return name, "_" + name
     elif name is None:
         if name_of_func == out:
-            name_of_func += '_'
+            name_of_func += "_"
         return name_of_func, out
 
 
@@ -71,19 +72,19 @@ def basic_node_validator(func_node):
 
     names_that_are_not_strings = [name for name in names if not isinstance(name, str)]
     if names_that_are_not_strings:
-        names_that_are_not_strings = ', '.join(map(str, names_that_are_not_strings))
-        raise ValidationError(f'Should be strings: {names_that_are_not_strings}')
+        names_that_are_not_strings = ", ".join(map(str, names_that_are_not_strings))
+        raise ValidationError(f"Should be strings: {names_that_are_not_strings}")
 
     # Make sure there's no name duplicates
     _duplicates = duplicates(names)
     if _duplicates:
-        raise ValidationError(f'{func_node} has duplicate names: {_duplicates}')
+        raise ValidationError(f"{func_node} has duplicate names: {_duplicates}")
 
     # Make sure all names are identifiers
     _non_identifiers = list(filter(lambda name: not name.isidentifier(), names))
     # print(_non_identifiers, names)
     if _non_identifiers:
-        raise ValidationError(f'{func_node} non-identifier names: {_non_identifiers}')
+        raise ValidationError(f"{func_node} non-identifier names: {_non_identifiers}")
 
     # Making sure all src_name keys are in the function's signature
     bind_names_not_in_sig_names = func_node.bind.keys() - func_node.sig.names
@@ -91,6 +92,17 @@ def basic_node_validator(func_node):
         f"some bind keys weren't found as function argnames: "
         f"{', '.join(bind_names_not_in_sig_names)}"
     )
+
+
+def handle_variadics(func):
+    func = ch_variadics_to_non_variadic_kind(func)
+    # sig = Sig(func)
+    # var_kw = sig.var_keyword_name
+
+    #   # may be always return the wrapped function
+    # # func.var_kw_name = var_kw # TODO add it when needed
+
+    return func
 
 
 # TODO: When 3.10, look into and possibly use match_args in to_dict and from_dict
@@ -206,6 +218,7 @@ class FuncNode:
     node_validator: Callable = basic_node_validator
 
     def __post_init__(self):
+        self.func = handle_variadics(self.func)
         _func_node_args_validation(func=self.func, name=self.name, out=self.out)
         self.name, self.out = self.names_maker(self.func, self.name, self.out)
         self.__name__ = self.name
@@ -227,7 +240,7 @@ class FuncNode:
 
         self.node_validator(self)
 
-    def synopsis_string(self, bind_info='values'):
+    def synopsis_string(self, bind_info="values"):
         """
 
         :param bind_info:
@@ -243,20 +256,20 @@ class FuncNode:
         >>> fn.synopsis_string(bind_info='hybrid')
         'y=b,c -> h -> d'
         """
-        if bind_info in {'values', 'varnodes', 'var_nodes'}:
-            return f"{','.join(self.bind.values())} -> {self.name} " f'-> {self.out}'
-        elif bind_info == 'hybrid':
+        if bind_info in {"values", "varnodes", "var_nodes"}:
+            return f"{','.join(self.bind.values())} -> {self.name} " f"-> {self.out}"
+        elif bind_info == "hybrid":
 
             def gen():
                 for k, v in self.bind.items():
                     if k == v:
                         yield k
                     else:
-                        yield f'{k}={v}'
+                        yield f"{k}={v}"
 
-            return f"{','.join(gen())} -> {self.name} " f'-> {self.out}'
-        elif bind_info in {'keys', 'params'}:
-            return f"{','.join(self.bind.keys())} -> {self.name} " f'-> {self.out}'
+            return f"{','.join(gen())} -> {self.name} " f"-> {self.out}"
+        elif bind_info in {"keys", "params"}:
+            return f"{','.join(self.bind.keys())} -> {self.name} " f"-> {self.out}"
 
     def __repr__(self):
         return f'FuncNode({self.synopsis_string(bind_info="hybrid")})'
@@ -284,7 +297,7 @@ class FuncNode:
         and space are used, so could possibly encode as int (for __hash__ method)
         in a way that is reverse-decodable and with reasonable int size.
         """
-        return self.synopsis_string(bind_info='hybrid')
+        return self.synopsis_string(bind_info="hybrid")
         # return ';'.join(self.bind) + '::' + self.out
 
     # TODO: Find a better one. Need to have guidance on hash and eq methods dos-&-donts
@@ -343,7 +356,7 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
         c = Counter(node_names + outs)
         offending_names = [name for name, count in c.items() if count > 1]
         raise ValueError(
-            f'Some of your node names and/or outs where used more than once. '
+            f"Some of your node names and/or outs where used more than once. "
             f"They shouldn't. These are the names I find offensive: {offending_names}"
         )
 
@@ -388,7 +401,7 @@ def is_func_node(obj) -> bool:
     # return isinstance(obj, FuncNode)
     cls = type(obj)
     if cls is not type:
-        return any(getattr(x, '__name__', '') == 'FuncNode' for x in cls.mro())
+        return any(getattr(x, "__name__", "") == "FuncNode" for x in cls.mro())
     else:
         return False
 
@@ -437,8 +450,8 @@ def ch_func_node_attrs(fn, **new_attrs_values):
     init_params = get_init_params_of_instance(fn)
     if params_that_are_not_init_params := (new_attrs_values.keys() - init_params):
         raise ValueError(
-            f'These are not params of {type(fn).__name__}: '
-            f'{params_that_are_not_init_params}'
+            f"These are not params of {type(fn).__name__}: "
+            f"{params_that_are_not_init_params}"
         )
     fn_kwargs = dict(init_params, **new_attrs_values)
     return FuncNode(**fn_kwargs)
@@ -447,9 +460,9 @@ def ch_func_node_attrs(fn, **new_attrs_values):
 def _keys_and_values_are_strings_validation(d: dict):
     for k, v in d.items():
         if not isinstance(k, str):
-            raise ValidationError(f'Should be a str: {k}')
+            raise ValidationError(f"Should be a str: {k}")
         if not isinstance(v, str):
-            raise ValidationError(f'Should be a str: {v}')
+            raise ValidationError(f"Should be a str: {v}")
 
 
 def _func_node_args_validation(
@@ -468,15 +481,15 @@ def _func_node_args_validation(
 
     """
     if func is not None and not isinstance(func, Callable):
-        raise ValidationError(f'Should be callable: {func}')
+        raise ValidationError(f"Should be callable: {func}")
     if name is not None and not isinstance(name, str):
-        raise ValidationError(f'Should be a str: {name}')
+        raise ValidationError(f"Should be a str: {name}")
     if bind is not None:
         if not isinstance(bind, dict):
-            raise ValidationError(f'Should be a dict: {bind}')
+            raise ValidationError(f"Should be a dict: {bind}")
         _keys_and_values_are_strings_validation(bind)
     if out is not None and not isinstance(out, str):
-        raise ValidationError(f'Should be a str: {out}')
+        raise ValidationError(f"Should be a str: {out}")
 
 
 def _old_mapped_extraction(extract_from: dict, key_map: dict):
@@ -580,9 +593,9 @@ def _complete_dict_with_iterable_of_required_keys(
 from typing import NewType, Dict, Tuple, Mapping
 
 # TODO: Make a type where ``isinstance(s, Identifier) == s.isidentifier()``
-Identifier = NewType('Identifier', str)  # + should satisfy str.isidentifier
+Identifier = NewType("Identifier", str)  # + should satisfy str.isidentifier
 Bind = NewType(
-    'Bind',
+    "Bind",
     Union[
         str,  # Identifier or ' '.join(Iterable[Identifier])
         Dict[Identifier, Identifier],
@@ -633,7 +646,8 @@ FuncNodeAble = Union[FuncNode, Callable]
 
 
 def func_node_transformer(
-    fn: FuncNode, kwargs_transformers=(),
+    fn: FuncNode,
+    kwargs_transformers=(),
 ):
     """Get a modified ``FuncNode`` from an iterable of ``kwargs_trans`` modifiers."""
     func_node_kwargs = fn.to_dict()
