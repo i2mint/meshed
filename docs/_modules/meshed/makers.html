@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.69 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.70 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -535,14 +535,25 @@
     <span class="k">return</span> <span class="n">mk_fnodes_from_fn_factories</span><span class="p">(</span><span class="n">fnodes_factories</span><span class="p">,</span> <span class="n">func_src</span><span class="p">)</span>
 
 
+<span class="k">def</span> <span class="nf">_extract_name_from_single_func_def</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">body</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">first_element</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_element</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">name</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">first_element</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="n">default</span>
+
+
 <span class="nd">@double_up_as_factory</span>
 <span class="k">def</span> <span class="nf">code_to_dag</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_src</span><span class="o">=</span><span class="n">dlft_factory_to_func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get a ``meshed.DAG`` from src code&quot;&quot;&quot;</span>
     <span class="c1"># Get a name for the dag (if src is a str</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="c1"># TODO: Get name from FunctionDef.name instead</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;dag_made_from_code_parsing&#39;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_extract_name_from_single_func_def</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s1">&#39;dag_made_from_code_parsing&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="c1"># Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG</span>
