@@ -435,14 +435,25 @@ def _code_to_fnodes(src, func_src=dlft_factory_to_func):
     return mk_fnodes_from_fn_factories(fnodes_factories, func_src)
 
 
+def _extract_name_from_single_func_def(src: str, default=None):
+    t = ast.parse(src)
+    if (body := getattr(t, 'body')) is not None:
+        first_element = next(iter(body))
+        if (
+            isinstance(first_element, ast.FunctionDef)
+            and (name := getattr(first_element, 'name')) is not None
+        ):
+            return name
+    return default
+
+
 @double_up_as_factory
 def code_to_dag(src=None, *, func_src=dlft_factory_to_func, name=None) -> DAG:
     """Get a ``meshed.DAG`` from src code"""
     # Get a name for the dag (if src is a str
     if name is None:
         if isinstance(src, str):
-            # TODO: Get name from FunctionDef.name instead
-            name = 'dag_made_from_code_parsing'
+            name = _extract_name_from_single_func_def(src, 'dag_made_from_code_parsing')
         else:
             name = name_of_obj(src)
     # Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG
