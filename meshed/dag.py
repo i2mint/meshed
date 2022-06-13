@@ -462,7 +462,6 @@ class DAG:
                 self.src_name_params(root_nodes(self.graph))
             )
         )
-        print(type(self.__signature__))
 
         # self.__signature__(self)  # to put the signature on the callable DAG
         # figure out the roots and leaves
