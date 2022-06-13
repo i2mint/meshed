@@ -27,6 +27,7 @@
    module_docs/meshed/tests/test_composition
    module_docs/meshed/tests/test_dag
    module_docs/meshed/tests/test_dag_2
+   module_docs/meshed/tests/test_dag_defaults
    module_docs/meshed/tests/test_getitem
    module_docs/meshed/tests/test_itools
    module_docs/meshed/tests/test_makers
