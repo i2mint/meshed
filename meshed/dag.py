@@ -191,7 +191,7 @@ from meshed.itools import (
 
 
 def order_subset_from_list(items, sublist):
-    assert set(sublist).issubset(set(items)), f'{sublist} is not contained in {items}'
+    assert set(sublist).issubset(set(items)), f"{sublist} is not contained in {items}"
     d = {k: v for v, k in enumerate(items)}
 
     return sorted(sublist, key=lambda x: d[x])
@@ -203,7 +203,7 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
     else:
         i = start_at
         while True:
-            name = f'{prefix}__{i}'
+            name = f"{prefix}__{i}"
             if name not in exclude_names:
                 return name
             i += 1
@@ -215,16 +215,16 @@ def mk_mock_funcnode(arg, out):
         pass
 
     # name = "_mock_" + str(arg) + "_" + str(out)  # f-string
-    name = f'_mock_{str(arg)}_{str(out)}'  # f-string
+    name = f"_mock_{str(arg)}_{str(out)}"  # f-string
 
     return FuncNode(func=func, out=out, name=name)
 
 
 def mk_func_name(func, exclude_names=()):
-    name = getattr(func, '__name__', '')
-    if name == '<lambda>':
+    name = getattr(func, "__name__", "")
+    if name == "<lambda>":
         name = lambda_name()  # make a lambda name that is a unique identifier
-    elif name == '':
+    elif name == "":
         if isinstance(func, partial):
             return mk_func_name(func.func, exclude_names)
         else:
@@ -242,7 +242,7 @@ def arg_names(func, func_name, exclude_names=()):
                 yield name
             else:
                 found_name = find_first_free_name(
-                    f'{func_name}__{name}', _exclude_names
+                    f"{func_name}__{name}", _exclude_names
                 )
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
@@ -344,15 +344,15 @@ def _find_unique_element(item, search_iterable, key: Callable[[Any, Any], bool])
 
 
 def modified_func_node(func_node, **modifications) -> FuncNode:
-    modifiable_attrs = {'func', 'name', 'bind', 'out'}
+    modifiable_attrs = {"func", "name", "bind", "out"}
     assert not modifications.keys().isdisjoint(
         modifiable_attrs
     ), f"Can only modify these: {', '.join(modifiable_attrs)}"
     original_func_node_kwargs = {
-        'func': func_node.func,
-        'name': func_node.name,
-        'bind': func_node.bind,
-        'out': func_node.out,
+        "func": func_node.func,
+        "name": func_node.name,
+        "bind": func_node.bind,
+        "out": func_node.out,
     }
     return FuncNode(**dict(original_func_node_kwargs, **modifications))
 
@@ -386,7 +386,7 @@ DagOutput = Any
 
 
 def _name_attr_or_x(x):
-    return getattr(x, 'name', x)
+    return getattr(x, "name", x)
 
 
 # TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
@@ -457,14 +457,16 @@ class DAG:
         # reorder the nodes to fit topological order
         self.func_nodes, self.var_nodes = _separate_func_nodes_and_var_nodes(self.nodes)
         # self.sig = Sig(dict(extract_items(sig.parameters, 'xz')))
-        self.sig = Sig(  # make a signature
+        self.__signature__ = Sig(  # make a signature
             sort_params(  # with the sorted params (sorted to satisfy kind/default order)
                 self.src_name_params(root_nodes(self.graph))
             )
         )
-        self.sig(self)  # to put the signature on the callable DAG
+        self.__signature__(self)  # to put the signature on the callable DAG
         # figure out the roots and leaves
-        self.roots = tuple(self.sig.names)  # roots in the same order as signature
+        self.roots = tuple(
+            self.__signature__.names
+        )  # roots in the same order as signature
         leafs = leaf_nodes(self.graph)
         # But we want leafs in topological order
         self.leafs = tuple([name for name in self.nodes if name in leafs])
@@ -480,7 +482,9 @@ class DAG:
         # How positionals are resolved is determined by sels.sig
         # The result is the initial ``scope`` the func nodes will both read from
         # to get their arguments, and write their outputs to.
-        scope = self.sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
+        scope = self.__signature__.kwargs_from_args_and_kwargs(
+            args, kwargs, apply_defaults=True
+        )
         # Go through self.func_nodes in order and call them on scope (performing said
         # read_input -> call_func -> write_output operations)
         self.call_on_scope(scope)
@@ -693,7 +697,7 @@ class DAG:
         9
         """
 
-        keyword_dflts = self.sig.kwargs_from_args_and_kwargs(
+        keyword_dflts = self.__signature__.kwargs_from_args_and_kwargs(
             args=positional_dflts,
             kwargs=keyword_dflts,
             apply_defaults=_consider_defaulted_arguments_as_bound,
@@ -715,7 +719,7 @@ class DAG:
         return new_dag
 
     def process_item(self, item):
-        assert isinstance(item, slice), f'must be a slice, was: {item}'
+        assert isinstance(item, slice), f"must be a slice, was: {item}"
 
         input_names, outs = item.start, item.stop
 
@@ -733,7 +737,7 @@ class DAG:
                 # TODO: See if we can use _func_node_for instead
                 return list(map(self.get_node_matching, obj))
             else:
-                raise ValidationError(f'Unrecognized variables specification: {obj}')
+                raise ValidationError(f"Unrecognized variables specification: {obj}")
 
         # assert len(item) == 2, f"Only items of size 1 or 2 are supported"
         input_names, outs = map(ensure_variable_list, [input_names, outs])
@@ -746,7 +750,7 @@ class DAG:
             return self._func_node_for[idx]
         elif isinstance(idx, Callable):
             return self._func_node_for[idx]
-        raise NotFound(f'No matching node for idx: {idx}')
+        raise NotFound(f"No matching node for idx: {idx}")
 
     # TODO: Reflect: Should we include functions as keys here? Makes existence of the
     #  item depend on unicity of the function in the DAG, therefore dynamic, so instable?
@@ -1029,8 +1033,8 @@ class DAG:
             if not to_node.bind:
                 raise InvalidFunctionParameters(
                     "You can't add an edge TO a FuncNode whose function has no "
-                    'parameters. '
-                    f'You attempted to add an edge between {from_node=} and {to_node=}.'
+                    "parameters. "
+                    f"You attempted to add an edge between {from_node=} and {to_node=}."
                 )
             else:
                 # first param of .func (i.e. first key of .bind)
@@ -1041,11 +1045,11 @@ class DAG:
             raise ValueError(
                 f"The {to_node} node is already sourcing '{to_param}' from '"
                 f"{existing_bind}'."
-                'Delete that edge to be able before you add a new one'
+                "Delete that edge to be able before you add a new one"
             )
 
         new_to_node_dict = to_node.to_dict()
-        new_bind = new_to_node_dict['bind'].copy()
+        new_bind = new_to_node_dict["bind"].copy()
         new_bind[to_param] = from_node.out  # this is the actual edge creation
         new_to_node = FuncNode.from_dict(dict(new_to_node_dict, bind=new_bind))
         return DAG(
@@ -1077,8 +1081,8 @@ class DAG:
 
     # ------------ display --------------------------------------------------------------
 
-    def synopsis_string(self, bind_info='values'):
-        return '\n'.join(
+    def synopsis_string(self, bind_info="values"):
+        return "\n".join(
             func_node.synopsis_string(bind_info) for func_node in self.func_nodes
         )
 
@@ -1106,7 +1110,7 @@ class DAG:
         """Get an ascii art string that represents the pipeline"""
         from meshed.util import dot_to_ascii
 
-        return dot_to_ascii('\n'.join(self.dot_digraph_body(*args, **kwargs)))
+        return dot_to_ascii("\n".join(self.dot_digraph_body(*args, **kwargs)))
 
     @wraps(dot_digraph_body)
     def dot_digraph(self, *args, **kwargs):
@@ -1114,8 +1118,8 @@ class DAG:
             import graphviz
         except (ModuleNotFoundError, ImportError) as e:
             raise ModuleNotFoundError(
-                f'{e}\nYou may not have graphviz installed. '
-                f'See https://pypi.org/project/graphviz/.'
+                f"{e}\nYou may not have graphviz installed. "
+                f"See https://pypi.org/project/graphviz/."
             )
         # Note: Since graphviz 0.18, need to have a newline in body lines!
         body = list(map(_add_new_line_if_none, self.dot_digraph_body(*args, **kwargs)))
@@ -1125,22 +1129,22 @@ class DAG:
 # These are the defaults used in lined.
 # TODO: Merge some of the functionalities around graph displays in lined and meshed
 dflt_configs = dict(
-    fnode_shape='box',
-    vnode_shape='none',
+    fnode_shape="box",
+    vnode_shape="none",
     display_all_arguments=True,
-    edge_kind='to_args_on_edge',
+    edge_kind="to_args_on_edge",
     input_node=True,
-    output_node='output',
+    output_node="output",
 )
 
 
-def param_to_dot_definition(p: Parameter, shape=dflt_configs['vnode_shape']):
+def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
     if p.default is not empty:
-        name = p.name + '='
+        name = p.name + "="
     elif p.kind == p.VAR_POSITIONAL:
-        name = '*' + p.name
+        name = "*" + p.name
     elif p.kind == p.VAR_KEYWORD:
-        name = '**' + p.name
+        name = "**" + p.name
     else:
         name = p.name
     yield f'{p.name} [label="{name}" shape="{shape}"]'
@@ -1157,30 +1161,32 @@ def dot_lines_of_func_parameters(
     func_id: str,
     *,
     func_label: str = None,
-    output_shape: str = dflt_configs['vnode_shape'],
-    func_shape: str = dflt_configs['fnode_shape'],
+    output_shape: str = dflt_configs["vnode_shape"],
+    func_shape: str = dflt_configs["fnode_shape"],
 ) -> Iterable[str]:
     assert func_id != out, (
-        f"Your func and output name shouldn't be the " f'same: {out=} {func_id=}'
+        f"Your func and output name shouldn't be the " f"same: {out=} {func_id=}"
     )
     func_label = func_label or func_id
     yield f'{out} [label="{out}" shape="{output_shape}"]'
     yield f'{func_id} [label="{func_label}" shape="{func_shape}"]'
-    yield f'{func_id} -> {out}'
+    yield f"{func_id} -> {out}"
     # args -> func
     for p in parameters:
         yield from param_to_dot_definition(p)
     for p in parameters:
-        yield f'{p.name} -> {func_id}'
+        yield f"{p.name} -> {func_id}"
 
 
 def _parameters_and_names_from_sig(
-    sig: Sig, out=None, func_name=None,
+    sig: Sig,
+    out=None,
+    func_name=None,
 ):
     func_name = func_name or sig.name
     out = out or sig.name
     if func_name == out:
-        func_name = '_' + func_name
+        func_name = "_" + func_name
     assert isinstance(func_name, str) and isinstance(out, str)
     return sig.parameters, out, func_name
 
@@ -1278,9 +1284,9 @@ def dot_lines_of_func_node(func_node: FuncNode):
 
     out = func_node.out
     func_id = func_node.name
-    func_label = getattr(func_node, 'func_label', func_id)
+    func_label = getattr(func_node, "func_label", func_id)
     if out == func_id:  # though forbidden in default FuncNode validation
-        func_id = '_' + func_id
+        func_id = "_" + func_id
 
     # Get the Parameter objects for sig, with names changed to bind ones
     params = func_node.sig.ch_names(**func_node.bind).params
@@ -1294,12 +1300,12 @@ def _add_new_line_if_none(s: str):
     """Since graphviz 0.18, need to have a newline in body lines.
     This util is there to address that, adding newlines to body lines
     when missing."""
-    if s and s[-1] != '\n':
-        return s + '\n'
+    if s and s[-1] != "\n":
+        return s + "\n"
     return s
 
 
-def print_dag_string(dag: DAG, bind_info: str = 'hybrid'):
+def print_dag_string(dag: DAG, bind_info: str = "hybrid"):
     print(dag.synopsis_string(bind_info=bind_info))
 
 
@@ -1320,7 +1326,7 @@ def reorder_on_constraints(funcnodes, outs):
     funcnodes += extra_nodes
     graph = _func_nodes_to_graph_dict(funcnodes)
     nodes = topological_sort(graph)
-    print('after ordering:', nodes)
+    print("after ordering:", nodes)
     ordered_nodes = [node for node in nodes if node not in extra_nodes]
     func_nodes, var_nodes = _separate_func_nodes_and_var_nodes(ordered_nodes)
 
@@ -1341,7 +1347,7 @@ def attribute_vals(objs: Iterable, attrs: Iterable[str], egress=None):
         return val_tuples
 
 
-names_and_outs = partial(attribute_vals, attrs=('name', 'out'), egress=chain)
+names_and_outs = partial(attribute_vals, attrs=("name", "out"), egress=chain)
 
 DagAble = Union[DAG, Iterable[FuncNodeAble]]
 
@@ -1472,11 +1478,11 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
     renamer = renamer or numbered_suffix_renamer
     if isinstance(renamer, str):
         suffix = renamer
-        renamer = lambda name: f'{name}{suffix}'
+        renamer = lambda name: f"{name}{suffix}"
     elif isinstance(renamer, Mapping):
         old_to_new_map = dict(renamer)
         renamer = old_to_new_map.get
-    assert callable(renamer), f'Could not be resolved into a callable: {renamer}'
+    assert callable(renamer), f"Could not be resolved into a callable: {renamer}"
     ktrans = partial(_rename_node, renamer=renamer)
     func_node_trans = partial(func_node_transformer, kwargs_transformers=ktrans)
     return egress(map(func_node_trans, func_nodes))
@@ -1486,10 +1492,10 @@ def _rename_node(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
     fn_kwargs = fn_kwargs.copy()
     # decorate renamer so if the original returns None the decorated will return input
     renamer = _if_none_return_input(renamer)
-    fn_kwargs['name'] = renamer(fn_kwargs['name'])
-    fn_kwargs['out'] = renamer(fn_kwargs['out'])
-    fn_kwargs['bind'] = {
-        param: renamer(var_id) for param, var_id in fn_kwargs['bind'].items()
+    fn_kwargs["name"] = renamer(fn_kwargs["name"])
+    fn_kwargs["out"] = renamer(fn_kwargs["out"])
+    fn_kwargs["bind"] = {
+        param: renamer(var_id) for param, var_id in fn_kwargs["bind"].items()
     }
     return fn_kwargs
 
