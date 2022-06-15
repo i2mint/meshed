@@ -1361,6 +1361,7 @@ def _validate_func_src(func_src, func_nodes: DagAble):
         raise ValueError(f"These values of func_src weren't callable: {not_callable}")
 
 
+# TODO: Include as method of DAG?
 # TODO: extract egress functionality to decorator
 @double_up_as_factory
 def ch_funcs(func_nodes: DagAble = None, *, func_src=(), strict=False):
@@ -1389,6 +1390,7 @@ def ch_funcs(func_nodes: DagAble = None, *, func_src=(), strict=False):
 change_funcs = ch_funcs  # back-compatibility
 
 
+# TODO: Include as method of DAG?
 # TODO: extract egress functionality to decorator
 @double_up_as_factory
 def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_renamer):
