@@ -457,14 +457,17 @@ class DAG:
         # reorder the nodes to fit topological order
         self.func_nodes, self.var_nodes = _separate_func_nodes_and_var_nodes(self.nodes)
         # self.sig = Sig(dict(extract_items(sig.parameters, 'xz')))
-        self.sig = Sig(  # make a signature
+        self.__signature__ = Sig(  # make a signature
             sort_params(  # with the sorted params (sorted to satisfy kind/default order)
                 self.src_name_params(root_nodes(self.graph))
             )
         )
-        self.sig(self)  # to put the signature on the callable DAG
+
+        # self.__signature__(self)  # to put the signature on the callable DAG
         # figure out the roots and leaves
-        self.roots = tuple(self.sig.names)  # roots in the same order as signature
+        self.roots = tuple(
+            self.__signature__.names
+        )  # roots in the same order as signature
         leafs = leaf_nodes(self.graph)
         # But we want leafs in topological order
         self.leafs = tuple([name for name in self.nodes if name in leafs])
@@ -480,7 +483,9 @@ class DAG:
         # How positionals are resolved is determined by sels.sig
         # The result is the initial ``scope`` the func nodes will both read from
         # to get their arguments, and write their outputs to.
-        scope = self.sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
+        scope = self.__signature__.kwargs_from_args_and_kwargs(
+            args, kwargs, apply_defaults=True
+        )
         # Go through self.func_nodes in order and call them on scope (performing said
         # read_input -> call_func -> write_output operations)
         self.call_on_scope(scope)
@@ -693,7 +698,7 @@ class DAG:
         9
         """
 
-        keyword_dflts = self.sig.kwargs_from_args_and_kwargs(
+        keyword_dflts = self.__signature__.kwargs_from_args_and_kwargs(
             args=positional_dflts,
             kwargs=keyword_dflts,
             apply_defaults=_consider_defaulted_arguments_as_bound,
