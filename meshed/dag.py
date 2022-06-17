@@ -146,6 +146,7 @@ from typing import (
     Any,
     Mapping,
 )
+from warnings import warn
 
 from i2 import double_up_as_factory
 from i2.signatures import (
@@ -1125,6 +1126,15 @@ class DAG:
         # Note: Since graphviz 0.18, need to have a newline in body lines!
         body = list(map(_add_new_line_if_none, self.dot_digraph_body(*args, **kwargs)))
         return graphviz.Digraph(body=body)
+
+    # NOTE: "sig = property(__signature__)" is not working. So, doing the following instead.
+    @property
+    def sig(self):
+        return self.__signature__
+
+    @sig.setter
+    def sig(self, value):
+        self.__signature__ = value
 
 
 # These are the defaults used in lined.
