@@ -146,6 +146,7 @@ from typing import (
     Any,
     Mapping,
 )
+from warnings import warn
 
 from i2 import double_up_as_factory
 from i2.signatures import (
@@ -389,6 +390,13 @@ def _name_attr_or_x(x):
     return getattr(x, 'name', x)
 
 
+def change_value_on_cond(d, cond, func):
+    for k, v in d.items():
+        if cond(k, v):
+            d[k] = func(v)
+    return d
+
+
 # TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
 #  concern. Perhaps a more general form would be to define a cache factory defaulting
 #  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)
@@ -474,6 +482,15 @@ class DAG:
         self.last_scope = None
         if self.name is not None:
             self.__name__ = self.name
+
+        self.bindings_cleaner()
+
+    def bindings_cleaner(self):
+        funcnodes_names = [node.name for node in self.func_nodes]
+        func = lambda v: self._func_node_for[v].out
+        cond = lambda k, v: v in funcnodes_names
+        for node in self.func_nodes:
+            node.bind = change_value_on_cond(node.bind, cond, func)
 
     def __call__(self, *args, **kwargs):
         return self._call(*args, **kwargs)
@@ -1125,6 +1142,15 @@ class DAG:
         # Note: Since graphviz 0.18, need to have a newline in body lines!
         body = list(map(_add_new_line_if_none, self.dot_digraph_body(*args, **kwargs)))
         return graphviz.Digraph(body=body)
+
+    # NOTE: "sig = property(__signature__)" is not working. So, doing the following instead.
+    @property
+    def sig(self):
+        return self.__signature__
+
+    @sig.setter
+    def sig(self, value):
+        self.__signature__ = value
 
 
 # These are the defaults used in lined.
