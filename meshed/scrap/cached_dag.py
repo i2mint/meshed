@@ -148,6 +148,7 @@ class CachedDag:
     - Cache multiple paths (lru_cache style) for different input combinations
 
     """
+
     def __init__(self, dag, cache=True, name=None):
         self.dag = dag
         self.reversed_graph = edge_reversed_graph(dag.graph_ids)
@@ -231,6 +232,8 @@ def cached_dag_test():
 
     :return:
     """
+
+
 def add(a, b=1):
     return a + b
 
@@ -246,13 +249,16 @@ def exp(mult, n=3):
 def subtract(a, b=4):
     return a - b
 
+
 from meshed import code_to_dag
+
 
 @code_to_dag(func_src=locals())
 def dag(w, ww, www):
     x = mult(w, ww)
     y = add(x, www)
     z = subtract(x, y)
+
 
 g = CachedDag(dag)
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.75 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.76 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -104,6 +104,146 @@
              
   <section id="module-meshed.scrap.cached_dag">
 <span id="meshed-scrap-cached-dag"></span><h1>meshed.scrap.cached_dag<a class="headerlink" href="#module-meshed.scrap.cached_dag" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="meshed.scrap.cached_dag.CachedDag">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.scrap.cached_dag.</code><code class="sig-name descname">CachedDag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dag</span></em>, <em class="sig-param"><span class="n">cache</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#CachedDag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.cached_dag.CachedDag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wraps a DAG, using it to compute any of it’s var nodes from it’s dependents,
+with the capability of caching intermediate var nodes for later reuse.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">code_to_dag</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@code_to_dag</span><span class="p">(</span><span class="n">func_src</span><span class="o">=</span><span class="nb">locals</span><span class="p">())</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">dag</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">,</span> <span class="n">www</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">mult</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">www</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">z</span> <span class="o">=</span> <span class="n">subtract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph_ascii</span><span class="p">())</span>  
+</pre></div>
+</div>
+<div class="highlight-w notranslate"><div class="highlight"><pre><span></span>            │
+            │
+            ▼
+          ┌──────────┐
+ww=   ──▶ │   mult   │
+          └──────────┘
+            │
+            │
+            ▼
+
+               x       ─┐
+                        │
+            │           │
+            │           │
+            ▼           │
+          ┌──────────┐  │
+www=  ──▶ │   add    │  │
+          └──────────┘  │
+            │           │
+            │           │
+            ▼           │
+                        │
+               y=       │
+                        │
+            │           │
+            │           │
+            ▼           │
+          ┌──────────┐  │
+          │ subtract │ ◀┘
+          └──────────┘
+            │
+            │
+            ▼
+
+               z
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">CachedDag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signature</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="go">&lt;Signature (k, input_kwargs=())&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;ww&#39;</span><span class="p">)</span>  <span class="c1"># we can get this since it has a default</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">g</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>  <span class="c1"># this one won&#39;t work, because we need a w</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="go">The input_kwargs of a dag call is missing 1 required argument: &#39;w&#39;</span>
+</pre></div>
+</div>
+<p>It needs a w?! No, it needs an x! But to get an x you need a w, and…</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>  <span class="c1"># this one won&#39;t work, because we need a w</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="go">The input_kwargs of a dag call is missing 1 required argument: &#39;w&#39;</span>
+</pre></div>
+</div>
+<p>So let’s give it a w!</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>  <span class="c1"># == 3 * 2 ==</span>
+<span class="go">6</span>
+</pre></div>
+</div>
+<p>And now this works:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">6</span>
+</pre></div>
+</div>
+<p>because</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">cache</span>
+<span class="go">{&#39;x&#39;: 6}</span>
+</pre></div>
+</div>
+<p>and this will work too:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="go">7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">cache</span>
+<span class="go">{&#39;x&#39;: 6, &#39;y&#39;: 7}</span>
+</pre></div>
+</div>
+<p>But this is something we need to handle better!</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="go">6</span>
+</pre></div>
+</div>
+<p>This is happending because there’s already a x in the cache, and it takes precedence.
+This would be okay if consider CachedDag as a low level object that is never
+actually used by a user.
+But we need to protect the user from such effects!</p>
+<p>First, we probably should cache inputs too.</p>
+<p>The we can:
+- Make  computation take precedence over cache, overwriting the existing cache</p>
+<blockquote>
+<div><p>with the new resulting values</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Allow the user to declare the entire cache, or just some variables in it,</p></li>
+</ul>
+<p>as write-once, to avoid creating bugs with the above proposal.</p>
+<ul class="simple">
+<li><p>Cache multiple paths (lru_cache style) for different input combinations</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.scrap.cached_dag.cached_dag_test">
+<code class="sig-prename descclassname">meshed.scrap.cached_dag.</code><code class="sig-name descname">cached_dag_test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#cached_dag_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.cached_dag.cached_dag_test" title="Permalink to this definition">¶</a></dt>
+<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
