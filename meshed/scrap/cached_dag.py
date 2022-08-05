@@ -24,6 +24,130 @@ NoSuchKey = type('NoSuchKey', (), {})
 
 # TODO: Cache validation and invalidation
 class CachedDag:
+    """
+    Wraps a DAG, using it to compute any of it's var nodes from it's dependents,
+    with the capability of caching intermediate var nodes for later reuse.
+
+    >>> def add(a, b=1):
+    ...     return a + b
+    >>> def mult(x, y=2):
+    ...     return x * y
+    >>> def subtract(a, b=4):
+    ...     return a - b
+    >>> from meshed import code_to_dag
+    >>>
+    >>> @code_to_dag(func_src=locals())
+    ... def dag(w, ww, www):
+    ...     x = mult(w, ww)
+    ...     y = add(x, www)
+    ...     z = subtract(x, y)
+    >>> print(dag.dot_digraph_ascii())  # doctest: +SKIP
+
+    .. code-block::
+                        w
+
+                     │
+                     │
+                     ▼
+                   ┌──────────┐
+         ww=   ──▶ │   mult   │
+                   └──────────┘
+                     │
+                     │
+                     ▼
+
+                        x       ─┐
+                                 │
+                     │           │
+                     │           │
+                     ▼           │
+                   ┌──────────┐  │
+         www=  ──▶ │   add    │  │
+                   └──────────┘  │
+                     │           │
+                     │           │
+                     ▼           │
+                                 │
+                        y=       │
+                                 │
+                     │           │
+                     │           │
+                     ▼           │
+                   ┌──────────┐  │
+                   │ subtract │ ◀┘
+                   └──────────┘
+                     │
+                     │
+                     ▼
+
+                        z
+
+    >>> from inspect import signature
+    >>> g = CachedDag(dag)
+    >>> signature(g)
+    <Signature (k, input_kwargs=())>
+    >>>
+    >>>
+    >>> g('ww')  # we can get this since it has a default
+    2
+    >>> try:
+    ...     g('y')  # this one won't work, because we need a w
+    ... except TypeError as e:
+    ...     print(e)
+    The input_kwargs of a dag call is missing 1 required argument: 'w'
+
+    It needs a w?! No, it needs an x! But to get an x you need a w, and...
+
+    >>> try:
+    ...     g('x')  # this one won't work, because we need a w
+    ... except TypeError as e:
+    ...     print(e)
+    The input_kwargs of a dag call is missing 1 required argument: 'w'
+
+    So let's give it a w!
+
+    >>> g('x', dict(w=3))  # == 3 * 2 ==
+    6
+
+    And now this works:
+
+    >>> g('x')
+    6
+
+    because
+
+    >>> g.cache
+    {'x': 6}
+
+    and this will work too:
+
+    >>> g('y')
+    7
+    >>> g.cache
+    {'x': 6, 'y': 7}
+
+    But this is something we need to handle better!
+
+    >>> g('x', dict(w=10))
+    6
+
+    This is happending because there's already a x in the cache, and it takes precedence.
+    This would be okay if consider CachedDag as a low level object that is never
+    actually used by a user.
+    But we need to protect the user from such effects!
+
+    First, we probably should cache inputs too.
+
+    The we can:
+    - Make  computation take precedence over cache, overwriting the existing cache
+        with the new resulting values
+
+    - Allow the user to declare the entire cache, or just some variables in it,
+    as write-once, to avoid creating bugs with the above proposal.
+
+    - Cache multiple paths (lru_cache style) for different input combinations
+
+    """
     def __init__(self, dag, cache=True, name=None):
         self.dag = dag
         self.reversed_graph = edge_reversed_graph(dag.graph_ids)
@@ -55,8 +179,11 @@ class CachedDag:
         if func_node_name is not None:
             return self.out_of_func_node_name[func_node_name]
 
+    # TODO: Consider having args and kwargs instead of just input_kwargs.
+    #   or making it (k, /, *args, **kwargs)
     def __call__(self, k, input_kwargs=()):
         #         print(f"Calling ({k=},{input_kwargs=})\t{self.cache=}")
+        input_kwargs = dict(input_kwargs)
         if intersection := (input_kwargs.keys() & self.cache.keys()):
             raise ValueError(
                 f"input_kwargs can't contain any keys that are already in cache! "
@@ -98,26 +225,35 @@ class CachedDag:
 
 
 def cached_dag_test():
-    def add(a, b=1):
-        return a + b
+    """
 
-    def mult(x, y=2):
-        return x * y
+    .. code-block::
 
-    def exp(mult, n=3):
-        return m ** n
+    :return:
+    """
+def add(a, b=1):
+    return a + b
 
-    def subtract(a, b=4):
-        return a - b
 
-    from meshed import code_to_dag
+def mult(x, y=2):
+    return x * y
 
-    @code_to_dag(func_src=locals())
-    def dag(w, ww, www):
-        x = mult(w, ww)
-        y = add(x, www)
-        z = subtract(x, y)
 
-    g = CachedDag(dag)
+def exp(mult, n=3):
+    return mult ** n
 
-    assert g('z', {'w': 2, 'ww': 3, 'www': 4}) == -4 == dag(2, 3, 4)
+
+def subtract(a, b=4):
+    return a - b
+
+from meshed import code_to_dag
+
+@code_to_dag(func_src=locals())
+def dag(w, ww, www):
+    x = mult(w, ww)
+    y = add(x, www)
+    z = subtract(x, y)
+
+g = CachedDag(dag)
+
+assert g('z', {'w': 2, 'ww': 3, 'www': 4}) == -4 == dag(2, 3, 4)
