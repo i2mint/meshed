@@ -1,7 +1,16 @@
 from typing import Mapping
+from functools import partial
 from collections import ChainMap
 from meshed.itools import edge_reversed_graph
 from i2 import Sig
+
+
+class NotAllowed(Exception):
+    """To use to indicate that something is not allowed"""
+
+
+class OverWritesNotAllowedError(NotAllowed):
+    """Error to raise when a writes to existing keys are not allowed"""
 
 
 def get_first_item_and_assert_unicity(seq):
@@ -18,6 +27,44 @@ def get_first_item_and_assert_unicity(seq):
 def func_node_names_and_outs(dag):
     for func_node in dag.func_nodes:
         yield func_node.name, func_node.out
+
+
+class NoOverwritesDict(dict):
+    """
+    A dict where you're not allowed to write to a key that already has a value in it.
+
+    >>> d = NoOverwritesDict(a=1, b=2)
+    >>> d
+    {'a': 1, 'b': 2}
+
+    Writing is allowed, in new keys
+
+    >>> d['c'] = 3
+    >>> d
+    {'a': 1, 'b': 2, 'c': 3}
+
+    It's also okay to write into an existing key if the value it holds is identical.
+    In fact, the write doesn't even happen.
+
+    >>> d['b'] = 2
+
+    But if we try to write a different value...
+
+    >>> d['b'] = 22
+    Traceback (most recent call last):
+        ...
+    cached_dag.OverWritesNotAllowedError: The b key already exists and you're not allowed to change its value
+
+    """
+    def __setitem__(self, key, value):
+        if key not in self:
+            super().__setitem__(key, value)
+        elif value != self[key]:
+            raise OverWritesNotAllowedError(
+                f"The {key} key already exists and you're not allowed to change its "
+                f"value"
+            )
+        # else, don't even write the value since it's the same
 
 
 NoSuchKey = type('NoSuchKey', (), {})
@@ -160,7 +207,7 @@ class CachedDag:
         self.out_of_func_node_name = dict(func_node_names_and_outs(self.dag))
         self.defaults = Sig(self.dag).defaults
         if cache is True:
-            self.cache = {}
+            self.cache = NoOverwritesDict()
         elif not isinstance(cache, Mapping):
             raise NotImplementedError(
                 'This type of cache is not implemented (must resolve to a Mapping): '
@@ -186,6 +233,9 @@ class CachedDag:
         #         print(f"Calling ({k=},{input_kwargs=})\t{self.cache=}")
         input_kwargs = dict(input_kwargs)
         if intersection := (input_kwargs.keys() & self.cache.keys()):
+            # TODO: Can give the user a more informative/correct message, since the
+            #  user has more options than just the root nodes: They some combination of
+            #  intermediates would also satisfy requirements.
             raise ValueError(
                 f"input_kwargs can't contain any keys that are already in cache! "
                 f'These names were in both: {intersection}'
@@ -214,8 +264,8 @@ class CachedDag:
                 #                 print(f"result -> {output}")
                 return output
         else:  # k is a root node
-            inputs = ChainMap(input_kwargs, self._cache)
             assert k in self.roots, f'Was expecting this to be a root node: {k}'
+            inputs = ChainMap(input_kwargs, self._cache)
             if (output := inputs.get(k, NoSuchKey)) is not NoSuchKey:
                 return output
             else:
@@ -224,14 +274,35 @@ class CachedDag:
                     f"argument: '{k}'"
                 )
 
+    def _call(self, k, **kwargs):
+        return self(k, kwargs)
+
+    def inject_methods(self):
+        # TODO: Should be input_names of reversed_graph, but resulting "shadow" in
+        #  the root nodes, along with their defaults (filtered by cache)
+        for output_name, input_names in self.reversed_graph.items():
+            f = Sig(input_names)(partial(self._call, output_name))
+            setattr(self, output_name, f)
 
 def cached_dag_test():
     """
-
-    .. code-block::
-
-    :return:
+    Covering issue https://github.com/i2mint/meshed/issues/34
+    about "CachedDag.cache should be populated with inputs that it was called on"
     """
+    from meshed.dag import DAG
+
+    def f(a, x=1):
+        return a + x
+
+    def g(a, y=2):
+        return a * y
+
+    dag = DAG([f, g])
+
+    c = CachedDag(dag)
+    c('g', dict(a=1))
+    assert c.cache == {'g': 2, 'a': 1}
+    assert c('f' == 2)
 
 
 def add(a, b=1):
