@@ -458,6 +458,7 @@ class DAG:
         default=extract_values, repr=False
     )
 
+
     def __post_init__(self):
         self.func_nodes = tuple(_mk_func_nodes(self.func_nodes))
         self.graph = _func_nodes_to_graph_dict(self.func_nodes)
@@ -1142,6 +1143,10 @@ class DAG:
         # Note: Since graphviz 0.18, need to have a newline in body lines!
         body = list(map(_add_new_line_if_none, self.dot_digraph_body(*args, **kwargs)))
         return graphviz.Digraph(body=body)
+
+    @property
+    def __name__(self):
+        return self.name or 'DAG'
 
     # NOTE: "sig = property(__signature__)" is not working. So, doing the following instead.
     @property
