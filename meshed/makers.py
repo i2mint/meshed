@@ -447,9 +447,22 @@ def _extract_name_from_single_func_def(src: str, default=None):
     return default
 
 
+FuncSource = Union[Callable[[str], Callable], Mapping[str, Callable]]
+
+
+def _ensure_func_src(obj: FuncSource) -> Callable[[str], Callable]:
+    if isinstance(obj, Mapping):
+        return obj.get
+    assert callable(obj), f'Should be callable, but is not: {obj}'
+    return obj
+
+
 @double_up_as_factory
-def code_to_dag(src=None, *, func_src=dlft_factory_to_func, name=None) -> DAG:
+def code_to_dag(
+    src=None, *, func_src: FuncSource = dlft_factory_to_func, name: str = None
+) -> DAG:
     """Get a ``meshed.DAG`` from src code"""
+    func_src = _ensure_func_src(func_src)
     # Get a name for the dag (if src is a str
     if name is None:
         if isinstance(src, str):
