@@ -158,6 +158,7 @@ from i2.signatures import (
 )
 from meshed.base import (
     FuncNode,
+    ch_func_node_attrs,
     validate_that_func_node_names_are_sane,
     _mk_func_nodes,
     _func_nodes_to_graph_dict,
@@ -1095,6 +1096,33 @@ class DAG:
         for edge in edges:
             dag = dag.add_edge(*edge)
         return dag
+
+    def ch_funcs(self, **name_and_func):
+        """
+        Change some of the functions in the DAG.
+        More preciseluy get a copy of the DAG where in some of the functions have
+        changed.
+
+        :param name_and_func: ``name=func`` pairs where ``name`` is the ``FuncNode.name``
+            of the func nodes you want to change and func is the function you want to
+            change it by.
+        :return: A new DAG with the different functions.
+
+        """
+
+        def ch_func(dag, name, func):
+            return DAG(
+                replace_item_in_iterable(
+                    dag.func_nodes,
+                    condition=lambda fn: fn.name == name,
+                    replacement=lambda fn: ch_func_node_attrs(fn, func=func),
+                )
+            )
+
+        new_dag = self
+        for name, func in name_and_func.items():
+            new_dag = ch_func(new_dag, name, func)
+        return new_dag
 
     # ------------ display --------------------------------------------------------------
 
