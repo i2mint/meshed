@@ -2,6 +2,35 @@
 import pytest
 
 
+def test_dag_operations():
+    from meshed.makers import code_to_dag
+    from i2 import Sig
+
+    # Note: This is just for the linter not to complain about the code_to_dag dag
+    mult, add, subtract, w, ww, www, x, y, z = map(lambda x: x, [None] * 8)
+
+    @code_to_dag()
+    def dag():
+        x = mult(w, ww)
+        y = add(x, www)
+        z = subtract(x, y)
+
+    assert str(Sig(dag)) == '(w, ww, www)'
+
+    assert (
+        dag(1, 2, 3) == 'subtract(x=mult(w=1, ww=2), y=add(x=mult(w=1, ww=2), www=3))'
+    )
+
+    dag = dag.ch_funcs(
+        mult=lambda w, ww=2: w * ww,
+        add=lambda x, www=3: x + www,
+        subtract=lambda x, y=1: x - y,
+    )
+
+    assert str(Sig(dag)) == '(w, ww=2, www=3)'
+    assert dag(1, 2, 3) == -3
+
+
 def test_funcnode_bind():
     """
     Test the renaming of arguments and output of functions using FuncNode and its

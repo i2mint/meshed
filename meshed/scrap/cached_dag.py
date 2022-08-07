@@ -1,8 +1,8 @@
 from typing import Mapping
 from functools import partial
 from collections import ChainMap
-from meshed.itools import edge_reversed_graph
-from i2 import Sig
+from meshed.itools import edge_reversed_graph, descendants
+from i2 import Sig, Param, sort_params
 
 
 class NotAllowed(Exception):
@@ -56,13 +56,14 @@ class NoOverwritesDict(dict):
     cached_dag.OverWritesNotAllowedError: The b key already exists and you're not allowed to change its value
 
     """
+
     def __setitem__(self, key, value):
         if key not in self:
             super().__setitem__(key, value)
         elif value != self[key]:
             raise OverWritesNotAllowedError(
                 f"The {key} key already exists and you're not allowed to change its "
-                f"value"
+                f'value'
             )
         # else, don't even write the value since it's the same
 
@@ -205,7 +206,8 @@ class CachedDag:
         self.func_node_of_id = {fn.out: fn for fn in self.dag.func_nodes}
         self.name = name
         self.out_of_func_node_name = dict(func_node_names_and_outs(self.dag))
-        self.defaults = Sig(self.dag).defaults
+        self._dag_sig = Sig(self.dag)
+        self.defaults = self._dag_sig.defaults
         if cache is True:
             self.cache = NoOverwritesDict()
         elif not isinstance(cache, Mapping):
@@ -277,12 +279,49 @@ class CachedDag:
     def _call(self, k, **kwargs):
         return self(k, kwargs)
 
+    def roots_for(self, node):
+        """
+        The set of roots that lead to ``node``.
+
+        >>> from meshed.makers import code_to_dag
+        >>> @code_to_dag
+        ... def dag():
+        ...     x = mult(w, ww)
+        ...     y = add(x, www)
+        ...     z = subtract(x, y)
+        >>> print(dag.synopsis_string())
+        w,ww -> mult -> x
+        x,www -> add -> y
+        x,y -> subtract -> z
+        >>> g = CachedDag(dag)
+        >>> sorted(g.roots_for('x'))
+        ['w', 'ww']
+        >>> g.roots_for('y')
+        ['w', 'ww', 'www']
+        """
+        return set(
+            filter(self.roots.__contains__, descendants(self.reversed_graph, node))
+        )
+
+    def _signature_for_node_method(self, node):
+        def gen():
+            for name in filter(lambda x: x not in self.cache, self.roots_for(node)):
+                yield Param(
+                    name=name,
+                    kind=Param.KEYWORD_ONLY,
+                    default=self.defaults.get(name, Param.empty),
+                    annotation=self._dag_sig.annotations.get(name, Param.empty),
+                )
+
+        return Sig(sort_params(gen()))
+
     def inject_methods(self):
         # TODO: Should be input_names of reversed_graph, but resulting "shadow" in
         #  the root nodes, along with their defaults (filtered by cache)
         for output_name, input_names in self.reversed_graph.items():
             f = Sig(input_names)(partial(self._call, output_name))
             setattr(self, output_name, f)
+
 
 def cached_dag_test():
     """
