@@ -191,6 +191,16 @@ from meshed.itools import (
     ancestors,
 )
 
+dflt_configs = dict(
+    fnode_shape='box',
+    vnode_shape='none',
+    display_all_arguments=True,
+    edge_kind='to_args_on_edge',
+    input_node=True,
+    output_node='output',
+    func_display=True,
+)
+
 
 def order_subset_from_list(items, sublist):
     assert set(sublist).issubset(set(items)), f'{sublist} is not contained in {items}'
@@ -1132,7 +1142,15 @@ class DAG:
         )
 
     # TODO: Give more control (merge with lined)
-    def dot_digraph_body(self, start_lines=()):
+    def dot_digraph_body(
+        self,
+        start_lines=(),
+        *,
+        end_lines=(),
+        vnode_shape: str = dflt_configs['vnode_shape'],
+        fnode_shape: str = dflt_configs['fnode_shape'],
+        func_display: bool = dflt_configs['func_display'],
+    ):
         """Make lines for dot (graphviz) specification of DAG
 
         >>> def add(a, b=1): return a + b
@@ -1148,7 +1166,14 @@ class DAG:
         """
         if isinstance(start_lines, str):
             start_lines = start_lines.split()  # TODO: really? split on space?
-        yield from dot_lines_of_func_nodes(self.func_nodes, start_lines=start_lines)
+        if isinstance(end_lines, str):
+            end_lines = end_lines.split()
+        kwargs = dict(
+            vnode_shape=vnode_shape, fnode_shape=fnode_shape, func_display=func_display
+        )
+        yield from dot_lines_of_func_nodes(
+            self.func_nodes, start_lines=start_lines, end_lines=end_lines, **kwargs
+        )
 
     @wraps(dot_digraph_body)
     def dot_digraph_ascii(self, *args, **kwargs):
@@ -1182,14 +1207,6 @@ class DAG:
 
 # These are the defaults used in lined.
 # TODO: Merge some of the functionalities around graph displays in lined and meshed
-dflt_configs = dict(
-    fnode_shape='box',
-    vnode_shape='none',
-    display_all_arguments=True,
-    edge_kind='to_args_on_edge',
-    input_node=True,
-    output_node='output',
-)
 
 
 def param_to_dot_definition(p: Parameter, shape=dflt_configs['vnode_shape']):
@@ -1215,21 +1232,26 @@ def dot_lines_of_func_parameters(
     func_id: str,
     *,
     func_label: str = None,
-    output_shape: str = dflt_configs['vnode_shape'],
-    func_shape: str = dflt_configs['fnode_shape'],
+    vnode_shape: str = dflt_configs['vnode_shape'],
+    fnode_shape: str = dflt_configs['fnode_shape'],
+    func_display: bool = dflt_configs['func_display'],
 ) -> Iterable[str]:
     assert func_id != out, (
         f"Your func and output name shouldn't be the " f'same: {out=} {func_id=}'
     )
-    func_label = func_label or func_id
-    yield f'{out} [label="{out}" shape="{output_shape}"]'
-    yield f'{func_id} [label="{func_label}" shape="{func_shape}"]'
-    yield f'{func_id} -> {out}'
-    # args -> func
+    yield f'{out} [label="{out}" shape="{vnode_shape}"]'
     for p in parameters:
-        yield from param_to_dot_definition(p)
-    for p in parameters:
-        yield f'{p.name} -> {func_id}'
+        yield from param_to_dot_definition(p, shape=vnode_shape)
+
+    if func_display:
+        func_label = func_label or func_id
+        yield f'{func_id} [label="{func_label}" shape="{fnode_shape}"]'
+        yield f'{func_id} -> {out}'
+        for p in parameters:
+            yield f'{p.name} -> {func_id}'
+    else:
+        for p in parameters:
+            yield f'{p.name} -> {out}'
 
 
 def _parameters_and_names_from_sig(
@@ -1243,7 +1265,9 @@ def _parameters_and_names_from_sig(
     return sig.parameters, out, func_name
 
 
-def dot_lines_of_func_nodes(func_nodes: Iterable[FuncNode], start_lines=()):
+def dot_lines_of_func_nodes(
+    func_nodes: Iterable[FuncNode], start_lines=(), end_lines=(), **kwargs
+):
     r"""Got lines generator for the graphviz.DiGraph(body=list(...))
 
     >>> def add(a, b=1):
@@ -1329,12 +1353,14 @@ def dot_lines_of_func_nodes(func_nodes: Iterable[FuncNode], start_lines=()):
     yield from start_lines
     validate_that_func_node_names_are_sane(func_nodes)
     for func_node in func_nodes:
-        yield from dot_lines_of_func_node(func_node)
+        yield from dot_lines_of_func_node(func_node, **kwargs)
+    yield from end_lines
 
 
-def dot_lines_of_func_node(func_node: FuncNode):
+def dot_lines_of_func_node(func_node: FuncNode, **kwargs):
 
     out = func_node.out
+
     func_id = func_node.name
     func_label = getattr(func_node, 'func_label', func_id)
     if out == func_id:  # though forbidden in default FuncNode validation
@@ -1344,7 +1370,7 @@ def dot_lines_of_func_node(func_node: FuncNode):
     params = func_node.sig.ch_names(**func_node.bind).params
 
     yield from dot_lines_of_func_parameters(
-        params, out=out, func_id=func_id, func_label=func_label
+        params, out=out, func_id=func_id, func_label=func_label, **kwargs
     )
 
 
