@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.77 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.78 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -395,8 +395,92 @@ key (useful for pipeline sanity), etc.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="meshed.dag.DAG.ch_funcs">
+<code class="sig-name descname">ch_funcs</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">name_and_func</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.ch_funcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.ch_funcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change some of the functions in the DAG.
+More preciseluy get a copy of the DAG where in some of the functions have
+changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name_and_func</strong> – <code class="docutils literal notranslate"><span class="pre">name=func</span></code> pairs where <code class="docutils literal notranslate"><span class="pre">name</span></code> is the <code class="docutils literal notranslate"><span class="pre">FuncNode.name</span></code>
+of the func nodes you want to change and func is the function you want to
+change it by.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new DAG with the different functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="meshed.dag.DAG.debugger">
+<code class="sig-name descname">debugger</code><span class="sig-paren">(</span><em class="sig-param">feedback: Callable = &lt;function dflt_debugger_feedback&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.debugger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.debugger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility to debug DAGs by computing each step sequentially, with feedback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>feedback</strong> – A callable that defines what feedback is given, usually used to
+print/log some information and output some information for every step.
+Must be a function with signature <code class="docutils literal notranslate"><span class="pre">(func_node,</span> <span class="pre">scope,</span> <span class="pre">output,</span> <span class="pre">step)</span></code> or
+a subset thereof.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">c</span> <span class="o">*</span> <span class="n">d</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">h</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">g</span> <span class="o">-</span> <span class="n">f</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag2</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;arithmetic&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag2</span>
+<span class="go">DAG(func_nodes=[FuncNode(c,d -&gt; g_ -&gt; g), FuncNode(a,b -&gt; f_ -&gt; f), FuncNode(f,g -&gt; h_ -&gt; h)], name=&#39;arithmetic&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">dag2</span><span class="p">))</span>
+<span class="go">&#39;(c, a, b, d=4)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">-1</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">debugger</span> <span class="o">=</span> <span class="n">dag2</span><span class="o">.</span><span class="n">debugger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">debugger</span><span class="p">))</span>
+<span class="go">&#39;(c, a, b, d=4)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">debugger</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>  
+<span class="go">0 --------------------------------------------------------------</span>
+<span class="go">    func_node=FuncNode(c,d -&gt; g_ -&gt; g)</span>
+<span class="go">    scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4}</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>  
+<span class="go">1 --------------------------------------------------------------</span>
+<span class="go">    func_node=FuncNode(a,b -&gt; f_ -&gt; f)</span>
+<span class="go">    scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4, &#39;f&#39;: 5}</span>
+<span class="go">5</span>
+</pre></div>
+</div>
+<p>… and so on. You can also choose to run every step all at once, collecting
+the <code class="docutils literal notranslate"><span class="pre">feedback</span></code> outputs of each step in a list, like this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">feedback_outputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">debugger</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>  
+<span class="go">0 --------------------------------------------------------------</span>
+<span class="go">    func_node=FuncNode(c,d -&gt; g_ -&gt; g)</span>
+<span class="go">    scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4}</span>
+<span class="go">1 --------------------------------------------------------------</span>
+<span class="go">    func_node=FuncNode(a,b -&gt; f_ -&gt; f)</span>
+<span class="go">    scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4, &#39;f&#39;: 5}</span>
+<span class="go">2 --------------------------------------------------------------</span>
+<span class="go">    func_node=FuncNode(f,g -&gt; h_ -&gt; h)</span>
+<span class="go">    scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4, &#39;f&#39;: 5, &#39;h&#39;: -1}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt id="meshed.dag.DAG.dot_digraph">
-<code class="sig-name descname">dot_digraph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.dot_digraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.dot_digraph" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dot_digraph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">end_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">vnode_shape</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'none'</span></em>, <em class="sig-param"><span class="n">fnode_shape</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'box'</span></em>, <em class="sig-param"><span class="n">func_display</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.dot_digraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.dot_digraph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make lines for dot (graphviz) specification of DAG</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
@@ -413,7 +497,7 @@ key (useful for pipeline sanity), etc.</p>
 
 <dl class="py method">
 <dt id="meshed.dag.DAG.dot_digraph_ascii">
-<code class="sig-name descname">dot_digraph_ascii</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.dot_digraph_ascii"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.dot_digraph_ascii" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dot_digraph_ascii</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">end_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">vnode_shape</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'none'</span></em>, <em class="sig-param"><span class="n">fnode_shape</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'box'</span></em>, <em class="sig-param"><span class="n">func_display</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.dot_digraph_ascii"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.dot_digraph_ascii" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make lines for dot (graphviz) specification of DAG</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
@@ -430,7 +514,7 @@ key (useful for pipeline sanity), etc.</p>
 
 <dl class="py method">
 <dt id="meshed.dag.DAG.dot_digraph_body">
-<code class="sig-name descname">dot_digraph_body</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.dot_digraph_body"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.dot_digraph_body" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dot_digraph_body</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">end_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">vnode_shape</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'none'</span></em>, <em class="sig-param"><span class="n">fnode_shape</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'box'</span></em>, <em class="sig-param"><span class="n">func_display</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.dot_digraph_body"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.dot_digraph_body" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make lines for dot (graphviz) specification of DAG</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
@@ -579,7 +663,7 @@ you want to also consider arguments that already had defaults as bound
 
 <dl class="py function">
 <dt id="meshed.dag.dot_lines_of_func_nodes">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">dot_lines_of_func_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#dot_lines_of_func_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.dot_lines_of_func_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">dot_lines_of_func_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">end_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#dot_lines_of_func_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.dot_lines_of_func_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Got lines generator for the graphviz.DiGraph(body=list(…))</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
