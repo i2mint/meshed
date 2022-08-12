@@ -151,6 +151,7 @@ from warnings import warn
 from i2 import double_up_as_factory
 from i2.signatures import (
     call_somewhat_forgivingly,
+    call_forgivingly,
     Parameter,
     empty,
     Sig,
@@ -406,6 +407,12 @@ def change_value_on_cond(d, cond, func):
         if cond(k, v):
             d[k] = func(v)
     return d
+
+
+def dflt_debugger_feedback(func_node, scope, output, step):
+    print(f'{step} --------------------------------------------------------------')
+    print(f'\t{func_node=}\n\t{scope=}')
+    return output
 
 
 # TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
@@ -1139,6 +1146,78 @@ class DAG:
         for name, func in name_and_func.items():
             new_dag = ch_func(new_dag, name, func)
         return new_dag
+
+    def debugger(self, feedback: Callable = dflt_debugger_feedback):
+        r"""
+        Utility to debug DAGs by computing each step sequentially, with feedback.
+
+        :param feedback: A callable that defines what feedback is given, usually used to
+            print/log some information and output some information for every step.
+            Must be a function with signature ``(func_node, scope, output, step)`` or
+            a subset thereof.
+        :return:
+
+        >>> from inspect import signature
+        >>>
+        >>> def f(a, b):
+        ...     return a + b
+        ...
+        >>> def g(c, d=4):
+        ...     return c * d
+        ...
+        >>> def h(f, g):
+        ...     return g - f
+        ...
+        >>> dag2 = DAG([f, g, h], name='arithmetic')
+        >>> dag2
+        DAG(func_nodes=[FuncNode(c,d -> g_ -> g), FuncNode(a,b -> f_ -> f), FuncNode(f,g -> h_ -> h)], name='arithmetic')
+        >>> str(signature(dag2))
+        '(c, a, b, d=4)'
+        >>> dag2(1,2,3)
+        -1
+        >>>
+        >>> debugger = dag2.debugger()
+        >>> str(signature(debugger))
+        '(c, a, b, d=4)'
+        >>> d = debugger(1,2,3)
+        >>> next(d)  # doctest: +NORMALIZE_WHITESPACE
+        0 --------------------------------------------------------------
+            func_node=FuncNode(c,d -> g_ -> g)
+            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4}
+        4
+        >>> next(d)  # doctest: +NORMALIZE_WHITESPACE
+        1 --------------------------------------------------------------
+            func_node=FuncNode(a,b -> f_ -> f)
+            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4, 'f': 5}
+        5
+
+        ... and so on. You can also choose to run every step all at once, collecting
+        the ``feedback`` outputs of each step in a list, like this:
+
+        >>> feedback_outputs = list(debugger(1,2,3))  # doctest: +NORMALIZE_WHITESPACE
+        0 --------------------------------------------------------------
+            func_node=FuncNode(c,d -> g_ -> g)
+            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4}
+        1 --------------------------------------------------------------
+            func_node=FuncNode(a,b -> f_ -> f)
+            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4, 'f': 5}
+        2 --------------------------------------------------------------
+            func_node=FuncNode(f,g -> h_ -> h)
+            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4, 'f': 5, 'h': -1}
+
+        """
+        # TODO: Add feedback callable validation
+        @Sig(self)
+        def launch_debugger(*args, **kwargs):
+            scope = self._get_kwargs(*args, **kwargs)
+            for step, func_node in enumerate(self.func_nodes):
+                output = func_node.call_on_scope(scope)
+                kwargs = dict(
+                    func_node=func_node, scope=scope, output=output, step=step
+                )
+                yield call_forgivingly(feedback, **kwargs)
+
+        return launch_debugger
 
     # ------------ display --------------------------------------------------------------
 
