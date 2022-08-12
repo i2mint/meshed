@@ -1,19 +1,54 @@
 """Test dags"""
 import pytest
 
+from meshed.makers import code_to_dag
+
+# Note: This is just for the linter not to complain about the code_to_dag dag
+mult, add, subtract, w, ww, www, x, y, z = map(lambda x: x, [None] * 9)
+
+
+@code_to_dag()
+def mult_add_subtract_dag():
+    x = mult(w, ww)
+    y = add(x, www)
+    z = subtract(x, y)
+
+
+def pass_on_tuple(a, b):
+    return a, b
+
+
+def add(x, y):
+    return x + y
+
+
+def _expand_and_sum_dag():
+    x, y = pass_on_tuple(w, ww)
+    result = add(x, y)
+
+
+expand_and_sum_dag = code_to_dag(_expand_and_sum_dag, func_src=locals())
+
+
+def test_code_to_dag_itemgetter():
+    assert expand_and_sum_dag(2, 3) == 5
+
 
 def test_dag_operations():
-    from meshed.makers import code_to_dag
+    # from meshed.makers import code_to_dag
+    #
+    # # Note: This is just for the linter not to complain about the code_to_dag dag
+    # mult, add, subtract, w, ww, www, x, y, z = map(lambda x: x, [None] * 9)
+    #
+    # @code_to_dag()
+    # def dag():
+    #     x = mult(w, ww)
+    #     y = add(x, www)
+    #     z = subtract(x, y)
+
+    dag = mult_add_subtract_dag
+
     from i2 import Sig
-
-    # Note: This is just for the linter not to complain about the code_to_dag dag
-    mult, add, subtract, w, ww, www, x, y, z = map(lambda x: x, [None] * 8)
-
-    @code_to_dag()
-    def dag():
-        x = mult(w, ww)
-        y = add(x, www)
-        z = subtract(x, y)
 
     assert str(Sig(dag)) == '(w, ww, www)'
 

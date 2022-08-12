@@ -191,13 +191,16 @@ def _ast_info_str(x):
     return f'lineno={x.lineno}'
 
 
-def _itemgetter(items, item_keys=()):
-    return tuple(items[i] for i in item_keys)
+def _itemgetter(sequence, keys=()):
+    if len(keys) == 1:
+        key = keys[0]
+        return sequence[key]
+    return tuple(sequence[i] for i in keys)
 
 
-def signed_itemgetter(*item_keys):
+def signed_itemgetter(*keys):
     """Like ``operator.itemgetter``, except has a signature, which we needed"""
-    return partialx(_itemgetter, item_keys=item_keys, _rm_partialize=True)
+    return partialx(_itemgetter, keys=keys, _rm_partialize=True)
 
 
 # Note: generalize? glom?
@@ -291,6 +294,12 @@ def node_kwargs_to_func_node_factory(node_kwargs) -> FuncNodeFactory:
     return partial(FuncNode, **node_kwargs)
 
 
+def _ensure_src_string(src):
+    if callable(src):
+        src = inspect.getsource(src)
+    return src
+
+
 def parse_assignment_steps(src):
     """
     Parse source code and generate tuples of information about it.
@@ -325,8 +334,7 @@ def parse_assignment_steps(src):
     Basically, these ast objects contain all we need to know about the (parsed) source.
 
     """
-    if callable(src):
-        src = inspect.getsource(src)
+    src = _ensure_src_string(src)
     root = ast.parse(src)
     assert len(root.body) == 1
     func_body = root.body[0]
@@ -345,17 +353,21 @@ FactoryToFunc = Callable[[FuncNodeFactory], Callable]
 
 
 def src_to_func_node_factory(
-    src, names_used_so_far=None
+    src, exclude_names=None
 ) -> Iterator[Union[FuncNode, FuncNodeFactory]]:
-    """A generator of FuncNode factories from a src (string or object)."""
-    names_used_so_far = names_used_so_far or set()
+    """
+    :param src: Callable or string of callable.
+    :param exclude_names: Names to exclude when making func_nodes
+    :return:
+    """
+    exclude_names = set(exclude_names or set())
     for i, target_value in enumerate(parse_assignment_steps(src), 1):
         for node_kwargs in parsed_to_node_kwargs(target_value):
             node_kwargs['func_label'] = node_kwargs['name']
-            if node_kwargs['name'] in names_used_so_far:
+            if node_kwargs['name'] in exclude_names:
                 # need to keep names uniques, so add a prefix to (hope) to get uniqueness
                 node_kwargs['name'] += f'_{i:02.0f}'
-            names_used_so_far.add(node_kwargs['name'])
+            exclude_names.add(node_kwargs['name'])
             yield node_kwargs_to_func_node_factory(node_kwargs)
 
 
@@ -422,16 +434,15 @@ def mk_fnodes_from_fn_factories(
             )
 
 
+class dlft_factory_to_func_mapping(Mapping):
+    def __getitem__(self, item):
+        return dlft_factory_to_func(item)
+
+
 def _code_to_fnodes(src, func_src=dlft_factory_to_func):
-    if isinstance(func_src, Mapping):
-        name_to_func_map = func_src
-        func_src = partial(
-            dlft_factory_to_func,
-            name_to_func_map=name_to_func_map,
-            use_place_holder_fallback=False,
-        )
-    assert isinstance(func_src, Callable), f'func_src should be callable, or a mapping'
+    # Make all the funodes, but partial ones that don't have the func defined yet
     fnodes_factories = list(src_to_func_node_factory(src))
+    # "Inject" the actual functions
     return mk_fnodes_from_fn_factories(fnodes_factories, func_src)
 
 
@@ -450,11 +461,16 @@ def _extract_name_from_single_func_def(src: str, default=None):
 FuncSource = Union[Callable[[str], Callable], Mapping[str, Callable]]
 
 
-def _ensure_func_src(obj: FuncSource) -> Callable[[str], Callable]:
-    if isinstance(obj, Mapping):
-        return obj.get
-    assert callable(obj), f'Should be callable, but is not: {obj}'
-    return obj
+def _ensure_func_src(func_src: FuncSource) -> Callable[[str], Callable]:
+    if isinstance(func_src, Mapping):
+        name_to_func_map = func_src
+        func_src = partial(
+            dlft_factory_to_func,
+            name_to_func_map=name_to_func_map,
+            use_place_holder_fallback=False,
+        )
+    assert isinstance(func_src, Callable), f'func_src should be callable, or a mapping'
+    return func_src
 
 
 @double_up_as_factory
@@ -471,6 +487,7 @@ def code_to_dag(
             name = name_of_obj(src)
     # Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG
     fnodes = _code_to_fnodes(src, func_src)
+    fnodes = list(fnodes)
     return DAG(fnodes, name=name)
 
 

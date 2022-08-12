@@ -505,14 +505,20 @@ class DAG:
     def __call__(self, *args, **kwargs):
         return self._call(*args, **kwargs)
 
-    def _call(self, *args, **kwargs):
-        # Get a dict of {argname: argval} pairs from positional and keyword arguments
-        # How positionals are resolved is determined by sels.sig
-        # The result is the initial ``scope`` the func nodes will both read from
-        # to get their arguments, and write their outputs to.
-        scope = self.__signature__.kwargs_from_args_and_kwargs(
+    def _get_kwargs(self, *args, **kwargs):
+        """
+        Get a dict of {argname: argval} pairs from positional and keyword arguments.
+        """
+        return self.__signature__.kwargs_from_args_and_kwargs(
             args, kwargs, apply_defaults=True
         )
+
+    def _call(self, *args, **kwargs):
+        # Get a dict of {argname: argval} pairs from positional and keyword arguments
+        # How positionals are resolved is determined by self.__signature__
+        # The result is the initial ``scope`` the func nodes will both read from
+        # to get their arguments, and write their outputs to.
+        scope = self._get_kwargs(*args, **kwargs)
         # Go through self.func_nodes in order and call them on scope (performing said
         # read_input -> call_func -> write_output operations)
         self.call_on_scope(scope)

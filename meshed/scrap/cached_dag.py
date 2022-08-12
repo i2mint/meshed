@@ -257,8 +257,7 @@ class CachedDag:
                     src: self(src, input_kwargs) for src in func_node.bind.values()
                 }
                 #                 inputs = dict(input_sources, **input_kwargs)  #
-                #                 TODO: do we need to include **self.defaults in the
-                #                  middle?
+                # TODO: do we need to include **self.defaults in the middle?
                 inputs = ChainMap(_cache, input_sources)
                 #                 print(f"Computing {func_node_id}: ", end=" ")
                 output = func_node.call_on_scope(inputs, write_output_into_scope=False)
@@ -296,7 +295,7 @@ class CachedDag:
         >>> g = CachedDag(dag)
         >>> sorted(g.roots_for('x'))
         ['w', 'ww']
-        >>> g.roots_for('y')
+        >>> sorted(g.roots_for('y'))
         ['w', 'ww', 'www']
         """
         return set(
@@ -318,9 +317,10 @@ class CachedDag:
     def inject_methods(self):
         # TODO: Should be input_names of reversed_graph, but resulting "shadow" in
         #  the root nodes, along with their defaults (filtered by cache)
-        for output_name, input_names in self.reversed_graph.items():
-            f = Sig(input_names)(partial(self._call, output_name))
-            setattr(self, output_name, f)
+        for var_node in filter(lambda x: x not in self.roots, self.var_nodes):
+            sig = self._signature_for_node_method(var_node)
+            f = sig(partial(self._call, var_node))
+            setattr(self, var_node, f)
 
 
 def cached_dag_test():
@@ -360,16 +360,16 @@ def subtract(a, b=4):
     return a - b
 
 
-from meshed import code_to_dag
-
-
-@code_to_dag(func_src=locals())
-def dag(w, ww, www):
-    x = mult(w, ww)
-    y = add(x, www)
-    z = subtract(x, y)
-
-
-g = CachedDag(dag)
-
-assert g('z', {'w': 2, 'ww': 3, 'www': 4}) == -4 == dag(2, 3, 4)
+# from meshed import code_to_dag
+#
+#
+# @code_to_dag(func_src=locals())
+# def dag(w, ww, www):
+#     x = mult(w, ww)
+#     y = add(x, www)
+#     z = subtract(x, y)
+#
+#
+# g = CachedDag(dag)
+#
+# assert g('z', {'w': 2, 'ww': 3, 'www': 4}) == -4 == dag(2, 3, 4)
