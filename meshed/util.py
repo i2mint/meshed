@@ -4,9 +4,65 @@ from functools import partial, wraps
 from inspect import Parameter
 from typing import Callable, Any, Union, Iterator, Optional, Iterable, Mapping, TypeVar
 
-from i2 import Sig, name_of_obj, Literal
+from i2 import Sig, name_of_obj, Literal, FuncFanout, Pipe
+from operator import itemgetter
 
 T = TypeVar('T')
+
+
+def if_then_else(if_func, then_func, else_func, *args, **kwargs):
+    """
+    Tool to "functionalize" the if-then-else logic.
+
+    >>> from functools import partial
+    >>> f = partial(ifthenelse, str.isnumeric, int, str)
+    >>> f('a string')
+    'a string'
+    >>> f('42')
+    42
+
+    """
+    if if_func(*args, **kwargs):
+        return then_func(*args, **kwargs)
+    else:
+        return else_func(*args, **kwargs)
+
+
+# TODO: Revise FuncFanout so it makes a generator of values, or items, instead of a dict
+def funcs_conjunction(*funcs):
+    """
+    Makes a conjunction of functions. That is, ``func1(x) and func2(x) and ...``
+
+    >>> f = funcs_conjunction(lambda x: isinstance(x, str), lambda x: len(x) >= 5)
+    >>> f('app')  # because length is less than 5...
+    False
+    >>> f('apple')  # length at least 5 so...
+    True
+
+    Note that in:
+
+    >>> f(42)
+    False
+
+    it is ``False`` because it is not a string.
+    This shows that the second function is not applied to the input at all, since it
+    doesn't need to, and if it were, we'd get an error (length of a number?!).
+
+    """
+    return Pipe(FuncFanout(*funcs), partial(map, itemgetter(1)), all)
+
+
+def funcs_disjunction(*funcs):
+    """
+    Makes a disjunction of functions. That is, ``func1(x) or func2(x) or ...``
+
+    >>> f = funcs_disjunction(lambda x: x > 10, lambda x: x < -5)
+    >>> f(7)
+    False
+    >>> f(-7)
+    True
+    """
+    return Pipe(FuncFanout(*funcs), partial(map, itemgetter(1)), any)
 
 
 def extra_wraps(func, name=None, doc_prefix=''):
