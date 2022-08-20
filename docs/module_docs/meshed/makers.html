@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.77 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.78 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -248,6 +248,11 @@ of the dag signature, names, and relationships between these names:</p>
 <dd><p>Get a function for the given factory, using</p>
 </dd></dl>
 
+<dl class="py class">
+<dt id="meshed.makers.dlft_factory_to_func_mapping">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">dlft_factory_to_func_mapping</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#dlft_factory_to_func_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.dlft_factory_to_func_mapping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py function">
 <dt id="meshed.makers.mk_fnodes_from_fn_factories">
 <code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">mk_fnodes_from_fn_factories</code><span class="sig-paren">(</span><em class="sig-param">fnodes_factories: Iterable[Callable[[...], meshed.base.FuncNode]], factory_to_func: Callable[[Callable[[...], meshed.base.FuncNode]], Callable] = &lt;function dlft_factory_to_func&gt;</em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#mk_fnodes_from_fn_factories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.mk_fnodes_from_fn_factories" title="Permalink to this definition">¶</a></dt>
@@ -336,14 +341,24 @@ what kind of function to make).</p></li>
 
 <dl class="py function">
 <dt id="meshed.makers.signed_itemgetter">
-<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">signed_itemgetter</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">item_keys</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#signed_itemgetter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.signed_itemgetter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">signed_itemgetter</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">keys</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/makers.html#signed_itemgetter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.signed_itemgetter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Like <code class="docutils literal notranslate"><span class="pre">operator.itemgetter</span></code>, except has a signature, which we needed</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="meshed.makers.src_to_func_node_factory">
-<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">src_to_func_node_factory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">names_used_so_far</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>Union<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">, </span>Callable<span class="p">[</span><span class="p">[</span><span class="p">…</span><span class="p">]</span><span class="p">, </span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#src_to_func_node_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.src_to_func_node_factory" title="Permalink to this definition">¶</a></dt>
-<dd><p>A generator of FuncNode factories from a src (string or object).</p>
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">src_to_func_node_factory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">exclude_names</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>Union<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">, </span>Callable<span class="p">[</span><span class="p">[</span><span class="p">…</span><span class="p">]</span><span class="p">, </span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#src_to_func_node_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.src_to_func_node_factory" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> – Callable or string of callable.</p></li>
+<li><p><strong>exclude_names</strong> – Names to exclude when making func_nodes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.77 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.78 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -229,19 +229,77 @@ But we need to protect the user from such effects!</p>
 <ul class="simple">
 <li><p>Cache multiple paths (lru_cache style) for different input combinations</p></li>
 </ul>
+<dl class="py method">
+<dt id="meshed.scrap.cached_dag.CachedDag.roots_for">
+<code class="sig-name descname">roots_for</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#CachedDag.roots_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.cached_dag.CachedDag.roots_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of roots that lead to <code class="docutils literal notranslate"><span class="pre">node</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">code_to_dag</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@code_to_dag</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">dag</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">mult</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">www</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">z</span> <span class="o">=</span> <span class="n">subtract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+<span class="go">w,ww -&gt; mult -&gt; x</span>
+<span class="go">x,www -&gt; add -&gt; y</span>
+<span class="go">x,y -&gt; subtract -&gt; z</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">CachedDag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">roots_for</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">))</span>
+<span class="go">[&#39;w&#39;, &#39;ww&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">roots_for</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+<span class="go">[&#39;w&#39;, &#39;ww&#39;, &#39;www&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="meshed.scrap.cached_dag.NoOverwritesDict">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.scrap.cached_dag.</code><code class="sig-name descname">NoOverwritesDict</code><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#NoOverwritesDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.cached_dag.NoOverwritesDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dict where you’re not allowed to write to a key that already has a value in it.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">NoOverwritesDict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
+<span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2}</span>
+</pre></div>
+</div>
+<p>Writing is allowed, in new keys</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
+<span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
+</pre></div>
+</div>
+<p>It’s also okay to write into an existing key if the value it holds is identical.
+In fact, the write doesn’t even happen.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>But if we try to write a different value…</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">22</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">cached_dag.OverWritesNotAllowedError</span>: <span class="n">The b key already exists and you&#39;re not allowed to change its value</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="meshed.scrap.cached_dag.NotAllowed">
+<em class="property">exception </em><code class="sig-prename descclassname">meshed.scrap.cached_dag.</code><code class="sig-name descname">NotAllowed</code><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#NotAllowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.cached_dag.NotAllowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>To use to indicate that something is not allowed</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="meshed.scrap.cached_dag.OverWritesNotAllowedError">
+<em class="property">exception </em><code class="sig-prename descclassname">meshed.scrap.cached_dag.</code><code class="sig-name descname">OverWritesNotAllowedError</code><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#OverWritesNotAllowedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.cached_dag.OverWritesNotAllowedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error to raise when a writes to existing keys are not allowed</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="meshed.scrap.cached_dag.cached_dag_test">
 <code class="sig-prename descclassname">meshed.scrap.cached_dag.</code><code class="sig-name descname">cached_dag_test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#cached_dag_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.cached_dag.cached_dag_test" title="Permalink to this definition">¶</a></dt>
-<dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-</dl>
+<dd><p>Covering issue <a class="reference external" href="https://github.com/i2mint/meshed/issues/34">https://github.com/i2mint/meshed/issues/34</a>
+about “CachedDag.cache should be populated with inputs that it was called on”</p>
 </dd></dl>
 
 </section>
