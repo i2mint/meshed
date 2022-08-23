@@ -144,6 +144,7 @@ But see below that the dag is now using the functions we specified:
 
 
 import ast
+import re
 import inspect
 from operator import itemgetter, attrgetter
 from typing import (
@@ -300,6 +301,29 @@ def _ensure_src_string(src):
     return src
 
 
+def _remove_indentation(src):
+    m = re.match('\s+', src)
+    if m is not None:
+        indent = m.group(0)
+        indent_length = len(indent)
+
+        def gen():
+            for line in src.split('\n'):
+                if line.startswith(indent):
+                    yield line[indent_length:]
+
+        return '\n'.join(gen())
+    else:
+        raise RuntimeError(f'I found no indent!')
+
+
+def robust_ast_parse(src):
+    try:
+        return ast.parse(src)
+    except IndentationError:
+        return robust_ast_parse(_remove_indentation(src))
+
+
 def parse_assignment_steps(src):
     """
     Parse source code and generate tuples of information about it.
@@ -335,7 +359,7 @@ def parse_assignment_steps(src):
 
     """
     src = _ensure_src_string(src)
-    root = ast.parse(src)
+    root = robust_ast_parse(src)
     assert len(root.body) == 1
     func_body = root.body[0]
     # TODO: work with func_body.args to get info on interface (name, args, kwargs,
@@ -447,7 +471,7 @@ def _code_to_fnodes(src, func_src=dlft_factory_to_func):
 
 
 def _extract_name_from_single_func_def(src: str, default=None):
-    t = ast.parse(src)
+    t = robust_ast_parse(src)
     if (body := getattr(t, 'body')) is not None:
         first_element = next(iter(body))
         if (
