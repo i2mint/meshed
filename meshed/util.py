@@ -15,7 +15,7 @@ def if_then_else(if_func, then_func, else_func, *args, **kwargs):
     Tool to "functionalize" the if-then-else logic.
 
     >>> from functools import partial
-    >>> f = partial(ifthenelse, str.isnumeric, int, str)
+    >>> f = partial(if_then_else, str.isnumeric, int, str)
     >>> f('a string')
     'a string'
     >>> f('42')
