@@ -302,7 +302,7 @@ def _ensure_src_string(src):
 
 
 def _remove_indentation(src):
-    m = re.match('\s+', src)
+    m = re.match(r'\s+', src)
     if m is not None:
         indent = m.group(0)
         indent_length = len(indent)
