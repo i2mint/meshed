@@ -531,7 +531,7 @@ class DAG:
         func = lambda v: self._func_node_for[v].out
         cond = lambda k, v: v in funcnodes_names
         for node, name in zip(self.func_nodes, funcnodes_names):
-            node.name = name
+            # node.name = name
             node.bind = change_value_on_cond(node.bind, cond, func)
 
     def __call__(self, *args, **kwargs):
