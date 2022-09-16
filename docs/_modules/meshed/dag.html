@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.86 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.87 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -365,13 +365,10 @@
 
 
 <span class="k">def</span> <span class="nf">mk_nodes_names_unique</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
-    <span class="n">old_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
-    <span class="n">funcnodes_names</span> <span class="o">=</span> <span class="n">mk_list_names_unique</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
-    <span class="n">dict_renamer</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">old_name</span><span class="p">:</span> <span class="n">new_name</span> <span class="k">for</span> <span class="n">old_name</span><span class="p">,</span> <span class="n">new_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">old_names</span><span class="p">,</span> <span class="n">funcnodes_names</span><span class="p">)</span>
-    <span class="p">}</span>
-    <span class="n">new_nodes</span> <span class="o">=</span> <span class="n">ch_names</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">dict_renamer</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">new_nodes</span>
+    <span class="n">new_names</span> <span class="o">=</span> <span class="n">mk_list_names_unique</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">new_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">new_names</span><span class="p">):</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span>
+    <span class="k">return</span> <span class="n">nodes</span>
 
 
 <span class="k">def</span> <span class="nf">arg_names</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
