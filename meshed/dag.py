@@ -532,7 +532,7 @@ class DAG:
     def bindings_cleaner(self):
 
         self.func_nodes = mk_nodes_names_unique(self.func_nodes)
-        funcnodes_names = [node.name for name in self.func_nodes]
+        funcnodes_names = [node.name for node in self.func_nodes]
         func = lambda v: self._func_node_for[v].out
         cond = lambda k, v: v in funcnodes_names
         for node in self.func_nodes:
