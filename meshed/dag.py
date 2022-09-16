@@ -263,13 +263,10 @@ def mk_list_names_unique(nodes, exclude_names=()):
 
 
 def mk_nodes_names_unique(nodes):
-    old_names = [node.name for node in nodes]
-    funcnodes_names = mk_list_names_unique(nodes)
-    dict_renamer = {
-        old_name: new_name for old_name, new_name in zip(old_names, funcnodes_names)
-    }
-    new_nodes = ch_names(nodes, renamer=dict_renamer)
-    return new_nodes
+    new_names = mk_list_names_unique(nodes)
+    for node, new_name in zip(nodes, new_names):
+        node.name = new_name
+    return nodes
 
 
 def arg_names(func, func_name, exclude_names=()):
