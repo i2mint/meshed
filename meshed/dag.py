@@ -253,10 +253,9 @@ def mk_nodes_names_unique(nodes, exclude_names=()):
         for name in names:
             if name not in _exclude_names:
                 yield name
+                _exclude_names = _exclude_names + (name,)
             else:
-                found_name = find_first_free_name(
-                    f"{func_name}__{name}", _exclude_names
-                )
+                found_name = find_first_free_name(f"{name}", _exclude_names)
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
 
