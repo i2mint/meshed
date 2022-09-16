@@ -245,7 +245,7 @@ def mk_func_name(func, exclude_names=()):
     return find_first_free_name(name, exclude_names)
 
 
-def mk_nodes_names_unique(nodes, exclude_names=()):
+def mk_list_names_unique(nodes, exclude_names=()):
     names = [node.name for node in nodes]
 
     def gen():
@@ -260,6 +260,16 @@ def mk_nodes_names_unique(nodes, exclude_names=()):
                 _exclude_names = _exclude_names + (found_name,)
 
     return list(gen())
+
+
+def mk_nodes_names_unique(nodes):
+    old_names = [node.name for node in nodes]
+    funcnodes_names = mk_list_names_unique(nodes)
+    dict_renamer = {
+        old_name: new_name for old_name, new_name in zip(old_names, funcnodes_names)
+    }
+    new_nodes = ch_names(nodes, renamer=dict_renamer)
+    return new_nodes
 
 
 def arg_names(func, func_name, exclude_names=()):
@@ -520,18 +530,12 @@ class DAG:
         self.bindings_cleaner()
 
     def bindings_cleaner(self):
-        old_nodes = self.func_nodes
-        old_names = [node.name for node in old_nodes]
-        funcnodes_names = mk_nodes_names_unique(old_nodes)
-        dict_renamer = {
-            old_name: new_name for old_name, new_name in zip(old_names, funcnodes_names)
-        }
-        print(dict_renamer)
-        self.func_nodes = ch_names(old_nodes, renamer=dict_renamer)
+
+        self.func_nodes = mk_nodes_names_unique(self.func_nodes)
+        funcnodes_names = [node.name for name in self.func_nodes]
         func = lambda v: self._func_node_for[v].out
         cond = lambda k, v: v in funcnodes_names
-        for node, name in zip(self.func_nodes, funcnodes_names):
-            # node.name = name
+        for node in self.func_nodes:
             node.bind = change_value_on_cond(node.bind, cond, func)
 
     def __call__(self, *args, **kwargs):
