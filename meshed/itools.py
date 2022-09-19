@@ -43,7 +43,7 @@ def _handle_exclude_nodes(func):
     def _func(*args, **kwargs):
         kwargs = sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
         try:
-            _exclude_nodes = kwargs['_exclude_nodes']
+            _exclude_nodes = kwargs["_exclude_nodes"]
         except KeyError:
             raise RuntimeError(f"{func} doesn't have a _exclude_nodes argument")
 
@@ -52,7 +52,7 @@ def _handle_exclude_nodes(func):
         elif not isinstance(_exclude_nodes, set):
             _exclude_nodes = set(_exclude_nodes)
 
-        kwargs['_exclude_nodes'] = _exclude_nodes
+        kwargs["_exclude_nodes"] = _exclude_nodes
         args, kwargs = sig.args_and_kwargs_from_kwargs(kwargs)
         return func(*args, **kwargs)
 
@@ -405,7 +405,7 @@ def _topological_sort_helper(g, parent, visited, stack):
     visited.add(parent)  # Mark the current node as visited.
 
     # Recurse for all the vertices adjacent to this node
-    for child in g.get(parent, []):
+    for child in reversed(g.get(parent, [])):
         if child not in visited:
             _topological_sort_helper(g, child, visited, stack)
 
@@ -453,7 +453,7 @@ def topological_sort(g: Mapping):
 
     # Call the recursive helper function to accumulate topological sorts
     # starting from all vertices one by one
-    for parent in g:
+    for parent in reversed(g):
         if parent not in visited:
             # print(f"Processing {parent}")
             _topological_sort_helper(g, parent, visited, stack)
@@ -463,7 +463,7 @@ def topological_sort(g: Mapping):
 
 from typing import TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def edge_reversed_graph(
