@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.78 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.89 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -327,6 +327,54 @@ and annotation should be used in the interface of the DAG?</p>
 <code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">func_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/meshed/util.html#func_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.func_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The func.__name__ of a callable func, or makes and returns one if that fails.
 To make one, it calls unamed_func_name which produces incremental names to reduce the chances of clashing</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.util.funcs_conjunction">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">funcs_conjunction</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">funcs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#funcs_conjunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.funcs_conjunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a conjunction of functions. That is, <code class="docutils literal notranslate"><span class="pre">func1(x)</span> <span class="pre">and</span> <span class="pre">func2(x)</span> <span class="pre">and</span> <span class="pre">...</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">funcs_conjunction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">)</span>  <span class="c1"># because length is less than 5...</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s1">&#39;apple&#39;</span><span class="p">)</span>  <span class="c1"># length at least 5 so...</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Note that in:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>it is <code class="docutils literal notranslate"><span class="pre">False</span></code> because it is not a string.
+This shows that the second function is not applied to the input at all, since it
+doesn’t need to, and if it were, we’d get an error (length of a number?!).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.util.funcs_disjunction">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">funcs_disjunction</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">funcs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#funcs_disjunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.funcs_disjunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a disjunction of functions. That is, <code class="docutils literal notranslate"><span class="pre">func1(x)</span> <span class="pre">or</span> <span class="pre">func2(x)</span> <span class="pre">or</span> <span class="pre">...</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">funcs_disjunction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.util.if_then_else">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">if_then_else</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">if_func</span></em>, <em class="sig-param"><span class="n">then_func</span></em>, <em class="sig-param"><span class="n">else_func</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#if_then_else"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.if_then_else" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tool to “functionalize” the if-then-else logic.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">if_then_else</span><span class="p">,</span> <span class="nb">str</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s1">&#39;a string&#39;</span><span class="p">)</span>
+<span class="go">&#39;a string&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+<span class="go">42</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">

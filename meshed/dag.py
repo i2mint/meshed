@@ -245,6 +245,30 @@ def mk_func_name(func, exclude_names=()):
     return find_first_free_name(name, exclude_names)
 
 
+def mk_list_names_unique(nodes, exclude_names=()):
+    names = [node.name for node in nodes]
+
+    def gen():
+        _exclude_names = exclude_names
+        for name in names:
+            if name not in _exclude_names:
+                yield name
+                _exclude_names = _exclude_names + (name,)
+            else:
+                found_name = find_first_free_name(f'{name}', _exclude_names)
+                yield found_name
+                _exclude_names = _exclude_names + (found_name,)
+
+    return list(gen())
+
+
+def mk_nodes_names_unique(nodes):
+    new_names = mk_list_names_unique(nodes)
+    for node, new_name in zip(nodes, new_names):
+        node.name = new_name
+    return nodes
+
+
 def arg_names(func, func_name, exclude_names=()):
     names = Sig(func).names
 
@@ -531,6 +555,8 @@ class DAG:
         return cls(func_nodes)
 
     def bindings_cleaner(self):
+
+        self.func_nodes = mk_nodes_names_unique(self.func_nodes)
         funcnodes_names = [node.name for node in self.func_nodes]
         func = lambda v: self._func_node_for[v].out
         cond = lambda k, v: v in funcnodes_names

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.78 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.89 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -246,6 +246,7 @@
 
 
 <span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span><span class="p">,</span> <span class="n">attrgetter</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
@@ -402,6 +403,29 @@
     <span class="k">return</span> <span class="n">src</span>
 
 
+<span class="k">def</span> <span class="nf">_remove_indentation</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">indent</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">indent_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">src</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">indent</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">line</span><span class="p">[</span><span class="n">indent_length</span><span class="p">:]</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;I found no indent!&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IndentationError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">robust_ast_parse</span><span class="p">(</span><span class="n">_remove_indentation</span><span class="p">(</span><span class="n">src</span><span class="p">))</span>
+
+
 <div class="viewcode-block" id="parse_assignment_steps"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.parse_assignment_steps">[docs]</a><span class="k">def</span> <span class="nf">parse_assignment_steps</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parse source code and generate tuples of information about it.</span>
@@ -437,7 +461,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">src</span> <span class="o">=</span> <span class="n">_ensure_src_string</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="n">func_body</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="c1"># TODO: work with func_body.args to get info on interface (name, args, kwargs,</span>
@@ -549,7 +573,7 @@
 
 
 <span class="k">def</span> <span class="nf">_extract_name_from_single_func_def</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">body</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">first_element</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
         <span class="k">if</span> <span class="p">(</span>
