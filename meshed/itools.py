@@ -399,18 +399,19 @@ def copy_of_g_with_some_keys_removed(g: Mapping, keys: Iterable):
     return {k: v for k, v in g.items() if k not in keys}
 
 
-def _topological_sort_helper(g, v, visited, stack):
+def _topological_sort_helper(g, parent, visited, stack):
     """A recursive function to service topological_sort"""
 
-    visited.add(v)  # Mark the current node as visited.
+    visited.add(parent)  # Mark the current node as visited.
 
     # Recurse for all the vertices adjacent to this node
-    for i in g.get(v, []):
-        if i not in visited:
-            _topological_sort_helper(g, i, visited, stack)
+    for child in g.get(parent, []):
+        if child not in visited:
+            _topological_sort_helper(g, child, visited, stack)
 
     # Push current node to stack which stores result
-    stack.insert(0, v)
+    stack.insert(0, parent)
+    # print(f"  Inserted {parent}: {stack=}")
 
 
 def topological_sort(g: Mapping):
@@ -452,9 +453,10 @@ def topological_sort(g: Mapping):
 
     # Call the recursive helper function to accumulate topological sorts
     # starting from all vertices one by one
-    for i in g:
-        if i not in visited:
-            _topological_sort_helper(g, i, visited, stack)
+    for parent in g:
+        if parent not in visited:
+            # print(f"Processing {parent}")
+            _topological_sort_helper(g, parent, visited, stack)
 
     return stack
 
