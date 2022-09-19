@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.89 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.90 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -539,6 +539,35 @@ the <code class="docutils literal notranslate"><span class="pre">feedback</span>
 <li><p>None if not</p></li>
 </ul>
 <p>This is used as the default extractor in DAG</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="meshed.dag.DAG.from_funcs">
+<em class="property">classmethod </em><code class="sig-name descname">from_funcs</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">funcs</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">named_funcs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.from_funcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.from_funcs" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>funcs</strong> – </p></li>
+<li><p><strong>named_funcs</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="o">.</span><span class="n">from_funcs</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">x</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">y</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">_0</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">_0</span>  <span class="c1"># _0 refers to first arg (lambda a: a * 2)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+<span class="go"> -&gt; x_ -&gt; x</span>
+<span class="go">a -&gt; _0_ -&gt; _0</span>
+<span class="go">x,_0 -&gt; y_ -&gt; y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">16</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
