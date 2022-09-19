@@ -148,7 +148,7 @@ from typing import (
 )
 from warnings import warn
 
-from i2 import double_up_as_factory
+from i2 import double_up_as_factory, MultiFunc
 from i2.signatures import (
     call_somewhat_forgivingly,
     call_forgivingly,
@@ -502,6 +502,34 @@ class DAG:
 
         self.bindings_cleaner()
 
+    # TODO: No control of other DAG args (cache_last_scope etc.).
+    @classmethod
+    def from_funcs(cls, *funcs, **named_funcs):
+        """
+
+        :param funcs:
+        :param named_funcs:
+        :return:
+
+        >>> dag = DAG.from_funcs(
+        ...     lambda a: a * 2,
+        ...     x=lambda: 10,
+        ...     y=lambda x, _0: x + _0  # _0 refers to first arg (lambda a: a * 2)
+        ... )
+        >>> print(dag.synopsis_string())
+         -> x_ -> x
+        a -> _0_ -> _0
+        x,_0 -> y_ -> y
+        >>> dag(3)
+        16
+
+        """
+        named_funcs = dict(MultiFunc(*funcs, **named_funcs))
+        func_nodes = [
+            FuncNode(name=name, func=f, out=name) for name, f in named_funcs.items()
+        ]
+        return cls(func_nodes)
+
     def bindings_cleaner(self):
         funcnodes_names = [node.name for node in self.func_nodes]
         func = lambda v: self._func_node_for[v].out
@@ -672,6 +700,21 @@ class DAG:
         return self._getitem(item)
 
     def _getitem(self, item):
+        return DAG(
+            func_nodes=self._ordered_subgraph_nodes(item),
+            cache_last_scope=self.cache_last_scope,
+            parameter_merge=self.parameter_merge,
+        )
+
+    def _ordered_subgraph_nodes(self, item):
+        subgraph_nodes = self._subgraph_nodes(item)
+        # TODO: When clone ready, use to do `constructor = type(self)` instead of DAG
+        # constructor = type(self)  # instead of DAG
+        initial_nodes = self.func_nodes
+        ordered_subgraph_nodes = order_subset_from_list(initial_nodes, subgraph_nodes)
+        return ordered_subgraph_nodes
+
+    def _subgraph_nodes(self, item):
         ins, outs = self.process_item(item)
         _descendants = set(
             filter(FuncNode.has_as_instance, set(ins) | descendants(self.graph, ins))
@@ -680,16 +723,7 @@ class DAG:
             filter(FuncNode.has_as_instance, set(outs) | ancestors(self.graph, outs))
         )
         subgraph_nodes = _descendants.intersection(_ancestors)
-        # TODO: When clone ready, use to do `constructor = type(self)` instead of DAG
-        # constructor = type(self)  # instead of DAG
-        initial_nodes = self.func_nodes
-        ordered_subgraph_nodes = order_subset_from_list(initial_nodes, subgraph_nodes)
-
-        return DAG(
-            func_nodes=ordered_subgraph_nodes,
-            cache_last_scope=self.cache_last_scope,
-            parameter_merge=self.parameter_merge,
-        )
+        return subgraph_nodes
 
     # TODO: Think about adding a ``_roll_in_orphaned_nodes=False`` argument:
     #   See https://github.com/i2mint/meshed/issues/14 for more information.
