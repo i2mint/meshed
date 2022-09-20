@@ -541,8 +541,8 @@ class DAG:
         ...     y=lambda x, _0: x + _0  # _0 refers to first arg (lambda a: a * 2)
         ... )
         >>> print(dag.synopsis_string())
+        a -> lambda_0_ -> lambda_0
          -> x_ -> x
-        a -> _0_ -> _0
         x,_0 -> y_ -> y
         >>> dag(3)
         16
@@ -783,8 +783,8 @@ class DAG:
         >>> dag = DAG([f, g, h])
         >>> from inspect import signature
         >>> str(signature(dag))
-        '(c, a, b, d=4)'
-        >>> dag(3, 1, 2, 4)  # == (3 * 4) - (1 + 2) == 12 - 3 == 9
+        '(a, b, c, d=4)'
+        >>> dag(1, 2, 3, 4)  # == (3 * 4) - (1 + 2) == 12 - 3 == 9
         9
         >>> dag(c=3, a=1, b=2, d=4)  # same as above
         9
