@@ -1661,8 +1661,8 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
 
     >>> another_new_data = ch_names(new_dag)
     >>> print_dag_string(another_new_data)
-    x=a_2 -> g_2 -> c_2
     a=a_2 -> f_2 -> b_2
+    x=a_2 -> g_2 -> c_2
     b=b_2,y=c_2 -> h_2 -> d_2
 
     If we specify a string for the ``renamer`` argument, it will be used to suffix all
