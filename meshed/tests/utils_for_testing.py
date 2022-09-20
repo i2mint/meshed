@@ -44,7 +44,6 @@ def string_to_dag(dot_string):
     >>> Sig(dag)
     <Sig (a, b, c, f)>
     >>> sorted(dag(1,2,3,4))
-    ['g(b=1, f=2)', 'i(a=3, e=d(a=3, b=1, c=4))']
-    """
+    ['g(b=2, f=4)', 'i(a=1, e=d(a=1, b=2, c=3))']"""
     func_nodes = list(map(string_to_func_node, filter(bool, dot_string.split("\n"))))
     return DAG(func_nodes)
