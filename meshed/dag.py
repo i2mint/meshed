@@ -465,15 +465,15 @@ class DAG:
     It's a callable, with a signature:
 
     >>> Sig(dag)  # doctest: +SKIP
-    <Sig (x, a, b=1)>
+    <Sig (a, x, b=1)>
 
     And when you call it, it executes the dag from the root values you give it and
     returns the leaf output values.
 
-    >>> dag(1, 2, 3)  # (a+b,x*b) == (2+3,1*3) == (5, 3)
-    (5, 3)
-    >>> dag(1, 2)  # (a+b,x*b) == (2+1,1*1) == (3, 1)
-    (3, 1)
+    >>> dag(1, 2, 3)  # (a+b,x*b) == (1+3,2*3) == (4, 6)
+    (4, 6)
+    >>> dag(1, 2)  # (a+b,x*b) == (1+1,2*1) == (2, 2)
+    (2, 2)
 
     The above DAG was created straight from the functions, using only the names of the
     functions and their arguments to define how to hook the network up.
@@ -1031,7 +1031,7 @@ class DAG:
         iterable -> list_ -> list
         iterable -> tuple_ -> tuple
         >>> dag([1,2,3])
-        ((1, 2, 3), [1, 2, 3])
+        ([1, 2, 3], (1, 2, 3))
         """
         if isinstance(other, DAG):
             other = list(other.func_nodes)
@@ -1062,9 +1062,9 @@ class DAG:
         ...     == (3 + 4, 2*1, 1** 1)
         ... )
         >>> print(three_funcs.synopsis_string())
-        x,y -> h_ -> h
-        c,d -> g_ -> g
         a,b -> f_ -> f
+        c,d -> g_ -> g
+        x,y -> h_ -> h
         >>> hg = three_funcs.add_edge('h', 'g')
         >>> assert (
         ...     hg(a=3, b=4, x=1)
@@ -1230,15 +1230,15 @@ class DAG:
         ...
         >>> dag2 = DAG([f, g, h], name='arithmetic')
         >>> dag2
-        DAG(func_nodes=[FuncNode(c,d -> g_ -> g), FuncNode(a,b -> f_ -> f), FuncNode(f,g -> h_ -> h)], name='arithmetic')
+        DAG(func_nodes=[FuncNode(a,b -> f_ -> f), FuncNode(c,d -> g_ -> g), FuncNode(f,g -> h_ -> h)], name='arithmetic')
         >>> str(signature(dag2))
-        '(c, a, b, d=4)'
+        '(a, b, c, d=4)'
         >>> dag2(1,2,3)
-        -1
+        9
         >>>
         >>> debugger = dag2.debugger()
         >>> str(signature(debugger))
-        '(c, a, b, d=4)'
+        '(a, b, c, d=4)'
         >>> d = debugger(1,2,3)
         >>> next(d)  # doctest: +NORMALIZE_WHITESPACE
         0 --------------------------------------------------------------
