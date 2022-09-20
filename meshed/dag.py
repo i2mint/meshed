@@ -1643,8 +1643,8 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
     This is what the dag looks like:
 
     >>> print_dag_string(dag)
-    x=a -> g -> c
     a -> f -> b
+    x=a -> g -> c
     b,y=c -> h -> d
 
     Now, if rename the vars of the ``dag`` without further specifying how, all of our
