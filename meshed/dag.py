@@ -1242,28 +1242,28 @@ class DAG:
         >>> d = debugger(1,2,3)
         >>> next(d)  # doctest: +NORMALIZE_WHITESPACE
         0 --------------------------------------------------------------
-            func_node=FuncNode(c,d -> g_ -> g)
-            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4}
-        4
+            func_node=FuncNode(a,b -> f_ -> f)
+            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3}
+        3
         >>> next(d)  # doctest: +NORMALIZE_WHITESPACE
         1 --------------------------------------------------------------
-            func_node=FuncNode(a,b -> f_ -> f)
-            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4, 'f': 5}
-        5
+            func_node=FuncNode(c,d -> g_ -> g)
+            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3, 'g': 12}
+        12
 
         ... and so on. You can also choose to run every step all at once, collecting
         the ``feedback`` outputs of each step in a list, like this:
 
         >>> feedback_outputs = list(debugger(1,2,3))  # doctest: +NORMALIZE_WHITESPACE
         0 --------------------------------------------------------------
-            func_node=FuncNode(c,d -> g_ -> g)
-            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4}
-        1 --------------------------------------------------------------
             func_node=FuncNode(a,b -> f_ -> f)
-            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4, 'f': 5}
+            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3}
+        1 --------------------------------------------------------------
+            func_node=FuncNode(c,d -> g_ -> g)
+            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3, 'g': 12}
         2 --------------------------------------------------------------
             func_node=FuncNode(f,g -> h_ -> h)
-            scope={'c': 1, 'a': 2, 'b': 3, 'd': 4, 'g': 4, 'f': 5, 'h': -1}
+            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3, 'g': 12, 'h': 9}
 
         """
         # TODO: Add feedback callable validation
