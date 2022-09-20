@@ -430,7 +430,7 @@ def topological_sort(g: Mapping):
     ... }
     >>>
     >>> list(topological_sort(g))
-    [0, 2, 4, 3, 1]
+    [0, 4, 2, 3, 1]
 
     Here's an ascii art of the graph, to verify that the topological sort is
     indeed as expected.
