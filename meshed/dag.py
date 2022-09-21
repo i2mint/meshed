@@ -1687,6 +1687,7 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
 
     >>> ch_names(dag.func_nodes, renamer=lambda x: x.upper() if x in 'abc' else None)
     [FuncNode(a=A -> f -> B), FuncNode(x=A -> g -> C), FuncNode(b=B,y=C -> h -> d)]
+
     If you want to rename the nodes with an explicit mapping, you can do so by
     specifying this mapping as your renamer
 
