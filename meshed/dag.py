@@ -541,7 +541,7 @@ class DAG:
         ...     y=lambda x, _0: x + _0  # _0 refers to first arg (lambda a: a * 2)
         ... )
         >>> print(dag.synopsis_string())
-        a -> lambda_0_ -> lambda_0
+        a -> _0_ -> _0
          -> x_ -> x
         x,_0 -> y_ -> y
         >>> dag(3)
@@ -1115,8 +1115,8 @@ class DAG:
         ... )
         >>>
         >>> print(f_of_g_and_h.synopsis_string())
-        x,y -> h_ -> h
         c,d -> g_ -> g
+        x,y -> h_ -> h
         g,h -> f_ -> f
 
         See Also ``DAG.add_edges`` to add multiple edges at once
