@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.90 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.91 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -119,8 +119,8 @@
 <span class="sd">&gt;&gt;&gt;</span>
 <span class="sd">&gt;&gt;&gt; dag = DAG((this, that, combine))</span>
 <span class="sd">&gt;&gt;&gt; print(dag.synopsis_string())</span>
-<span class="sd">x,b -&gt; that_ -&gt; that</span>
 <span class="sd">a,b -&gt; this_ -&gt; this</span>
+<span class="sd">x,b -&gt; that_ -&gt; that</span>
 <span class="sd">this,that -&gt; combine_ -&gt; combine</span>
 
 <span class="sd">But don&#39;t be fooled: There&#39;s much more to it!</span>
@@ -558,8 +558,8 @@
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; dag = DAG((this, that, combine))</span>
 <span class="sd">    &gt;&gt;&gt; print(dag.synopsis_string())</span>
-<span class="sd">    x,b -&gt; that_ -&gt; that</span>
 <span class="sd">    a,b -&gt; this_ -&gt; this</span>
+<span class="sd">    x,b -&gt; that_ -&gt; that</span>
 <span class="sd">    this,that -&gt; combine_ -&gt; combine</span>
 
 <span class="sd">    But what does it do?</span>
@@ -567,15 +567,15 @@
 <span class="sd">    It&#39;s a callable, with a signature:</span>
 
 <span class="sd">    &gt;&gt;&gt; Sig(dag)  # doctest: +SKIP</span>
-<span class="sd">    &lt;Sig (x, a, b=1)&gt;</span>
+<span class="sd">    &lt;Sig (a, x, b=1)&gt;</span>
 
 <span class="sd">    And when you call it, it executes the dag from the root values you give it and</span>
 <span class="sd">    returns the leaf output values.</span>
 
-<span class="sd">    &gt;&gt;&gt; dag(1, 2, 3)  # (a+b,x*b) == (2+3,1*3) == (5, 3)</span>
-<span class="sd">    (5, 3)</span>
-<span class="sd">    &gt;&gt;&gt; dag(1, 2)  # (a+b,x*b) == (2+1,1*1) == (3, 1)</span>
-<span class="sd">    (3, 1)</span>
+<span class="sd">    &gt;&gt;&gt; dag(1, 2, 3)  # (a+b,x*b) == (1+3,2*3) == (4, 6)</span>
+<span class="sd">    (4, 6)</span>
+<span class="sd">    &gt;&gt;&gt; dag(1, 2)  # (a+b,x*b) == (1+1,2*1) == (2, 2)</span>
+<span class="sd">    (2, 2)</span>
 
 <span class="sd">    The above DAG was created straight from the functions, using only the names of the</span>
 <span class="sd">    functions and their arguments to define how to hook the network up.</span>
@@ -643,8 +643,8 @@
 <span class="sd">        ...     y=lambda x, _0: x + _0  # _0 refers to first arg (lambda a: a * 2)</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; print(dag.synopsis_string())</span>
-<span class="sd">         -&gt; x_ -&gt; x</span>
 <span class="sd">        a -&gt; _0_ -&gt; _0</span>
+<span class="sd">         -&gt; x_ -&gt; x</span>
 <span class="sd">        x,_0 -&gt; y_ -&gt; y</span>
 <span class="sd">        &gt;&gt;&gt; dag(3)</span>
 <span class="sd">        16</span>
@@ -790,12 +790,12 @@
 <span class="sd">        &gt;&gt;&gt; dag = DAG([f, g, h, i, j, k, l])</span>
 <span class="sd">        &gt;&gt;&gt; print(dag.synopsis_string())</span>
 <span class="sd">        u,v -&gt; f_ -&gt; f</span>
-<span class="sd">        f,w -&gt; h_ -&gt; h</span>
-<span class="sd">        h,x -&gt; j_ -&gt; j</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
+<span class="sd">        f,w -&gt; h_ -&gt; h</span>
 <span class="sd">        g,h -&gt; i_ -&gt; i</span>
-<span class="sd">        i,j -&gt; l_ -&gt; l</span>
+<span class="sd">        h,x -&gt; j_ -&gt; j</span>
 <span class="sd">        i -&gt; k_ -&gt; k</span>
+<span class="sd">        i,j -&gt; l_ -&gt; l</span>
 
 <span class="sd">        A little util to get consistent prints:</span>
 
@@ -885,8 +885,8 @@
 <span class="sd">        &gt;&gt;&gt; dag = DAG([f, g, h])</span>
 <span class="sd">        &gt;&gt;&gt; from inspect import signature</span>
 <span class="sd">        &gt;&gt;&gt; str(signature(dag))</span>
-<span class="sd">        &#39;(c, a, b, d=4)&#39;</span>
-<span class="sd">        &gt;&gt;&gt; dag(3, 1, 2, 4)  # == (3 * 4) - (1 + 2) == 12 - 3 == 9</span>
+<span class="sd">        &#39;(a, b, c, d=4)&#39;</span>
+<span class="sd">        &gt;&gt;&gt; dag(1, 2, 3, 4)  # == (3 * 4) - (1 + 2) == 12 - 3 == 9</span>
 <span class="sd">        9</span>
 <span class="sd">        &gt;&gt;&gt; dag(c=3, a=1, b=2, d=4)  # same as above</span>
 <span class="sd">        9</span>
@@ -1130,10 +1130,10 @@
 
 <span class="sd">        &gt;&gt;&gt; dag = DAG(list) + DAG(tuple)</span>
 <span class="sd">        &gt;&gt;&gt; print(dag.synopsis_string(bind_info=&#39;hybrid&#39;))</span>
-<span class="sd">        iterable -&gt; tuple_ -&gt; tuple</span>
 <span class="sd">        iterable -&gt; list_ -&gt; list</span>
+<span class="sd">        iterable -&gt; tuple_ -&gt; tuple</span>
 <span class="sd">        &gt;&gt;&gt; dag([1,2,3])</span>
-<span class="sd">        ((1, 2, 3), [1, 2, 3])</span>
+<span class="sd">        ([1, 2, 3], (1, 2, 3))</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DAG</span><span class="p">):</span>
             <span class="n">other</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
@@ -1159,14 +1159,14 @@
 <span class="sd">        &gt;&gt;&gt; three_funcs = DAG([f, g, h])</span>
 <span class="sd">        &gt;&gt;&gt; assert (</span>
 <span class="sd">        ...     three_funcs(x=1, c=2, a=3, b=4)</span>
-<span class="sd">        ...     == (1, 2, 7)</span>
-<span class="sd">        ...     == (h(x=1), g(c=2), f(a=3, b=4))</span>
-<span class="sd">        ...     == (1 ** 1, 2 * 1, 3 + 4)</span>
+<span class="sd">        ...     == (7, 2, 1)</span>
+<span class="sd">        ...     == (f(a=3, b=4), g(c=2), h(x=1))</span>
+<span class="sd">        ...     == (3 + 4, 2*1, 1** 1)</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; print(three_funcs.synopsis_string())</span>
-<span class="sd">        x,y -&gt; h_ -&gt; h</span>
-<span class="sd">        c,d -&gt; g_ -&gt; g</span>
 <span class="sd">        a,b -&gt; f_ -&gt; f</span>
+<span class="sd">        c,d -&gt; g_ -&gt; g</span>
+<span class="sd">        x,y -&gt; h_ -&gt; h</span>
 <span class="sd">        &gt;&gt;&gt; hg = three_funcs.add_edge(&#39;h&#39;, &#39;g&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; assert (</span>
 <span class="sd">        ...     hg(a=3, b=4, x=1)</span>
@@ -1217,8 +1217,8 @@
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; print(f_of_g_and_h.synopsis_string())</span>
-<span class="sd">        x,y -&gt; h_ -&gt; h</span>
 <span class="sd">        c,d -&gt; g_ -&gt; g</span>
+<span class="sd">        x,y -&gt; h_ -&gt; h</span>
 <span class="sd">        g,h -&gt; f_ -&gt; f</span>
 
 <span class="sd">        See Also ``DAG.add_edges`` to add multiple edges at once</span>
@@ -1332,40 +1332,40 @@
 <span class="sd">        ...</span>
 <span class="sd">        &gt;&gt;&gt; dag2 = DAG([f, g, h], name=&#39;arithmetic&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; dag2</span>
-<span class="sd">        DAG(func_nodes=[FuncNode(c,d -&gt; g_ -&gt; g), FuncNode(a,b -&gt; f_ -&gt; f), FuncNode(f,g -&gt; h_ -&gt; h)], name=&#39;arithmetic&#39;)</span>
+<span class="sd">        DAG(func_nodes=[FuncNode(a,b -&gt; f_ -&gt; f), FuncNode(c,d -&gt; g_ -&gt; g), FuncNode(f,g -&gt; h_ -&gt; h)], name=&#39;arithmetic&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; str(signature(dag2))</span>
-<span class="sd">        &#39;(c, a, b, d=4)&#39;</span>
+<span class="sd">        &#39;(a, b, c, d=4)&#39;</span>
 <span class="sd">        &gt;&gt;&gt; dag2(1,2,3)</span>
-<span class="sd">        -1</span>
+<span class="sd">        9</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; debugger = dag2.debugger()</span>
 <span class="sd">        &gt;&gt;&gt; str(signature(debugger))</span>
-<span class="sd">        &#39;(c, a, b, d=4)&#39;</span>
+<span class="sd">        &#39;(a, b, c, d=4)&#39;</span>
 <span class="sd">        &gt;&gt;&gt; d = debugger(1,2,3)</span>
 <span class="sd">        &gt;&gt;&gt; next(d)  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">        0 --------------------------------------------------------------</span>
-<span class="sd">            func_node=FuncNode(c,d -&gt; g_ -&gt; g)</span>
-<span class="sd">            scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4}</span>
-<span class="sd">        4</span>
+<span class="sd">            func_node=FuncNode(a,b -&gt; f_ -&gt; f)</span>
+<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3}</span>
+<span class="sd">        3</span>
 <span class="sd">        &gt;&gt;&gt; next(d)  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">        1 --------------------------------------------------------------</span>
-<span class="sd">            func_node=FuncNode(a,b -&gt; f_ -&gt; f)</span>
-<span class="sd">            scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4, &#39;f&#39;: 5}</span>
-<span class="sd">        5</span>
+<span class="sd">            func_node=FuncNode(c,d -&gt; g_ -&gt; g)</span>
+<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3, &#39;g&#39;: 12}</span>
+<span class="sd">        12</span>
 
 <span class="sd">        ... and so on. You can also choose to run every step all at once, collecting</span>
 <span class="sd">        the ``feedback`` outputs of each step in a list, like this:</span>
 
 <span class="sd">        &gt;&gt;&gt; feedback_outputs = list(debugger(1,2,3))  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">        0 --------------------------------------------------------------</span>
-<span class="sd">            func_node=FuncNode(c,d -&gt; g_ -&gt; g)</span>
-<span class="sd">            scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4}</span>
-<span class="sd">        1 --------------------------------------------------------------</span>
 <span class="sd">            func_node=FuncNode(a,b -&gt; f_ -&gt; f)</span>
-<span class="sd">            scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4, &#39;f&#39;: 5}</span>
+<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3}</span>
+<span class="sd">        1 --------------------------------------------------------------</span>
+<span class="sd">            func_node=FuncNode(c,d -&gt; g_ -&gt; g)</span>
+<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3, &#39;g&#39;: 12}</span>
 <span class="sd">        2 --------------------------------------------------------------</span>
 <span class="sd">            func_node=FuncNode(f,g -&gt; h_ -&gt; h)</span>
-<span class="sd">            scope={&#39;c&#39;: 1, &#39;a&#39;: 2, &#39;b&#39;: 3, &#39;d&#39;: 4, &#39;g&#39;: 4, &#39;f&#39;: 5, &#39;h&#39;: -1}</span>
+<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3, &#39;g&#39;: 12, &#39;h&#39;: 9}</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># TODO: Add feedback callable validation</span>
@@ -1743,8 +1743,8 @@
 <span class="sd">    This is what the dag looks like:</span>
 
 <span class="sd">    &gt;&gt;&gt; print_dag_string(dag)</span>
-<span class="sd">    x=a -&gt; g -&gt; c</span>
 <span class="sd">    a -&gt; f -&gt; b</span>
+<span class="sd">    x=a -&gt; g -&gt; c</span>
 <span class="sd">    b,y=c -&gt; h -&gt; d</span>
 
 <span class="sd">    Now, if rename the vars of the ``dag`` without further specifying how, all of our</span>
@@ -1761,8 +1761,8 @@
 
 <span class="sd">    &gt;&gt;&gt; another_new_data = ch_names(new_dag)</span>
 <span class="sd">    &gt;&gt;&gt; print_dag_string(another_new_data)</span>
-<span class="sd">    x=a_2 -&gt; g_2 -&gt; c_2</span>
 <span class="sd">    a=a_2 -&gt; f_2 -&gt; b_2</span>
+<span class="sd">    x=a_2 -&gt; g_2 -&gt; c_2</span>
 <span class="sd">    b=b_2,y=c_2 -&gt; h_2 -&gt; d_2</span>
 
 <span class="sd">    If we specify a string for the ``renamer`` argument, it will be used to suffix all</span>
@@ -1786,7 +1786,7 @@
 <span class="sd">    have the effect of not changing that identifier.</span>
 
 <span class="sd">    &gt;&gt;&gt; ch_names(dag.func_nodes, renamer=lambda x: x.upper() if x in &#39;abc&#39; else None)</span>
-<span class="sd">    [FuncNode(x=A -&gt; g -&gt; C), FuncNode(a=A -&gt; f -&gt; B), FuncNode(b=B,y=C -&gt; h -&gt; d)]</span>
+<span class="sd">    [FuncNode(a=A -&gt; f -&gt; B), FuncNode(x=A -&gt; g -&gt; C), FuncNode(b=B,y=C -&gt; h -&gt; d)]</span>
 
 <span class="sd">    If you want to rename the nodes with an explicit mapping, you can do so by</span>
 <span class="sd">    specifying this mapping as your renamer</span>
