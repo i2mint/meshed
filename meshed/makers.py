@@ -485,7 +485,9 @@ def _extract_name_from_single_func_def(src: str, default=None):
 FuncSource = Union[Callable[[str], Callable], Mapping[str, Callable]]
 
 
-def _ensure_func_src(func_src: FuncSource, use_place_holder_fallback=False) -> Callable[[str], Callable]:
+def _ensure_func_src(
+    func_src: FuncSource, use_place_holder_fallback=False
+) -> Callable[[str], Callable]:
     if isinstance(func_src, Mapping):
         name_to_func_map = func_src
         func_src = partial(
@@ -499,7 +501,11 @@ def _ensure_func_src(func_src: FuncSource, use_place_holder_fallback=False) -> C
 
 @double_up_as_factory
 def code_to_dag(
-    src=None, *, func_src: FuncSource = dlft_factory_to_func, use_place_holder_fallback=False, name: str = None
+    src=None,
+    *,
+    func_src: FuncSource = dlft_factory_to_func,
+    use_place_holder_fallback=False,
+    name: str = None,
 ) -> DAG:
     """Get a ``meshed.DAG`` from src code"""
     func_src = _ensure_func_src(func_src, use_place_holder_fallback)

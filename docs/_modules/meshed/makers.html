@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.92 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.93 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -88,9 +88,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>meshed.makers</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">meshed.makers</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -587,13 +587,15 @@
 <span class="n">FuncSource</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">],</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span>
 
 
-<span class="k">def</span> <span class="nf">_ensure_func_src</span><span class="p">(</span><span class="n">func_src</span><span class="p">:</span> <span class="n">FuncSource</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_ensure_func_src</span><span class="p">(</span>
+    <span class="n">func_src</span><span class="p">:</span> <span class="n">FuncSource</span><span class="p">,</span> <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
         <span class="n">name_to_func_map</span> <span class="o">=</span> <span class="n">func_src</span>
         <span class="n">func_src</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
             <span class="n">dlft_factory_to_func</span><span class="p">,</span>
             <span class="n">name_to_func_map</span><span class="o">=</span><span class="n">name_to_func_map</span><span class="p">,</span>
-            <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="n">use_place_holder_fallback</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">Callable</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;func_src should be callable, or a mapping&#39;</span>
     <span class="k">return</span> <span class="n">func_src</span>
@@ -601,10 +603,14 @@
 
 <span class="nd">@double_up_as_factory</span>
 <span class="k">def</span> <span class="nf">code_to_dag</span><span class="p">(</span>
-    <span class="n">src</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_src</span><span class="p">:</span> <span class="n">FuncSource</span> <span class="o">=</span> <span class="n">dlft_factory_to_func</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">src</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">func_src</span><span class="p">:</span> <span class="n">FuncSource</span> <span class="o">=</span> <span class="n">dlft_factory_to_func</span><span class="p">,</span>
+    <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get a ``meshed.DAG`` from src code&quot;&quot;&quot;</span>
-    <span class="n">func_src</span> <span class="o">=</span> <span class="n">_ensure_func_src</span><span class="p">(</span><span class="n">func_src</span><span class="p">)</span>
+    <span class="n">func_src</span> <span class="o">=</span> <span class="n">_ensure_func_src</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">use_place_holder_fallback</span><span class="p">)</span>
     <span class="c1"># Get a name for the dag (if src is a str</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
