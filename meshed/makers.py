@@ -168,7 +168,7 @@ from meshed.base import FuncNode
 from meshed.util import mk_place_holder_func
 
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 # Some restrictions exist and need to be clarified or removed (i.e. more cases handled)
 # For example,
@@ -181,15 +181,15 @@ T = TypeVar("T")
 
 
 def attr_dict(obj):
-    return {a: getattr(obj, a) for a in dir(obj) if not a.startswith("_")}
+    return {a: getattr(obj, a) for a in dir(obj) if not a.startswith('_')}
 
 
 def is_from_ast_module(o):
-    return getattr(type(o), "__module__", "").startswith("_ast")
+    return getattr(type(o), '__module__', '').startswith('_ast')
 
 
 def _ast_info_str(x):
-    return f"lineno={x.lineno}"
+    return f'lineno={x.lineno}'
 
 
 def _itemgetter(sequence, keys=()):
@@ -213,15 +213,15 @@ def parse_assignment(body: ast.Assign) -> Tuple:
         raise ValueError(f"All commands should be assignments, this one wasn't: {info}")
 
     target = body.targets
-    assert len(target) == 1, f"Only one target allowed: {info}"
+    assert len(target) == 1, f'Only one target allowed: {info}'
     target = target[0]
     assert isinstance(
         target, (ast.Name, ast.Tuple)
-    ), f"Should be a ast.Name or ast.Tuple: {info}"
+    ), f'Should be a ast.Name or ast.Tuple: {info}'
 
     value = body.value
     assert isinstance(value, ast.Call), (
-        f"Only assigned function calls are allowed:" f" {info}"
+        f'Only assigned function calls are allowed:' f' {info}'
     )
 
     return target, value
@@ -265,10 +265,10 @@ def parsed_to_node_kwargs(target_value) -> Iterator[dict]:
             name=value.func.id, out=target.id, bind=dict(bind_from_args, **kwargs)
         )
     elif isinstance(target, ast.Tuple):
-        assign_to_names = tuple(map(attrgetter("id"), target.elts))
+        assign_to_names = tuple(map(attrgetter('id'), target.elts))
         # yield the function call information, assigning to a single variable
         # TODO: Long. Better way? (careful: need global uniqueness!)
-        func_output_name = "__".join(assign_to_names)
+        func_output_name = '__'.join(assign_to_names)
         yield dict(
             name=value.func.id,
             out=func_output_name,
@@ -278,14 +278,14 @@ def parsed_to_node_kwargs(target_value) -> Iterator[dict]:
         for i, assign_to_name in enumerate(assign_to_names):
             yield dict(
                 func=signed_itemgetter(i),
-                name=f"{assign_to_name}__{i}",
+                name=f'{assign_to_name}__{i}',
                 out=assign_to_name,
                 bind={0: func_output_name},
-                func_label=f"[{i}]",
+                func_label=f'[{i}]',
             )
         # raise ValueError(f"You're here: {target=}")
     else:
-        raise TypeError(f"Should be a ast.Name or ast.Tuple. Was: {target}")
+        raise TypeError(f'Should be a ast.Name or ast.Tuple. Was: {target}')
 
 
 FuncNodeFactory = Callable[[Callable], FuncNode]
@@ -302,19 +302,19 @@ def _ensure_src_string(src):
 
 
 def _remove_indentation(src):
-    m = re.match(r"\s+", src)
+    m = re.match(r'\s+', src)
     if m is not None:
         indent = m.group(0)
         indent_length = len(indent)
 
         def gen():
-            for line in src.split("\n"):
+            for line in src.split('\n'):
                 if line.startswith(indent):
                     yield line[indent_length:]
 
-        return "\n".join(gen())
+        return '\n'.join(gen())
     else:
-        raise RuntimeError(f"I found no indent!")
+        raise RuntimeError(f'I found no indent!')
 
 
 def robust_ast_parse(src):
@@ -387,11 +387,11 @@ def src_to_func_node_factory(
     exclude_names = set(exclude_names or set())
     for i, target_value in enumerate(parse_assignment_steps(src), 1):
         for node_kwargs in parsed_to_node_kwargs(target_value):
-            node_kwargs["func_label"] = node_kwargs["name"]
-            if node_kwargs["name"] in exclude_names:
+            node_kwargs['func_label'] = node_kwargs['name']
+            if node_kwargs['name'] in exclude_names:
                 # need to keep names uniques, so add a prefix to (hope) to get uniqueness
-                node_kwargs["name"] += f"_{i:02.0f}"
-            exclude_names.add(node_kwargs["name"])
+                node_kwargs['name'] += f'_{i:02.0f}'
+            exclude_names.add(node_kwargs['name'])
             yield node_kwargs_to_func_node_factory(node_kwargs)
 
 
@@ -411,17 +411,17 @@ def dlft_factory_to_func(
 
     factory_kwargs = factory.keywords
     name = (
-        factory_kwargs["func_label"] or factory_kwargs["name"] or factory_kwargs["out"]
+        factory_kwargs['func_label'] or factory_kwargs['name'] or factory_kwargs['out']
     )
     if name in name_to_func_map:
         return name_to_func_map[name]
     elif use_place_holder_fallback:
         arg_names = [
-            k if isinstance(k, str) else v for k, v in factory_kwargs["bind"].items()
+            k if isinstance(k, str) else v for k, v in factory_kwargs['bind'].items()
         ]
         return mk_place_holder_func(arg_names, name=name)
     else:
-        raise KeyError(f"name not found in name_to_func_map: {name}")
+        raise KeyError(f'name not found in name_to_func_map: {name}')
 
 
 def mk_fnodes_from_fn_factories(
@@ -440,7 +440,7 @@ def mk_fnodes_from_fn_factories(
     # TODO: Might be a cleaner design for this...
     for fnode_factory in fnodes_factories:
         sig = Sig(fnode_factory)
-        if sig.n_required == 1 and sig.names[0] == "func":
+        if sig.n_required == 1 and sig.names[0] == 'func':
             # first making sure the fnode_factory is exactly as expected for this case,
             # get a function for this fnode_factory, then use it to make the fnode
             func = factory_to_func(fnode_factory)
@@ -453,8 +453,8 @@ def mk_fnodes_from_fn_factories(
             raise ValueError(
                 f"The fnode_factory didn't have the expected format, so I'm freaking "
                 f"out. It's supposed to be a no-arguments-required-callable or a "
-                f"functools.partial that needs only a func to make the func node. "
-                f"This is the offending fnode_factory: {fnode_factory}"
+                f'functools.partial that needs only a func to make the func node. '
+                f'This is the offending fnode_factory: {fnode_factory}'
             )
 
 
@@ -472,11 +472,11 @@ def _code_to_fnodes(src, func_src=dlft_factory_to_func):
 
 def _extract_name_from_single_func_def(src: str, default=None):
     t = robust_ast_parse(src)
-    if (body := getattr(t, "body")) is not None:
+    if (body := getattr(t, 'body')) is not None:
         first_element = next(iter(body))
         if (
             isinstance(first_element, ast.FunctionDef)
-            and (name := getattr(first_element, "name")) is not None
+            and (name := getattr(first_element, 'name')) is not None
         ):
             return name
     return default
@@ -530,14 +530,14 @@ def _ensure_func_src(
             name_to_func_map=name_to_func_map,
             use_place_holder_fallback=use_place_holder_fallback,
         )
-    assert isinstance(func_src, Callable), f"func_src should be callable, or a mapping"
+    assert isinstance(func_src, Callable), f'func_src should be callable, or a mapping'
     return func_src
 
 
 def _ensure_name(name, src):
     if name is None:
         if isinstance(src, str):
-            name = _extract_name_from_single_func_def(src, "dag_made_from_code_parsing")
+            name = _extract_name_from_single_func_def(src, 'dag_made_from_code_parsing')
         else:
             name = name_of_obj(src)
     return name
