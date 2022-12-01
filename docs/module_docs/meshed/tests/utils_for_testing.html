@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.utils_for_testing &mdash; meshed 0.1.90 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.tests.utils_for_testing &mdash; meshed 0.1.94 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -91,8 +91,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>meshed.tests.utils_for_testing</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">meshed.tests.utils_for_testing</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/module_docs/meshed/tests/utils_for_testing.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -115,13 +115,15 @@
 <span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">string_to_dag</span><span class="p">(</span><span class="n">dot_string</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
-<span class="go">b,f -&gt; g -&gt; h</span>
 <span class="go">a,b,c -&gt; d -&gt; e</span>
+<span class="go">b,f -&gt; g -&gt; h</span>
 <span class="go">a,e -&gt; i -&gt; j</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Sig</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
-<span class="go">&lt;Sig (b, f, a, c)&gt;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Sig</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+<span class="go">&lt;Sig (a, b, c, f)&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="go">[&#39;g(b=1, f=2)&#39;, &#39;i(a=3, e=d(a=3, b=1, c=4))&#39;]</span>
+<span class="go">[&#39;g(b=2, f=4)&#39;, &#39;i(a=1, e=d(a=1, b=2, c=3))&#39;]</span>
 </pre></div>
 </div>
 </dd></dl>

@@ -25,15 +25,15 @@ def test_user_story_01():
     dag = code_to_dag(user_story_01)
     assert (
         dag.synopsis_string()
-        == """ -> get_data_source -> data_source
+        == ''' -> get_data_source -> data_source
 data_source -> make_wfs -> wfs
 wfs,chk_size -> chunker -> chks
 chks -> splitter -> train_chks__test_chks
 train_chks__test_chks -> train_chks__0 -> train_chks
 train_chks__test_chks -> test_chks__1 -> test_chks
-featurizer_learner,train_chks -> learn_featurizer -> featurizer_obj"""
+featurizer_learner,train_chks -> learn_featurizer -> featurizer_obj'''
     )
-    assert str(Sig(dag)) == "(chk_size, featurizer_learner)"
+    assert str(Sig(dag)) == '(chk_size, featurizer_learner)'
 
 
 def test_smoke_code_to_dag(src=user_story_01):

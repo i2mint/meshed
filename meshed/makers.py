@@ -487,34 +487,32 @@ def _extract_name_from_single_func_def(src: str, default=None):
 FuncSource = Union[Callable[[str], Callable], Mapping[str, Callable]]
 
 
-def _ensure_func_src(func_src: FuncSource) -> Callable[[str], Callable]:
-    if isinstance(func_src, Mapping):
-        name_to_func_map = func_src
-        func_src = partial(
-            dlft_factory_to_func,
-            name_to_func_map=name_to_func_map,
-            use_place_holder_fallback=False,
-        )
-    assert isinstance(func_src, Callable), f"func_src should be callable, or a mapping"
-    return func_src
+@double_up_as_factory
+def code_to_fnodes(
+    src=None,
+    *,
+    func_src: FuncSource = dlft_factory_to_func,
+    use_place_holder_fallback=False,
+) -> Tuple[FuncNode]:
+    """Get func_nodes from src code"""
+    func_src = _ensure_func_src(func_src, use_place_holder_fallback)
+    # Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG
+    return tuple(_code_to_fnodes(src, func_src))
 
 
 @double_up_as_factory
 def code_to_dag(
-    src=None, *, func_src: FuncSource = dlft_factory_to_func, name: str = None
+    src=None,
+    *,
+    func_src: FuncSource = dlft_factory_to_func,
+    use_place_holder_fallback=False,
+    name: str = None,
 ) -> DAG:
     """Get a ``meshed.DAG`` from src code"""
-    func_src = _ensure_func_src(func_src)
-    # Get a name for the dag (if src is a str
-    if name is None:
-        if isinstance(src, str):
-            name = _extract_name_from_single_func_def(src, "dag_made_from_code_parsing")
-        else:
-            name = name_of_obj(src)
-    # Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG
-    fnodes = _code_to_fnodes(src, func_src)
-    fnodes = list(fnodes)
-    return DAG(fnodes, name=name)
+    fnodes = code_to_fnodes(
+        src, func_src=func_src, use_place_holder_fallback=use_place_holder_fallback
+    )
+    return DAG(fnodes, name=_ensure_name(name, src))
 
 
 def code_to_digraph(src):
@@ -522,6 +520,29 @@ def code_to_digraph(src):
 
 
 simple_code_to_digraph = code_to_digraph  # back-compatability alias
+
+
+def _ensure_func_src(
+    func_src: FuncSource, use_place_holder_fallback=False
+) -> Callable[[str], Callable]:
+    if isinstance(func_src, Mapping):
+        name_to_func_map = func_src
+        func_src = partial(
+            dlft_factory_to_func,
+            name_to_func_map=name_to_func_map,
+            use_place_holder_fallback=use_place_holder_fallback,
+        )
+    assert isinstance(func_src, Callable), f"func_src should be callable, or a mapping"
+    return func_src
+
+
+def _ensure_name(name, src):
+    if name is None:
+        if isinstance(src, str):
+            name = _extract_name_from_single_func_def(src, "dag_made_from_code_parsing")
+        else:
+            name = name_of_obj(src)
+    return name
 
 
 # SB stuff, not used, so comment-out deprecating
