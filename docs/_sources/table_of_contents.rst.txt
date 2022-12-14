@@ -22,6 +22,7 @@
    module_docs/meshed/scrap/misc_utils
    module_docs/meshed/scrap/wrapping_dags
    module_docs/meshed/tests
+   module_docs/meshed/tests/objects_for_testing
    module_docs/meshed/tests/test_base
    module_docs/meshed/tests/test_caching
    module_docs/meshed/tests/test_composition

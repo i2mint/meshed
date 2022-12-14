@@ -47,5 +47,3 @@ dag_plus_times_minus = DAG([f, g, h])
 dag_plus_times_minus_partial = dag_plus_times_minus.partial(c=3, a=1)
 assert dag_plus_times_minus_partial(b=5, d=6) == 12
 assert str(signature(dag_plus_times_minus_partial)) == '(b, a=1, c=3, d=4)'
-
-
