@@ -145,6 +145,9 @@ from typing import (
     Iterable,
     Any,
     Mapping,
+    Tuple,
+    KT,
+    VT,
 )
 from warnings import warn
 
@@ -159,7 +162,7 @@ from i2.signatures import (
 )
 from meshed.base import (
     FuncNode,
-    ch_func_node_attrs,
+    ch_func_node_func,
     validate_that_func_node_names_are_sane,
     _mk_func_nodes,
     _func_nodes_to_graph_dict,
@@ -201,6 +204,8 @@ dflt_configs = dict(
     output_node='output',
     func_display=True,
 )
+
+FuncMapping = Union[Mapping[KT, Callable], Iterable[Tuple[KT, Callable]]]
 
 
 def order_subset_from_list(items, sublist):
@@ -854,7 +859,9 @@ class DAG:
         raise NotFound(f'No matching node for idx: {idx}')
 
     # TODO: Reflect: Should we include functions as keys here? Makes existence of the
-    #  item depend on unicity of the function in the DAG, therefore dynamic, so instable?
+    #  item depend on unicity of the function in the DAG, therefore dynamic,
+    #  so instable?
+    #  Should this node indexing be controllable by user?
     @cached_property
     def _func_node_for(self):
         """A dictionary mapping identifiers and functions to their FuncNode instances
@@ -946,6 +953,79 @@ class DAG:
         'a=2 b=3 g=7'
         """
         yield from self.func_nodes
+
+    def ch_funcs(
+            self, **func_mapping: Callable
+    ):
+        """
+        Change some of the functions in the DAG.
+        More preciseluy get a copy of the DAG where in some of the functions have
+        changed.
+
+        :param name_and_func: ``name=func`` pairs where ``name`` is the
+            ``FuncNode.name`` of the func nodes you want to change and func is the
+            function you want to change it by.
+        :return: A new DAG with the different functions.
+
+        >>> from meshed import FuncNode, DAG
+        >>> from i2 import Sig
+        >>>
+        >>> def f(a, b):
+        ...     return a + b
+        ...
+        >>>
+        >>> def g(a_plus_b, x):
+        ...     return a_plus_b * x
+        ...
+        >>> f_node = FuncNode(func=f, out='a_plus_b')
+        >>> g_node = FuncNode(func=g, bind={'x': 'b'})
+        >>> d = DAG((f_node, g_node))
+        >>> print(d.synopsis_string())
+        a,b -> f -> a_plus_b
+        b,a_plus_b -> g_ -> g
+        >>> d(2, 3)  # (2 + 3) * 3 == 5 * 3
+        15
+        >>> dd = d.ch_funcs(f=lambda a, b: a - b)
+        >>> dd(2, 3)  # (2 - 3) * 3 == -1 * 3
+        -3
+
+        You can reference the ``FuncNode`` you want to change through its ``.name`` or
+        ``.out`` attribute (both are unique to this ``FuncNode`` in a ``DAG``).
+        """
+        return ch_funcs(
+            self,
+            func_mapping=func_mapping,
+
+        )
+
+
+        # _validate_func_mapping(func_mapping, self)
+        #
+        # # def validate(func_mapping, func_nodes):
+        #
+        # # def ch_func(dag, key, func):
+        # #     return DAG(
+        # #         replace_item_in_iterable(
+        # #             dag.func_nodes,
+        # #             condition=lambda fn: dag._func_node_for.get(key, None) is not None,
+        # #             replacement=lambda fn: ch_func_node_func(fn, func=func),
+        # #         )
+        # #     )
+        #
+        # # TODO: Change to use self._func_node_for
+        # def ch_func(dag, key, func):
+        #     return DAG(
+        #         replace_item_in_iterable(
+        #             dag.func_nodes,
+        #             condition=lambda fn: fn.name == key or fn.out == key,
+        #             replacement=lambda fn: _ch_func_node_func(fn, func=func),
+        #         )
+        #     )
+        #
+        # new_dag = self
+        # for key, func in func_mapping.items():
+        #     new_dag = ch_func(new_dag, key, func)
+        # return new_dag
 
     # ------------ utils --------------------------------------------------------------
 
@@ -1179,33 +1259,6 @@ class DAG:
         for edge in edges:
             dag = dag.add_edge(*edge)
         return dag
-
-    def ch_funcs(self, **name_and_func):
-        """
-        Change some of the functions in the DAG.
-        More preciseluy get a copy of the DAG where in some of the functions have
-        changed.
-
-        :param name_and_func: ``name=func`` pairs where ``name`` is the ``FuncNode.name``
-            of the func nodes you want to change and func is the function you want to
-            change it by.
-        :return: A new DAG with the different functions.
-
-        """
-
-        def ch_func(dag, name, func):
-            return DAG(
-                replace_item_in_iterable(
-                    dag.func_nodes,
-                    condition=lambda fn: fn.name == name,
-                    replacement=lambda fn: ch_func_node_attrs(fn, func=func),
-                )
-            )
-
-        new_dag = self
-        for name, func in name_and_func.items():
-            new_dag = ch_func(new_dag, name, func)
-        return new_dag
 
     def debugger(self, feedback: Callable = dflt_debugger_feedback):
         r"""
@@ -1574,41 +1627,131 @@ names_and_outs = partial(attribute_vals, attrs=('name', 'out'), egress=chain)
 
 DagAble = Union[DAG, Iterable[FuncNodeAble]]
 
+# TODO: Extract hardcoded ".name or .out" condition so indexing/condition can be
+#  controlled by user.
+def _validate_func_mapping(func_mapping: FuncMapping, func_nodes: DagAble):
+    """Validates a ``FuncMapping`` against an iterable of ``FuncNodes``.
 
-def _validate_func_src(func_src, func_nodes: DagAble):
-    allowed_identifiers = set(names_and_outs(DAG(func_nodes).func_nodes))
-    if not_allowed := (func_src.keys() - allowed_identifiers):
-        raise ValueError(
-            f"These identifiers weren't found in func_nodes: {not_allowed}"
+    That is, it assures that:
+
+    - The keys of ``func_mapping`` are all ``FuncNode`` identifiers (i.e. appear as a
+    ``.name`` or ``.out`` of one of the ``func_nodes``.
+
+    - The values of ``func_mapping`` are all callable.
+
+    >>> def f(a, b):
+    ...     return a + b
+    >>> def g(a_plus_b, x):
+    ...     return a_plus_b * x
+    ...
+    >>> func_nodes = [
+    ...     FuncNode(func=f, out='a_plus_b'), FuncNode(func=g, bind={'x': 'b'})
+    ... ]
+    >>> _validate_func_mapping(
+    ...     dict(f=lambda a, b: a - b, g=lambda a_plus_b, x: x), func_nodes
+    ... )
+
+    You can use the ``.name`` or ``.out`` to index the func_node:
+
+    >>> _validate_func_mapping(dict(f=lambda a, b: a - b), func_nodes)
+    >>> _validate_func_mapping(dict(a_plus_b=lambda a, b: a - b), func_nodes)
+
+    If you mention a key that doesn't correspond to one of the elements of
+    ``func_nodes``, you'll be told off.
+
+    >>> _validate_func_mapping(dict(not_a_key=lambda a, b: a - b), func_nodes)
+    Traceback (most recent call last):
+      ...
+    KeyError: "These identifiers weren't found in func_nodes: not_a_key"
+
+    If you mention a value that is not callable, you'll also be told off:
+
+    >>> _validate_func_mapping(dict(f='hello world'), func_nodes)
+    Traceback (most recent call last):
+      ...
+    TypeError: These values of func_src weren't callable: hello world
+
+    """
+    allowed_identifiers = set(
+        chain.from_iterable(names_and_outs(DAG(func_nodes).func_nodes))
+    )
+    if not_allowed := (func_mapping.keys() - allowed_identifiers):
+        raise KeyError(
+            f"These identifiers weren't found in func_nodes: {', '.join(not_allowed)}"
         )
-    if not_callable := set(filter(lambda x: not callable(x), func_src.values())):
-        raise ValueError(f"These values of func_src weren't callable: {not_callable}")
+    if not_callable := set(filter(lambda x: not callable(x), func_mapping.values())):
+        raise TypeError(
+            f"These values of func_src weren't callable: {', '.join(not_callable)}"
+        )
 
 
-# TODO: Include as method of DAG?
-# TODO: extract egress functionality to decorator
+FuncMappingValidator = Callable[[FuncMapping, DagAble], None]
+
+# TODO: Merge with DAG, or with Mesh (when it exists)
+# TODO: Make it work with any FuncNode Iterable
+# TODO: extract egress functionality to decorator?
 @double_up_as_factory
-def ch_funcs(func_nodes: DagAble = None, *, func_src=(), strict=False):
-    if isinstance(func_nodes, DAG):
-        egress = DAG
-    else:
-        egress = list
+def ch_funcs(
+        func_nodes: DagAble = None, *,
+        func_mapping: FuncMapping = (),
+        ch_func_node_func: Callable[[FuncNode, Callable], FuncNode] = ch_func_node_func,
+        validate_func_mapping: Optional[FuncMappingValidator] = _validate_func_mapping,
+):
+    """Function (and decorator) to change the functions of func_nodes according to
+    the specification of a func_mapping whose keys are ``.name`` or ``.out`` values
+    of the nodes of ``func_nodes`` and the values are the callable we want to replace
+    them by.
 
-    func_src = dict(func_src)
-    if strict:
-        _validate_func_src(func_src, func_nodes)
+    A constrained version of ``ch_funcs`` is used as a method of ``DAG``.
+    The present function is given to provide more control.
 
-    def gen():
-        for fn in func_nodes:
-            if (
-                new_func := func_src.get(fn.out, func_src.get(fn.name, None))
-            ) is not None:
-                new_fn_kwargs = dict(fn.to_dict(), func=new_func)
-                yield FuncNode.from_dict(new_fn_kwargs)
-            else:
-                yield fn
+    """
+    func_mapping = dict(func_mapping)
+    if validate_func_mapping:
+        validate_func_mapping(func_mapping, func_nodes)
 
-    return egress(gen())
+    # def validate(func_mapping, func_nodes):
+
+    # def ch_func(dag, key, func):
+    #     return DAG(
+    #         replace_item_in_iterable(
+    #             dag.func_nodes,
+    #             condition=lambda fn: dag._func_node_for.get(key, None) is not None,
+    #             replacement=lambda fn: ch_func_node_func(fn, func=func),
+    #         )
+    #     )
+
+    # TODO: Optimize (for example, use self._func_node_for)
+    def ch_func(dag, key, func):
+        return DAG(
+            replace_item_in_iterable(
+                dag.func_nodes,
+                condition=lambda fn: fn.name == key or fn.out == key,
+                replacement=lambda fn: ch_func_node_func(fn, func=func),
+            )
+        )
+
+    new_dag = DAG(func_nodes)
+    for key, func in func_mapping.items():
+        new_dag = ch_func(new_dag, key, func)
+    return new_dag
+
+    # def transformed_func_nodes():
+    #     for fn in func_nodes:
+    #         if (
+    #             new_func := func_mapping.get(fn.out, func_mapping.get(fn.name, None))
+    #         ) is not None:
+    #             new_fn_kwargs = dict(fn.to_dict(), func=new_func)
+    #             yield FuncNode.from_dict(new_fn_kwargs)
+    #         else:
+    #             yield fn
+
+    # # If func_nodes are input as a DAG (which is an iterable of FuncNodes!),
+    # # make sure to return a DAG as well -- if not, return a list of FuncNodes
+    # if isinstance(func_nodes, DAG):
+    #     return DAG(transformed_func_nodes())
+    # else:
+    #     return list(transformed_func_nodes())
 
 
 change_funcs = ch_funcs  # back-compatibility

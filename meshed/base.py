@@ -422,7 +422,7 @@ def get_init_params_of_instance(obj):
     return {k: v for k, v in vars(obj).items() if k in Sig(type(obj)).names}
 
 
-def ch_func_node_attrs(fn, **new_attrs_values):
+def ch_func_node_attrs(fn: FuncNode, **new_attrs_values):
     """Returns a copy of the func node with some of it's attributes changed
 
     >>> def plus(a, b):
@@ -455,6 +455,30 @@ def ch_func_node_attrs(fn, **new_attrs_values):
         )
     fn_kwargs = dict(init_params, **new_attrs_values)
     return FuncNode(**fn_kwargs)
+
+
+def compare_signatures(func1, func2):
+    return Sig(func1) == Sig(func2)
+
+
+def raise_error(fn, func):
+    raise ValueError(
+        "fn.func's signature didn't match the func's: "
+        f"({fn=}: {fn.func=} and {func=}"
+    )
+
+
+def ch_func_node_func(
+        fn: FuncNode,
+        func: Callable,
+        *,
+        compare_func=compare_signatures,
+        alternative=raise_error
+):
+    if compare_func(fn.func, func):
+        return ch_func_node_attrs(fn, func=func)
+    else:
+        return alternative(fn, func)
 
 
 def _keys_and_values_are_strings_validation(d: dict):

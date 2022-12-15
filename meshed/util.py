@@ -730,7 +730,7 @@ def conditional_trans(
     """
     # TODO: Maybe make Literal checking less sensitive to isinstance checks, using
     #   hasattr instead for example.
-    if isinstance(obj, Literal):  # If val is a Literal, return it's value as is
+    if isinstance(obj, Literal):  # If val is a Literal, return its value as is
         return obj.val
     elif condition(obj):  # If obj satisfies condition, return the alternative_obj
         return trans(obj)
