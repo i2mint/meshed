@@ -5,6 +5,7 @@ import meshed.base
 import meshed.util
 from meshed.dag import ch_funcs, _validate_func_mapping
 from meshed.tests.objects_for_testing import f, g
+from meshed.base import compare_signatures
 from i2 import Sig
 from typing import NamedTuple
 
@@ -43,7 +44,17 @@ class FlagWithMessage(NamedTuple):
     msg: str = ""
 
 
+# This function is used to give a more detailed report on
+# mismatched signatures
+# the same can be done by tweaking ch_func_node_func
+# and its "alternative" param
 def validate_func_mapping_on_signatures(func_mapping, func_nodes):
+    """
+    This function is used to give a more detailed report on
+    mismatched signatures
+    The same can be done by tweaking ch_func_node_func
+    and its "alternative" param
+    """
     from meshed import DAG
 
     _validate_func_mapping(func_mapping, func_nodes)
@@ -52,9 +63,8 @@ def validate_func_mapping_on_signatures(func_mapping, func_nodes):
     for key, func in func_mapping.items():
         if fnode := dag._func_node_for.get(key, None):
             old_func = fnode.func
-            old_sig = Sig(old_func)
-            new_sig = Sig(func)
-            if old_sig == new_sig:
+
+            if compare_signatures(old_func, func):
                 result = FlagWithMessage(flag=True)
             else:
                 msg = f"Signatures disagree for key={key}"
@@ -83,3 +93,13 @@ def test_validate_func_mapping_based_on_signatures(
         },
     )
     assert result == expected
+
+
+def test_validate_bind_attributes():
+    """
+    in ch_func_node_func: validate compatibility (not equality of sigs)
+    we cannot use call_compatibility
+    rename everything
+    https://github.com/i2mint/i2/issues/47
+    """
+    pass
