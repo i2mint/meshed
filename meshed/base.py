@@ -3,7 +3,7 @@ Base functionality of meshed
 """
 from collections import Counter
 from dataclasses import dataclass, field, fields
-from functools import partial
+from functools import partial, cached_property
 from typing import Callable, MutableMapping, Iterable, Union, Sized, Sequence
 
 from i2 import Sig, call_somewhat_forgivingly
@@ -333,6 +333,17 @@ class FuncNode:
         False
         """
         return isinstance(obj, cls)
+
+
+@dataclass
+class Mesh:
+    func_nodes: Iterable[FuncNode]
+
+    def synopsis_string(self, bind_info='values'):
+        return '\n'.join(
+            func_node.synopsis_string(bind_info) for func_node in self.func_nodes
+        )
+
 
 
 def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
