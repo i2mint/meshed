@@ -472,10 +472,13 @@ def compare_signatures(func1, func2):
     return Sig(func1) == Sig(func2)
 
 
-def raise_error(fn, func):
+def raise_signature_mismatch_error(fn, func):
     raise ValueError(
-        "fn.func's signature didn't match the func's: "
-        f"({fn=}: {fn.func=} and {func=}"
+        "You can only change the func of a FuncNode with a another func if the "
+        "signatures match.\n"
+        f"\t{fn=}\n"
+        f"\t{Sig(fn.func)=}\n"
+        f"\t{Sig(func)=}\n"
     )
 
 
@@ -484,7 +487,7 @@ def ch_func_node_func(
         func: Callable,
         *,
         compare_func=compare_signatures,
-        alternative=raise_error
+        alternative=raise_signature_mismatch_error
 ):
     if compare_func(fn.func, func):
         return ch_func_node_attrs(fn, func=func)

@@ -57,12 +57,12 @@ def test_dag_operations():
     )
 
     dag = dag.ch_funcs(
-        mult=lambda w, ww=2: w * ww,
-        add=lambda x, www=3: x + www,
-        subtract=lambda x, y=1: x - y,
+        mult=lambda w, ww: w * ww,
+        add=lambda x, www: x + www,
+        subtract=lambda x, y: x - y,
     )
 
-    assert str(Sig(dag)) == '(w, ww=2, www=3)'
+    assert str(Sig(dag)) == '(w, ww, www)'
     assert dag(1, 2, 3) == -3
 
 

@@ -1727,7 +1727,7 @@ def ch_funcs(
             replace_item_in_iterable(
                 dag.func_nodes,
                 condition=lambda fn: fn.name == key or fn.out == key,
-                replacement=lambda fn: ch_func_node_func(fn, func=func),
+                replacement=lambda fn: ch_func_node_func(fn, func),
             )
         )
 
