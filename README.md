@@ -1,6 +1,6 @@
 # meshed
 
-Link functions up into callable objects (DAGs)
+Link functions up into callable objects (e.g. pipelines, DAGs, etc.)
 
 To install: `pip install meshed`
 
