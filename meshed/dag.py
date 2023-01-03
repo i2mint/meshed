@@ -954,9 +954,7 @@ class DAG:
         """
         yield from self.func_nodes
 
-    def ch_funcs(
-            self, **func_mapping: Callable
-    ):
+    def ch_funcs(self, **func_mapping: Callable):
         """
         Change some of the functions in the DAG.
         More preciseluy get a copy of the DAG where in some of the functions have
@@ -992,12 +990,7 @@ class DAG:
         You can reference the ``FuncNode`` you want to change through its ``.name`` or
         ``.out`` attribute (both are unique to this ``FuncNode`` in a ``DAG``).
         """
-        return ch_funcs(
-            self,
-            func_mapping=func_mapping,
-
-        )
-
+        return ch_funcs(self, func_mapping=func_mapping,)
 
         # _validate_func_mapping(func_mapping, self)
         #
@@ -1692,10 +1685,11 @@ FuncMappingValidator = Callable[[FuncMapping, DagAble], None]
 # TODO: extract egress functionality to decorator?
 @double_up_as_factory
 def ch_funcs(
-        func_nodes: DagAble = None, *,
-        func_mapping: FuncMapping = (),
-        ch_func_node_func: Callable[[FuncNode, Callable], FuncNode] = ch_func_node_func,
-        validate_func_mapping: Optional[FuncMappingValidator] = _validate_func_mapping,
+    func_nodes: DagAble = None,
+    *,
+    func_mapping: FuncMapping = (),
+    ch_func_node_func: Callable[[FuncNode, Callable], FuncNode] = ch_func_node_func,
+    validate_func_mapping: Optional[FuncMappingValidator] = _validate_func_mapping,
 ):
     """Function (and decorator) to change the functions of func_nodes according to
     the specification of a func_mapping whose keys are ``.name`` or ``.out`` values

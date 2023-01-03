@@ -20,7 +20,7 @@ def example_func_nodes():
 
 @pytest.fixture
 def example_func_mapping():
-    mapping = {"f_": f, "g_": g}
+    mapping = {'f_': f, 'g_': g}
     return mapping
 
 
@@ -31,17 +31,14 @@ def test_ch_funcs_no_change(example_func_nodes):
 
     dummy_mapping = dict(zip(names, funcs))
 
-    new_dag = ch_funcs(
-        func_nodes=nodes,
-        func_mapping=dummy_mapping,
-    )
+    new_dag = ch_funcs(func_nodes=nodes, func_mapping=dummy_mapping,)
     new_nodes = new_dag().func_nodes
     assert nodes == new_nodes
 
 
 class FlagWithMessage(NamedTuple):
     flag: bool
-    msg: str = ""
+    msg: str = ''
 
 
 # This function is used to give a more detailed report on
@@ -67,11 +64,11 @@ def validate_func_mapping_on_signatures(func_mapping, func_nodes):
             if compare_signatures(old_func, func):
                 result = FlagWithMessage(flag=True)
             else:
-                msg = f"Signatures disagree for key={key}"
+                msg = f'Signatures disagree for key={key}'
                 result = FlagWithMessage(flag=False, msg=msg)
 
         else:
-            msg = f"No funcnode matching the key {key}"
+            msg = f'No funcnode matching the key {key}'
             result = FlagWithMessage(flag=False, msg=msg)
         d[key] = result
     all_flags_true = all(item.flag for item in d.values())
@@ -88,8 +85,8 @@ def test_validate_func_mapping_based_on_signatures(
     expected = (
         True,
         {
-            "f_": FlagWithMessage(flag=True, msg=""),
-            "g_": FlagWithMessage(flag=True, msg=""),
+            'f_': FlagWithMessage(flag=True, msg=''),
+            'g_': FlagWithMessage(flag=True, msg=''),
         },
     )
     assert result == expected

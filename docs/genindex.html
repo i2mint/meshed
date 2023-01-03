@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; meshed 0.1.96 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Index &mdash; meshed 0.1.97 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
@@ -63,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
@@ -267,16 +268,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.find_path">find_path() (in module meshed.itools)</a>
 </li>
+      <li><a href="module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.FlagWithMessage.flag">flag (meshed.tests.test_ch_funcs.FlagWithMessage attribute)</a>
+</li>
+      <li><a href="module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.FlagWithMessage">FlagWithMessage (class in meshed.tests.test_ch_funcs)</a>
+</li>
       <li><a href="module_docs/meshed/base.html#meshed.base.FuncNode.from_dict">from_dict() (meshed.base.FuncNode class method)</a>
 </li>
       <li><a href="module_docs/meshed/dag.html#meshed.dag.DAG.from_funcs">from_funcs() (meshed.dag.DAG class method)</a>
 </li>
       <li><a href="module_docs/meshed/util.html#meshed.util.func_name">func_name() (in module meshed.util)</a>
 </li>
-      <li><a href="module_docs/meshed/composition.html#meshed.composition.func_node_name_trans">func_node_name_trans() (in module meshed.composition)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/meshed/composition.html#meshed.composition.func_node_name_trans">func_node_name_trans() (in module meshed.composition)</a>
+</li>
       <li><a href="module_docs/meshed/base.html#meshed.base.func_node_transformer">func_node_transformer() (in module meshed.base)</a>
 </li>
       <li><a href="module_docs/meshed/base.html#meshed.base.FuncNode">FuncNode (class in meshed.base)</a>
@@ -371,6 +376,8 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/meshed/base.html#meshed.base.Mesh">Mesh (class in meshed.base)</a>
+</li>
       <li>
     meshed
 
@@ -533,6 +540,13 @@
 </li>
       </ul></li>
       <li>
+    meshed.tests.test_ch_funcs
+
+      <ul>
+        <li><a href="module_docs/meshed/tests/test_ch_funcs.html#module-meshed.tests.test_ch_funcs">module</a>
+</li>
+      </ul></li>
+      <li>
     meshed.tests.test_composition
 
       <ul>
@@ -667,6 +681,8 @@
 </li>
         <li><a href="module_docs/meshed/tests/test_caching.html#module-meshed.tests.test_caching">meshed.tests.test_caching</a>
 </li>
+        <li><a href="module_docs/meshed/tests/test_ch_funcs.html#module-meshed.tests.test_ch_funcs">meshed.tests.test_ch_funcs</a>
+</li>
         <li><a href="module_docs/meshed/tests/test_composition.html#module-meshed.tests.test_composition">meshed.tests.test_composition</a>
 </li>
         <li><a href="module_docs/meshed/tests/test_dag.html#module-meshed.tests.test_dag">meshed.tests.test_dag</a>
@@ -690,6 +706,8 @@
         <li><a href="module_docs/meshed/util.html#module-meshed.util">meshed.util</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.FlagWithMessage.msg">msg (meshed.tests.test_ch_funcs.FlagWithMessage attribute)</a>
+</li>
       <li><a href="module_docs/meshed/util.html#meshed.util.my_isinstance">my_isinstance() (in module meshed.util)</a>
 </li>
   </ul></td>
@@ -848,9 +866,11 @@
 </li>
       <li><a href="module_docs/meshed/tests/test_dag.html#meshed.tests.test_dag.test_funcnode_bind">test_funcnode_bind() (in module meshed.tests.test_dag)</a>
 </li>
+      <li><a href="module_docs/meshed/tests/test_composition.html#meshed.tests.test_composition.test_line_with_dag">test_line_with_dag() (in module meshed.tests.test_composition)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/meshed/tests/test_composition.html#meshed.tests.test_composition.test_line_with_dag">test_line_with_dag() (in module meshed.tests.test_composition)</a>
+      <li><a href="module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.test_validate_bind_attributes">test_validate_bind_attributes() (in module meshed.tests.test_ch_funcs)</a>
 </li>
       <li><a href="module_docs/meshed/base.html#meshed.base.FuncNode.to_dict">to_dict() (meshed.base.FuncNode method)</a>
 </li>
@@ -870,10 +890,12 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/meshed/base.html#meshed.base.validate_that_func_node_names_are_sane">validate_that_func_node_names_are_sane() (in module meshed.base)</a>
+      <li><a href="module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.validate_func_mapping_on_signatures">validate_func_mapping_on_signatures() (in module meshed.tests.test_ch_funcs)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/meshed/base.html#meshed.base.validate_that_func_node_names_are_sane">validate_that_func_node_names_are_sane() (in module meshed.base)</a>
+</li>
       <li><a href="module_docs/meshed/util.html#meshed.util.ValidationError">ValidationError</a>
 </li>
   </ul></td>

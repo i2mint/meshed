@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.96 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.97 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -72,6 +72,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
@@ -397,20 +398,45 @@ key (useful for pipeline sanity), etc.</p>
 
 <dl class="py method">
 <dt id="meshed.dag.DAG.ch_funcs">
-<code class="sig-name descname">ch_funcs</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">name_and_func</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.ch_funcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.ch_funcs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ch_funcs</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">func_mapping</span><span class="p">:</span> <span class="n">Callable</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.ch_funcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.ch_funcs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change some of the functions in the DAG.
 More preciseluy get a copy of the DAG where in some of the functions have
 changed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name_and_func</strong> – <code class="docutils literal notranslate"><span class="pre">name=func</span></code> pairs where <code class="docutils literal notranslate"><span class="pre">name</span></code> is the <code class="docutils literal notranslate"><span class="pre">FuncNode.name</span></code>
-of the func nodes you want to change and func is the function you want to
-change it by.</p>
+<dd class="field-odd"><p><strong>name_and_func</strong> – <code class="docutils literal notranslate"><span class="pre">name=func</span></code> pairs where <code class="docutils literal notranslate"><span class="pre">name</span></code> is the
+<code class="docutils literal notranslate"><span class="pre">FuncNode.name</span></code> of the func nodes you want to change and func is the
+function you want to change it by.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A new DAG with the different functions.</p>
 </dd>
 </dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="n">DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">...</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">x</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a_plus_b&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">f_node</span><span class="p">,</span> <span class="n">g_node</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+<span class="go">a,b -&gt; f -&gt; a_plus_b</span>
+<span class="go">b,a_plus_b -&gt; g_ -&gt; g</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># (2 + 3) * 3 == 5 * 3</span>
+<span class="go">15</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dd</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># (2 - 3) * 3 == -1 * 3</span>
+<span class="go">-3</span>
+</pre></div>
+</div>
+<p>You can reference the <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> you want to change through its <code class="docutils literal notranslate"><span class="pre">.name</span></code> or
+<code class="docutils literal notranslate"><span class="pre">.out</span></code> attribute (both are unique to this <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> in a <code class="docutils literal notranslate"><span class="pre">DAG</span></code>).</p>
 </dd></dl>
 
 <dl class="py method">

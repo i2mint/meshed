@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.itools &mdash; meshed 0.1.96 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.itools &mdash; meshed 0.1.97 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -63,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
@@ -115,7 +116,7 @@
 
 
 <div class="viewcode-block" id="random_graph"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.random_graph">[docs]</a><span class="k">def</span> <span class="nf">random_graph</span><span class="p">(</span><span class="n">n_nodes</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get a random graph.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a random graph.</span>
 
 <span class="sd">    &gt;&gt;&gt; random_graph()  # doctest: +SKIP</span>
 <span class="sd">    {0: [6, 3, 5, 2],</span>
@@ -163,7 +164,7 @@
 
 
 <div class="viewcode-block" id="add_edge"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.add_edge">[docs]</a><span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add an edge FROM node1 TO node2&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an edge FROM node1 TO node2&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">node1</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
         <span class="n">g</span><span class="p">[</span><span class="n">node1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -171,7 +172,7 @@
 
 
 <div class="viewcode-block" id="edges"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.edges">[docs]</a><span class="k">def</span> <span class="nf">edges</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generates edges of graph, i.e. ``(from_node, to_node)`` tuples.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generates edges of graph, i.e. ``(from_node, to_node)`` tuples.</span>
 
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;ce&#39;, c=&#39;abde&#39;, d=&#39;c&#39;, e=[&#39;c&#39;, &#39;z&#39;], f={})</span>
 <span class="sd">    &gt;&gt;&gt; assert sorted(edges(g)) == [</span>
@@ -184,7 +185,7 @@
 
 
 <div class="viewcode-block" id="nodes"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.nodes">[docs]</a><span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;ce&#39;, c=&#39;abde&#39;, d=&#39;c&#39;, e=[&#39;c&#39;, &#39;z&#39;], f={})</span>
 <span class="sd">    &gt;&gt;&gt; sorted(nodes(g))</span>
 <span class="sd">    [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;f&#39;, &#39;z&#39;]</span>
@@ -201,7 +202,7 @@
 
 
 <div class="viewcode-block" id="has_node"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.has_node">[docs]</a><span class="k">def</span> <span class="nf">has_node</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">check_adjacencies</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns True if the graph has given node</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns True if the graph has given node</span>
 
 <span class="sd">    &gt;&gt;&gt; g = {</span>
 <span class="sd">    ...     0: [1, 2],</span>
@@ -249,7 +250,7 @@
 
 <div class="viewcode-block" id="successors"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.successors">[docs]</a><span class="nd">@_handle_exclude_nodes</span>
 <span class="k">def</span> <span class="nf">successors</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">_exclude_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Iterator of nodes that have directed paths FROM node</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator of nodes that have directed paths FROM node</span>
 
 <span class="sd">    &gt;&gt;&gt; g = {</span>
 <span class="sd">    ...     0: [1, 2],</span>
@@ -270,7 +271,7 @@
 
 
 <div class="viewcode-block" id="predecessors"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.predecessors">[docs]</a><span class="k">def</span> <span class="nf">predecessors</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Iterator of nodes that have directed paths TO node</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator of nodes that have directed paths TO node</span>
 
 <span class="sd">    &gt;&gt;&gt; g = {</span>
 <span class="sd">    ...     0: [1, 2],</span>
@@ -291,7 +292,7 @@
 
 
 <span class="k">def</span> <span class="nf">_split_if_str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    If source is a string, the `str.split()` of it will be returned.</span>
 
 <span class="sd">    This is to be used in situations where we deal with lists of strings and</span>
@@ -311,7 +312,7 @@
 
 
 <div class="viewcode-block" id="children"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.children">[docs]</a><span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set of all nodes (not in source) adjacent FROM &#39;source&#39; in &#39;g&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set of all nodes (not in source) adjacent FROM &#39;source&#39; in &#39;g&#39;</span>
 
 <span class="sd">    &gt;&gt;&gt; g = {</span>
 <span class="sd">    ...     0: [1, 2],</span>
@@ -333,7 +334,7 @@
 
 
 <div class="viewcode-block" id="parents"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.parents">[docs]</a><span class="k">def</span> <span class="nf">parents</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set of all nodes (not in source) adjacent TO &#39;source&#39; in &#39;g&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set of all nodes (not in source) adjacent TO &#39;source&#39; in &#39;g&#39;</span>
 
 <span class="sd">    &gt;&gt;&gt; g = {</span>
 <span class="sd">    ...     0: [1, 2],</span>
@@ -351,7 +352,7 @@
 
 <div class="viewcode-block" id="ancestors"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.ancestors">[docs]</a><span class="nd">@_handle_exclude_nodes</span>
 <span class="k">def</span> <span class="nf">ancestors</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">_exclude_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Set of all nodes (not in source) reachable TO `source` in `g`.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set of all nodes (not in source) reachable TO `source` in `g`.</span>
 
 <span class="sd">    &gt;&gt;&gt; g = {</span>
 <span class="sd">    ...     0: [1, 2],</span>
@@ -377,7 +378,7 @@
 
 
 <div class="viewcode-block" id="descendants"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.descendants">[docs]</a><span class="k">def</span> <span class="nf">descendants</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">_exclude_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the set of all nodes reachable FROM `source` in `g`.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the set of all nodes reachable FROM `source` in `g`.</span>
 
 <span class="sd">    &gt;&gt;&gt; g = {</span>
 <span class="sd">    ...     0: [1, 2],</span>
@@ -395,7 +396,7 @@
 
 <span class="c1"># TODO: Can serious be optimized, and hasn&#39;t been tested much: Revise</span>
 <div class="viewcode-block" id="root_nodes"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.root_nodes">[docs]</a><span class="k">def</span> <span class="nf">root_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;ce&#39;, c=&#39;abde&#39;, d=&#39;c&#39;, e=[&#39;c&#39;, &#39;z&#39;], f={})</span>
 <span class="sd">    &gt;&gt;&gt; sorted(root_nodes(g))</span>
 <span class="sd">    [&#39;f&#39;]</span>
@@ -409,7 +410,7 @@
 
 <span class="c1"># TODO: Can serious be optimized, and hasn&#39;t been tested much: Revise</span>
 <div class="viewcode-block" id="leaf_nodes"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.leaf_nodes">[docs]</a><span class="k">def</span> <span class="nf">leaf_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;ce&#39;, c=&#39;abde&#39;, d=&#39;c&#39;, e=[&#39;c&#39;, &#39;z&#39;], f={})</span>
 <span class="sd">    &gt;&gt;&gt; sorted(leaf_nodes(g))</span>
 <span class="sd">    [&#39;f&#39;, &#39;z&#39;]</span>
@@ -421,7 +422,7 @@
 
 
 <div class="viewcode-block" id="isolated_nodes"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.isolated_nodes">[docs]</a><span class="k">def</span> <span class="nf">isolated_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Nodes that</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Nodes that</span>
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;ce&#39;, c=list(&#39;abde&#39;), d=&#39;c&#39;, e=[&#39;c&#39;, &#39;z&#39;], f={})</span>
 <span class="sd">    &gt;&gt;&gt; set(isolated_nodes(g))</span>
 <span class="sd">    {&#39;f&#39;}</span>
@@ -434,7 +435,7 @@
 
 
 <div class="viewcode-block" id="find_path"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.find_path">[docs]</a><span class="k">def</span> <span class="nf">find_path</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;find a path from src to dst nodes in graph</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;find a path from src to dst nodes in graph</span>
 
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;ce&#39;, c=list(&#39;abde&#39;), d=&#39;c&#39;, e=[&#39;c&#39;, &#39;z&#39;], f={})</span>
 <span class="sd">    &gt;&gt;&gt; find_path(g, &#39;a&#39;, &#39;c&#39;)</span>
@@ -462,7 +463,7 @@
 
 
 <div class="viewcode-block" id="reverse_edges"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.reverse_edges">[docs]</a><span class="k">def</span> <span class="nf">reverse_edges</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generator of reversed edges. Like edges but with inverted edges.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generator of reversed edges. Like edges but with inverted edges.</span>
 
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;ce&#39;, c=&#39;abde&#39;, d=&#39;c&#39;, e=[&#39;c&#39;, &#39;z&#39;], f={})</span>
 <span class="sd">    &gt;&gt;&gt; assert sorted(reverse_edges(g)) == [</span>
@@ -477,7 +478,7 @@
 
 
 <div class="viewcode-block" id="out_degrees"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.out_degrees">[docs]</a><span class="k">def</span> <span class="nf">out_degrees</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Sized</span><span class="p">]):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;ce&#39;, c=&#39;abde&#39;, d=&#39;c&#39;, e=[&#39;c&#39;, &#39;z&#39;], f={})</span>
 <span class="sd">    &gt;&gt;&gt; assert dict(out_degrees(g)) == (</span>
 <span class="sd">    ...     {&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 4, &#39;d&#39;: 1, &#39;e&#39;: 2, &#39;f&#39;: 0}</span>
@@ -488,7 +489,7 @@
 
 
 <div class="viewcode-block" id="in_degrees"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.in_degrees">[docs]</a><span class="k">def</span> <span class="nf">in_degrees</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;ce&#39;, c=&#39;abde&#39;, d=&#39;c&#39;, e=[&#39;c&#39;, &#39;z&#39;], f={})</span>
 <span class="sd">    &gt;&gt;&gt; assert dict(in_degrees(g)) == (</span>
 <span class="sd">    ... {&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: 4,  &#39;d&#39;: 1, &#39;e&#39;: 2, &#39;f&#39;: 0, &#39;z&#39;: 1}</span>
@@ -503,7 +504,7 @@
 
 
 <span class="k">def</span> <span class="nf">_topological_sort_helper</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">visited</span><span class="p">,</span> <span class="n">stack</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A recursive function to service topological_sort&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A recursive function to service topological_sort&quot;&quot;&quot;</span>
 
     <span class="n">visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>  <span class="c1"># Mark the current node as visited.</span>
 
@@ -518,7 +519,7 @@
 
 
 <div class="viewcode-block" id="topological_sort"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.topological_sort">[docs]</a><span class="k">def</span> <span class="nf">topological_sort</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return the list of nodes in topological sort order.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the list of nodes in topological sort order.</span>
 
 <span class="sd">    This order is such that a node parents will all occur before;</span>
 <span class="sd">        If order[i] is parent of order[j] then i &lt; j</span>
@@ -574,7 +575,7 @@
     <span class="n">dst_nodes_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">,</span>
     <span class="n">dst_nodes_append</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">T</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
-    <span class="sd">&quot;&quot;&quot;Invert the from/to direction of the edges of the graph.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Invert the from/to direction of the edges of the graph.</span>
 
 <span class="sd">    &gt;&gt;&gt; g = dict(a=&#39;c&#39;, b=&#39;cd&#39;, c=&#39;abd&#39;, e=&#39;&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; assert edge_reversed_graph(g) == {</span>

@@ -345,7 +345,6 @@ class Mesh:
         )
 
 
-
 def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
     """Assert that the names of func_nodes are sane.
     That is:
@@ -474,20 +473,20 @@ def compare_signatures(func1, func2):
 
 def raise_signature_mismatch_error(fn, func):
     raise ValueError(
-        "You can only change the func of a FuncNode with a another func if the "
-        "signatures match.\n"
-        f"\t{fn=}\n"
-        f"\t{Sig(fn.func)=}\n"
-        f"\t{Sig(func)=}\n"
+        'You can only change the func of a FuncNode with a another func if the '
+        'signatures match.\n'
+        f'\t{fn=}\n'
+        f'\t{Sig(fn.func)=}\n'
+        f'\t{Sig(func)=}\n'
     )
 
 
 def ch_func_node_func(
-        fn: FuncNode,
-        func: Callable,
-        *,
-        compare_func=compare_signatures,
-        alternative=raise_signature_mismatch_error
+    fn: FuncNode,
+    func: Callable,
+    *,
+    compare_func=compare_signatures,
+    alternative=raise_signature_mismatch_error,
 ):
     if compare_func(fn.func, func):
         return ch_func_node_attrs(fn, func=func)

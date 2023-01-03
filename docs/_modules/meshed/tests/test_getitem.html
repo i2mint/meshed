@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.test_getitem &mdash; meshed 0.1.96 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.tests.test_getitem &mdash; meshed 0.1.97 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -63,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
@@ -123,22 +124,22 @@
 
 
 <div class="viewcode-block" id="confusion_count"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.confusion_count">[docs]</a><span class="k">def</span> <span class="nf">confusion_count</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">truth</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get a dict containing the counts of all combinations of predicction and corresponding truth values.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a dict containing the counts of all combinations of predicction and corresponding truth values.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Counter</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">truth</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="prediction"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.prediction">[docs]</a><span class="k">def</span> <span class="nf">prediction</span><span class="p">(</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get an array of predictions from thresholding the scores of predict_proba array.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an array of predictions from thresholding the scores of predict_proba array.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">predict_proba</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="predict_proba"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.predict_proba">[docs]</a><span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get the prediction_proba scores of a model given some test data&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the prediction_proba scores of a model given some test data&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_aligned_items</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Yield (k, a_value, b_value) triples for all k that are both a key of a and of b&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield (k, a_value, b_value) triples for all k that are both a key of a and of b&quot;&quot;&quot;</span>
     <span class="c1"># reason for casting to dict is to make sure things like pd.Series use the right keys.</span>
     <span class="c1"># could also use k in a.keys() etc. to solve this.</span>
     <span class="n">a</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
@@ -149,7 +150,7 @@
 
 
 <div class="viewcode-block" id="dot_product"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.dot_product">[docs]</a><span class="k">def</span> <span class="nf">dot_product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; dot_product({&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}, {&#39;b&#39;: 4, &#39;c&#39;: -1, &#39;d&#39;: &#39;whatever&#39;})</span>
 <span class="sd">    5</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -157,7 +158,7 @@
 
 
 <div class="viewcode-block" id="classifier_score"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.classifier_score">[docs]</a><span class="k">def</span> <span class="nf">classifier_score</span><span class="p">(</span><span class="n">confusion_count</span><span class="p">,</span> <span class="n">confusion_value</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compute a score for a classifier that produced the `confusion_count`, based on the given `confusion_value`.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute a score for a classifier that produced the `confusion_count`, based on the given `confusion_value`.</span>
 <span class="sd">    Meant to be curried by fixing the confusion_value dict.</span>
 
 <span class="sd">    The function is purposely general -- it is not specific to binary classifier outcomes, or even any classifier outcomes.</span>

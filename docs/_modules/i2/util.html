@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>i2.util &mdash; meshed 0.1.96 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>i2.util &mdash; meshed 0.1.97 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -63,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
@@ -124,7 +125,7 @@
 
 
 <span class="k">class</span> <span class="nc">OverwritesForbidden</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Raise when a user is not allowed to overwrite a mapping&#39;s key&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raise when a user is not allowed to overwrite a mapping&#39;s key&quot;&quot;&quot;</span>
 
 
 <span class="k">def</span> <span class="nf">is_lambda</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -133,7 +134,7 @@
 
 <span class="c1"># TODO: Fragile. Make more robust.</span>
 <span class="k">def</span> <span class="nf">lambda_code</span><span class="p">(</span><span class="n">lambda_func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract code of expression from lambda function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract code of expression from lambda function.</span>
 <span class="sd">    For lambda code-extraction see:</span>
 <span class="sd">    https://stackoverflow.com/questions/73980648/how-to-transform-a-lambda-function-into-a-pickle-able-function</span>
 
@@ -145,7 +146,7 @@
 <span class="c1"># TODO: Only works with lambdas so either assert function is a lambda on construction</span>
 <span class="c1">#  or make it work with functions more generally.</span>
 <span class="k">class</span> <span class="nc">PicklableLambda</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wraps a lambda function to make it picklable (through extracting its code)</span>
 <span class="sd">    Also, provide it with a name, optionally.</span>
 
@@ -185,7 +186,7 @@
     <span class="n">get_identfiers</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">,</span>
     <span class="n">is_identifier</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Ensure an iterable of identifiers</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure an iterable of identifiers</span>
 
 <span class="sd">    &gt;&gt;&gt; list(ensure_identifiers(&#39;these&#39;, &#39;are&#39;, &#39;valid&#39;, &#39;identifiers&#39;))</span>
 <span class="sd">    [&#39;these&#39;, &#39;are&#39;, &#39;valid&#39;, &#39;identifiers&#39;]</span>
@@ -223,7 +224,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">identifier</span><span class="si">}</span><span class="s2"> isn&#39;t an identifier according to&quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">is_identifier</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">is_identifier</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">is_identifier</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;__name__&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">is_identifier</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
 
@@ -233,7 +234,7 @@
     <span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span>
     <span class="n">allow_overwrites</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Make several string-parametrized objects and insert them in a scope (e.g. locals()).</span>
 
 <span class="sd">    This is useful when to avoid (error-prone) situations where we want the name we</span>
@@ -292,7 +293,7 @@
 
 
 <span class="k">class</span> <span class="nc">Literal</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;An object to indicate that the value should be considered literally.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An object to indicate that the value should be considered literally.</span>
 
 <span class="sd">    &gt;&gt;&gt; t = Literal(42)</span>
 <span class="sd">    &gt;&gt;&gt; t.get_val()</span>
@@ -306,7 +307,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
 
     <span class="k">def</span> <span class="nf">get_val</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the value wrapped by Literal instance.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value wrapped by Literal instance.</span>
 
 <span class="sd">        One might want to use ``literal.get_val()`` instead ``literal()`` to get the</span>
 <span class="sd">        value a ``Literal`` is wrapping because ``.get_val`` is more explicit.</span>
@@ -332,7 +333,7 @@
 
 
 <span class="k">def</span> <span class="nf">path_extractor</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="n">dflt_idx_preprocessor</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">path_sep</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get items from a tree-structured object from a sequence of tree-traversal indices.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get items from a tree-structured object from a sequence of tree-traversal indices.</span>
 
 <span class="sd">    :param tree: The object you want to extract values from:</span>
 <span class="sd">        Can be any object you want, as long as the indices listed by path and how to get</span>
@@ -410,7 +411,7 @@
 
 <span class="c1"># Note: Specialization of path_extractor for Mappings</span>
 <span class="k">def</span> <span class="nf">dp_get</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">dot_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get stuff from a dict (or any Mapping), using dot_paths (i.e. &#39;foo.bar&#39; instead of</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get stuff from a dict (or any Mapping), using dot_paths (i.e. &#39;foo.bar&#39; instead of</span>
 <span class="sd">     [&#39;foo&#39;][&#39;bar&#39;])</span>
 
 <span class="sd">    &gt;&gt;&gt; d = {&#39;foo&#39;: {&#39;bar&#39;: 2, &#39;alice&#39;: &#39;bob&#39;}, 3: {&#39;pi&#39;: 3.14}}</span>
@@ -422,7 +423,7 @@
 
 
 <span class="k">class</span> <span class="nc">lazyprop</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A descriptor implementation of lazyprop (cached property) from David Beazley&#39;s &quot;Python Cookbook&quot; book.</span>
 <span class="sd">    It&#39;s</span>
 
@@ -470,7 +471,7 @@
 
 
 <span class="k">class</span> <span class="nc">FrozenDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;An immutable dict subtype that is hashable and can itself be used</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An immutable dict subtype that is hashable and can itself be used</span>
 <span class="sd">    as a :class:`dict` key or :class:`set` entry. What</span>
 <span class="sd">    :class:`frozenset` is to :class:`set`, FrozenDict is to</span>
 <span class="sd">    :class:`dict`.</span>
@@ -486,7 +487,7 @@
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_hash&#39;</span><span class="p">,)</span>
 
     <span class="k">def</span> <span class="nf">updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Make a copy and add items from a dictionary or iterable (and/or</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a copy and add items from a dictionary or iterable (and/or</span>
 <span class="sd">        keyword arguments), overwriting values under an existing</span>
 <span class="sd">        key. See :meth:`dict.update` for more details.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -569,7 +570,7 @@
 
 
 <span class="k">def</span> <span class="nf">inject_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_function</span><span class="p">,</span> <span class="n">method_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    method_function could be:</span>
 <span class="sd">        * a function</span>
 <span class="sd">        * a {method_name: function, ...} dict (for multiple injections)</span>
@@ -635,7 +636,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">module</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Creates and returns a new **instance** of a new class, suitable for usage as a</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates and returns a new **instance** of a new class, suitable for usage as a</span>
 <span class="sd">    &quot;sentinel&quot; since it is a kind of singleton (there can be only one instance of it.)</span>
 
 <span class="sd">    A frequent use case for sentinels are where we want to indicate that something is</span>
@@ -809,7 +810,7 @@
     <span class="n">formatreturns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">text</span><span class="p">:</span> <span class="s1">&#39; -&gt; &#39;</span> <span class="o">+</span> <span class="n">text</span><span class="p">,</span>
     <span class="n">formatannotation</span><span class="o">=</span><span class="n">formatannotation</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Copy formatargspec from python 3.7 standard library.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy formatargspec from python 3.7 standard library.</span>
 <span class="sd">    Python 3 has deprecated formatargspec and requested that Signature</span>
 <span class="sd">    be used instead, however this requires a full reimplementation</span>
 <span class="sd">    of formatargspec() in terms of creating Parameter objects and such.</span>
@@ -851,7 +852,7 @@
 
 
 <span class="k">class</span> <span class="nc">FunctionBuilder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The FunctionBuilder type provides an interface for programmatically</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The FunctionBuilder type provides an interface for programmatically</span>
 <span class="sd">    creating new functions, either based on existing functions or from</span>
 <span class="sd">    scratch.</span>
 
@@ -961,7 +962,7 @@
     <span class="c1"># def get_argspec(self):  # TODO</span>
 
     <span class="k">def</span> <span class="nf">get_sig_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_annotations</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return function signature as a string.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return function signature as a string.</span>
 
 <span class="sd">        with_annotations is ignored on Python 2.  On Python 3 signature</span>
 <span class="sd">        will omit annotations if it is set to False.</span>
@@ -976,7 +977,7 @@
         <span class="p">)</span>
 
     <span class="n">_KWONLY_MARKER</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-        <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    \*     # a star</span>
 <span class="sd">    \s*    # followed by any amount of whitespace</span>
 <span class="sd">    ,      # followed by a comma</span>
@@ -1007,7 +1008,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_func</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a new FunctionBuilder instance based on an existing</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new FunctionBuilder instance based on an existing</span>
 <span class="sd">        function. The original function will not be stored or</span>
 <span class="sd">        modified.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1033,7 +1034,7 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execdict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_source</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">with_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compile and return a new function based on the current values of</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compile and return a new function based on the current values of</span>
 <span class="sd">        the FunctionBuilder.</span>
 
 <span class="sd">        Args:</span>
@@ -1087,7 +1088,7 @@
         <span class="k">return</span> <span class="n">func</span>
 
     <span class="k">def</span> <span class="nf">get_defaults_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a dictionary of function arguments with defaults and the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a dictionary of function arguments with defaults and the</span>
 <span class="sd">        respective values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -1106,7 +1107,7 @@
         <span class="k">return</span> <span class="n">arg_names</span>
 
     <span class="k">def</span> <span class="nf">add_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NO_DEFAULT</span><span class="p">,</span> <span class="n">kwonly</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add an argument with optional *default* (defaults to</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an argument with optional *default* (defaults to</span>
 <span class="sd">        ``funcutils.NO_DEFAULT``). Pass *kwonly=True* to add a</span>
 <span class="sd">        keyword-only argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1129,7 +1130,7 @@
         <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">remove_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove an argument from this FunctionBuilder&#39;s argument list. The</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an argument from this FunctionBuilder&#39;s argument list. The</span>
 <span class="sd">        resulting function will have one less argument per call to</span>
 <span class="sd">        this function.</span>
 

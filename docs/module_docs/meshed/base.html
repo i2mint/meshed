@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.96 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.base &mdash; meshed 0.1.97 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -66,6 +66,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
@@ -306,6 +307,11 @@ digit)</p></li>
 
 </dd></dl>
 
+<dl class="py class">
+<dt id="meshed.base.Mesh">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.base.</code><code class="sig-name descname">Mesh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#Mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.Mesh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py function">
 <dt id="meshed.base.basic_node_validator">
 <code class="sig-prename descclassname">meshed.base.</code><code class="sig-name descname">basic_node_validator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_node</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#basic_node_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.basic_node_validator" title="Permalink to this definition">¶</a></dt>
@@ -336,7 +342,7 @@ digit)</p></li>
 
 <dl class="py function">
 <dt id="meshed.base.ch_func_node_attrs">
-<code class="sig-prename descclassname">meshed.base.</code><code class="sig-name descname">ch_func_node_attrs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">new_attrs_values</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#ch_func_node_attrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.ch_func_node_attrs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.base.</code><code class="sig-name descname">ch_func_node_attrs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a></span></em>, <em class="sig-param"><span class="o">**</span><span class="n">new_attrs_values</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#ch_func_node_attrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.ch_func_node_attrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a copy of the func node with some of it’s attributes changed</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">plus</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>

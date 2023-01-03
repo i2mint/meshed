@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.96 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.97 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -63,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
@@ -248,6 +249,9 @@
     <span class="n">Iterable</span><span class="p">,</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">KT</span><span class="p">,</span>
+    <span class="n">VT</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 
@@ -262,7 +266,7 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FuncNode</span><span class="p">,</span>
-    <span class="n">ch_func_node_attrs</span><span class="p">,</span>
+    <span class="n">ch_func_node_func</span><span class="p">,</span>
     <span class="n">validate_that_func_node_names_are_sane</span><span class="p">,</span>
     <span class="n">_mk_func_nodes</span><span class="p">,</span>
     <span class="n">_func_nodes_to_graph_dict</span><span class="p">,</span>
@@ -304,6 +308,8 @@
     <span class="n">output_node</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
     <span class="n">func_display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">FuncMapping</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="n">KT</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">KT</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]]</span>
 
 
 <span class="k">def</span> <span class="nf">order_subset_from_list</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">sublist</span><span class="p">):</span>
@@ -391,7 +397,7 @@
 
 
 <div class="viewcode-block" id="named_partial"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.named_partial">[docs]</a><span class="k">def</span> <span class="nf">named_partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;functools.partial, but with a __name__</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;functools.partial, but with a __name__</span>
 
 <span class="sd">    &gt;&gt;&gt; f = named_partial(print, sep=&#39;\\n&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; f.__name__</span>
@@ -410,7 +416,7 @@
 
 
 <div class="viewcode-block" id="hook_up"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.hook_up">[docs]</a><span class="k">def</span> <span class="nf">hook_up</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Source inputs and write outputs to given variables mapping.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Source inputs and write outputs to given variables mapping.</span>
 
 <span class="sd">    Returns inputless and outputless function that will, when called,</span>
 <span class="sd">    get relevant inputs from the provided variables mapping and write it&#39;s</span>
@@ -470,7 +476,7 @@
 
 
 <span class="k">def</span> <span class="nf">_find_unique_element</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">search_iterable</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]):</span>
-    <span class="sd">&quot;&quot;&quot;Find item in search_iterable, using key as the matching function,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find item in search_iterable, using key as the matching function,</span>
 <span class="sd">    raising a NotFound error if no match and a NotUniqueError if more than one.&quot;&quot;&quot;</span>
     <span class="n">it</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">key</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">search_iterable</span><span class="p">)</span>
     <span class="n">first</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">_not_found</span><span class="p">)</span>
@@ -547,7 +553,7 @@
 <span class="c1">#  to a dict, but that could be a &quot;dict&quot; that logs writes (even to an attribute of self)</span>
 <div class="viewcode-block" id="DAG"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">DAG</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; from meshed.dag import DAG, Sig</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; def this(a, b=1):</span>
@@ -632,7 +638,7 @@
     <span class="c1"># TODO: No control of other DAG args (cache_last_scope etc.).</span>
 <div class="viewcode-block" id="DAG.from_funcs"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.from_funcs">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_funcs</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">funcs</span><span class="p">,</span> <span class="o">**</span><span class="n">named_funcs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param funcs:</span>
 <span class="sd">        :param named_funcs:</span>
@@ -670,7 +676,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a dict of {argname: argval} pairs from positional and keyword arguments.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span>
@@ -691,7 +697,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_output_from_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leafs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DAG.call_on_scope"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.call_on_scope">[docs]</a>    <span class="k">def</span> <span class="nf">call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Calls the func_nodes using scope (a dict or MutableMapping) both to</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the func_nodes using scope (a dict or MutableMapping) both to</span>
 <span class="sd">        source it&#39;s arguments and write it&#39;s results.</span>
 
 <span class="sd">        Note: This method is only meant to be used as a backend to __call__, not as</span>
@@ -714,7 +720,7 @@
     <span class="c1">#     &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a sub-dag from a specification of (var or fun) input and output nodes.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a sub-dag from a specification of (var or fun) input and output nodes.</span>
 
 <span class="sd">        ``dag[input_nodes:output_nodes]`` is the sub-dag made of intersection of all</span>
 <span class="sd">        descendants of ``input_nodes``</span>
@@ -863,7 +869,7 @@
         <span class="n">_consider_defaulted_arguments_as_bound</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">keyword_dflts</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a curried version of the DAG.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a curried version of the DAG.</span>
 
 <span class="sd">        Like ``functools.partial``, but returns a DAG (not just a callable) and allows</span>
 <span class="sd">        you to remove bound arguments as well as roll in orphaned_nodes.</span>
@@ -957,10 +963,12 @@
         <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No matching node for idx: </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># TODO: Reflect: Should we include functions as keys here? Makes existence of the</span>
-    <span class="c1">#  item depend on unicity of the function in the DAG, therefore dynamic, so instable?</span>
+    <span class="c1">#  item depend on unicity of the function in the DAG, therefore dynamic,</span>
+    <span class="c1">#  so instable?</span>
+    <span class="c1">#  Should this node indexing be controllable by user?</span>
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">_func_node_for</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A dictionary mapping identifiers and functions to their FuncNode instances</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A dictionary mapping identifiers and functions to their FuncNode instances</span>
 <span class="sd">        in the DAG. The keys of this dictionary will include:</span>
 
 <span class="sd">        - identifiers (names) of the ``FuncNode`` instances</span>
@@ -1025,7 +1033,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Yields the self.func_nodes</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yields the self.func_nodes</span>
 <span class="sd">        Note: The raison d&#39;etre of this ``__iter__`` is simply because if no custom one</span>
 <span class="sd">        is provided, python defaults to yielding ``__getitem__[i]`` for integers,</span>
 <span class="sd">        which leads to an error being raised.</span>
@@ -1050,11 +1058,77 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span>
 
+<div class="viewcode-block" id="DAG.ch_funcs"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.ch_funcs">[docs]</a>    <span class="k">def</span> <span class="nf">ch_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">func_mapping</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Change some of the functions in the DAG.</span>
+<span class="sd">        More preciseluy get a copy of the DAG where in some of the functions have</span>
+<span class="sd">        changed.</span>
+
+<span class="sd">        :param name_and_func: ``name=func`` pairs where ``name`` is the</span>
+<span class="sd">            ``FuncNode.name`` of the func nodes you want to change and func is the</span>
+<span class="sd">            function you want to change it by.</span>
+<span class="sd">        :return: A new DAG with the different functions.</span>
+
+<span class="sd">        &gt;&gt;&gt; from meshed import FuncNode, DAG</span>
+<span class="sd">        &gt;&gt;&gt; from i2 import Sig</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; def f(a, b):</span>
+<span class="sd">        ...     return a + b</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; def g(a_plus_b, x):</span>
+<span class="sd">        ...     return a_plus_b * x</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; f_node = FuncNode(func=f, out=&#39;a_plus_b&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; g_node = FuncNode(func=g, bind={&#39;x&#39;: &#39;b&#39;})</span>
+<span class="sd">        &gt;&gt;&gt; d = DAG((f_node, g_node))</span>
+<span class="sd">        &gt;&gt;&gt; print(d.synopsis_string())</span>
+<span class="sd">        a,b -&gt; f -&gt; a_plus_b</span>
+<span class="sd">        b,a_plus_b -&gt; g_ -&gt; g</span>
+<span class="sd">        &gt;&gt;&gt; d(2, 3)  # (2 + 3) * 3 == 5 * 3</span>
+<span class="sd">        15</span>
+<span class="sd">        &gt;&gt;&gt; dd = d.ch_funcs(f=lambda a, b: a - b)</span>
+<span class="sd">        &gt;&gt;&gt; dd(2, 3)  # (2 - 3) * 3 == -1 * 3</span>
+<span class="sd">        -3</span>
+
+<span class="sd">        You can reference the ``FuncNode`` you want to change through its ``.name`` or</span>
+<span class="sd">        ``.out`` attribute (both are unique to this ``FuncNode`` in a ``DAG``).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ch_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func_mapping</span><span class="o">=</span><span class="n">func_mapping</span><span class="p">,)</span></div>
+
+        <span class="c1"># _validate_func_mapping(func_mapping, self)</span>
+        <span class="c1">#</span>
+        <span class="c1"># # def validate(func_mapping, func_nodes):</span>
+        <span class="c1">#</span>
+        <span class="c1"># # def ch_func(dag, key, func):</span>
+        <span class="c1"># #     return DAG(</span>
+        <span class="c1"># #         replace_item_in_iterable(</span>
+        <span class="c1"># #             dag.func_nodes,</span>
+        <span class="c1"># #             condition=lambda fn: dag._func_node_for.get(key, None) is not None,</span>
+        <span class="c1"># #             replacement=lambda fn: ch_func_node_func(fn, func=func),</span>
+        <span class="c1"># #         )</span>
+        <span class="c1"># #     )</span>
+        <span class="c1">#</span>
+        <span class="c1"># # TODO: Change to use self._func_node_for</span>
+        <span class="c1"># def ch_func(dag, key, func):</span>
+        <span class="c1">#     return DAG(</span>
+        <span class="c1">#         replace_item_in_iterable(</span>
+        <span class="c1">#             dag.func_nodes,</span>
+        <span class="c1">#             condition=lambda fn: fn.name == key or fn.out == key,</span>
+        <span class="c1">#             replacement=lambda fn: _ch_func_node_func(fn, func=func),</span>
+        <span class="c1">#         )</span>
+        <span class="c1">#     )</span>
+        <span class="c1">#</span>
+        <span class="c1"># new_dag = self</span>
+        <span class="c1"># for key, func in func_mapping.items():</span>
+        <span class="c1">#     new_dag = ch_func(new_dag, key, func)</span>
+        <span class="c1"># return new_dag</span>
+
     <span class="c1"># ------------ utils --------------------------------------------------------------</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">params_for_src</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The ``{src_name: list_of_params_using_that_src,...}`` dictionary.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The ``{src_name: list_of_params_using_that_src,...}`` dictionary.</span>
 <span class="sd">        That is, a ``dict`` having lists of all ``Parameter`` objs that are used by a</span>
 <span class="sd">        ``node.bind`` source (value of ``node.bind``) for each such source in the graph</span>
 
@@ -1074,7 +1148,7 @@
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DAG.src_name_params"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.src_name_params">[docs]</a>    <span class="k">def</span> <span class="nf">src_name_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Generate Parameter instances that are needed to compute ``src_names``&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate Parameter instances that are needed to compute ``src_names``&quot;&quot;&quot;</span>
         <span class="c1"># see params_for_src property to see what d is</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_for_src</span>
         <span class="k">if</span> <span class="n">src_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># if no src_names given, use the names of all var_nodes</span>
@@ -1100,7 +1174,7 @@
     <span class="c1"># TODO: Find more representative (and possibly shorter) doctest:</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">graph_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The dict representing the ``{from_node: to_nodes}`` graph.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The dict representing the ``{from_node: to_nodes}`` graph.</span>
 <span class="sd">        Like ``.graph``, but with node ids (names).</span>
 
 <span class="sd">        &gt;&gt;&gt; from meshed.dag import DAG</span>
@@ -1125,7 +1199,7 @@
         <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A union of DAGs.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A union of DAGs.</span>
 
 <span class="sd">        :param other: Another DAG or a valid object to make one with ``DAG(other)``.</span>
 
@@ -1146,7 +1220,7 @@
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="n">ch_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">))</span>
 
 <div class="viewcode-block" id="DAG.add_edge"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.add_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_node</span><span class="p">,</span> <span class="n">to_node</span><span class="p">,</span> <span class="n">to_param</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add an e</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an e</span>
 
 <span class="sd">        :param from_node:</span>
 <span class="sd">        :param to_node:</span>
@@ -1266,7 +1340,7 @@
 
     <span class="c1"># TODO: There are optimization and pre-validation opportunities here!</span>
 <div class="viewcode-block" id="DAG.add_edges"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.add_edges">[docs]</a>    <span class="k">def</span> <span class="nf">add_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds multiple edges by applying ``DAG.add_edge`` multiple times.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds multiple edges by applying ``DAG.add_edge`` multiple times.</span>
 
 <span class="sd">        :param edges: An iterable of ``(from_node, to_node)`` pairs or</span>
 <span class="sd">            ``(from_node, to_node, param)`` triples.</span>
@@ -1283,35 +1357,8 @@
             <span class="n">dag</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dag</span></div>
 
-<div class="viewcode-block" id="DAG.ch_funcs"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.ch_funcs">[docs]</a>    <span class="k">def</span> <span class="nf">ch_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">name_and_func</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Change some of the functions in the DAG.</span>
-<span class="sd">        More preciseluy get a copy of the DAG where in some of the functions have</span>
-<span class="sd">        changed.</span>
-
-<span class="sd">        :param name_and_func: ``name=func`` pairs where ``name`` is the ``FuncNode.name``</span>
-<span class="sd">            of the func nodes you want to change and func is the function you want to</span>
-<span class="sd">            change it by.</span>
-<span class="sd">        :return: A new DAG with the different functions.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">def</span> <span class="nf">ch_func</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
-                <span class="n">replace_item_in_iterable</span><span class="p">(</span>
-                    <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span>
-                    <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">fn</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">,</span>
-                    <span class="n">replacement</span><span class="o">=</span><span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">ch_func_node_attrs</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">),</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-
-        <span class="n">new_dag</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">name_and_func</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">new_dag</span> <span class="o">=</span> <span class="n">ch_func</span><span class="p">(</span><span class="n">new_dag</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">new_dag</span></div>
-
 <div class="viewcode-block" id="DAG.debugger"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.debugger">[docs]</a>    <span class="k">def</span> <span class="nf">debugger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">dflt_debugger_feedback</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility to debug DAGs by computing each step sequentially, with feedback.</span>
 
 <span class="sd">        :param feedback: A callable that defines what feedback is given, usually used to</span>
@@ -1399,7 +1446,7 @@
         <span class="n">fnode_shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s1">&#39;fnode_shape&#39;</span><span class="p">],</span>
         <span class="n">func_display</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s1">&#39;func_display&#39;</span><span class="p">],</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Make lines for dot (graphviz) specification of DAG</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make lines for dot (graphviz) specification of DAG</span>
 
 <span class="sd">        &gt;&gt;&gt; def add(a, b=1): return a + b</span>
 <span class="sd">        &gt;&gt;&gt; def mult(x, y=3): return x * y</span>
@@ -1425,7 +1472,7 @@
 
 <div class="viewcode-block" id="DAG.dot_digraph_ascii"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.dot_digraph_ascii">[docs]</a>    <span class="nd">@wraps</span><span class="p">(</span><span class="n">dot_digraph_body</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">dot_digraph_ascii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get an ascii art string that represents the pipeline&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an ascii art string that represents the pipeline&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">dot_to_ascii</span>
 
         <span class="k">return</span> <span class="n">dot_to_ascii</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dot_digraph_body</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span></div>
@@ -1516,7 +1563,7 @@
 <div class="viewcode-block" id="dot_lines_of_func_nodes"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.dot_lines_of_func_nodes">[docs]</a><span class="k">def</span> <span class="nf">dot_lines_of_func_nodes</span><span class="p">(</span>
     <span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">],</span> <span class="n">start_lines</span><span class="o">=</span><span class="p">(),</span> <span class="n">end_lines</span><span class="o">=</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Got lines generator for the graphviz.DiGraph(body=list(...))</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Got lines generator for the graphviz.DiGraph(body=list(...))</span>
 
 <span class="sd">    &gt;&gt;&gt; def add(a, b=1):</span>
 <span class="sd">    ...     return a + b</span>
@@ -1623,7 +1670,7 @@
 
 
 <span class="k">def</span> <span class="nf">_add_new_line_if_none</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Since graphviz 0.18, need to have a newline in body lines.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Since graphviz 0.18, need to have a newline in body lines.</span>
 <span class="sd">    This util is there to address that, adding newlines to body lines</span>
 <span class="sd">    when missing.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">s</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
@@ -1660,7 +1707,7 @@
 
 
 <div class="viewcode-block" id="attribute_vals"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.attribute_vals">[docs]</a><span class="k">def</span> <span class="nf">attribute_vals</span><span class="p">(</span><span class="n">objs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">egress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Extract attributes from an iterable of objects</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract attributes from an iterable of objects</span>
 <span class="sd">    &gt;&gt;&gt; list(attribute_vals([print, map], attrs=[&#39;__name__&#39;, &#39;__module__&#39;]))</span>
 <span class="sd">    [(&#39;print&#39;, &#39;builtins&#39;), (&#39;map&#39;, &#39;builtins&#39;)]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1677,41 +1724,132 @@
 
 <span class="n">DagAble</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">DAG</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNodeAble</span><span class="p">]]</span>
 
+<span class="c1"># TODO: Extract hardcoded &quot;.name or .out&quot; condition so indexing/condition can be</span>
+<span class="c1">#  controlled by user.</span>
+<span class="k">def</span> <span class="nf">_validate_func_mapping</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">:</span> <span class="n">FuncMapping</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates a ``FuncMapping`` against an iterable of ``FuncNodes``.</span>
 
-<span class="k">def</span> <span class="nf">_validate_func_src</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span><span class="p">):</span>
-    <span class="n">allowed_identifiers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">names_and_outs</span><span class="p">(</span><span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">not_allowed</span> <span class="o">:=</span> <span class="p">(</span><span class="n">func_src</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="n">allowed_identifiers</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;These identifiers weren&#39;t found in func_nodes: </span><span class="si">{</span><span class="n">not_allowed</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="sd">    That is, it assures that:</span>
+
+<span class="sd">    - The keys of ``func_mapping`` are all ``FuncNode`` identifiers (i.e. appear as a</span>
+<span class="sd">    ``.name`` or ``.out`` of one of the ``func_nodes``.</span>
+
+<span class="sd">    - The values of ``func_mapping`` are all callable.</span>
+
+<span class="sd">    &gt;&gt;&gt; def f(a, b):</span>
+<span class="sd">    ...     return a + b</span>
+<span class="sd">    &gt;&gt;&gt; def g(a_plus_b, x):</span>
+<span class="sd">    ...     return a_plus_b * x</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; func_nodes = [</span>
+<span class="sd">    ...     FuncNode(func=f, out=&#39;a_plus_b&#39;), FuncNode(func=g, bind={&#39;x&#39;: &#39;b&#39;})</span>
+<span class="sd">    ... ]</span>
+<span class="sd">    &gt;&gt;&gt; _validate_func_mapping(</span>
+<span class="sd">    ...     dict(f=lambda a, b: a - b, g=lambda a_plus_b, x: x), func_nodes</span>
+<span class="sd">    ... )</span>
+
+<span class="sd">    You can use the ``.name`` or ``.out`` to index the func_node:</span>
+
+<span class="sd">    &gt;&gt;&gt; _validate_func_mapping(dict(f=lambda a, b: a - b), func_nodes)</span>
+<span class="sd">    &gt;&gt;&gt; _validate_func_mapping(dict(a_plus_b=lambda a, b: a - b), func_nodes)</span>
+
+<span class="sd">    If you mention a key that doesn&#39;t correspond to one of the elements of</span>
+<span class="sd">    ``func_nodes``, you&#39;ll be told off.</span>
+
+<span class="sd">    &gt;&gt;&gt; _validate_func_mapping(dict(not_a_key=lambda a, b: a - b), func_nodes)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">      ...</span>
+<span class="sd">    KeyError: &quot;These identifiers weren&#39;t found in func_nodes: not_a_key&quot;</span>
+
+<span class="sd">    If you mention a value that is not callable, you&#39;ll also be told off:</span>
+
+<span class="sd">    &gt;&gt;&gt; _validate_func_mapping(dict(f=&#39;hello world&#39;), func_nodes)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">      ...</span>
+<span class="sd">    TypeError: These values of func_src weren&#39;t callable: hello world</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">allowed_identifiers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">names_and_outs</span><span class="p">(</span><span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">not_allowed</span> <span class="o">:=</span> <span class="p">(</span><span class="n">func_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="n">allowed_identifiers</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;These identifiers weren&#39;t found in func_nodes: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_allowed</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="n">not_callable</span> <span class="o">:=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">func_src</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;These values of func_src weren&#39;t callable: </span><span class="si">{</span><span class="n">not_callable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">not_callable</span> <span class="o">:=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">func_mapping</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;These values of func_src weren&#39;t callable: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
 
-<span class="c1"># TODO: Include as method of DAG?</span>
-<span class="c1"># TODO: extract egress functionality to decorator</span>
+<span class="n">FuncMappingValidator</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">FuncMapping</span><span class="p">,</span> <span class="n">DagAble</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="c1"># TODO: Merge with DAG, or with Mesh (when it exists)</span>
+<span class="c1"># TODO: Make it work with any FuncNode Iterable</span>
+<span class="c1"># TODO: extract egress functionality to decorator?</span>
 <span class="nd">@double_up_as_factory</span>
-<span class="k">def</span> <span class="nf">ch_funcs</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_src</span><span class="o">=</span><span class="p">(),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">DAG</span><span class="p">):</span>
-        <span class="n">egress</span> <span class="o">=</span> <span class="n">DAG</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">egress</span> <span class="o">=</span> <span class="nb">list</span>
+<span class="k">def</span> <span class="nf">ch_funcs</span><span class="p">(</span>
+    <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">func_mapping</span><span class="p">:</span> <span class="n">FuncMapping</span> <span class="o">=</span> <span class="p">(),</span>
+    <span class="n">ch_func_node_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">FuncNode</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span> <span class="n">FuncNode</span><span class="p">]</span> <span class="o">=</span> <span class="n">ch_func_node_func</span><span class="p">,</span>
+    <span class="n">validate_func_mapping</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FuncMappingValidator</span><span class="p">]</span> <span class="o">=</span> <span class="n">_validate_func_mapping</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function (and decorator) to change the functions of func_nodes according to</span>
+<span class="sd">    the specification of a func_mapping whose keys are ``.name`` or ``.out`` values</span>
+<span class="sd">    of the nodes of ``func_nodes`` and the values are the callable we want to replace</span>
+<span class="sd">    them by.</span>
 
-    <span class="n">func_src</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">func_src</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
-        <span class="n">_validate_func_src</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">)</span>
+<span class="sd">    A constrained version of ``ch_funcs`` is used as a method of ``DAG``.</span>
+<span class="sd">    The present function is given to provide more control.</span>
 
-    <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
-        <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="n">new_func</span> <span class="o">:=</span> <span class="n">func_src</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="n">func_src</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-            <span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">new_fn_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">func</span><span class="o">=</span><span class="n">new_func</span><span class="p">)</span>
-                <span class="k">yield</span> <span class="n">FuncNode</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">new_fn_kwargs</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">fn</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">func_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">validate_func_mapping</span><span class="p">:</span>
+        <span class="n">validate_func_mapping</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+    <span class="c1"># def validate(func_mapping, func_nodes):</span>
+
+    <span class="c1"># def ch_func(dag, key, func):</span>
+    <span class="c1">#     return DAG(</span>
+    <span class="c1">#         replace_item_in_iterable(</span>
+    <span class="c1">#             dag.func_nodes,</span>
+    <span class="c1">#             condition=lambda fn: dag._func_node_for.get(key, None) is not None,</span>
+    <span class="c1">#             replacement=lambda fn: ch_func_node_func(fn, func=func),</span>
+    <span class="c1">#         )</span>
+    <span class="c1">#     )</span>
+
+    <span class="c1"># TODO: Optimize (for example, use self._func_node_for)</span>
+    <span class="k">def</span> <span class="nf">ch_func</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
+            <span class="n">replace_item_in_iterable</span><span class="p">(</span>
+                <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span>
+                <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">fn</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">key</span> <span class="ow">or</span> <span class="n">fn</span><span class="o">.</span><span class="n">out</span> <span class="o">==</span> <span class="n">key</span><span class="p">,</span>
+                <span class="n">replacement</span><span class="o">=</span><span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">ch_func_node_func</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">new_dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">func_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">new_dag</span> <span class="o">=</span> <span class="n">ch_func</span><span class="p">(</span><span class="n">new_dag</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_dag</span>
+
+    <span class="c1"># def transformed_func_nodes():</span>
+    <span class="c1">#     for fn in func_nodes:</span>
+    <span class="c1">#         if (</span>
+    <span class="c1">#             new_func := func_mapping.get(fn.out, func_mapping.get(fn.name, None))</span>
+    <span class="c1">#         ) is not None:</span>
+    <span class="c1">#             new_fn_kwargs = dict(fn.to_dict(), func=new_func)</span>
+    <span class="c1">#             yield FuncNode.from_dict(new_fn_kwargs)</span>
+    <span class="c1">#         else:</span>
+    <span class="c1">#             yield fn</span>
+
+    <span class="c1"># # If func_nodes are input as a DAG (which is an iterable of FuncNodes!),</span>
+    <span class="c1"># # make sure to return a DAG as well -- if not, return a list of FuncNodes</span>
+    <span class="c1"># if isinstance(func_nodes, DAG):</span>
+    <span class="c1">#     return DAG(transformed_func_nodes())</span>
+    <span class="c1"># else:</span>
+    <span class="c1">#     return list(transformed_func_nodes())</span>
 
 
 <span class="n">change_funcs</span> <span class="o">=</span> <span class="n">ch_funcs</span>  <span class="c1"># back-compatibility</span>
@@ -1721,7 +1859,7 @@
 <span class="c1"># TODO: extract egress functionality to decorator</span>
 <span class="nd">@double_up_as_factory</span>
 <span class="k">def</span> <span class="nf">ch_names</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.</span>
 
 <span class="sd">    :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``</span>
 <span class="sd">    :param renamer: A function taking an old name and returning the new one, or:</span>

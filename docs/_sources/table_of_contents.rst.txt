@@ -25,6 +25,7 @@
    module_docs/meshed/tests/objects_for_testing
    module_docs/meshed/tests/test_base
    module_docs/meshed/tests/test_caching
+   module_docs/meshed/tests/test_ch_funcs
    module_docs/meshed/tests/test_composition
    module_docs/meshed/tests/test_dag
    module_docs/meshed/tests/test_dag_2
