@@ -4,7 +4,7 @@ from functools import partial, wraps
 from inspect import Parameter
 from typing import Callable, Any, Union, Iterator, Optional, Iterable, Mapping, TypeVar
 
-from i2 import Sig, name_of_obj, Literal, FuncFanout, Pipe
+from i2 import Sig, name_of_obj, LiteralVal, FuncFanout, Pipe
 from operator import itemgetter
 
 T = TypeVar('T')
@@ -724,13 +724,13 @@ def conditional_trans(
     what, wrap the input with ``Literal``
 
     >>> # from meshed import Literal
-    >>> conditional_trans(Literal('10'), str.isnumeric, float)
+    >>> conditional_trans(LiteralVal('10'), str.isnumeric, float)
     '10'
 
     """
     # TODO: Maybe make Literal checking less sensitive to isinstance checks, using
     #   hasattr instead for example.
-    if isinstance(obj, Literal):  # If val is a Literal, return its value as is
+    if isinstance(obj, LiteralVal):  # If val is a Literal, return its value as is
         return obj.val
     elif condition(obj):  # If obj satisfies condition, return the alternative_obj
         return trans(obj)

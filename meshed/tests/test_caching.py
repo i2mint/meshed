@@ -5,7 +5,7 @@ def test_lazy_props():
     # Note: LazyProps isn't used at the time of writing this (2022-05-20) so if
     # test fails can (maybe) remove.
     from meshed.caching import LazyProps
-    from i2 import Literal
+    from i2 import LiteralVal
 
     # TODO: Why doesn't it work with dataclasses?
     # from dataclasses import dataclass
@@ -46,7 +46,7 @@ def test_lazy_props():
         def profit(self):
             return self.revenue - self.cost
 
-        @Literal  # Meaning "leave this attribute as is (i.e. don't make it a lazy prop)"
+        @LiteralVal  # Meaning "leave this attribute as is (i.e. don't make it a lazy prop)"
         def leave_this_alone(self, a, b):
             return a + b
 

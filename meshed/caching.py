@@ -3,7 +3,7 @@
 from functools import cached_property
 from inspect import signature
 
-from meshed.util import func_name, Literal
+from meshed.util import func_name, LiteralVal
 
 
 def set_cached_property_attr(obj, name, value):
@@ -21,7 +21,7 @@ class LazyProps:
         #         cls.__lazyprops = []
         for attr_name in (a for a in dir(cls) if not a.startswith('__')):
             attr_obj = getattr(cls, attr_name)
-            if isinstance(attr_obj, Literal):
+            if isinstance(attr_obj, LiteralVal):
                 setattr(cls, attr_name, attr_obj.val)
             #                 cls._LazyProps__literals.append(attr_name)
             else:
@@ -29,7 +29,7 @@ class LazyProps:
 
     #                 cls._LazyProps__lazyprops.append(attr_name)
 
-    Literal = Literal  # just to have Literal available as LazyProps.Literal
+    Literal = LiteralVal  # just to have Literal available as LazyProps.Literal
 
 
 def add_cached_property(cls, method, attr_name=None):
