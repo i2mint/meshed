@@ -136,7 +136,7 @@ from collections import defaultdict
 
 from dataclasses import dataclass, field
 from itertools import chain
-from operator import attrgetter
+from operator import attrgetter, eq
 from typing import (
     Callable,
     MutableMapping,
@@ -159,6 +159,8 @@ from i2.signatures import (
     empty,
     Sig,
     sort_params,
+    # SignatureComparator,
+    CallableComparator,
 )
 from meshed.base import (
     FuncNode,
@@ -169,6 +171,7 @@ from meshed.base import (
     is_func_node,
     FuncNodeAble,
     func_node_transformer,
+    compare_signatures,
 )
 
 from meshed.util import (
@@ -954,7 +957,14 @@ class DAG:
         """
         yield from self.func_nodes
 
-    def ch_funcs(self, **func_mapping: Callable):
+    # Note: signature_comparator is position only to not conflict with any of the
+    #  func_mapping keys.
+    def ch_funcs(
+        self,
+        func_comparator: CallableComparator = compare_signatures,
+        /,
+        **func_mapping: Callable,
+    ) -> 'DAG':
         """
         Change some of the functions in the DAG.
         More preciseluy get a copy of the DAG where in some of the functions have
@@ -989,8 +999,67 @@ class DAG:
 
         You can reference the ``FuncNode`` you want to change through its ``.name`` or
         ``.out`` attribute (both are unique to this ``FuncNode`` in a ``DAG``).
+
+        >>> from i2 import Sig
+        >>>
+        >>> dag = DAG([
+        ...     FuncNode(lambda a, b: a + b, name='f'),
+        ...     FuncNode(lambda y=1, z=2: y * z, name='g', bind={'z': 'f'})
+        ... ])
+        >>>
+        >>> Sig(dag)
+        <Sig (a, b, f=2, y=1)>
+        >>>
+
+        If you replace by a different function with exactly the same signature,
+        all goes well:
+
+        >>> dag.ch_funcs(g=lambda y=1, z=2: y / z)
+        DAG(func_nodes=[FuncNode(a,b -> f -> _f), FuncNode(z=_f,y -> g -> _g)], name=None)
+
+        But if you change the signature, even slightly you get an error.
+
+        Here we didn't include the defaults:
+
+        >>> dag.ch_funcs(g=lambda y, z: y / z)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+        Traceback (most recent call last):
+          ...
+        ValueError: You can only change the func of a FuncNode with a another func if the signatures match.
+          ...
+
+        Here we include defaults, but ``z``'s is different:
+
+        >>> dag.ch_funcs(g=lambda y=1, z=200: y / z)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+        Traceback (most recent call last):
+          ...
+        ValueError: You can only change the func of a FuncNode with a another func if the signatures match.
+          ...
+
+        Here the defaults are exactly the same, but the order of parameters is
+        different:
+
+        >>> dag.ch_funcs(g=lambda z=2, y=1: y / z)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+        Traceback (most recent call last):
+          ...
+        ValueError: You can only change the func of a FuncNode with a another func if the signatures match.
+          ...
+
+        This validation of the functions controlled by the ``func_comparator``
+        argument. By default this is the ``compare_signatures`` which compares the
+        signatures of the functions in the strictest way possible.
+        The is the right choice for a default since it will get you out of trouble
+        down the line.
+
+        But it's also annoying in many situations, and in those cases you should
+        specify the ``func_comparator`` that makes sense for your context.
+
+
+
+
         """
-        return ch_funcs(self, func_mapping=func_mapping,)
+        return ch_funcs(
+            self, func_mapping=func_mapping, func_comparator=func_comparator
+        )
 
         # _validate_func_mapping(func_mapping, self)
         #
@@ -1688,8 +1757,13 @@ def ch_funcs(
     func_nodes: DagAble = None,
     *,
     func_mapping: FuncMapping = (),
-    ch_func_node_func: Callable[[FuncNode, Callable], FuncNode] = ch_func_node_func,
     validate_func_mapping: Optional[FuncMappingValidator] = _validate_func_mapping,
+    # TODO: Design. Don't like the fact that ch_func_node_func needs a slot for
+    #  func_comparator, which is then given later.
+    ch_func_node_func: Callable[
+        [FuncNode, Callable, CallableComparator], FuncNode
+    ] = ch_func_node_func,
+    func_comparator: CallableComparator = compare_signatures,
 ):
     """Function (and decorator) to change the functions of func_nodes according to
     the specification of a func_mapping whose keys are ``.name`` or ``.out`` values
@@ -1717,11 +1791,13 @@ def ch_funcs(
 
     # TODO: Optimize (for example, use self._func_node_for)
     def ch_func(dag, key, func):
+        condition = lambda fn: fn.name == key or fn.out == key  # TODO: interface ctrl?
+        replacement = lambda fn: ch_func_node_func(
+            fn, func, func_comparator=func_comparator
+        )
         return DAG(
             replace_item_in_iterable(
-                dag.func_nodes,
-                condition=lambda fn: fn.name == key or fn.out == key,
-                replacement=lambda fn: ch_func_node_func(fn, func),
+                dag.func_nodes, condition=condition, replacement=replacement,
             )
         )
 

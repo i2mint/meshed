@@ -705,6 +705,7 @@ def _not_callable(obj):
     return not callable(obj)
 
 
+# Pattern: routing
 # TODO: Replace
 def conditional_trans(
     obj: T, condition: Callable[[T], bool], trans: Callable[[T], Any]
@@ -738,7 +739,9 @@ def conditional_trans(
         return obj
 
 
-def replace_item_in_iterable(iterable, condition, replacement, *, egress=None):
+def replace_item_in_iterable(
+        iterable, condition, replacement, *, egress=None
+):
     """Returns a list where all items satisfying ``condition(item)`` were replaced
     with ``replacement(item)``.
 
