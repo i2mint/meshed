@@ -1053,7 +1053,36 @@ class DAG:
         But it's also annoying in many situations, and in those cases you should
         specify the ``func_comparator`` that makes sense for your context.
 
+        Since most of the time, you'll want to compare functions solely based on
+        their signature, we provide a ``compare_signatures`` allows you to control the
+        signature comparison through a ``signature_comparator`` argument.
 
+        >>> from meshed import compare_signatures
+        >>> from functools import partial
+        >>> on_names = lambda sig1, sig2: list(sig1.parameters) == list(sig2.parameters)
+        >>> same_names = partial(compare_signatures, signature_comparator=on_names)
+        >>> d = dag.ch_funcs(same_names, g=lambda y, z: y / z);
+        >>> Sig(d)
+        <Sig (a, b, y)>
+        >>> d(2, 3, 4)
+        0.8
+
+        And this one works too:
+
+        >>> d = dag.ch_funcs(same_names, g=lambda y=1, z=200: y / z);
+
+        But our ``same_names`` function compared names including their order.
+        If we want a function with the signature ``(z=2, y=1)`` to be able to be
+        "injected" we'll need a different comparator:
+
+        >>> _names = lambda sig1, sig2: set(sig1.parameters) == set(sig2.parameters)
+        >>> same_set_of_names = partial(
+        ...     compare_signatures,
+        ...     signature_comparator=(
+        ...         lambda sig1, sig2: set(sig1.parameters) == set(sig2.parameters)
+        ...     )
+        ... )
+        >>> d = dag.ch_funcs(same_set_of_names, g=lambda z=2, y=1: y / z);
 
 
         """

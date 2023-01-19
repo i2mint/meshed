@@ -18,7 +18,7 @@ by an adjacency Mapping.
 
 
 from meshed.dag import DAG, ch_funcs, ch_names
-from meshed.base import FuncNode
+from meshed.base import FuncNode, compare_signatures
 from meshed.makers import code_to_dag, code_to_fnodes
 from meshed.itools import random_graph, topological_sort
 from meshed.util import (

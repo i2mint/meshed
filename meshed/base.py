@@ -5,9 +5,14 @@ from collections import Counter
 from dataclasses import dataclass, field, fields
 from functools import partial, cached_property
 from typing import Callable, MutableMapping, Iterable, Union, Sized, Sequence
+from operator import eq
 
 from i2 import Sig, call_somewhat_forgivingly
-from i2.signatures import ch_variadics_to_non_variadic_kind
+from i2.signatures import (
+    ch_variadics_to_non_variadic_kind,
+    CallableComparator,
+    compare_signatures,
+)
 from meshed.util import ValidationError, NameValidationError, mk_func_name
 from meshed.itools import add_edge
 
@@ -467,10 +472,6 @@ def ch_func_node_attrs(fn: FuncNode, **new_attrs_values):
     return FuncNode(**fn_kwargs)
 
 
-def compare_signatures(func1, func2):
-    return Sig(func1) == Sig(func2)
-
-
 def raise_signature_mismatch_error(fn, func):
     raise ValueError(
         'You can only change the func of a FuncNode with a another func if the '
@@ -481,14 +482,19 @@ def raise_signature_mismatch_error(fn, func):
     )
 
 
+# from i2.signatures import keyed_comparator, SignatureComparator
+# if compare_func is None:
+#     compare_func = keyed_comparator(signature_comparator, key=Sig)
+
+
 def ch_func_node_func(
     fn: FuncNode,
     func: Callable,
     *,
-    compare_func=compare_signatures,
+    func_comparator: CallableComparator = compare_signatures,
     alternative=raise_signature_mismatch_error,
 ):
-    if compare_func(fn.func, func):
+    if func_comparator(fn.func, func):
         return ch_func_node_attrs(fn, func=func)
     else:
         return alternative(fn, func)
