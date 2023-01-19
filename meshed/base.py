@@ -5,7 +5,6 @@ from collections import Counter
 from dataclasses import dataclass, field, fields
 from functools import partial, cached_property
 from typing import Callable, MutableMapping, Iterable, Union, Sized, Sequence
-from operator import eq
 
 from i2 import Sig, call_somewhat_forgivingly
 from i2.signatures import (
