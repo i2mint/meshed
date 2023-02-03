@@ -17,10 +17,12 @@
    module_docs/meshed/makers
    module_docs/meshed/scrap
    module_docs/meshed/scrap/cached_dag
+   module_docs/meshed/scrap/conversion
    module_docs/meshed/scrap/dask_graph_language
    module_docs/meshed/scrap/gk_with_networkx
    module_docs/meshed/scrap/misc_utils
    module_docs/meshed/scrap/wrapping_dags
+   module_docs/meshed/slabs
    module_docs/meshed/tests
    module_docs/meshed/tests/objects_for_testing
    module_docs/meshed/tests/test_base

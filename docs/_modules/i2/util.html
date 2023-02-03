@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>i2.util &mdash; meshed 0.1.98 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>i2.util &mdash; meshed 0.1.99 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -55,10 +55,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/makers.html">meshed.makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests.html">meshed.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
@@ -292,10 +294,10 @@
             <span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">Literal</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">LiteralVal</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An object to indicate that the value should be considered literally.</span>
 
-<span class="sd">    &gt;&gt;&gt; t = Literal(42)</span>
+<span class="sd">    &gt;&gt;&gt; t = LiteralVal(42)</span>
 <span class="sd">    &gt;&gt;&gt; t.get_val()</span>
 <span class="sd">    42</span>
 <span class="sd">    &gt;&gt;&gt; t()</span>
@@ -393,7 +395,7 @@
         <span class="n">idx</span><span class="p">,</span> <span class="o">*</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>  <span class="c1"># extract path[0] as idx &amp; update path to path[1:]</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">idx</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span>  <span class="c1"># use a filter function (but filter everything in)</span>
-        <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">Literal</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">LiteralVal</span><span class="p">):</span>
             <span class="c1"># If idx is a non-literal callable, consider it as a filter to be applied</span>
             <span class="c1"># to iter(tree)</span>
             <span class="c1"># TODO: https://github.com/i2mint/i2/issues/27</span>
@@ -401,7 +403,7 @@
                 <span class="n">path_extractor</span><span class="p">(</span><span class="n">sub_tree</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">getter</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub_tree</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">tree</span><span class="p">)</span>
             <span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">Literal</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">LiteralVal</span><span class="p">):</span>
                 <span class="c1"># Use of Literal is meant get out of trouble if we want to use a</span>
                 <span class="c1"># callable as an actual index, not as a filter.</span>
                 <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">get_val</span><span class="p">()</span>

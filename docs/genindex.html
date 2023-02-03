@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; meshed 0.1.98 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Index &mdash; meshed 0.1.99 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
@@ -55,10 +55,12 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/makers.html">meshed.makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap.html">meshed.scrap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/slabs.html">meshed.slabs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests.html">meshed.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
@@ -252,6 +254,8 @@
 </li>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.edges">edges() (in module meshed.itools)</a>
 </li>
+      <li><a href="module_docs/meshed/slabs.html#meshed.slabs.ExceptionalException">ExceptionalException</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/util.html#meshed.util.extract_items">extract_items() (in module meshed.util)</a>
@@ -306,8 +310,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/composition.html#meshed.composition.get_param">get_param() (in module meshed.composition)</a>
 </li>
-      <li><a href="module_docs/meshed/caching.html#meshed.caching.LazyProps.Literal.get_val">get_val() (meshed.caching.LazyProps.Literal method)</a>
-</li>
       <li><a href="module_docs/meshed/dag.html#meshed.dag.DAG.graph_ids">graph_ids() (meshed.dag.DAG property)</a>
 </li>
   </ul></td>
@@ -340,10 +342,10 @@
 </li>
       <li><a href="module_docs/meshed/util.html#meshed.util.instance_checker">instance_checker() (in module meshed.util)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/util.html#meshed.util.InvalidFunctionParameters">InvalidFunctionParameters</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/base.html#meshed.base.is_func_node">is_func_node() (in module meshed.base)</a>
 </li>
       <li><a href="module_docs/meshed/composition.html#meshed.composition.is_func_node_kwargs_trans">is_func_node_kwargs_trans() (in module meshed.composition)</a>
@@ -351,6 +353,8 @@
       <li><a href="module_docs/meshed/base.html#meshed.base.is_not_func_node">is_not_func_node() (in module meshed.base)</a>
 </li>
       <li><a href="module_docs/meshed/itools.html#meshed.itools.isolated_nodes">isolated_nodes() (in module meshed.itools)</a>
+</li>
+      <li><a href="module_docs/meshed/slabs.html#meshed.slabs.IteratorExit">IteratorExit</a>
 </li>
       <li><a href="module_docs/meshed/util.html#meshed.util.iterize">iterize() (in module meshed.util)</a>
 </li>
@@ -362,13 +366,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/meshed/caching.html#meshed.caching.LazyProps">LazyProps (class in meshed.caching)</a>
 </li>
-      <li><a href="module_docs/meshed/caching.html#meshed.caching.LazyProps.Literal">LazyProps.Literal (class in meshed.caching)</a>
+      <li><a href="module_docs/meshed/itools.html#meshed.itools.leaf_nodes">leaf_nodes() (in module meshed.itools)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/meshed/itools.html#meshed.itools.leaf_nodes">leaf_nodes() (in module meshed.itools)</a>
-</li>
       <li><a href="module_docs/meshed/composition.html#meshed.composition.line_with_dag">line_with_dag() (in module meshed.composition)</a>
+</li>
+      <li><a href="module_docs/meshed/caching.html#meshed.caching.LazyProps.Literal">Literal (meshed.caching.LazyProps attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -512,6 +516,13 @@
 </li>
       </ul></li>
       <li>
+    meshed.slabs
+
+      <ul>
+        <li><a href="module_docs/meshed/slabs.html#module-meshed.slabs">module</a>
+</li>
+      </ul></li>
+      <li>
     meshed.tests
 
       <ul>
@@ -567,6 +578,8 @@
         <li><a href="module_docs/meshed/tests/test_dag_2.html#module-meshed.tests.test_dag_2">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     meshed.tests.test_dag_defaults
 
@@ -574,8 +587,6 @@
         <li><a href="module_docs/meshed/tests/test_dag_defaults.html#module-meshed.tests.test_dag_defaults">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     meshed.tests.test_dag_variadics
 
@@ -672,6 +683,8 @@
         <li><a href="module_docs/meshed/scrap/misc_utils.html#module-meshed.scrap.misc_utils">meshed.scrap.misc_utils</a>
 </li>
         <li><a href="module_docs/meshed/scrap/wrapping_dags.html#module-meshed.scrap.wrapping_dags">meshed.scrap.wrapping_dags</a>
+</li>
+        <li><a href="module_docs/meshed/slabs.html#module-meshed.slabs">meshed.slabs</a>
 </li>
         <li><a href="module_docs/meshed/tests.html#module-meshed.tests">meshed.tests</a>
 </li>
@@ -844,8 +857,12 @@
 </li>
       <li><a href="module_docs/meshed/makers.html#meshed.makers.signed_itemgetter">signed_itemgetter() (in module meshed.makers)</a>
 </li>
+      <li><a href="module_docs/meshed/slabs.html#meshed.slabs.Slabs">Slabs (class in meshed.slabs)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/meshed/slabs.html#meshed.slabs.SlabsIter">SlabsIter (in module meshed.slabs)</a>
+</li>
       <li><a href="module_docs/meshed/dag.html#meshed.dag.DAG.src_name_params">src_name_params() (meshed.dag.DAG method)</a>
 </li>
       <li><a href="module_docs/meshed/makers.html#meshed.makers.src_to_func_node_factory">src_to_func_node_factory() (in module meshed.makers)</a>

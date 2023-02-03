@@ -113,7 +113,7 @@ def log_and_return(msg, logger=print):
 # TODO: Could consider (topologically) ordering the exceptions to reduce the matching
 #  possibilities (see _handle_exception)
 def _get_handle_exceptions(
-        handle_exceptions: HandledExceptionsMapSpec,
+    handle_exceptions: HandledExceptionsMapSpec,
 ) -> HandledExceptionsMap:
     if isinstance(handle_exceptions, BaseException):
         # Only one? Ensure there's a tuple of exceptions:
@@ -124,7 +124,7 @@ def _get_handle_exceptions(
 
 
 def _handle_exception(
-        instance, exc_val: BaseException, handle_exceptions: HandledExceptionsMap
+    instance, exc_val: BaseException, handle_exceptions: HandledExceptionsMap
 ) -> ExceptionHandlerOutput:
     """Looks for an exception type matching exc_val and calls the corresponding
     handler with
@@ -399,6 +399,7 @@ class Slabs:
 
         def normalize_components(components):
             for k, v in components.items():
+
                 @Sig(v)
                 def func(*args, **kwargs):
                     return v(*args, **kwargs)

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.98 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.99 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -55,10 +55,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/makers.html">meshed.makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests.html">meshed.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
@@ -240,7 +242,7 @@
 
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span><span class="p">,</span> <span class="n">eq</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Callable</span><span class="p">,</span>
     <span class="n">MutableMapping</span><span class="p">,</span>
@@ -263,6 +265,8 @@
     <span class="n">empty</span><span class="p">,</span>
     <span class="n">Sig</span><span class="p">,</span>
     <span class="n">sort_params</span><span class="p">,</span>
+    <span class="c1"># SignatureComparator,</span>
+    <span class="n">CallableComparator</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FuncNode</span><span class="p">,</span>
@@ -273,6 +277,7 @@
     <span class="n">is_func_node</span><span class="p">,</span>
     <span class="n">FuncNodeAble</span><span class="p">,</span>
     <span class="n">func_node_transformer</span><span class="p">,</span>
+    <span class="n">compare_signatures</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="p">(</span>
@@ -1058,7 +1063,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span>
 
-<div class="viewcode-block" id="DAG.ch_funcs"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.ch_funcs">[docs]</a>    <span class="k">def</span> <span class="nf">ch_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">func_mapping</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+    <span class="c1"># Note: signature_comparator is position only to not conflict with any of the</span>
+    <span class="c1">#  func_mapping keys.</span>
+<div class="viewcode-block" id="DAG.ch_funcs"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.ch_funcs">[docs]</a>    <span class="k">def</span> <span class="nf">ch_funcs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">func_comparator</span><span class="p">:</span> <span class="n">CallableComparator</span> <span class="o">=</span> <span class="n">compare_signatures</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">func_mapping</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DAG&#39;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change some of the functions in the DAG.</span>
 <span class="sd">        More preciseluy get a copy of the DAG where in some of the functions have</span>
@@ -1093,8 +1105,96 @@
 
 <span class="sd">        You can reference the ``FuncNode`` you want to change through its ``.name`` or</span>
 <span class="sd">        ``.out`` attribute (both are unique to this ``FuncNode`` in a ``DAG``).</span>
+
+<span class="sd">        &gt;&gt;&gt; from i2 import Sig</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; dag = DAG([</span>
+<span class="sd">        ...     FuncNode(lambda a, b: a + b, name=&#39;f&#39;),</span>
+<span class="sd">        ...     FuncNode(lambda y=1, z=2: y * z, name=&#39;g&#39;, bind={&#39;z&#39;: &#39;f&#39;})</span>
+<span class="sd">        ... ])</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; Sig(dag)</span>
+<span class="sd">        &lt;Sig (a, b, f=2, y=1)&gt;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+
+<span class="sd">        If you replace by a different function with exactly the same signature,</span>
+<span class="sd">        all goes well:</span>
+
+<span class="sd">        &gt;&gt;&gt; dag.ch_funcs(g=lambda y=1, z=2: y / z)</span>
+<span class="sd">        DAG(func_nodes=[FuncNode(a,b -&gt; f -&gt; _f), FuncNode(z=_f,y -&gt; g -&gt; _g)], name=None)</span>
+
+<span class="sd">        But if you change the signature, even slightly you get an error.</span>
+
+<span class="sd">        Here we didn&#39;t include the defaults:</span>
+
+<span class="sd">        &gt;&gt;&gt; dag.ch_funcs(g=lambda y, z: y / z)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">          ...</span>
+<span class="sd">        ValueError: You can only change the func of a FuncNode with a another func if the signatures match.</span>
+<span class="sd">          ...</span>
+
+<span class="sd">        Here we include defaults, but ``z``&#39;s is different:</span>
+
+<span class="sd">        &gt;&gt;&gt; dag.ch_funcs(g=lambda y=1, z=200: y / z)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">          ...</span>
+<span class="sd">        ValueError: You can only change the func of a FuncNode with a another func if the signatures match.</span>
+<span class="sd">          ...</span>
+
+<span class="sd">        Here the defaults are exactly the same, but the order of parameters is</span>
+<span class="sd">        different:</span>
+
+<span class="sd">        &gt;&gt;&gt; dag.ch_funcs(g=lambda z=2, y=1: y / z)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">          ...</span>
+<span class="sd">        ValueError: You can only change the func of a FuncNode with a another func if the signatures match.</span>
+<span class="sd">          ...</span>
+
+<span class="sd">        This validation of the functions controlled by the ``func_comparator``</span>
+<span class="sd">        argument. By default this is the ``compare_signatures`` which compares the</span>
+<span class="sd">        signatures of the functions in the strictest way possible.</span>
+<span class="sd">        The is the right choice for a default since it will get you out of trouble</span>
+<span class="sd">        down the line.</span>
+
+<span class="sd">        But it&#39;s also annoying in many situations, and in those cases you should</span>
+<span class="sd">        specify the ``func_comparator`` that makes sense for your context.</span>
+
+<span class="sd">        Since most of the time, you&#39;ll want to compare functions solely based on</span>
+<span class="sd">        their signature, we provide a ``compare_signatures`` allows you to control the</span>
+<span class="sd">        signature comparison through a ``signature_comparator`` argument.</span>
+
+<span class="sd">        &gt;&gt;&gt; from meshed import compare_signatures</span>
+<span class="sd">        &gt;&gt;&gt; from functools import partial</span>
+<span class="sd">        &gt;&gt;&gt; on_names = lambda sig1, sig2: list(sig1.parameters) == list(sig2.parameters)</span>
+<span class="sd">        &gt;&gt;&gt; same_names = partial(compare_signatures, signature_comparator=on_names)</span>
+<span class="sd">        &gt;&gt;&gt; d = dag.ch_funcs(same_names, g=lambda y, z: y / z);</span>
+<span class="sd">        &gt;&gt;&gt; Sig(d)</span>
+<span class="sd">        &lt;Sig (a, b, y)&gt;</span>
+<span class="sd">        &gt;&gt;&gt; d(2, 3, 4)</span>
+<span class="sd">        0.8</span>
+
+<span class="sd">        And this one works too:</span>
+
+<span class="sd">        &gt;&gt;&gt; d = dag.ch_funcs(same_names, g=lambda y=1, z=200: y / z);</span>
+
+<span class="sd">        But our ``same_names`` function compared names including their order.</span>
+<span class="sd">        If we want a function with the signature ``(z=2, y=1)`` to be able to be</span>
+<span class="sd">        &quot;injected&quot; we&#39;ll need a different comparator:</span>
+
+<span class="sd">        &gt;&gt;&gt; _names = lambda sig1, sig2: set(sig1.parameters) == set(sig2.parameters)</span>
+<span class="sd">        &gt;&gt;&gt; same_set_of_names = partial(</span>
+<span class="sd">        ...     compare_signatures,</span>
+<span class="sd">        ...     signature_comparator=(</span>
+<span class="sd">        ...         lambda sig1, sig2: set(sig1.parameters) == set(sig2.parameters)</span>
+<span class="sd">        ...     )</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; d = dag.ch_funcs(same_set_of_names, g=lambda z=2, y=1: y / z);</span>
+
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ch_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func_mapping</span><span class="o">=</span><span class="n">func_mapping</span><span class="p">,)</span></div>
+        <span class="k">return</span> <span class="n">ch_funcs</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">func_mapping</span><span class="o">=</span><span class="n">func_mapping</span><span class="p">,</span> <span class="n">func_comparator</span><span class="o">=</span><span class="n">func_comparator</span>
+        <span class="p">)</span></div>
 
         <span class="c1"># _validate_func_mapping(func_mapping, self)</span>
         <span class="c1">#</span>
@@ -1792,8 +1892,13 @@
     <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">func_mapping</span><span class="p">:</span> <span class="n">FuncMapping</span> <span class="o">=</span> <span class="p">(),</span>
-    <span class="n">ch_func_node_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">FuncNode</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span> <span class="n">FuncNode</span><span class="p">]</span> <span class="o">=</span> <span class="n">ch_func_node_func</span><span class="p">,</span>
     <span class="n">validate_func_mapping</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FuncMappingValidator</span><span class="p">]</span> <span class="o">=</span> <span class="n">_validate_func_mapping</span><span class="p">,</span>
+    <span class="c1"># TODO: Design. Don&#39;t like the fact that ch_func_node_func needs a slot for</span>
+    <span class="c1">#  func_comparator, which is then given later.</span>
+    <span class="n">ch_func_node_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span><span class="n">FuncNode</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">CallableComparator</span><span class="p">],</span> <span class="n">FuncNode</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="n">ch_func_node_func</span><span class="p">,</span>
+    <span class="n">func_comparator</span><span class="p">:</span> <span class="n">CallableComparator</span> <span class="o">=</span> <span class="n">compare_signatures</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Function (and decorator) to change the functions of func_nodes according to</span>
 <span class="sd">    the specification of a func_mapping whose keys are ``.name`` or ``.out`` values</span>
@@ -1821,11 +1926,13 @@
 
     <span class="c1"># TODO: Optimize (for example, use self._func_node_for)</span>
     <span class="k">def</span> <span class="nf">ch_func</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">fn</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">key</span> <span class="ow">or</span> <span class="n">fn</span><span class="o">.</span><span class="n">out</span> <span class="o">==</span> <span class="n">key</span>  <span class="c1"># TODO: interface ctrl?</span>
+        <span class="n">replacement</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">ch_func_node_func</span><span class="p">(</span>
+            <span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">func_comparator</span><span class="o">=</span><span class="n">func_comparator</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
             <span class="n">replace_item_in_iterable</span><span class="p">(</span>
-                <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span>
-                <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">fn</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">key</span> <span class="ow">or</span> <span class="n">fn</span><span class="o">.</span><span class="n">out</span> <span class="o">==</span> <span class="n">key</span><span class="p">,</span>
-                <span class="n">replacement</span><span class="o">=</span><span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">ch_func_node_func</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="p">),</span>
+                <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">condition</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="n">replacement</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 

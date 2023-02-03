@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.caching &mdash; meshed 0.1.98 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.caching &mdash; meshed 0.1.99 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -58,10 +58,12 @@
 <li class="toctree-l1"><a class="reference internal" href="makers.html">meshed.makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap.html">meshed.scrap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scrap/conversion.html">meshed.scrap.conversion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="slabs.html">meshed.slabs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests.html">meshed.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/test_base.html">meshed.tests.test_base</a></li>
@@ -111,28 +113,10 @@
 <dt id="meshed.caching.LazyProps">
 <em class="property">class </em><code class="sig-prename descclassname">meshed.caching.</code><code class="sig-name descname">LazyProps</code><a class="reference internal" href="../../_modules/meshed/caching.html#LazyProps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.caching.LazyProps" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class that makes all</p>
-<dl class="py class">
+<dl class="py attribute">
 <dt id="meshed.caching.LazyProps.Literal">
-<em class="property">class </em><code class="sig-name descname">Literal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.caching.LazyProps.Literal" title="Permalink to this definition">¶</a></dt>
-<dd><p>An object to indicate that the value should be considered literally.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">get_val</span><span class="p">()</span>
-<span class="go">42</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="p">()</span>
-<span class="go">42</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt id="meshed.caching.LazyProps.Literal.get_val">
-<code class="sig-name descname">get_val</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#meshed.caching.LazyProps.Literal.get_val" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value wrapped by Literal instance.</p>
-<p>One might want to use <code class="docutils literal notranslate"><span class="pre">literal.get_val()</span></code> instead <code class="docutils literal notranslate"><span class="pre">literal()</span></code> to get the
-value a <code class="docutils literal notranslate"><span class="pre">Literal</span></code> is wrapping because <code class="docutils literal notranslate"><span class="pre">.get_val</span></code> is more explicit.</p>
-<p>That said, with a bit of hesitation, we allow the <code class="docutils literal notranslate"><span class="pre">literal()</span></code> form as well
-since it is useful in situations where we need to use a callback function to
-get a value.</p>
-</dd></dl>
-
+<code class="sig-name descname">Literal</code><a class="headerlink" href="#meshed.caching.LazyProps.Literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">i2.util.LiteralVal</span></code></p>
 </dd></dl>
 
 </dd></dl>

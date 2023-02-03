@@ -36,7 +36,9 @@ def dot_to_ipython_image(dot_src, *, prog=DFLT_PROG, tmp_file='__tmp_file.png'):
 
     return ipython_obj
 
+
 def dot_to_pydot(dot_src):
     import pydot
+
     dot_src = ensure_dot_code(dot_src)
     return pydot.graph_from_dot_data(dot_src)
