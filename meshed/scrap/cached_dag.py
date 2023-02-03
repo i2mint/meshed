@@ -50,7 +50,7 @@ class NoOverwritesDict(dict):
 
     But if we try to write a different value...
 
-    >>> d['b'] = 22
+    >>> d['b'] = 22  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
     cached_dag.OverWritesNotAllowedError: The b key already exists and you're not allowed to change its value
