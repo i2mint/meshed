@@ -227,7 +227,12 @@ class Slabs:
 
     The produce of the volume and the lumens gives you 192, so you now have...
 
-    >>> slab = {'audio': [1, 2, 4], 'light': 126, 'turn_mov_on': False, 'movement': None}
+    >>> slab = {
+    ...     'audio': [1, 2, 4],
+    ...     'light': 126,
+    ...     'should_turn_movement_sensor_on': False,
+    ...     'movement': None
+    ... }
 
     The next slab that comes in is
 
@@ -236,7 +241,10 @@ class Slabs:
     which puts us over the threshold so
 
     >>> slab = {
-    ...     'audio': [-96, 89, -92], 'light': 501, 'turn_mov_on': True, 'movement': None
+    ...     'audio': [-96, 89, -92],
+    ...     'light': 501,
+    ...     'should_turn_movement_sensor_on': True,
+    ...     'movement': None
     ... }
 
     and the movement sensor is turned on, the movement is detected, a `human_presence`
@@ -333,14 +341,30 @@ class Slabs:
      'should_notify': True,
      'notify': None}
 
+    Note that ``Slabs`` uses a "scope" to store the intermediate results of the
+    computation. This scope is a `dict` by default, but you can pass any
+    ``MutableMapping`` to the ``scope_factory`` argument. This means that you can use
+    other means to store intermediate results simply by wrapping them in a
+    MutableMapping. For example, you could use message broker such as Redis to
+    store the intermediate results, and have the components read and write to it.
+
+    To help you with this, check out the `dol <https://pypi.org/project/dol/>`_
+    and `py2store <https://pypi.org/project/py2store/>`_ libraries.
+
     """
 
     _output_of_context_enter = None
 
-    def __init__(self, handle_exceptions=DFLT_INTERRUPT_EXCEPTIONS, **components):
+    def __init__(
+            self,
+            handle_exceptions: HandledExceptionsMapSpec = DFLT_INTERRUPT_EXCEPTIONS,
+            scope_factory: Callable[[], MutableMapping] = dict,
+            **components
+    ):
         _validate_components(components)
         self.components = components
         self.handle_exceptions = _get_handle_exceptions(handle_exceptions)
+        self.scope_factory = scope_factory
         self._handled_exception_types = tuple(self.handle_exceptions)
         self.sigs = {
             name: Sig.sig_or_default(func) for name, func in self.components.items()
@@ -361,7 +385,7 @@ class Slabs:
         At least one of the components will have to be argument-less and provide
         some data for other components to get their inputs from, if any are needed.
         """
-        return self._call_on_scope(scope={})
+        return self._call_on_scope(scope=self.scope_factory())
 
     def __iter__(self):
         """Iterates over slabs until a handle exception is raised."""
