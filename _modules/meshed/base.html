@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>meshed.base &mdash; meshed 0.1.101 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/toggleprompt.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            meshed
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/base.html">meshed.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/composition.html">meshed.composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext.html">meshed.ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/itools.html">meshed.itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/makers.html">meshed.makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_defaults.html">meshed.tests.test_dag_defaults</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_variadics.html">meshed.tests.test_dag_variadics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_getitem.html">meshed.tests.test_getitem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_makers.html">meshed.tests.test_makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_util.html">meshed.tests.test_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/util.html">meshed.util</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">meshed</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">meshed.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for meshed.base</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Base functionality of meshed</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">fields</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">cached_property</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sized</span><span class="p">,</span> <span class="n">Sequence</span>
+
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">call_somewhat_forgivingly</span>
+<span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ch_variadics_to_non_variadic_kind</span><span class="p">,</span>
+    <span class="n">CallableComparator</span><span class="p">,</span>
+    <span class="n">compare_signatures</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">NameValidationError</span><span class="p">,</span> <span class="n">mk_func_name</span>
+<span class="kn">from</span> <span class="nn">meshed.itools</span> <span class="kn">import</span> <span class="n">add_edge</span>
+
+
+<div class="viewcode-block" id="underscore_func_node_names_maker"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.underscore_func_node_names_maker">[docs]</a><span class="k">def</span> <span class="nf">underscore_func_node_names_maker</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This name maker will resolve names in the following fashion:</span>
+
+<span class="sd">     #. look at the (func) name and out given as arguments, if None...</span>
+<span class="sd">     #. use mk_func_name(func) to make names.</span>
+
+<span class="sd">    It will use the mk_func_name(func)  itself for out, but suffix the same with</span>
+<span class="sd">    an underscore to provide a mk_func_name.</span>
+
+<span class="sd">    This is so because here we want to allow easy construction of function networks</span>
+<span class="sd">    where a function&#39;s output will be used as another&#39;s input argument when</span>
+<span class="sd">    that argument has the the function&#39;s (output) name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">out</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span>
+        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">out</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">name_of_func</span> <span class="o">=</span> <span class="n">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">NameValidationError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">err_msg</span> <span class="o">=</span> <span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">err_msg</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Suggestion: You might want to specify a name explicitly in &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;FuncNode(func, name=name) instead of just giving me the func as is.&#39;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="n">NameValidationError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">name_of_func</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">name_of_func</span>
+    <span class="k">elif</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name_of_func</span> <span class="o">==</span> <span class="n">out</span><span class="p">:</span>
+            <span class="n">name_of_func</span> <span class="o">+=</span> <span class="s1">&#39;_&#39;</span>
+        <span class="k">return</span> <span class="n">name_of_func</span><span class="p">,</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="basic_node_validator"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.basic_node_validator">[docs]</a><span class="k">def</span> <span class="nf">basic_node_validator</span><span class="p">(</span><span class="n">func_node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates a func node. Raises ValidationError if something wrong. Returns None.</span>
+
+<span class="sd">    Validates:</span>
+
+<span class="sd">    * that the ``func_node`` params are valid, that is, if not ``None``</span>
+<span class="sd">        * ``func`` should be a callable</span>
+<span class="sd">        * ``name`` and ``out`` should be ``str``</span>
+<span class="sd">        * ``bind`` should be a ``Dict[str, str]``</span>
+<span class="sd">    * that the names (``.name``, ``.out`` and all ``.bind.values()``)</span>
+<span class="sd">        * are valid python identifiers (alphanumeric or underscore not starting with</span>
+<span class="sd">          digit)</span>
+<span class="sd">        * are not repeated (no duplicates)</span>
+<span class="sd">    * that ``.bind.keys()`` are indeed present as params of ``.func``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_func_node_args_validation</span><span class="p">(</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">out</span>
+    <span class="p">)</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="o">*</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+
+    <span class="n">names_that_are_not_strings</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">names_that_are_not_strings</span><span class="p">:</span>
+        <span class="n">names_that_are_not_strings</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">names_that_are_not_strings</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be strings: </span><span class="si">{</span><span class="n">names_that_are_not_strings</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Make sure there&#39;s no name duplicates</span>
+    <span class="n">_duplicates</span> <span class="o">=</span> <span class="n">duplicates</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_duplicates</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_node</span><span class="si">}</span><span class="s1"> has duplicate names: </span><span class="si">{</span><span class="n">_duplicates</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Make sure all names are identifiers</span>
+    <span class="n">_non_identifiers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">(),</span> <span class="n">names</span><span class="p">))</span>
+    <span class="c1"># print(_non_identifiers, names)</span>
+    <span class="k">if</span> <span class="n">_non_identifiers</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_node</span><span class="si">}</span><span class="s1"> non-identifier names: </span><span class="si">{</span><span class="n">_non_identifiers</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Making sure all src_name keys are in the function&#39;s signature</span>
+    <span class="n">bind_names_not_in_sig_names</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="n">func_node</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">bind_names_not_in_sig_names</span><span class="p">,</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;some bind keys weren&#39;t found as function argnames: &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bind_names_not_in_sig_names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">handle_variadics</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">ch_variadics_to_non_variadic_kind</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="c1"># sig = Sig(func)</span>
+    <span class="c1"># var_kw = sig.var_keyword_name</span>
+
+    <span class="c1">#   # may be always return the wrapped function</span>
+    <span class="c1"># # func.var_kw_name = var_kw # TODO add it when needed</span>
+
+    <span class="k">return</span> <span class="n">func</span>
+
+
+<span class="c1"># TODO: When 3.10, look into and possibly use match_args in to_dict and from_dict</span>
+<span class="c1"># TODO: Make FuncNode immutable (is there a way to use frozen=True with post_init?)</span>
+<span class="c1"># TODO: How to get a safe hash? Needs to be immutable only?</span>
+<span class="c1"># @dataclass(eq=True, order=True, unsafe_hash=True)</span>
+<div class="viewcode-block" id="FuncNode"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FuncNode</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A function wrapper that makes the function amenable to operating in a network.</span>
+
+<span class="sd">    :param func: Function to wrap</span>
+<span class="sd">    :param name: The name to associate to the function</span>
+<span class="sd">    :param bind: The {func_argname: external_name,...} mapping that defines where</span>
+<span class="sd">        the node will source the data to call the function.</span>
+<span class="sd">        This only has to be used if the external names are different from the names</span>
+<span class="sd">        of the arguments of the function.</span>
+<span class="sd">    :param out: The variable name the function should write it&#39;s result to</span>
+
+<span class="sd">    Like we stated: `FuncNode` is meant to operate in computational networks.</span>
+<span class="sd">    But knowing what it does will help you make the networks you want, so we commend</span>
+<span class="sd">    your curiousity, and will oblige with an explanation.</span>
+
+<span class="sd">    Say you have a function to multiply numbers.</span>
+
+<span class="sd">    &gt;&gt;&gt; def multiply(x, y):</span>
+<span class="sd">    ...     return x * y</span>
+
+<span class="sd">    And you use it in some code like this:</span>
+
+<span class="sd">    &gt;&gt;&gt; item_price = 3.5</span>
+<span class="sd">    &gt;&gt;&gt; num_of_items = 2</span>
+<span class="sd">    &gt;&gt;&gt; total_price = multiply(item_price, num_of_items)</span>
+
+<span class="sd">    What the execution of `total_price = multiply(item_price, num_of_items)` does is</span>
+<span class="sd">    - grab the values (in the locals scope -- a dict), of ``item_price`` and ``num_of_items``,</span>
+<span class="sd">    - call the multiply function on these, and then</span>
+<span class="sd">    - write the result to a variable (in locals) named ``total_price``</span>
+
+<span class="sd">    `FuncNode` is a function wrapper that specification of such a</span>
+<span class="sd">    `output = function(...inputs...)` assignment statement</span>
+<span class="sd">    in such a way that it can carry it out on a `scope`.</span>
+<span class="sd">    A `scope` is a `dict` where the function can find it&#39;s input values and write its</span>
+<span class="sd">    output values.</span>
+
+<span class="sd">    For example, the `FuncNode` form of the above statement would be:</span>
+
+<span class="sd">    &gt;&gt;&gt; func_node = FuncNode(</span>
+<span class="sd">    ...     func=multiply,</span>
+<span class="sd">    ...     bind={&#39;x&#39;: &#39;item_price&#39;, &#39;y&#39;: &#39;num_of_items&#39;})</span>
+<span class="sd">    &gt;&gt;&gt; func_node</span>
+<span class="sd">    FuncNode(x=item_price,y=num_of_items -&gt; multiply_ -&gt; multiply)</span>
+
+<span class="sd">    Note the `bind` is a mapping **from** the variable names of the wrapped function</span>
+<span class="sd">    **to** the names of the scope.</span>
+
+<span class="sd">    That is, when it&#39;s time to execute, it tells the `FuncNode` where to find the values</span>
+<span class="sd">    of its inputs.</span>
+
+<span class="sd">    If an input is not specified in this `bind` mapping, the scope</span>
+<span class="sd">    (external) name is supposed to be the same as the function&#39;s (internal) name.</span>
+
+<span class="sd">    The purpose of a `FuncNode` is to source some inputs somewhere, compute something</span>
+<span class="sd">    with these, and write the result somewhere. That somewhere is what we call a</span>
+<span class="sd">    scope. A scope is a dictionary (or any mutuable mapping to be precise) and it works</span>
+<span class="sd">    like this:</span>
+
+<span class="sd">    &gt;&gt;&gt; scope = {&#39;item_price&#39;: 3.5, &#39;num_of_items&#39;: 2}</span>
+<span class="sd">    &gt;&gt;&gt; func_node(scope)  # see that it returns 7.0</span>
+<span class="sd">    7.0</span>
+<span class="sd">    &gt;&gt;&gt; scope  # but also wrote this in the scope</span>
+<span class="sd">    {&#39;item_price&#39;: 3.5, &#39;num_of_items&#39;: 2, &#39;multiply&#39;: 7.0}</span>
+
+<span class="sd">    Consider ``item_price,num_of_items -&gt; multiply_ -&gt; multiply``.</span>
+<span class="sd">    See that the name of the function is used for the name of its output,</span>
+<span class="sd">    and an underscore-suffixed name for its function name.</span>
+<span class="sd">    That&#39;s the default behavior if you don&#39;t specify either a name (of the function)</span>
+<span class="sd">    for the `FuncNode`, or a `out`.</span>
+<span class="sd">    The underscore is to distinguish from the name of the function itself.</span>
+<span class="sd">    The function gets the underscore because this favors particular naming style.</span>
+
+<span class="sd">    You can give it a custom name as well.</span>
+
+<span class="sd">    &gt;&gt;&gt; FuncNode(multiply, name=&#39;total_price&#39;, out=&#39;daily_expense&#39;)</span>
+<span class="sd">    FuncNode(x,y -&gt; total_price -&gt; daily_expense)</span>
+
+<span class="sd">    If you give an `out`, but not a `name` (for the function), the function&#39;s</span>
+<span class="sd">    name will be taken:</span>
+
+<span class="sd">    &gt;&gt;&gt; FuncNode(multiply, out=&#39;daily_expense&#39;)</span>
+<span class="sd">    FuncNode(x,y -&gt; multiply -&gt; daily_expense)</span>
+
+<span class="sd">    If you give a `name`, but not a `out`, an underscore-prefixed version of</span>
+<span class="sd">    the `name` will be taken:</span>
+
+<span class="sd">    &gt;&gt;&gt; FuncNode(multiply, name=&#39;total_price&#39;)</span>
+<span class="sd">    FuncNode(x,y -&gt; total_price -&gt; _total_price)</span>
+
+<span class="sd">    Note: In the context of networks if you want to reuse a same function</span>
+<span class="sd">    (say, `multiply`) in multiple places</span>
+<span class="sd">    you&#39;ll **need** to give it a custom name because the functions are identified by</span>
+<span class="sd">    this name in the network.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">bind</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">func_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># TODO: Integrate more</span>
+    <span class="c1"># write_output_into_scope: bool = True  # TODO: Do we really want to allow False?</span>
+    <span class="n">names_maker</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">underscore_func_node_names_maker</span>
+    <span class="n">node_validator</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">basic_node_validator</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">handle_variadics</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">_func_node_args_validation</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_maker</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="c1"># self.__name__ = self.name</span>
+        <span class="c1"># The wrapped function&#39;s signature will be useful</span>
+        <span class="c1"># when interfacing with it and the scope.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
+
+        <span class="c1"># replace integer bind keys with their corresponding name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">_bind_where_int_keys_repl_with_argname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+        <span class="c1"># complete bind with the argnames of the signature</span>
+        <span class="n">_complete_dict_with_iterable_of_required_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+        <span class="n">_func_node_args_validation</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_mapped_extraction</span><span class="p">,</span> <span class="n">to_extract</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">func_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FuncNode.synopsis_string"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.synopsis_string">[docs]</a>    <span class="k">def</span> <span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_info</span><span class="o">=</span><span class="s1">&#39;values&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param bind_info:</span>
+<span class="sd">        :return:</span>
+
+<span class="sd">        &gt;&gt;&gt; fn = FuncNode(</span>
+<span class="sd">        ...     func=lambda y, c: None , name=&#39;h&#39;, bind={&#39;y&#39;: &#39;b&#39;, &#39;c&#39;: &#39;c&#39;}, out=&#39;d&#39;</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; fn.synopsis_string()</span>
+<span class="sd">        &#39;b,c -&gt; h -&gt; d&#39;</span>
+<span class="sd">        &gt;&gt;&gt; fn.synopsis_string(bind_info=&#39;keys&#39;)</span>
+<span class="sd">        &#39;y,c -&gt; h -&gt; d&#39;</span>
+<span class="sd">        &gt;&gt;&gt; fn.synopsis_string(bind_info=&#39;hybrid&#39;)</span>
+<span class="sd">        &#39;y=b,c -&gt; h -&gt; d&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">bind_info</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;values&#39;</span><span class="p">,</span> <span class="s1">&#39;varnodes&#39;</span><span class="p">,</span> <span class="s1">&#39;var_nodes&#39;</span><span class="p">}:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s1">&#39;-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="n">bind_info</span> <span class="o">==</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">k</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s1">&#39;-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="n">bind_info</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;keys&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">}:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s1">&#39;-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;FuncNode(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="s2">&quot;hybrid&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+<div class="viewcode-block" id="FuncNode.call_on_scope"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.call_on_scope">[docs]</a>    <span class="k">def</span> <span class="nf">call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">write_output_into_scope</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call the function using the given scope both to source arguments and write</span>
+<span class="sd">        results.</span>
+
+<span class="sd">        Note: This method is only meant to be used as a backend to __call__, not as</span>
+<span class="sd">        an actual interface method. Additional control/constraints on read and writes</span>
+<span class="sd">        can be implemented by providing a custom scope for that.&quot;&quot;&quot;</span>
+        <span class="n">relevant_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extractor</span><span class="p">(</span><span class="n">scope</span><span class="p">))</span>
+        <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">args_and_kwargs_from_kwargs</span><span class="p">(</span><span class="n">relevant_kwargs</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">call_somewhat_forgivingly</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">enforce_sig</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">write_output_into_scope</span><span class="p">:</span>
+            <span class="n">scope</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+    <span class="k">def</span> <span class="nf">_hash_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Design ideo.</span>
+<span class="sd">        Attempt to construct a hash that reflects the actual identity we want.</span>
+<span class="sd">        Need to transform to int. Only identifier chars alphanumerics and underscore</span>
+<span class="sd">        and space are used, so could possibly encode as int (for __hash__ method)</span>
+<span class="sd">        in a way that is reverse-decodable and with reasonable int size.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="s1">&#39;hybrid&#39;</span><span class="p">)</span>
+        <span class="c1"># return &#39;;&#39;.join(self.bind) + &#39;::&#39; + self.out</span>
+
+    <span class="c1"># TODO: Find a better one. Need to have guidance on hash and eq methods dos-&amp;-donts</span>
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash_str</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deprecated: Don&#39;t use. Might be a normal function with a signature&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FuncNode.to_dict"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The inverse of from_dict: FuncNode.from_dict(fn.to_dict()) == fn&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)}</span></div>
+
+<div class="viewcode-block" id="FuncNode.from_dict"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.from_dict">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The inverse of to_dict: Make a ``FuncNode`` from a dictionary of init args&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">dictionary</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FuncNode.has_as_instance"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.FuncNode.has_as_instance">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">has_as_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify if ``obj`` is an instance of a FuncNode (or specific sub-class).</span>
+
+<span class="sd">        The usefulness of this method is to not have to make a lambda with isinstance</span>
+<span class="sd">        when filtering.</span>
+
+<span class="sd">        &gt;&gt;&gt; FuncNode.has_as_instance(FuncNode(lambda x: x))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; FuncNode.has_as_instance(&quot;I am not a FuncNode: I&#39;m a string&quot;)</span>
+<span class="sd">        False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Mesh"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.Mesh">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Mesh</span><span class="p">:</span>
+    <span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_info</span><span class="o">=</span><span class="s1">&#39;values&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">func_node</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validate_that_func_node_names_are_sane"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.validate_that_func_node_names_are_sane">[docs]</a><span class="k">def</span> <span class="nf">validate_that_func_node_names_are_sane</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assert that the names of func_nodes are sane.</span>
+<span class="sd">    That is:</span>
+
+<span class="sd">    * are valid dot (graphviz) names (we&#39;ll use str.isidentifier because lazy)</span>
+<span class="sd">    * All the ``func.name`` and ``func.out`` are unique</span>
+<span class="sd">    * more to come (TODO)...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+    <span class="n">node_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">]</span>
+    <span class="n">outs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">out</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">,</span> <span class="n">node_names</span><span class="p">)</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;some node names weren&#39;t valid identifiers: </span><span class="si">{</span><span class="n">node_names</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">,</span> <span class="n">outs</span><span class="p">)</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;some return names weren&#39;t valid identifiers: </span><span class="si">{</span><span class="n">outs</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">node_names</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">outs</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">node_names</span> <span class="o">+</span> <span class="n">outs</span><span class="p">)</span>
+        <span class="n">offending_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Some of your node names and/or outs where used more than once. &#39;</span>
+            <span class="sa">f</span><span class="s2">&quot;They shouldn&#39;t. These are the names I find offensive: </span><span class="si">{</span><span class="n">offending_names</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_mk_func_nodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">):</span>
+    <span class="c1"># TODO: Take care of names (or track and take care if collision)</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+        <span class="c1"># if input is a single function, make it a list containing that function</span>
+        <span class="n">single_func</span> <span class="o">=</span> <span class="n">func_nodes</span>
+        <span class="n">func_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">single_func</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_func_node</span><span class="p">(</span><span class="n">func_node</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">func_node</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func_node</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can&#39;t convert this to a FuncNode: </span><span class="si">{</span><span class="n">func_node</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_func_nodes_to_graph_dict</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">):</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">src_name</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">add_edge</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">src_name</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="n">add_edge</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">out</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">g</span>
+
+
+<div class="viewcode-block" id="is_func_node"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.is_func_node">[docs]</a><span class="k">def</span> <span class="nf">is_func_node</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; is_func_node(FuncNode(lambda x: x))</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; is_func_node(&quot;I am not a FuncNode: I&#39;m a string&quot;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># A weaker check than an isinstance(obj, FuncNode), which fails when we&#39;re</span>
+    <span class="c1"># developing (therefore changing) FuncNode definition (without relaunching python</span>
+    <span class="c1"># kernel). This is to be used instead, at least during development times</span>
+    <span class="c1"># TODO: Replace with isinstance(obj, FuncNode) is this when development</span>
+    <span class="c1">#  stabalizes</span>
+    <span class="c1"># return isinstance(obj, FuncNode)</span>
+    <span class="bp">cls</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">cls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;FuncNode&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">mro</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_not_func_node"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.is_not_func_node">[docs]</a><span class="k">def</span> <span class="nf">is_not_func_node</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; is_not_func_node(FuncNode(lambda x: x))</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; is_not_func_node(&quot;I am not a FuncNode: I&#39;m a string&quot;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">FuncNode</span><span class="o">.</span><span class="n">has_as_instance</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_init_params_of_instance"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.get_init_params_of_instance">[docs]</a><span class="k">def</span> <span class="nf">get_init_params_of_instance</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get names of instance object ``obj`` that are also parameters of the</span>
+<span class="sd">    ``__init__`` of its class&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">Sig</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span><span class="o">.</span><span class="n">names</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="ch_func_node_attrs"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.ch_func_node_attrs">[docs]</a><span class="k">def</span> <span class="nf">ch_func_node_attrs</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="o">**</span><span class="n">new_attrs_values</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a copy of the func node with some of it&#39;s attributes changed</span>
+
+<span class="sd">    &gt;&gt;&gt; def plus(a, b):</span>
+<span class="sd">    ...     return a + b</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; def minus(a, b):</span>
+<span class="sd">    ...     return a - b</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; fn = FuncNode(func=plus, out=&#39;sum&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fn.func == plus</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; fn.name == &#39;plus&#39;</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; new_fn = ch_func_node_attrs(fn, func=minus)</span>
+<span class="sd">    &gt;&gt;&gt; new_fn.func == minus</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; new_fn.synopsis_string() == &#39;a,b -&gt; plus -&gt; sum&#39;</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; newer_fn = ch_func_node_attrs(fn, func=minus, name=&#39;sub&#39;, out=&#39;difference&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; newer_fn.synopsis_string() == &#39;a,b -&gt; sub -&gt; difference&#39;</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">init_params</span> <span class="o">=</span> <span class="n">get_init_params_of_instance</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">params_that_are_not_init_params</span> <span class="o">:=</span> <span class="p">(</span><span class="n">new_attrs_values</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_params</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;These are not params of </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">: &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">params_that_are_not_init_params</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+    <span class="n">fn_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">init_params</span><span class="p">,</span> <span class="o">**</span><span class="n">new_attrs_values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span><span class="o">**</span><span class="n">fn_kwargs</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">raise_signature_mismatch_error</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="s1">&#39;You can only change the func of a FuncNode with a another func if the &#39;</span>
+        <span class="s1">&#39;signatures match.</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="si">{</span><span class="n">fn</span><span class="si">=}</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="si">{</span><span class="n">Sig</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">func</span><span class="p">)</span><span class="si">=}</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="si">{</span><span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="si">=}</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># from i2.signatures import keyed_comparator, SignatureComparator</span>
+<span class="c1"># if compare_func is None:</span>
+<span class="c1">#     compare_func = keyed_comparator(signature_comparator, key=Sig)</span>
+
+
+<span class="k">def</span> <span class="nf">ch_func_node_func</span><span class="p">(</span>
+    <span class="n">fn</span><span class="p">:</span> <span class="n">FuncNode</span><span class="p">,</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">func_comparator</span><span class="p">:</span> <span class="n">CallableComparator</span> <span class="o">=</span> <span class="n">compare_signatures</span><span class="p">,</span>
+    <span class="n">alternative</span><span class="o">=</span><span class="n">raise_signature_mismatch_error</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">func_comparator</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ch_func_node_attrs</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">alternative</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_keys_and_values_are_strings_validation</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be a str: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be a str: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_func_node_args_validation</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bind</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates the four first arguments that are used to make a ``FuncNode``.</span>
+<span class="sd">    Namely, if not ``None``,</span>
+
+<span class="sd">    * ``func`` should be a callable</span>
+
+<span class="sd">    * ``name`` and ``out`` should be ``str``</span>
+
+<span class="sd">    * ``bind`` should be a ``Dict[str, str]``, ``Dict[int, str]`` or ``List[str]``</span>
+
+<span class="sd">    * ``out`` should be a str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be callable: </span><span class="si">{</span><span class="n">func</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be a str: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bind</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bind</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be a dict: </span><span class="si">{</span><span class="n">bind</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">_keys_and_values_are_strings_validation</span><span class="p">(</span><span class="n">bind</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be a str: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_old_mapped_extraction</span><span class="p">(</span><span class="n">extract_from</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">key_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated: Old version of _mapped_extraction.</span>
+
+<span class="sd">    for every (k, v) of key_map whose v is a key of extract_from, yields</span>
+<span class="sd">    (v, extract_from[v])</span>
+
+<span class="sd">    Meant to be curried into an extractor, and wrapped in dict.</span>
+
+<span class="sd">    &gt;&gt;&gt; extracted = _old_mapped_extraction(</span>
+<span class="sd">    ...     {&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}, # extract_from</span>
+<span class="sd">    ...     {&#39;A&#39;: &#39;a&#39;, &#39;C&#39;: &#39;c&#39;, &#39;D&#39;: &#39;d&#39;}  # note that there&#39;s no &#39;d&#39; in extract_from</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; dict(extracted)</span>
+<span class="sd">    {&#39;a&#39;: 1, &#39;c&#39;: 3}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">key_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">extract_from</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">v</span><span class="p">,</span> <span class="n">extract_from</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_mapped_extraction</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">to_extract</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;for every (desired_name, src_name) of to_extract whose v is a key of source,</span>
+<span class="sd">    yields (desired_name, source[src_name])</span>
+
+<span class="sd">    It&#39;s purpose is to extract inputs from a src.</span>
+<span class="sd">    The names used in the src may be different from those desired by the function,</span>
+<span class="sd">    those to_extract specifies what to extract by a {desired_name: src_name, ...}</span>
+<span class="sd">    map.</span>
+
+<span class="sd">    _mapped_extraction_ is mant to be curried into an extractor.</span>
+
+<span class="sd">    &gt;&gt;&gt; extracted = _mapped_extraction(</span>
+<span class="sd">    ...     src={&#39;A&#39;: 1, &#39;B&#39;: 2, &#39;C&#39;: 3},</span>
+<span class="sd">    ...     to_extract={&#39;a&#39;: &#39;A&#39;, &#39;c&#39;: &#39;C&#39;, &#39;d&#39;: &#39;D&#39;}  # note that there&#39;s no &#39;d&#39; here</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; dict(extracted)</span>
+<span class="sd">    {&#39;a&#39;: 1, &#39;c&#39;: 3}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">desired_name</span><span class="p">,</span> <span class="n">src_name</span> <span class="ow">in</span> <span class="n">to_extract</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">src_name</span> <span class="ow">in</span> <span class="n">src</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">desired_name</span><span class="p">,</span> <span class="n">src</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">duplicates</span><span class="p">(</span><span class="n">elements</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">Sized</span><span class="p">]):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+
+<span class="k">def</span> <span class="nf">_bind_where_int_keys_repl_with_argname</span><span class="p">(</span><span class="n">bind</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param bind: A bind dict, as used in FuncNode</span>
+<span class="sd">    :param names: A sequence of strings</span>
+<span class="sd">    :return: A bind dict where integer keys were replaced with the corresponding</span>
+<span class="sd">        name from names.</span>
+
+<span class="sd">    &gt;&gt;&gt; bind = {0: &#39;a&#39;, 1: &#39;b&#39;, &#39;c&#39;: &#39;x&#39;, &#39;d&#39;: &#39;y&#39;}</span>
+<span class="sd">    &gt;&gt;&gt; names = &#39;e f g h&#39;.split()</span>
+<span class="sd">    &gt;&gt;&gt; _bind_where_int_keys_repl_with_argname(bind, names)</span>
+<span class="sd">    {&#39;e&#39;: &#39;a&#39;, &#39;f&#39;: &#39;b&#39;, &#39;c&#39;: &#39;x&#39;, &#39;d&#39;: &#39;y&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">transformed_items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">argname</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="k">yield</span> <span class="n">argname</span><span class="p">,</span> <span class="n">v</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">transformed_items</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">_complete_dict_with_iterable_of_required_keys</span><span class="p">(</span>
+    <span class="n">to_complete</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">complete_with</span><span class="p">:</span> <span class="n">Iterable</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Complete `to_complete` (in place) with `complete_with`</span>
+<span class="sd">    `complete_with` contains values that must be covered by `to_complete`</span>
+<span class="sd">    Those values that are not covered will be inserted in to_complete,</span>
+<span class="sd">    with key=val</span>
+
+<span class="sd">    &gt;&gt;&gt; d = {&#39;a&#39;: &#39;A&#39;, &#39;c&#39;: &#39;C&#39;}</span>
+<span class="sd">    &gt;&gt;&gt; _complete_dict_with_iterable_of_required_keys(d, &#39;abc&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; d</span>
+<span class="sd">    {&#39;a&#39;: &#39;A&#39;, &#39;c&#39;: &#39;C&#39;, &#39;b&#39;: &#39;b&#39;}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">keys_already_covered</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">to_complete</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">required_key</span> <span class="ow">in</span> <span class="n">complete_with</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">required_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keys_already_covered</span><span class="p">:</span>
+            <span class="n">to_complete</span><span class="p">[</span><span class="n">required_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">required_key</span>
+
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Mapping</span>
+
+<span class="c1"># TODO: Make a type where ``isinstance(s, Identifier) == s.isidentifier()``</span>
+<span class="n">Identifier</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">&#39;Identifier&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># + should satisfy str.isidentifier</span>
+<span class="n">Bind</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span>
+    <span class="s1">&#39;Bind&#39;</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">[</span>
+        <span class="nb">str</span><span class="p">,</span>  <span class="c1"># Identifier or &#39; &#39;.join(Iterable[Identifier])</span>
+        <span class="n">Dict</span><span class="p">[</span><span class="n">Identifier</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">],</span>
+        <span class="n">Sequence</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Identifier</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Identifier</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">]]],</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="n">IdentifierMapping</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Identifier</span><span class="p">,</span> <span class="n">Identifier</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="identifier_mapping"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.identifier_mapping">[docs]</a><span class="k">def</span> <span class="nf">identifier_mapping</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Bind</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IdentifierMapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an ``IdentifierMapping`` dict from a more loosely defined ``Bind``.</span>
+
+<span class="sd">    You can get an identifier mapping (that is, an explicit for for a ``bind`` argument)</span>
+<span class="sd">    from...</span>
+
+<span class="sd">    ... a single space-separated string</span>
+
+<span class="sd">    &gt;&gt;&gt; identifier_mapping(&#39;x a_b yz&#39;)  #</span>
+<span class="sd">    {&#39;x&#39;: &#39;x&#39;, &#39;a_b&#39;: &#39;a_b&#39;, &#39;yz&#39;: &#39;yz&#39;}</span>
+
+<span class="sd">    ... an iterable of strings or pairs of strings</span>
+
+<span class="sd">    &gt;&gt;&gt; identifier_mapping([&#39;foo&#39;, (&#39;bar&#39;, &#39;mitzvah&#39;)])</span>
+<span class="sd">    {&#39;foo&#39;: &#39;foo&#39;, &#39;bar&#39;: &#39;mitzvah&#39;}</span>
+
+<span class="sd">    ... a dict will be considered to be the mapping itself</span>
+
+<span class="sd">    &gt;&gt;&gt; identifier_mapping({&#39;x&#39;: &#39;y&#39;, &#39;a&#39;: &#39;b&#39;})</span>
+<span class="sd">    {&#39;x&#39;: &#39;y&#39;, &#39;a&#39;: &#39;b&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">item</span><span class="p">,</span> <span class="n">item</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">item</span>
+
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="o">**</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<span class="n">FuncNodeAble</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="func_node_transformer"><a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.func_node_transformer">[docs]</a><span class="k">def</span> <span class="nf">func_node_transformer</span><span class="p">(</span>
+    <span class="n">fn</span><span class="p">:</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="n">kwargs_transformers</span><span class="o">=</span><span class="p">(),</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a modified ``FuncNode`` from an iterable of ``kwargs_trans`` modifiers.&quot;&quot;&quot;</span>
+    <span class="n">func_node_kwargs</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">kwargs_transformers</span><span class="p">):</span>
+        <span class="n">kwargs_transformers</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs_transformers</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">kwargs_transformers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">new_kwargs</span> <span class="o">:=</span> <span class="n">trans</span><span class="p">(</span><span class="n">func_node_kwargs</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">func_node_kwargs</span> <span class="o">=</span> <span class="n">new_kwargs</span>
+    <span class="k">return</span> <span class="n">FuncNode</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">func_node_kwargs</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

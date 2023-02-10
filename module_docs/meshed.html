@@ -47,7 +47,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#extras">Extras</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="meshed/base.html">meshed.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="meshed/caching.html">meshed.caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="meshed/composition.html">meshed.composition</a></li>
@@ -110,8 +113,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="meshed">
-<h1>meshed<a class="headerlink" href="#meshed" title="Permalink to this headline">¶</a></h1>
+  <section id="module-meshed">
+<span id="meshed"></span><h1>meshed<a class="headerlink" href="#module-meshed" title="Permalink to this headline">¶</a></h1>
+<p><cite>meshed</cite> contains a set of tools that allow the developer to provide a collection
+of python objects (think functions) and some policy of how these should be connected
+and get an aggregate object that will use the underlying objects in some way.</p>
+<p>If you want something concrete, think of the python objects to be functions,
+and the aggregation policies to be things like “function composition” (pipelines)
+or DAGs.
+But the intent is to be able to get more general aggregations than those.</p>
+<section id="extras">
+<h2>Extras<a class="headerlink" href="#extras" title="Permalink to this headline">¶</a></h2>
+<p><cite>itools.py</cite> contain tools that enable operations on graphs where graphs are represented
+by an adjacency Mapping.</p>
+</section>
 </section>
 
 

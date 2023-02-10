@@ -110,8 +110,64 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="meshed-examples-vaccine-vs-no-vaccine">
-<h1>meshed.examples.vaccine_vs_no_vaccine<a class="headerlink" href="#meshed-examples-vaccine-vs-no-vaccine" title="Permalink to this headline">¶</a></h1>
+  <section id="module-meshed.examples.vaccine_vs_no_vaccine">
+<span id="meshed-examples-vaccine-vs-no-vaccine"></span><h1>meshed.examples.vaccine_vs_no_vaccine<a class="headerlink" href="#module-meshed.examples.vaccine_vs_no_vaccine" title="Permalink to this headline">¶</a></h1>
+<p>Simple model relating vaccination to death toll, involving exposure and infection rate</p>
+<blockquote>
+<div><p>┌──────────────────────┐
+│   death_vax_factor   │
+└──────────────────────┘</p>
+<blockquote>
+<div><p>│
+▼</p>
+</div></blockquote>
+</div></blockquote>
+<p>┌─────────────────┐     ┌──────────────────────────────────┐
+│ die_if_infected │ ──▶ │               die                │
+└─────────────────┘     └──────────────────────────────────┘</p>
+<blockquote>
+<div><p>│                       ▲    ▲
+▼                       │    │</p>
+</div></blockquote>
+<p>┌─────────────────┐     ┌──────────────────────┐  │  ┌─────┐
+│   population    │ ──▶ │      death_toll      │  │  │ vax │
+└─────────────────┘     └──────────────────────┘  │  └─────┘</p>
+<blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><p>│    │</p>
+</div></blockquote>
+<p>┌──────────────────────┐  │    │
+│ infection_vax_factor │  │    │
+└──────────────────────┘  │    │</p>
+<blockquote>
+<div><p>│                       │    │
+▼                       │    │</p>
+</div></blockquote>
+<p>┌──────────────────────┐  │    │</p>
+</div></blockquote>
+<p>┌▶ │       infected       │ ─┘    │
+│  └──────────────────────┘       │
+│    ▲                            │
+│    └────────────────────────────┘
+│  ┌──────────────────────┐
+│  │       exposed        │
+│  └──────────────────────┘
+│    │
+│    ▼
+│  ┌──────────────────────┐
+└─ │          r           │</p>
+<blockquote>
+<div><dl class="simple">
+<dt>└──────────────────────┘</dt><dd><p>▲
+│</p>
+</dd>
+</dl>
+<p>┌──────────────────────┐
+│   infect_if_expose   │
+└──────────────────────┘</p>
+</div></blockquote>
+</div></blockquote>
 </section>
 
 

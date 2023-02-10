@@ -110,8 +110,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="meshed-tests-utils-for-testing">
-<h1>meshed.tests.utils_for_testing<a class="headerlink" href="#meshed-tests-utils-for-testing" title="Permalink to this headline">¶</a></h1>
+  <section id="module-meshed.tests.utils_for_testing">
+<span id="meshed-tests-utils-for-testing"></span><h1>meshed.tests.utils_for_testing<a class="headerlink" href="#module-meshed.tests.utils_for_testing" title="Permalink to this headline">¶</a></h1>
+<p>Make objects for testing fast</p>
+<dl class="py function">
+<dt id="meshed.tests.utils_for_testing.string_to_dag">
+<code class="sig-prename descclassname">meshed.tests.utils_for_testing.</code><code class="sig-name descname">string_to_dag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dot_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/tests/utils_for_testing.html#string_to_dag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.tests.utils_for_testing.string_to_dag" title="Permalink to this definition">¶</a></dt>
+<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dot_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">... </span><span class="s1">a, b, c -&gt; d -&gt; e</span>
+<span class="gp">... </span><span class="s1">b, f -&gt; g -&gt; h</span>
+<span class="gp">... </span><span class="s1">a, e -&gt; i -&gt; j</span>
+<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">string_to_dag</span><span class="p">(</span><span class="n">dot_string</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+<span class="go">a,b,c -&gt; d -&gt; e</span>
+<span class="go">b,f -&gt; g -&gt; h</span>
+<span class="go">a,e -&gt; i -&gt; j</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Sig</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+<span class="go">&lt;Sig (a, b, c, f)&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">[&#39;g(b=2, f=4)&#39;, &#39;i(a=1, e=d(a=1, b=2, c=3))&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 
 

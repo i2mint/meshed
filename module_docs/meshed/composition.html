@@ -110,8 +110,52 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="meshed-composition">
-<h1>meshed.composition<a class="headerlink" href="#meshed-composition" title="Permalink to this headline">¶</a></h1>
+  <section id="module-meshed.composition">
+<span id="meshed-composition"></span><h1>meshed.composition<a class="headerlink" href="#module-meshed.composition" title="Permalink to this headline">¶</a></h1>
+<p>Specific use of FuncNode and DAG</p>
+<dl class="py function">
+<dt id="meshed.composition.func_node_name_trans">
+<code class="sig-prename descclassname">meshed.composition.</code><code class="sig-name descname">func_node_name_trans</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name_trans</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>str<span class="p">]</span><span class="p">, </span>Optional<span class="p">[</span>str<span class="p">, </span>None<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">also_apply_to_func_label</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/composition.html#func_node_name_trans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.composition.func_node_name_trans" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name_trans</strong> – A function taking a str and returning a str, or None (to indicate
+that no transformation should take place).</p></li>
+<li><p><strong>also_apply_to_func_label</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.composition.get_param">
+<code class="sig-prename descclassname">meshed.composition.</code><code class="sig-name descname">get_param</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/composition.html#get_param"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.composition.get_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the name of the parameter of a function with exactly one parameter.
+Raise an error if more or less parameters.
+:param func: callable, the function to inspect
+:return: str, the name of the single parameter of func</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.composition.is_func_node_kwargs_trans">
+<code class="sig-prename descclassname">meshed.composition.</code><code class="sig-name descname">is_func_node_kwargs_trans</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../../_modules/meshed/composition.html#is_func_node_kwargs_trans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.composition.is_func_node_kwargs_trans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True iff the only required params of func are FuncNode field names.
+This ensures that the func will be able to be bound to FuncNode fields and
+therefore used as a func_node (kwargs) transformer.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.composition.line_with_dag">
+<code class="sig-prename descclassname">meshed.composition.</code><code class="sig-name descname">line_with_dag</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">steps</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/composition.html#line_with_dag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.composition.line_with_dag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emulate a Line object with a DAG
+:param steps: an iterable of callables, the steps of the pipeline. Each step should have exactly one parameter
+and the output of each step is fed into the next
+:return: a DAG instance computing the composition of all the functions in steps, in the provided order</p>
+</dd></dl>
+
 </section>
 
 
