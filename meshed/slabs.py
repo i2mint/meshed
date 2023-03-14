@@ -18,11 +18,17 @@ happened around the same time.
 `Slabs` is a tool that allows you to source multiple streams into a stream of
 slabs that can contain the original data, or other datas computed from it, or both.
 
-Note to developers looking into the code: The overview of the `Slabs` class:
+Note to developers, though the code below is a reduced form of the actual code,
+it should be enough to understand the general idea.
+For a discussion about the design of Slabs, see
+https://github.com/i2mint/meshed/discussions/49.
+
 
 >>> class Slabs:
 ...     def _call_on_scope(self, scope):
-...         '''Calls the components 1 by 1, sourcing inputs and writing outputs in scope'''
+...         '''
+...         Calls the components 1 by 1, sourcing inputs and writing outputs in scope
+...         '''
 ...
 ...     def __next__(self):
 ...         '''Get the next slab by calling _call_on_scope on an new empty scope.
@@ -387,6 +393,8 @@ class Slabs:
         """
         return self._call_on_scope(scope=self.scope_factory())
 
+    # TODO: Extend the flow control capabilities of execption handling
+    #   (see https://github.com/i2mint/meshed/discussions/49)
     def __iter__(self):
         """Iterates over slabs until a handle exception is raised."""
         with self:  # enter all the contexts that need to be entered
