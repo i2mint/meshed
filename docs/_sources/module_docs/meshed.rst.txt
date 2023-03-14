@@ -1,4 +1,0 @@
-meshed
-======
-.. automodule:: meshed
-   :members:

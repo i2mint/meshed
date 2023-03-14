@@ -362,10 +362,10 @@ class Slabs:
     _output_of_context_enter = None
 
     def __init__(
-            self,
-            handle_exceptions: HandledExceptionsMapSpec = DFLT_INTERRUPT_EXCEPTIONS,
-            scope_factory: Callable[[], MutableMapping] = dict,
-            **components
+        self,
+        handle_exceptions: HandledExceptionsMapSpec = DFLT_INTERRUPT_EXCEPTIONS,
+        scope_factory: Callable[[], MutableMapping] = dict,
+        **components,
     ):
         _validate_components(components)
         self.components = components
