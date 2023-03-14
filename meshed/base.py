@@ -112,6 +112,8 @@ def handle_variadics(func):
 # TODO: When 3.10, look into and possibly use match_args in to_dict and from_dict
 # TODO: Make FuncNode immutable (is there a way to use frozen=True with post_init?)
 # TODO: How to get a safe hash? Needs to be immutable only?
+# TODO: FuncNode(func_node) gives us FuncNode(scope -> ...). Should we have it be
+#  FuncNode.from_dict(func_node.to_dict()) instead?
 # @dataclass(eq=True, order=True, unsafe_hash=True)
 @dataclass(order=True)
 class FuncNode:
@@ -174,7 +176,7 @@ class FuncNode:
     like this:
 
     >>> scope = {'item_price': 3.5, 'num_of_items': 2}
-    >>> func_node(scope)  # see that it returns 7.0
+    >>> func_node.call_on_scope(scope)  # see that it returns 7.0
     7.0
     >>> scope  # but also wrote this in the scope
     {'item_price': 3.5, 'num_of_items': 2, 'multiply': 7.0}
@@ -313,6 +315,9 @@ class FuncNode:
 
     def __call__(self, scope):
         """Deprecated: Don't use. Might be a normal function with a signature"""
+        from warnings import warn
+        raise DeprecationWarning("Nope")
+        warn(f"Deprecated. Use .call_on_scope(scope) instead.", DeprecationWarning)
         return self.call_on_scope(scope)
 
     def to_dict(self):

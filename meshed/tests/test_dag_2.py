@@ -125,7 +125,7 @@ def test_FuncNode():
         'multiply)'
     )
     scope = {'item_price': 3.5, 'num_of_items': 2}
-    assert func_node(scope) == 7.0
+    assert func_node.call_on_scope(scope) == 7.0
     assert scope == {'item_price': 3.5, 'num_of_items': 2, 'multiply': 7.0}
     # Give a name to output
     assert (

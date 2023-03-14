@@ -280,7 +280,7 @@ def test_dag_partialize():
     assert str(Sig(fff)) == '(b, a=4)'
 
     fn = fff.func_nodes[0]
-    assert fn(dict(b=3)) == 1
+    assert fn.call_on_scope(dict(b=3)) == 1
 
     def f(a, b):
         return a + b
