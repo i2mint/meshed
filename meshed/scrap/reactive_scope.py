@@ -15,6 +15,7 @@ from meshed import DAG, FuncNode
 
 class ReactiveFuncNode(FuncNode):
     """A ``FuncNode`` that computes on a scope only if the scope has what it takes"""
+
     @cached_property
     def _dependencies(self):
         """The keys the scope needs to have so that the FuncNode is callable"""
@@ -142,6 +143,7 @@ class ReactiveScope(MutableMapping):
     >>> s['g']  # (3 + 4) * 4 == 7 * 4 == 28
     28
     """
+
     def __init__(self, func_nodes=(), scope_factory=dict):
         # Note: scope_factory could be made to return a pre-filled dict too
         if isinstance(func_nodes, DAG):
@@ -187,9 +189,9 @@ class ReactiveScope(MutableMapping):
         # TODO: Could use the same mechanism as setitem to propagate the deletion through the network
         raise NotImplementedError(
             "deletion of keys are not implemented, since cache invalidation hasn't. "
-            "You can clear the whole scope with the `.clear()` method. "
+            'You can clear the whole scope with the `.clear()` method. '
             "(Note: This actually doesn't clear the mapping, but rather, resets it to it's original state.)"
         )
 
     def __repr__(self):
-        return f"<{type(self).__qualname__} with .scope: {repr(self.scope)}>"
+        return f'<{type(self).__qualname__} with .scope: {repr(self.scope)}>'

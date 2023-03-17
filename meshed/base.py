@@ -316,8 +316,9 @@ class FuncNode:
     def __call__(self, scope):
         """Deprecated: Don't use. Might be a normal function with a signature"""
         from warnings import warn
-        raise DeprecationWarning("Nope")
-        warn(f"Deprecated. Use .call_on_scope(scope) instead.", DeprecationWarning)
+
+        raise DeprecationWarning('Nope')
+        warn(f'Deprecated. Use .call_on_scope(scope) instead.', DeprecationWarning)
         return self.call_on_scope(scope)
 
     def to_dict(self):
