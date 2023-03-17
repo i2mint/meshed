@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.slabs &mdash; meshed 0.1.102 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.slabs &mdash; meshed 0.1.103 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -63,6 +63,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests.html">meshed.tests</a></li>
@@ -128,11 +129,17 @@
 <span class="sd">`Slabs` is a tool that allows you to source multiple streams into a stream of</span>
 <span class="sd">slabs that can contain the original data, or other datas computed from it, or both.</span>
 
-<span class="sd">Note to developers looking into the code: The overview of the `Slabs` class:</span>
+<span class="sd">Note to developers, though the code below is a reduced form of the actual code,</span>
+<span class="sd">it should be enough to understand the general idea.</span>
+<span class="sd">For a discussion about the design of Slabs, see</span>
+<span class="sd">https://github.com/i2mint/meshed/discussions/49.</span>
+
 
 <span class="sd">&gt;&gt;&gt; class Slabs:</span>
 <span class="sd">...     def _call_on_scope(self, scope):</span>
-<span class="sd">...         &#39;&#39;&#39;Calls the components 1 by 1, sourcing inputs and writing outputs in scope&#39;&#39;&#39;</span>
+<span class="sd">...         &#39;&#39;&#39;</span>
+<span class="sd">...         Calls the components 1 by 1, sourcing inputs and writing outputs in scope</span>
+<span class="sd">...         &#39;&#39;&#39;</span>
 <span class="sd">...</span>
 <span class="sd">...     def __next__(self):</span>
 <span class="sd">...         &#39;&#39;&#39;Get the next slab by calling _call_on_scope on an new empty scope.</span>
@@ -497,6 +504,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scope_factory</span><span class="p">())</span>
 
+    <span class="c1"># TODO: Extend the flow control capabilities of execption handling</span>
+    <span class="c1">#   (see https://github.com/i2mint/meshed/discussions/49)</span>
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterates over slabs until a handle exception is raised.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="p">:</span>  <span class="c1"># enter all the contexts that need to be entered</span>
