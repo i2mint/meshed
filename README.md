@@ -1,10 +1,15 @@
 # meshed
 
-Link functions up into callable objects (e.g. pipelines, DAGs, etc.)
+Object composition. 
+In particular: Link functions up into callable objects (e.g. pipelines, DAGs, etc.)
+
 
 To install: `pip install meshed`
 
 [Documentation](https://i2mint.github.io/meshed/)
+
+Note: The initial focuus of `meshed` was on DAGs, a versatile and probably most known kind of composition of functions, 
+but `meshed` aims at capturing much more than that. 
 
 
 # Quick Start
