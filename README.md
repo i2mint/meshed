@@ -3,7 +3,6 @@
 Object composition. 
 In particular: Link functions up into callable objects (e.g. pipelines, DAGs, etc.)
 
-
 To install: `pip install meshed`
 
 [Documentation](https://i2mint.github.io/meshed/)
