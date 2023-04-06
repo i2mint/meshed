@@ -1493,7 +1493,7 @@ class DAG:
     def sig(self, value):
         self.__signature__ = value
 
-    def find_funcs(self, filt: Callable[[FuncNode], bool]=None) -> Iterable[Callable]:
+    def find_funcs(self, filt: Callable[[FuncNode], bool] = None) -> Iterable[Callable]:
         return (func_node.func for func_node in filter(filt, self.func_nodes))
 
 
