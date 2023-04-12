@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.105 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.106 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -275,6 +275,7 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FuncNode</span><span class="p">,</span>
+    <span class="n">BindInfo</span><span class="p">,</span>
     <span class="n">ch_func_node_func</span><span class="p">,</span>
     <span class="n">validate_that_func_node_names_are_sane</span><span class="p">,</span>
     <span class="n">_mk_func_nodes</span><span class="p">,</span>
@@ -1406,7 +1407,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># resolve from_node and to_node into FuncNodes</span>
         <span class="n">from_node</span><span class="p">,</span> <span class="n">to_node</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find_func_node</span><span class="p">,</span> <span class="p">(</span><span class="n">from_node</span><span class="p">,</span> <span class="n">to_node</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">to_node</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">to_node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">to_node</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">to_node</span><span class="p">):</span>
             <span class="n">to_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span>
                 <span class="n">to_node</span>
             <span class="p">)</span>  <span class="c1"># TODO: Automatically avoid clashing with dag identifiers (?)</span>
@@ -1536,7 +1537,7 @@
 
     <span class="c1"># ------------ display --------------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_info</span><span class="o">=</span><span class="s1">&#39;values&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s1">&#39;var_nodes&#39;</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">func_node</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span>
         <span class="p">)</span>
@@ -1786,7 +1787,7 @@
     <span class="k">return</span> <span class="n">s</span>
 
 
-<span class="k">def</span> <span class="nf">print_dag_string</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">print_dag_string</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="n">bind_info</span><span class="p">))</span>
 
 
@@ -1884,7 +1885,7 @@
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;These identifiers weren&#39;t found in func_nodes: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_allowed</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="n">not_callable</span> <span class="o">:=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">func_mapping</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
+    <span class="k">if</span> <span class="n">not_callable</span> <span class="o">:=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">func_mapping</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;These values of func_src weren&#39;t callable: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
@@ -2063,7 +2064,7 @@
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">renamer</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
         <span class="n">old_to_new_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">renamer</span><span class="p">)</span>
         <span class="n">renamer</span> <span class="o">=</span> <span class="n">old_to_new_map</span><span class="o">.</span><span class="n">get</span>
-    <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">renamer</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Could not be resolved into a callable: </span><span class="si">{</span><span class="n">renamer</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">renamer</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Could not be resolved into a callable: </span><span class="si">{</span><span class="n">renamer</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="n">ktrans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_rename_node</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
     <span class="n">func_node_trans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">func_node_transformer</span><span class="p">,</span> <span class="n">kwargs_transformers</span><span class="o">=</span><span class="n">ktrans</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">func_node_trans</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">))</span>

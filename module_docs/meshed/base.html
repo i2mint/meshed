@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.105 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.base &mdash; meshed 0.1.106 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -284,10 +284,17 @@ digit)</p></li>
 
 <dl class="py method">
 <dt id="meshed.base.FuncNode.synopsis_string">
-<code class="sig-name descname">synopsis_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bind_info</span><span class="o">=</span><span class="default_value">'values'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#FuncNode.synopsis_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.FuncNode.synopsis_string" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">synopsis_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bind_info</span><span class="p">:</span> <span class="n">Literal<span class="p">[</span>var_nodes<span class="p">, </span>params<span class="p">, </span>hybrid<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'values'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#FuncNode.synopsis_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.FuncNode.synopsis_string" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>bind_info</strong> – </p>
+<dd class="field-odd"><p><strong>bind_info</strong> – <p>How to represent the bind in the synopsis string. Could be:
+- ‘values’, <cite>var_nodes</cite> or <cite>varnodes</cite>: the values of the bind (default).
+- ‘keys’ or ‘params’: the keys of the bind
+- ‘hybrid’: the keys of the bind, but with the values that are the same as</p>
+<blockquote>
+<div><p>the keys omitted.</p>
+</div></blockquote>
+</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>

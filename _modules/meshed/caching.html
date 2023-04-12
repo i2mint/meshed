@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.caching &mdash; meshed 0.1.105 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.caching &mdash; meshed 0.1.106 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -164,7 +164,7 @@
 <span class="k">def</span> <span class="nf">with_cached_properties</span><span class="p">(</span><span class="n">funcs</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">add_cached_properties</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
                 <span class="n">func</span><span class="p">,</span> <span class="n">attr_name</span> <span class="o">=</span> <span class="n">func</span>  <span class="c1"># assume it&#39;s a (func, attr_name) pair</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">attr_name</span> <span class="o">=</span> <span class="kc">None</span>
