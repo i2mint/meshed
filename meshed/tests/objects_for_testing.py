@@ -38,11 +38,20 @@ def g(c, d=4):
     return c * d
 
 
-def h(f, g):
-    return g - f
+def h(ff, gg=42):
+    return gg - ff
 
 
-dag_plus_times_minus = DAG([f, g, h])
+dag_plus_times_minus = DAG([
+    FuncNode(f, out='f_out', name='f'),
+    FuncNode(g, out='g_out', name='g', func_label='The G Node'),
+    FuncNode(h, bind={'ff': 'f_out', 'gg': 'g_out'})
+])
+dag_plus_times_minus.__doc__ = """
+A three node DAG with a variety of artifacts 
+(non-default out, bind, and func_label, as well as
+a defaulted root node and a defaulted middle node)
+"""
 
 dag_plus_times_minus_partial = dag_plus_times_minus.partial(c=3, a=1)
 assert dag_plus_times_minus_partial(b=5, d=6) == 12

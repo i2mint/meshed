@@ -4,7 +4,7 @@ Base functionality of meshed
 from collections import Counter
 from dataclasses import dataclass, field, fields
 from functools import partial, cached_property
-from typing import Callable, MutableMapping, Iterable, Union, Sized, Sequence
+from typing import Callable, MutableMapping, Iterable, Union, Sized, Sequence, Literal
 
 from i2 import Sig, call_somewhat_forgivingly
 from i2.signatures import (
@@ -14,6 +14,8 @@ from i2.signatures import (
 )
 from meshed.util import ValidationError, NameValidationError, mk_func_name
 from meshed.itools import add_edge
+
+BindInfo = Literal['var_nodes', 'params', 'hybrid']
 
 
 def underscore_func_node_names_maker(func: Callable, name=None, out=None):
@@ -246,10 +248,19 @@ class FuncNode:
 
         self.node_validator(self)
 
-    def synopsis_string(self, bind_info='values'):
+    # TODO: BindInfo lists only three unique behaviors, but there are seven actual
+    #  possible values for bind_info. All the rest are convenience aliases. Is this
+    #  a good idea? The hesitation here comes from the fact that the values/keys
+    #  language describes the bind data structure (dict), but the var_nodes/params
+    #  language describes their contextual use. If had to choose, I'd chose the latter.
+    def synopsis_string(self, bind_info: BindInfo = 'values'):
         """
 
-        :param bind_info:
+        :param bind_info: How to represent the bind in the synopsis string. Could be:
+            - 'values', `var_nodes` or `varnodes`: the values of the bind (default).
+            - 'keys' or 'params': the keys of the bind
+            - 'hybrid': the keys of the bind, but with the values that are the same as
+                the keys omitted.
         :return:
 
         >>> fn = FuncNode(
@@ -276,6 +287,8 @@ class FuncNode:
             return f"{','.join(gen())} -> {self.name} " f'-> {self.out}'
         elif bind_info in {'keys', 'params'}:
             return f"{','.join(self.bind.keys())} -> {self.name} " f'-> {self.out}'
+        else:
+            raise ValueError(f'Unknown bind_info: {bind_info}')
 
     def __repr__(self):
         return f'FuncNode({self.synopsis_string(bind_info="hybrid")})'
@@ -297,7 +310,7 @@ class FuncNode:
         return output
 
     def _hash_str(self):
-        """Design ideo.
+        """Design idea.
         Attempt to construct a hash that reflects the actual identity we want.
         Need to transform to int. Only identifier chars alphanumerics and underscore
         and space are used, so could possibly encode as int (for __hash__ method)
@@ -317,9 +330,9 @@ class FuncNode:
         """Deprecated: Don't use. Might be a normal function with a signature"""
         from warnings import warn
 
-        raise DeprecationWarning('Nope')
-        warn(f'Deprecated. Use .call_on_scope(scope) instead.', DeprecationWarning)
-        return self.call_on_scope(scope)
+        raise DeprecationWarning(f'Deprecated. Use .call_on_scope(scope) instead.')
+        # warn(f'Deprecated. Use .call_on_scope(scope) instead.', DeprecationWarning)
+        # return self.call_on_scope(scope)
 
     def to_dict(self):
         """The inverse of from_dict: FuncNode.from_dict(fn.to_dict()) == fn"""
@@ -349,7 +362,7 @@ class FuncNode:
 class Mesh:
     func_nodes: Iterable[FuncNode]
 
-    def synopsis_string(self, bind_info='values'):
+    def synopsis_string(self, bind_info: BindInfo = 'values'):
         return '\n'.join(
             func_node.synopsis_string(bind_info) for func_node in self.func_nodes
         )

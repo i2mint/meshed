@@ -164,6 +164,7 @@ from i2.signatures import (
 )
 from meshed.base import (
     FuncNode,
+    BindInfo,
     ch_func_node_func,
     validate_that_func_node_names_are_sane,
     _mk_func_nodes,
@@ -1425,7 +1426,7 @@ class DAG:
 
     # ------------ display --------------------------------------------------------------
 
-    def synopsis_string(self, bind_info='values'):
+    def synopsis_string(self, bind_info: BindInfo = 'var_nodes'):
         return '\n'.join(
             func_node.synopsis_string(bind_info) for func_node in self.func_nodes
         )
@@ -1675,7 +1676,7 @@ def _add_new_line_if_none(s: str):
     return s
 
 
-def print_dag_string(dag: DAG, bind_info: str = 'hybrid'):
+def print_dag_string(dag: DAG, bind_info: BindInfo = 'hybrid'):
     print(dag.synopsis_string(bind_info=bind_info))
 
 

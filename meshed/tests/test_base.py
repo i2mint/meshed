@@ -34,3 +34,16 @@ def test_synopsis_string():
         [fn.synopsis_string(bind_info='hybrid') for fn in dag_02.func_nodes]
     )
     assert s22 == _string02
+
+    from meshed.tests.objects_for_testing import dag_plus_times_minus
+
+    last_fnode = dag_plus_times_minus.func_nodes[-1]
+    assert last_fnode.synopsis_string(bind_info='hybrid') == (
+        'ff=f_out,gg=g_out -> h_ -> h'
+    )
+    assert last_fnode.synopsis_string(bind_info='var_nodes') == (
+        'f_out,g_out -> h_ -> h'
+    )
+    assert last_fnode.synopsis_string(bind_info='params') == (
+        'ff,gg -> h_ -> h'
+    )
