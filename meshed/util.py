@@ -859,12 +859,13 @@ def extract_items(d: dict, keys: Iterable):
 
 
 ParameterMerger = Callable[[Iterable[Parameter]], Parameter]
+parameter_merger: ParameterMerger
 
-conservative_parameter_merge: ParameterMerger
 
-
+# TODO: Make the ValidationError be even more specific, indicating what parameters
+#  are different and how.
 def parameter_merger(
-    params, *, same_kind=True, same_default=True, same_annotation=True
+    params, *, same_name=True, same_kind=True, same_default=True, same_annotation=True
 ):
     """Validates that all the params are exactly the same, returning the first if so.
 
@@ -888,11 +889,12 @@ def parameter_merger(
       ``i2.dag.parameter_merger``, fixing ``same_kind``, ``same_default``, 
       and/or ``same_annotation`` to ``False`` to get a more lenient version of it.
 
-    See https://github.com/i2mint/meshed/issues/7 (description and comments) for more
+    See https://github.com/i2mint/i2/discussions/63 and 
+    https://github.com/i2mint/meshed/issues/7 (description and comments) for more
     info.
     '''
     first_param, *_ = params
-    if not all(p.name == first_param.name for p in params):
+    if same_name and not all(p.name == first_param.name for p in params):
         raise ValidationError(
             f"Some params didn't have the same name: {params}\n{suggestion_on_error}"
         )
@@ -914,6 +916,6 @@ def parameter_merger(
     return first_param
 
 
-conservative_parameter_merge = partial(
+conservative_parameter_merge: ParameterMerger = partial(
     parameter_merger, same_kind=True, same_default=True, same_annotation=True
 )
