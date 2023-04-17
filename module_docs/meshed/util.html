@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.107 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.108 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -271,7 +271,7 @@ what, wrap the input with <code class="docutils literal notranslate"><span class
 
 <dl class="py function">
 <dt id="meshed.util.conservative_parameter_merge">
-<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">conservative_parameter_merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">same_kind</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_default</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_annotation</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#conservative_parameter_merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.conservative_parameter_merge" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">conservative_parameter_merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">same_name</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_kind</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_default</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_annotation</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.util.conservative_parameter_merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates that all the params are exactly the same, returning the first if so.</p>
 <p>This is used when hooking up functions that use the same parameters (i.e. arg
 names). When the name of an argument is used more than once, which kind, default,
@@ -550,6 +550,17 @@ Therefore, we can partialize class_or_tuple:</p>
 <span class="go">&#39;item_2&#39;</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.util.parameter_merger">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">parameter_merger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">same_name</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_kind</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_default</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">same_annotation</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#parameter_merger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.parameter_merger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that all the params are exactly the same, returning the first if so.</p>
+<p>This is used when hooking up functions that use the same parameters (i.e. arg
+names). When the name of an argument is used more than once, which kind, default,
+and annotation should be used in the interface of the DAG?</p>
+<p>If they’re all the same, there’s no problem.</p>
+<p>But if they’re not the same, we need to provide control on which to ignore.</p>
 </dd></dl>
 
 <dl class="py function">
