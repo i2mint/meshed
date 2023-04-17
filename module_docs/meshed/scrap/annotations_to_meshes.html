@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.dask_graph_language &mdash; meshed 0.1.107 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.annotations_to_meshes &mdash; meshed 0.1.107 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -22,8 +22,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="meshed.scrap.gk_with_networkx" href="gk_with_networkx.html" />
-    <link rel="prev" title="meshed.scrap.conversion" href="conversion.html" /> 
+    <link rel="next" title="meshed.scrap.cached_dag" href="cached_dag.html" />
+    <link rel="prev" title="meshed.scrap" href="../scrap.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -61,10 +61,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../itools.html">meshed.itools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../makers.html">meshed.makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scrap.html">meshed.scrap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.scrap.annotations_to_meshes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cached_dag.html">meshed.scrap.cached_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conversion.html">meshed.scrap.conversion</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.scrap.dask_graph_language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc_utils.html">meshed.scrap.misc_utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reactive_scope.html">meshed.scrap.reactive_scope</a></li>
@@ -102,9 +102,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">meshed.scrap.dask_graph_language</li>
+      <li class="breadcrumb-item active">meshed.scrap.annotations_to_meshes</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/module_docs/meshed/scrap/dask_graph_language.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/module_docs/meshed/scrap/annotations_to_meshes.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -112,18 +112,49 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-meshed.scrap.dask_graph_language">
-<span id="meshed-scrap-dask-graph-language"></span><h1>meshed.scrap.dask_graph_language<a class="headerlink" href="#module-meshed.scrap.dask_graph_language" title="Permalink to this headline">¶</a></h1>
-<p>How to make dags from the dask specification</p>
-<p>See <a class="reference external" href="https://docs.dask.org/en/latest/graphs.html#example">https://docs.dask.org/en/latest/graphs.html#example</a> for the specification</p>
+  <section id="module-meshed.scrap.annotations_to_meshes">
+<span id="meshed-scrap-annotations-to-meshes"></span><h1>meshed.scrap.annotations_to_meshes<a class="headerlink" href="#module-meshed.scrap.annotations_to_meshes" title="Permalink to this headline">¶</a></h1>
+<p>Code related to work on the “From annotated functions to meshes” discussion:</p>
+<p><a class="reference external" href="https://github.com/i2mint/meshed/discussions/55">https://github.com/i2mint/meshed/discussions/55</a></p>
+<dl class="py function">
+<dt id="meshed.scrap.annotations_to_meshes.callable_annots_to_signature">
+<code class="sig-prename descclassname">meshed.scrap.annotations_to_meshes.</code><code class="sig-name descname">callable_annots_to_signature</code><span class="sig-paren">(</span><em class="sig-param">callable_annots: collections.abc.Callable, mk_argname: Callable[[Any, int, str], str] = &lt;function try_annotation_name&gt;</em><span class="sig-paren">)</span> &#x2192; inspect.Signature<a class="reference internal" href="../../../_modules/meshed/scrap/annotations_to_meshes.html#callable_annots_to_signature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.annotations_to_meshes.callable_annots_to_signature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a signature from a Callable type annotation</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">NewType</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MyType</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">&#39;MyType&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">callable_annots_to_signature</span><span class="p">(</span><span class="n">Callable</span><span class="p">[[</span><span class="n">MyType</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">inspect</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Signature</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">[&#39;self&#39;, &#39;mytype&#39;, &#39;arg_01&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;arg_01&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">annotation</span>
+<span class="go">&lt;class &#39;str&#39;&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.scrap.annotations_to_meshes.func_types_to_protocol">
+<code class="sig-prename descclassname">meshed.scrap.annotations_to_meshes.</code><code class="sig-name descname">func_types_to_protocol</code><span class="sig-paren">(</span><em class="sig-param">func_types: Dict[str, collections.abc.Callable], name: str = None, *, mk_argname: Callable[[Any, int, str], str] = &lt;function try_annotation_name&gt;</em><span class="sig-paren">)</span> &#x2192; Protocol<a class="reference internal" href="../../../_modules/meshed/scrap/annotations_to_meshes.html#func_types_to_protocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.annotations_to_meshes.func_types_to_protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a typing.Protocol based on a dictionary of
+<cite>(method_name, Callable_type)</cite> specification</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.scrap.annotations_to_meshes.func_types_to_scaffold">
+<code class="sig-prename descclassname">meshed.scrap.annotations_to_meshes.</code><code class="sig-name descname">func_types_to_scaffold</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_types</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>collections.abc.Callable<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../../_modules/meshed/scrap/annotations_to_meshes.html#func_types_to_scaffold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.annotations_to_meshes.func_types_to_scaffold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a scaffold class containing the said methods, with given annotations</p>
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="conversion.html" class="btn btn-neutral float-left" title="meshed.scrap.conversion" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="gk_with_networkx.html" class="btn btn-neutral float-right" title="meshed.scrap.gk_with_networkx" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../scrap.html" class="btn btn-neutral float-left" title="meshed.scrap" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cached_dag.html" class="btn btn-neutral float-right" title="meshed.scrap.cached_dag" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
