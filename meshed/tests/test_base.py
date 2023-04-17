@@ -44,6 +44,4 @@ def test_synopsis_string():
     assert last_fnode.synopsis_string(bind_info='var_nodes') == (
         'f_out,g_out -> h_ -> h'
     )
-    assert last_fnode.synopsis_string(bind_info='params') == (
-        'ff,gg -> h_ -> h'
-    )
+    assert last_fnode.synopsis_string(bind_info='params') == ('ff,gg -> h_ -> h')
