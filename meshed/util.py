@@ -863,8 +863,8 @@ ParameterMerger = Callable[[Iterable[Parameter]], Parameter]
 conservative_parameter_merge: ParameterMerger
 
 
-def conservative_parameter_merge(
-    params, same_kind=True, same_default=True, same_annotation=True
+def parameter_merger(
+    params, *, same_kind=True, same_default=True, same_annotation=True
 ):
     """Validates that all the params are exactly the same, returning the first if so.
 
@@ -885,7 +885,7 @@ def conservative_parameter_merge(
       to get a function decorator that will do that for you.
     - If you're making a DAG, consider specifying a different ``parameter_merge``.
       For example you can use ``functools.partial`` on 
-      ``i2.dag.conservative_parameter_merge``, fixing ``same_kind``, ``same_default``, 
+      ``i2.dag.parameter_merger``, fixing ``same_kind``, ``same_default``, 
       and/or ``same_annotation`` to ``False`` to get a more lenient version of it.
 
     See https://github.com/i2mint/meshed/issues/7 (description and comments) for more
@@ -912,3 +912,8 @@ def conservative_parameter_merge(
             f'{params}\n{suggestion_on_error}'
         )
     return first_param
+
+
+conservative_parameter_merge = partial(
+    parameter_merger, same_kind=True, same_default=True, same_annotation=True
+)
