@@ -456,7 +456,7 @@ def get_init_params_of_instance(obj):
 
 
 def ch_func_node_attrs(fn: FuncNode, **new_attrs_values):
-    """Returns a copy of the func node with some of it's attributes changed
+    """Returns a copy of the func node with some of its attributes changed
 
     >>> def plus(a, b):
     ...     return a + b
