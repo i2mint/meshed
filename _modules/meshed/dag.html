@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.108 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.109 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -1276,7 +1276,7 @@
                 <span class="c1"># is determined by what ``parameter_merge`` specified, which is,</span>
                 <span class="c1"># by default, strict (everything needs to be the same, or</span>
                 <span class="c1"># ``parameter_merge`` with raise an error.)</span>
-                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_merge</span><span class="p">(</span><span class="n">params_with_name_changed_to_src_name</span><span class="p">)</span></div>
+                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_merge</span><span class="p">(</span><span class="o">*</span><span class="n">params_with_name_changed_to_src_name</span><span class="p">)</span></div>
 
     <span class="c1"># TODO: Find more representative (and possibly shorter) doctest:</span>
     <span class="nd">@property</span>

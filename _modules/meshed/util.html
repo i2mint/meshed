@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.108 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.109 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -974,10 +974,14 @@
 <span class="n">parameter_merger</span><span class="p">:</span> <span class="n">ParameterMerger</span>
 
 
+<span class="c1"># TODO: Be aware of i2.signatures.param_comparator in</span>
+<span class="c1">#  https://github.com/i2mint/i2/blob/2bd43b350a3ae29f1e6c587dbe15d6f536635173/i2/signatures.py#L4247</span>
+<span class="c1">#  and related funnctions, which are meant to be a more general approach. Consider</span>
+<span class="c1">#  merging parameter_merger to use that general tooling.</span>
 <span class="c1"># TODO: Make the ValidationError be even more specific, indicating what parameters</span>
 <span class="c1">#  are different and how.</span>
 <div class="viewcode-block" id="parameter_merger"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.parameter_merger">[docs]</a><span class="k">def</span> <span class="nf">parameter_merger</span><span class="p">(</span>
-    <span class="n">params</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">same_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_kind</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_annotation</span><span class="o">=</span><span class="kc">True</span>
+    <span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">same_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_kind</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">same_annotation</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates that all the params are exactly the same, returning the first if so.</span>
 
@@ -989,12 +993,28 @@
 
 <span class="sd">    But if they&#39;re not the same, we need to provide control on which to ignore.</span>
 
+<span class="sd">    &gt;&gt;&gt; from inspect import Parameter as P</span>
+<span class="sd">    &gt;&gt;&gt; PK = P.POSITIONAL_OR_KEYWORD</span>
+<span class="sd">    &gt;&gt;&gt; KO = P.KEYWORD_ONLY</span>
+<span class="sd">    &gt;&gt;&gt; parameter_merger(P(&#39;a&#39;, PK), P(&#39;a&#39;, PK))</span>
+<span class="sd">    &lt;Parameter &quot;a&quot;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; parameter_merger(P(&#39;a&#39;, PK), P(&#39;different_name&#39;, PK), same_name=False)</span>
+<span class="sd">    &lt;Parameter &quot;a&quot;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; parameter_merger(P(&#39;a&#39;, PK), P(&#39;a&#39;, KO), same_kind=False)</span>
+<span class="sd">    &lt;Parameter &quot;a&quot;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; parameter_merger(P(&#39;a&#39;, PK), P(&#39;a&#39;, PK,  default=42), same_default=False)</span>
+<span class="sd">    &lt;Parameter &quot;a&quot;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; parameter_merger(P(&#39;a&#39;, PK, default=42), P(&#39;a&#39;, PK), same_default=False)</span>
+<span class="sd">    &lt;Parameter &quot;a=42&quot;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; parameter_merger(P(&#39;a&#39;, PK, annotation=int), P(&#39;a&#39;, PK), same_annotation=False)</span>
+<span class="sd">    &lt;Parameter &quot;a: int&quot;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">suggestion_on_error</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;To resolve this you have several choices:</span>
 
 <span class="s1">    - Change the properties of the param (kind, default, annotation) to be those you </span>
-<span class="s1">      want. For example, you can use ``i2.Sig.ch_param_attrs`` </span>
-<span class="s1">      (or ``i2.Sig.ch_defaults``, ``i2.Sig.ch_kinds``, ``i2.Sig.ch_annotations``)</span>
+<span class="s1">      want. For example, you can use ``i2.Sig.ch_param_attrs`` on the signatures </span>
+<span class="s1">      (or ``i2.Sig.ch_names``, ``i2.Sig.ch_defaults``, ``i2.Sig.ch_kinds``, </span>
+<span class="s1">      ``i2.Sig.ch_annotations``)</span>
 <span class="s1">      to get a function decorator that will do that for you.</span>
 <span class="s1">    - If you&#39;re making a DAG, consider specifying a different ``parameter_merge``.</span>
 <span class="s1">      For example you can use ``functools.partial`` on </span>
