@@ -574,3 +574,70 @@ def lined_dag(funcs):
         pairs = zip(names, names[1:])
         dag = dag.add_edges(pairs)
         return dag
+
+
+from typing import Callable, Mapping, Iterable
+
+NamedFuncs = Mapping[str, Callable]
+
+
+def named_funcs_to_func_nodes(named_funcs: NamedFuncs) -> Iterable[FuncNode]:
+    """Make ``FuncNode``s from keyword arguments, using the key as the ``.out`` of the
+    ``FuncNode`` and the value as the ``.func`` of the ``FuncNode``.
+
+    Example use: To get from ``Slabs`` to ``DAG``.
+
+    >>> from meshed import DAG
+    >>> func_nodes = list(named_funcs_to_func_nodes(dict(
+    ...     a=lambda x: x + 1,
+    ...     b=lambda a: a + 2,
+    ...     c=lambda a, b: a * b)
+    ... ))
+    >>> dag = DAG(func_nodes)
+    >>> dag(x=3)
+    24
+
+    The inverse of this function is ``func_nodes_to_named_funcs``.
+
+    >>> named_funcs = func_nodes_to_named_funcs(dag.func_nodes)
+    >>> dag2 = DAG(named_funcs_to_func_nodes(named_funcs))
+    >>> assert dag2(x=3) == dag(x=3) == 24
+
+    """
+    return (
+        FuncNode(func, name=f'{out}_', out=out) for out, func in named_funcs.items()
+    )
+
+
+def func_nodes_to_named_funcs(func_nodes: Iterable[FuncNode]) -> NamedFuncs:
+    """Make some components (kwargs) based on the ``.out`` and ``.func`` of the
+    ``FuncNode``s.
+
+    Example use: To get from ``DAG`` to ``Slabs``.
+
+    >>> from meshed import DAG, FuncNode
+    >>> dag = DAG([
+    ...     FuncNode(lambda x: x + 1, out='a'),
+    ...     FuncNode(lambda a: a + 2, out='b',),
+    ...     FuncNode(lambda a, b: a * b, out='c'),
+    ... ])
+    >>> dag(x=10)
+    143
+    >>> named_funcs = func_nodes_to_named_funcs(dag.func_nodes)
+    >>> isinstance(named_funcs, dict)
+    True
+    >>> list(named_funcs)
+    ['a', 'b', 'c']
+    >>> callable(named_funcs['a'])
+    True
+    >>> assert dag.find_func_node('a').func(3) == named_funcs['a'](3) ==4
+
+    The inverse of this function is ``named_funcs_to_func_nodes``.
+
+    >>> func_nodes = list(named_funcs_to_func_nodes(named_funcs))
+    >>> dag2 = DAG(func_nodes)
+    >>> assert dag2(x=3) == dag(x=3) == 24
+
+
+    """
+    return {node.out: node.func for node in func_nodes}
