@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.109 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.110 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -123,7 +123,7 @@
 <p>Making DAGs</p>
 <p>In it’s simplest form, consider this:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">this</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">...</span>
@@ -133,7 +133,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">)</span>
 <span class="gp">...</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">,</span> <span class="n">combine</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
 <span class="go">a,b -&gt; this_ -&gt; this</span>
@@ -150,9 +150,9 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">chunker</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">chk_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">iter</span><span class="p">(</span><span class="n">sequence</span><span class="p">)]</span> <span class="o">*</span> <span class="n">chk_size</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_chunker</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">chunker</span><span class="p">,</span> <span class="n">chk_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vec</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>  <span class="c1"># when appropriate, use easier to read sequences</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">my_chunker</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span>
 <span class="go">[(0, 1, 2), (3, 4, 5)]</span>
@@ -244,14 +244,14 @@ That said it is your responsiblity to use the right policy for your particular c
 <dt id="meshed.dag.DAG">
 <em class="property">class </em><code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">DAG</code><span class="sig-paren">(</span><em class="sig-param">func_nodes: Iterable[Union[meshed.base.FuncNode, Callable]] = (), cache_last_scope: bool = True, parameter_merge: Callable[[Iterable[inspect.Parameter]], inspect.Parameter] = functools.partial(&lt;function parameter_merger&gt;, same_kind=True, same_default=True, same_annotation=True), new_scope: Callable = &lt;class 'dict'&gt;, name: str = None, extract_output_from_scope: Callable[[dict, Iterable[str]], Any] = &lt;function extract_values&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#DAG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG" title="Permalink to this definition">¶</a></dt>
 <dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Sig</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">this</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">that</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">b</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">,</span> <span class="n">combine</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
 <span class="go">a,b -&gt; this_ -&gt; this</span>
@@ -300,7 +300,7 @@ The edges of the DAG are defined by matching <cite>out</cite> TO <cite>bind</cit
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">c</span> <span class="o">*</span> <span class="n">d</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">h</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="n">y</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">three_funcs</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="p">(</span>
 <span class="gp">... </span>    <span class="n">three_funcs</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -323,7 +323,7 @@ The edges of the DAG are defined by matching <cite>out</cite> TO <cite>bind</cit
 <span class="go">a,b -&gt; f_ -&gt; f</span>
 <span class="go">x,y -&gt; h_ -&gt; h</span>
 <span class="go">h,d -&gt; g_ -&gt; g</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fhg</span> <span class="o">=</span> <span class="n">three_funcs</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="p">(</span>
 <span class="gp">... </span>    <span class="n">fhg</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -360,7 +360,7 @@ parameters <code class="docutils literal notranslate"><span class="pre">a</span>
 <span class="gp">... </span>    <span class="o">==</span> <span class="n">f</span><span class="p">(</span><span class="n">g</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">h</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 <span class="gp">... </span>    <span class="o">==</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">2</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">f_of_g_and_h</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
 <span class="go">c,d -&gt; g_ -&gt; g</span>
 <span class="go">x,y -&gt; h_ -&gt; h</span>
@@ -422,11 +422,11 @@ function you want to change it by.</p>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="n">DAG</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">...</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">x</span>
 <span class="gp">...</span>
@@ -446,15 +446,15 @@ function you want to change it by.</p>
 <p>You can reference the <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> you want to change through its <code class="docutils literal notranslate"><span class="pre">.name</span></code> or
 <code class="docutils literal notranslate"><span class="pre">.out</span></code> attribute (both are unique to this <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> in a <code class="docutils literal notranslate"><span class="pre">DAG</span></code>).</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span>
 <span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;f&#39;</span><span class="p">),</span>
 <span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span> <span class="n">y</span> <span class="o">*</span> <span class="n">z</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="s1">&#39;f&#39;</span><span class="p">})</span>
 <span class="gp">... </span><span class="p">])</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Sig</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
 <span class="go">&lt;Sig (a, b, f=2, y=1)&gt;</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
 <p>If you replace by a different function with exactly the same signature,
@@ -469,7 +469,7 @@ all goes well:</p>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">ValueError</span>: <span class="n">You can only change the func of a FuncNode with a another func if the signatures match.</span>
-<span class="go">  ...</span>
+<span class="x">  ...</span>
 </pre></div>
 </div>
 <p>Here we include defaults, but <code class="docutils literal notranslate"><span class="pre">z</span></code>’s is different:</p>
@@ -477,7 +477,7 @@ all goes well:</p>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">ValueError</span>: <span class="n">You can only change the func of a FuncNode with a another func if the signatures match.</span>
-<span class="go">  ...</span>
+<span class="x">  ...</span>
 </pre></div>
 </div>
 <p>Here the defaults are exactly the same, but the order of parameters is
@@ -486,7 +486,7 @@ different:</p>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">ValueError</span>: <span class="n">You can only change the func of a FuncNode with a another func if the signatures match.</span>
-<span class="go">  ...</span>
+<span class="x">  ...</span>
 </pre></div>
 </div>
 <p>This validation of the functions controlled by the <code class="docutils literal notranslate"><span class="pre">func_comparator</span></code>
@@ -545,7 +545,7 @@ a subset thereof.</p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">...</span>
@@ -562,7 +562,7 @@ a subset thereof.</p>
 <span class="go">&#39;(a, b, c, d=4)&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">9</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">debugger</span> <span class="o">=</span> <span class="n">dag2</span><span class="o">.</span><span class="n">debugger</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">debugger</span><span class="p">))</span>
 <span class="go">&#39;(a, b, c, d=4)&#39;</span>
@@ -866,7 +866,7 @@ you want to also consider arguments that already had defaults as bound
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">dot_to_ascii</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dot_to_ascii</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)))</span>  
 
 <span class="go">                a        ─┐</span>

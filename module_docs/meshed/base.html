@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.109 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.base &mdash; meshed 0.1.110 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -358,7 +358,7 @@ digit)</p></li>
 <dl class="py function">
 <dt id="meshed.base.ch_func_node_attrs">
 <code class="sig-prename descclassname">meshed.base.</code><code class="sig-name descname">ch_func_node_attrs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a></span></em>, <em class="sig-param"><span class="o">**</span><span class="n">new_attrs_values</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#ch_func_node_attrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.ch_func_node_attrs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a copy of the func node with some of it’s attributes changed</p>
+<dd><p>Returns a copy of the func node with some of its attributes changed</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">plus</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">...</span>
@@ -375,8 +375,8 @@ digit)</p></li>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_fn</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;a,b -&gt; plus -&gt; sum&#39;</span>
 <span class="go">True</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">newer_fn</span> <span class="o">=</span> <span class="n">ch_func_node_attrs</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">minus</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sub&#39;</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;difference&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">newer_fn</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;a,b -&gt; sub -&gt; difference&#39;</span>
 <span class="go">True</span>

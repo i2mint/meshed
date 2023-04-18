@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.109 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.110 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -686,6 +686,73 @@
         <span class="n">pairs</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
         <span class="n">dag</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">add_edges</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dag</span>
+
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span>
+
+<span class="n">NamedFuncs</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="named_funcs_to_func_nodes"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.named_funcs_to_func_nodes">[docs]</a><span class="k">def</span> <span class="nf">named_funcs_to_func_nodes</span><span class="p">(</span><span class="n">named_funcs</span><span class="p">:</span> <span class="n">NamedFuncs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make ``FuncNode``s from keyword arguments, using the key as the ``.out`` of the</span>
+<span class="sd">    ``FuncNode`` and the value as the ``.func`` of the ``FuncNode``.</span>
+
+<span class="sd">    Example use: To get from ``Slabs`` to ``DAG``.</span>
+
+<span class="sd">    &gt;&gt;&gt; from meshed import DAG</span>
+<span class="sd">    &gt;&gt;&gt; func_nodes = list(named_funcs_to_func_nodes(dict(</span>
+<span class="sd">    ...     a=lambda x: x + 1,</span>
+<span class="sd">    ...     b=lambda a: a + 2,</span>
+<span class="sd">    ...     c=lambda a, b: a * b)</span>
+<span class="sd">    ... ))</span>
+<span class="sd">    &gt;&gt;&gt; dag = DAG(func_nodes)</span>
+<span class="sd">    &gt;&gt;&gt; dag(x=3)</span>
+<span class="sd">    24</span>
+
+<span class="sd">    The inverse of this function is ``func_nodes_to_named_funcs``.</span>
+
+<span class="sd">    &gt;&gt;&gt; named_funcs = func_nodes_to_named_funcs(dag.func_nodes)</span>
+<span class="sd">    &gt;&gt;&gt; dag2 = DAG(named_funcs_to_func_nodes(named_funcs))</span>
+<span class="sd">    &gt;&gt;&gt; assert dag2(x=3) == dag(x=3) == 24</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">_&#39;</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span> <span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">named_funcs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="func_nodes_to_named_funcs"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.func_nodes_to_named_funcs">[docs]</a><span class="k">def</span> <span class="nf">func_nodes_to_named_funcs</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NamedFuncs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make some components (kwargs) based on the ``.out`` and ``.func`` of the</span>
+<span class="sd">    ``FuncNode``s.</span>
+
+<span class="sd">    Example use: To get from ``DAG`` to ``Slabs``.</span>
+
+<span class="sd">    &gt;&gt;&gt; from meshed import DAG, FuncNode</span>
+<span class="sd">    &gt;&gt;&gt; dag = DAG([</span>
+<span class="sd">    ...     FuncNode(lambda x: x + 1, out=&#39;a&#39;),</span>
+<span class="sd">    ...     FuncNode(lambda a: a + 2, out=&#39;b&#39;,),</span>
+<span class="sd">    ...     FuncNode(lambda a, b: a * b, out=&#39;c&#39;),</span>
+<span class="sd">    ... ])</span>
+<span class="sd">    &gt;&gt;&gt; dag(x=10)</span>
+<span class="sd">    143</span>
+<span class="sd">    &gt;&gt;&gt; named_funcs = func_nodes_to_named_funcs(dag.func_nodes)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(named_funcs, dict)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(named_funcs)</span>
+<span class="sd">    [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; callable(named_funcs[&#39;a&#39;])</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; assert dag.find_func_node(&#39;a&#39;).func(3) == named_funcs[&#39;a&#39;](3) ==4</span>
+
+<span class="sd">    The inverse of this function is ``named_funcs_to_func_nodes``.</span>
+
+<span class="sd">    &gt;&gt;&gt; func_nodes = list(named_funcs_to_func_nodes(named_funcs))</span>
+<span class="sd">    &gt;&gt;&gt; dag2 = DAG(func_nodes)</span>
+<span class="sd">    &gt;&gt;&gt; assert dag2(x=3) == dag(x=3) == 24</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">node</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">func</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">}</span></div>
 </pre></div>
 
            </div>

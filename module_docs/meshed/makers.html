@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.109 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.110 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -217,13 +217,13 @@ sure that we don’t ever fallback on a placeholder function as we did above.</p
 <span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">_chain</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">factory_to_func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">dlft_factory_to_func</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">name_to_func_map</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;map&#39;</span><span class="p">:</span> <span class="n">_map</span><span class="p">,</span> <span class="s1">&#39;chain&#39;</span><span class="p">:</span> <span class="n">_chain</span><span class="p">,</span> <span class="s1">&#39;call&#39;</span><span class="p">:</span> <span class="n">_call</span><span class="p">},</span>
 <span class="gp">... </span>    <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fnodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mk_fnodes_from_fn_factories</span><span class="p">(</span><span class="n">fnodes_factories</span><span class="p">,</span> <span class="n">factory_to_func</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">fnodes</span><span class="p">)</span>
 </pre></div>
@@ -264,6 +264,38 @@ of the dag signature, names, and relationships between these names:</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt id="meshed.makers.func_nodes_to_named_funcs">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">func_nodes_to_named_funcs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span>str<span class="p">, </span>Callable<span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#func_nodes_to_named_funcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.func_nodes_to_named_funcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make some components (kwargs) based on the <code class="docutils literal notranslate"><span class="pre">.out</span></code> and <code class="docutils literal notranslate"><span class="pre">.func</span></code> of the
+<a href="#id1"><span class="problematic" id="id2">``</span></a>FuncNode``s.</p>
+<p>Example use: To get from <code class="docutils literal notranslate"><span class="pre">DAG</span></code> to <code class="docutils literal notranslate"><span class="pre">Slabs</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">FuncNode</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,),</span>
+<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">143</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">named_funcs</span> <span class="o">=</span> <span class="n">func_nodes_to_named_funcs</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">named_funcs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">named_funcs</span><span class="p">)</span>
+<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">callable</span><span class="p">(</span><span class="n">named_funcs</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">dag</span><span class="o">.</span><span class="n">find_func_node</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="n">named_funcs</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">](</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span><span class="mi">4</span>
+</pre></div>
+</div>
+<p>The inverse of this function is <code class="docutils literal notranslate"><span class="pre">named_funcs_to_func_nodes</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">named_funcs_to_func_nodes</span><span class="p">(</span><span class="n">named_funcs</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag2</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">dag2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="n">dag</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">24</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt id="meshed.makers.mk_fnodes_from_fn_factories">
 <code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">mk_fnodes_from_fn_factories</code><span class="sig-paren">(</span><em class="sig-param">fnodes_factories: Iterable[Callable[[...], meshed.base.FuncNode]], factory_to_func: Callable[[Callable[[...], meshed.base.FuncNode]], Callable] = &lt;function dlft_factory_to_func&gt;</em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#mk_fnodes_from_fn_factories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.mk_fnodes_from_fn_factories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make func nodes from func node factories and a specification of how to make the
@@ -281,6 +313,31 @@ what kind of function to make).</p></li>
 <dd class="field-even"><p></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.makers.named_funcs_to_func_nodes">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">named_funcs_to_func_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">named_funcs</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span>str<span class="p">, </span>Callable<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Iterable<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#named_funcs_to_func_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.named_funcs_to_func_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make <code class="docutils literal notranslate"><span class="pre">FuncNode``s</span> <span class="pre">from</span> <span class="pre">keyword</span> <span class="pre">arguments,</span> <span class="pre">using</span> <span class="pre">the</span> <span class="pre">key</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">``.out</span></code> of the
+<code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> and the value as the <code class="docutils literal notranslate"><span class="pre">.func</span></code> of the <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code>.</p>
+<p>Example use: To get from <code class="docutils literal notranslate"><span class="pre">Slabs</span></code> to <code class="docutils literal notranslate"><span class="pre">DAG</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">named_funcs_to_func_nodes</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">a</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">b</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">c</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">24</span>
+</pre></div>
+</div>
+<p>The inverse of this function is <code class="docutils literal notranslate"><span class="pre">func_nodes_to_named_funcs</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">named_funcs</span> <span class="o">=</span> <span class="n">func_nodes_to_named_funcs</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag2</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">named_funcs_to_func_nodes</span><span class="p">(</span><span class="n">named_funcs</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">dag2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="n">dag</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">24</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
