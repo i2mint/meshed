@@ -1164,7 +1164,7 @@ class DAG:
                 # is determined by what ``parameter_merge`` specified, which is,
                 # by default, strict (everything needs to be the same, or
                 # ``parameter_merge`` with raise an error.)
-                yield self.parameter_merge(params_with_name_changed_to_src_name)
+                yield self.parameter_merge(*params_with_name_changed_to_src_name)
 
     # TODO: Find more representative (and possibly shorter) doctest:
     @property

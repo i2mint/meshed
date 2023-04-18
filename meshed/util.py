@@ -862,10 +862,14 @@ ParameterMerger = Callable[[Iterable[Parameter]], Parameter]
 parameter_merger: ParameterMerger
 
 
+# TODO: Be aware of i2.signatures.param_comparator in
+#  https://github.com/i2mint/i2/blob/2bd43b350a3ae29f1e6c587dbe15d6f536635173/i2/signatures.py#L4247
+#  and related funnctions, which are meant to be a more general approach. Consider
+#  merging parameter_merger to use that general tooling.
 # TODO: Make the ValidationError be even more specific, indicating what parameters
 #  are different and how.
 def parameter_merger(
-    params, *, same_name=True, same_kind=True, same_default=True, same_annotation=True
+    *params, same_name=True, same_kind=True, same_default=True, same_annotation=True
 ):
     """Validates that all the params are exactly the same, returning the first if so.
 
@@ -877,12 +881,28 @@ def parameter_merger(
 
     But if they're not the same, we need to provide control on which to ignore.
 
+    >>> from inspect import Parameter as P
+    >>> PK = P.POSITIONAL_OR_KEYWORD
+    >>> KO = P.KEYWORD_ONLY
+    >>> parameter_merger(P('a', PK), P('a', PK))
+    <Parameter "a">
+    >>> parameter_merger(P('a', PK), P('different_name', PK), same_name=False)
+    <Parameter "a">
+    >>> parameter_merger(P('a', PK), P('a', KO), same_kind=False)
+    <Parameter "a">
+    >>> parameter_merger(P('a', PK), P('a', PK,  default=42), same_default=False)
+    <Parameter "a">
+    >>> parameter_merger(P('a', PK, default=42), P('a', PK), same_default=False)
+    <Parameter "a=42">
+    >>> parameter_merger(P('a', PK, annotation=int), P('a', PK), same_annotation=False)
+    <Parameter "a: int">
     """
     suggestion_on_error = '''To resolve this you have several choices:
 
     - Change the properties of the param (kind, default, annotation) to be those you 
-      want. For example, you can use ``i2.Sig.ch_param_attrs`` 
-      (or ``i2.Sig.ch_defaults``, ``i2.Sig.ch_kinds``, ``i2.Sig.ch_annotations``)
+      want. For example, you can use ``i2.Sig.ch_param_attrs`` on the signatures 
+      (or ``i2.Sig.ch_names``, ``i2.Sig.ch_defaults``, ``i2.Sig.ch_kinds``, 
+      ``i2.Sig.ch_annotations``)
       to get a function decorator that will do that for you.
     - If you're making a DAG, consider specifying a different ``parameter_merge``.
       For example you can use ``functools.partial`` on 
