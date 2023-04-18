@@ -26,5 +26,5 @@ from meshed.util import (
     ConditionalIterize,
     instance_checker,
     replace_item_in_iterable,
-    parameter_merger
+    parameter_merger,
 )
