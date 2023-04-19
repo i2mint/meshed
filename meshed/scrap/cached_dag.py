@@ -71,6 +71,8 @@ class NoOverwritesDict(dict):
 NoSuchKey = type('NoSuchKey', (), {})
 
 # TODO: Cache validation and invalidation
+# TODO: Continue constructing uppward towards lazyprop-using class (instances are
+#  varnodes)
 class CachedDag:
     """
     Wraps a DAG, using it to compute any of it's var nodes from it's dependents,
@@ -133,28 +135,32 @@ class CachedDag:
     >>> from inspect import signature
     >>> g = CachedDag(dag)
     >>> signature(g)
-    <Signature (k, input_kwargs=())>
-    >>>
-    >>>
+    <Signature (k, /, **input_kwargs)>
+
+
+    We can get ``ww`` because it has a default:
+
     >>> g('ww')  # we can get this since it has a default
     2
-    >>> try:
-    ...     g('y')  # this one won't work, because we need a w
-    ... except TypeError as e:
-    ...     print(e)
-    The input_kwargs of a dag call is missing 1 required argument: 'w'
 
-    It needs a w?! No, it needs an x! But to get an x you need a w, and...
+    But we can't get ``y`` because we don't have what it depends on:
 
-    >>> try:
-    ...     g('x')  # this one won't work, because we need a w
-    ... except TypeError as e:
-    ...     print(e)
-    The input_kwargs of a dag call is missing 1 required argument: 'w'
+    >>> g('y')
+    Traceback (most recent call last):
+        ...
+    TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'
+
+    It needs a ``w?``! No, it needs an ``x``! But to get an ``x`` you need a ``w``,
+    and...
+
+    >>> g('x')
+    Traceback (most recent call last):
+        ...
+    TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'
 
     So let's give it a w!
 
-    >>> g('x', dict(w=3))  # == 3 * 2 ==
+    >>> g('x', w=3)  # == 3 * 2 ==
     6
 
     And now this works:
@@ -176,7 +182,7 @@ class CachedDag:
 
     But this is something we need to handle better!
 
-    >>> g('x', dict(w=10))
+    >>> g('x', w=10)
     6
 
     This is happending because there's already a x in the cache, and it takes precedence.
@@ -231,7 +237,7 @@ class CachedDag:
 
     # TODO: Consider having args and kwargs instead of just input_kwargs.
     #   or making it (k, /, *args, **kwargs)
-    def __call__(self, k, input_kwargs=()):
+    def __call__(self, k, /, **input_kwargs):
         #         print(f"Calling ({k=},{input_kwargs=})\t{self.cache=}")
         input_kwargs = dict(input_kwargs)
         if intersection := (input_kwargs.keys() & self.cache.keys()):
@@ -254,7 +260,7 @@ class CachedDag:
             else:
                 func_node = self.func_node_of_id[func_node_id]
                 input_sources = {
-                    src: self(src, input_kwargs) for src in func_node.bind.values()
+                    src: self(src, **input_kwargs) for src in func_node.bind.values()
                 }
                 #                 inputs = dict(input_sources, **input_kwargs)  #
                 # TODO: do we need to include **self.defaults in the middle?
@@ -275,8 +281,8 @@ class CachedDag:
                     f"argument: '{k}'"
                 )
 
-    def _call(self, k, **kwargs):
-        return self(k, kwargs)
+    def _call(self, k, /, **kwargs):
+        return self(k, **kwargs)
 
     def roots_for(self, node):
         """
@@ -314,13 +320,20 @@ class CachedDag:
 
         return Sig(sort_params(gen()))
 
-    def inject_methods(self):
+    def inject_methods(self, obj=None):
         # TODO: Should be input_names of reversed_graph, but resulting "shadow" in
         #  the root nodes, along with their defaults (filtered by cache)
-        for var_node in filter(lambda x: x not in self.roots, self.var_nodes):
+        non_root_var_nodes = list(filter(lambda x: x not in self.roots, self.var_nodes))
+        if obj is None:
+            from types import SimpleNamespace
+            obj = SimpleNamespace(**{k: None for k in non_root_var_nodes})
+        for var_node in non_root_var_nodes:
             sig = self._signature_for_node_method(var_node)
             f = sig(partial(self._call, var_node))
-            setattr(self, var_node, f)
+            setattr(obj, var_node, f)
+
+        obj._cache = self.cache
+        return obj
 
 
 def cached_dag_test():
@@ -339,7 +352,7 @@ def cached_dag_test():
     dag = DAG([f, g])
 
     c = CachedDag(dag)
-    c('g', dict(a=1))
+    c('g', a=1)
     assert c.cache == {'g': 2, 'a': 1}
     assert c('f' == 2)
 
