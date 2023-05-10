@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.110 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.111 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -175,28 +175,31 @@ www=  ──▶ │   add    │  │
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">CachedDag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signature</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<span class="go">&lt;Signature (k, input_kwargs=())&gt;</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;ww&#39;</span><span class="p">)</span>  <span class="c1"># we can get this since it has a default</span>
-<span class="go">2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="n">g</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>  <span class="c1"># this one won&#39;t work, because we need a w</span>
-<span class="gp">... </span><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-<span class="go">The input_kwargs of a dag call is missing 1 required argument: &#39;w&#39;</span>
+<span class="go">&lt;Signature (k, /, **input_kwargs)&gt;</span>
 </pre></div>
 </div>
-<p>It needs a w?! No, it needs an x! But to get an x you need a w, and…</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>  <span class="c1"># this one won&#39;t work, because we need a w</span>
-<span class="gp">... </span><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-<span class="go">The input_kwargs of a dag call is missing 1 required argument: &#39;w&#39;</span>
+<p>We can get <code class="docutils literal notranslate"><span class="pre">ww</span></code> because it has a default:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;ww&#39;</span><span class="p">)</span>  <span class="c1"># we can get this since it has a default</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>But we can’t get <code class="docutils literal notranslate"><span class="pre">y</span></code> because we don’t have what it depends on:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="gr">TypeError</span>: <span class="n">The input_kwargs of a dag call is missing 1 required argument: &#39;w&#39;</span>
+</pre></div>
+</div>
+<p>It needs a <code class="docutils literal notranslate"><span class="pre">w?</span></code>! No, it needs an <code class="docutils literal notranslate"><span class="pre">x</span></code>! But to get an <code class="docutils literal notranslate"><span class="pre">x</span></code> you need a <code class="docutils literal notranslate"><span class="pre">w</span></code>,
+and…</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="gr">TypeError</span>: <span class="n">The input_kwargs of a dag call is missing 1 required argument: &#39;w&#39;</span>
 </pre></div>
 </div>
 <p>So let’s give it a w!</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>  <span class="c1"># == 3 * 2 ==</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># == 3 * 2 ==</span>
 <span class="go">6</span>
 </pre></div>
 </div>
@@ -218,7 +221,7 @@ www=  ──▶ │   add    │  │
 </pre></div>
 </div>
 <p>But this is something we need to handle better!</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="go">6</span>
 </pre></div>
 </div>

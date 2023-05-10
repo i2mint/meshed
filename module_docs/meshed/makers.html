@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.110 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.111 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -264,6 +264,12 @@ of the dag signature, names, and relationships between these names:</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt id="meshed.makers.extract_tokens">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">extract_tokens</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">endpos</span><span class="o">=</span><span class="default_value">9223372036854775807</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.makers.extract_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all non-overlapping matches of pattern in string.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="meshed.makers.func_nodes_to_named_funcs">
 <code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">func_nodes_to_named_funcs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Mapping<span class="p">[</span>str<span class="p">, </span>Callable<span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#func_nodes_to_named_funcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.func_nodes_to_named_funcs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make some components (kwargs) based on the <code class="docutils literal notranslate"><span class="pre">.out</span></code> and <code class="docutils literal notranslate"><span class="pre">.func</span></code> of the
@@ -426,6 +432,31 @@ what kind of function to make).</p></li>
 <dd class="field-even"><p></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.makers.triples_to_fnodes">
+<code class="sig-prename descclassname">meshed.makers.</code><code class="sig-name descname">triples_to_fnodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">triples</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>Tuple<span class="p">[</span>str<span class="p">, </span>str<span class="p">, </span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Iterable<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span><a class="reference internal" href="../../_modules/meshed/makers.html#triples_to_fnodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.makers.triples_to_fnodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts an iterable of func call triples to an iterable of <code class="docutils literal notranslate"><span class="pre">FuncNode``s.</span>
+<span class="pre">(Which</span> <span class="pre">in</span> <span class="pre">turn</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">converted</span> <span class="pre">to</span> <span class="pre">a</span> <span class="pre">``DAG</span></code>.)</p>
+<p>Note how the python identifiers are extracted (on the basis of “an unbroken
+sequence of alphanumerical (and underscore) characters”, ignoring all other
+characters).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">triples_to_fnodes</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span>
+<span class="gp">... </span>        <span class="p">(</span><span class="s1">&#39;alpha bravo&#39;</span><span class="p">,</span> <span class="s1">&#39;charlie&#39;</span><span class="p">,</span> <span class="s1">&#39;delta echo&#39;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="p">(</span><span class="s1">&#39; foxtrot  &amp;^$#&#39;</span><span class="p">,</span> <span class="s1">&#39;golf&#39;</span><span class="p">,</span> <span class="s1">&#39;  alpha,  echo&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="p">])</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+<span class="go">delta,echo -&gt; charlie -&gt; alpha__bravo</span>
+<span class="go">alpha__bravo -&gt; alpha__0 -&gt; alpha</span>
+<span class="go">alpha__bravo -&gt; bravo__1 -&gt; bravo</span>
+<span class="go">alpha,echo -&gt; golf -&gt; foxtrot</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>

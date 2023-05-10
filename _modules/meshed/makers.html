@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.110 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.111 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -599,6 +599,8 @@
 <span class="n">FuncSource</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">],</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span>
 
 
+<span class="c1"># TODO: Make code_to_fnodes more flexible (not need to be enclosed in a function</span>
+<span class="c1">#  definition)</span>
 <span class="nd">@double_up_as_factory</span>
 <span class="k">def</span> <span class="nf">code_to_fnodes</span><span class="p">(</span>
     <span class="n">src</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -632,6 +634,62 @@
 
 
 <span class="n">simple_code_to_digraph</span> <span class="o">=</span> <span class="n">code_to_digraph</span>  <span class="c1"># back-compatability alias</span>
+
+
+<span class="c1"># import re</span>
+<span class="c1"># from typing import Tuple, Iterable, Iterator</span>
+<span class="c1"># from meshed import FuncNode, code_to_dag, code_to_fnodes, DAG</span>
+
+<span class="n">extract_tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\w+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span>
+
+
+<div class="viewcode-block" id="triples_to_fnodes"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.triples_to_fnodes">[docs]</a><span class="k">def</span> <span class="nf">triples_to_fnodes</span><span class="p">(</span><span class="n">triples</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts an iterable of func call triples to an iterable of ``FuncNode``s.</span>
+<span class="sd">    (Which in turn can be converted to a ``DAG``.)</span>
+
+<span class="sd">    Note how the python identifiers are extracted (on the basis of &quot;an unbroken</span>
+<span class="sd">    sequence of alphanumerical (and underscore) characters&quot;, ignoring all other</span>
+<span class="sd">    characters).</span>
+
+<span class="sd">    &gt;&gt;&gt; from meshed import DAG</span>
+<span class="sd">    &gt;&gt;&gt; dag = DAG(</span>
+<span class="sd">    ...     triples_to_fnodes(</span>
+<span class="sd">    ...     [</span>
+<span class="sd">    ...         (&#39;alpha bravo&#39;, &#39;charlie&#39;, &#39;delta echo&#39;),</span>
+<span class="sd">    ...         (&#39; foxtrot  &amp;^$#&#39;, &#39;golf&#39;, &#39;  alpha,  echo&#39;),</span>
+<span class="sd">    ...     ])</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; print(dag.synopsis_string())</span>
+<span class="sd">    delta,echo -&gt; charlie -&gt; alpha__bravo</span>
+<span class="sd">    alpha__bravo -&gt; alpha__0 -&gt; alpha</span>
+<span class="sd">    alpha__bravo -&gt; bravo__1 -&gt; bravo</span>
+<span class="sd">    alpha,echo -&gt; golf -&gt; foxtrot</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n\t</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_triple_to_func_call_str</span><span class="p">(</span><span class="o">*</span><span class="n">triple</span><span class="p">)</span> <span class="k">for</span> <span class="n">triple</span> <span class="ow">in</span> <span class="n">triples</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;def main():</span><span class="se">\n\t</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">return</span> <span class="n">code_to_fnodes</span><span class="p">(</span><span class="n">code</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_triple_to_func_call_str</span><span class="p">(</span>
+    <span class="n">outputs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">func_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a `(outputs, func_name, inputs)` triple to a function call string.</span>
+
+<span class="sd">    &gt;&gt;&gt; _triple_to_func_call_str((&#39;a&#39;, &#39;b&#39;), &#39;func&#39;, (&#39;c&#39;, &#39;d&#39;))</span>
+<span class="sd">    &#39;a, b = func(c, d)&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">_ensure_tokens_iterable</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">_ensure_tokens_iterable</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_ensure_tokens_iterable</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">extract_tokens</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tokens</span>
 
 
 <span class="k">def</span> <span class="nf">_ensure_func_src</span><span class="p">(</span>
