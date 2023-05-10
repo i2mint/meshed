@@ -487,6 +487,8 @@ def _extract_name_from_single_func_def(src: str, default=None):
 FuncSource = Union[Callable[[str], Callable], Mapping[str, Callable]]
 
 
+# TODO: Make code_to_fnodes more flexible (not need to be enclosed in a function
+#  definition)
 @double_up_as_factory
 def code_to_fnodes(
     src=None,
@@ -533,12 +535,16 @@ def triples_to_fnodes(triples: Iterable[Tuple[str, str, str]]) -> Iterable[FuncN
     """Converts an iterable of func call triples to an iterable of ``FuncNode``s.
     (Which in turn can be converted to a ``DAG``.)
 
+    Note how the python identifiers are extracted (on the basis of "an unbroken
+    sequence of alphanumerical (and underscore) characters", ignoring all other
+    characters).
+
     >>> from meshed import DAG
     >>> dag = DAG(
     ...     triples_to_fnodes(
     ...     [
     ...         ('alpha bravo', 'charlie', 'delta echo'),
-    ...         ('foxtrot', 'golf', 'alpha echo'),
+    ...         (' foxtrot  &^$#', 'golf', '  alpha,  echo'),
     ...     ])
     ... )
     >>> print(dag.synopsis_string())
