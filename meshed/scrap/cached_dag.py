@@ -326,6 +326,7 @@ class CachedDag:
         non_root_var_nodes = list(filter(lambda x: x not in self.roots, self.var_nodes))
         if obj is None:
             from types import SimpleNamespace
+
             obj = SimpleNamespace(**{k: None for k in non_root_var_nodes})
         for var_node in non_root_var_nodes:
             sig = self._signature_for_node_method(var_node)
