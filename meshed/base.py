@@ -516,6 +516,11 @@ def ch_func_node_func(
         return ch_func_node_attrs(fn, func=func)
     else:
         return alternative(fn, func)
+    
+    
+def insert_func_if_compatible(func_comparator: CallableComparator = compare_signatures):
+    return partial(ch_func_node_func, func_comparator=func_comparator)
+
 
 
 def _keys_and_values_are_strings_validation(d: dict):

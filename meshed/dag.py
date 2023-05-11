@@ -962,7 +962,10 @@ class DAG:
     #  func_mapping keys.
     def ch_funcs(
         self,
-        func_comparator: CallableComparator = compare_signatures,
+        # func_comparator: CallableComparator = compare_signatures,
+        ch_func_node_func: Callable[
+            [FuncNode, Callable, CallableComparator], FuncNode
+        ] = ch_func_node_func,
         /,
         **func_mapping: Callable,
     ) -> 'DAG':
@@ -1062,7 +1065,8 @@ class DAG:
         >>> from functools import partial
         >>> on_names = lambda sig1, sig2: list(sig1.parameters) == list(sig2.parameters)
         >>> same_names = partial(compare_signatures, signature_comparator=on_names)
-        >>> d = dag.ch_funcs(same_names, g=lambda y, z: y / z);
+        >>> ch_fnode = partial(ch_func_node_func, func_comparator=same_names)
+        >>> d = dag.ch_funcs(ch_fnode, g=lambda y, z: y / z);
         >>> Sig(d)
         <Sig (a, b, y)>
         >>> d(2, 3, 4)
@@ -1070,7 +1074,7 @@ class DAG:
 
         And this one works too:
 
-        >>> d = dag.ch_funcs(same_names, g=lambda y=1, z=200: y / z);
+        >>> d = dag.ch_funcs(ch_fnode, g=lambda y=1, z=200: y / z);
 
         But our ``same_names`` function compared names including their order.
         If we want a function with the signature ``(z=2, y=1)`` to be able to be
@@ -1083,12 +1087,12 @@ class DAG:
         ...         lambda sig1, sig2: set(sig1.parameters) == set(sig2.parameters)
         ...     )
         ... )
-        >>> d = dag.ch_funcs(same_set_of_names, g=lambda z=2, y=1: y / z);
-
+        >>> ch_fnode2 = partial(ch_func_node_func, func_comparator=same_set_of_names)
+        >>> d = dag.ch_funcs(ch_fnode2, g=lambda z=2, y=1: y / z);
 
         """
         return ch_funcs(
-            self, func_mapping=func_mapping, func_comparator=func_comparator
+            self, func_mapping=func_mapping, ch_func_node_func=ch_func_node_func
         )
 
         # _validate_func_mapping(func_mapping, self)
@@ -1782,6 +1786,7 @@ def _validate_func_mapping(func_mapping: FuncMapping, func_nodes: DagAble):
 
 FuncMappingValidator = Callable[[FuncMapping, DagAble], None]
 
+# TODO: Redesign. Is terrible both in interface and code. 
 # TODO: Merge with DAG, or with Mesh (when it exists)
 # TODO: Make it work with any FuncNode Iterable
 # TODO: extract egress functionality to decorator?
@@ -1792,11 +1797,12 @@ def ch_funcs(
     func_mapping: FuncMapping = (),
     validate_func_mapping: Optional[FuncMappingValidator] = _validate_func_mapping,
     # TODO: Design. Don't like the fact that ch_func_node_func needs a slot for
-    #  func_comparator, which is then given later.
+    #  func_comparator, which is then given later. Perhaps only ch_func_node_func should
+    #  should be given (and it contains the func_comparator)
     ch_func_node_func: Callable[
         [FuncNode, Callable, CallableComparator], FuncNode
     ] = ch_func_node_func,
-    func_comparator: CallableComparator = compare_signatures,
+    # func_comparator: CallableComparator = compare_signatures,
 ):
     """Function (and decorator) to change the functions of func_nodes according to
     the specification of a func_mapping whose keys are ``.name`` or ``.out`` values
@@ -1826,7 +1832,7 @@ def ch_funcs(
     def ch_func(dag, key, func):
         condition = lambda fn: fn.name == key or fn.out == key  # TODO: interface ctrl?
         replacement = lambda fn: ch_func_node_func(
-            fn, func, func_comparator=func_comparator
+            fn, func,
         )
         return DAG(
             replace_item_in_iterable(
