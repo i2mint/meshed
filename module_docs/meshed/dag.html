@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.111 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.112 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -406,7 +406,7 @@ key (useful for pipeline sanity), etc.</p>
 
 <dl class="py method">
 <dt id="meshed.dag.DAG.ch_funcs">
-<code class="sig-name descname">ch_funcs</code><span class="sig-paren">(</span><em class="sig-param">func_comparator: Callable[[Callable, Callable], Comparison] = &lt;function compare_signatures&gt;, /, **func_mapping: Callable</em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#meshed.dag.DAG" title="meshed.dag.DAG">meshed.dag.DAG</a><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.ch_funcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.ch_funcs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ch_funcs</code><span class="sig-paren">(</span><em class="sig-param">ch_func_node_func: Callable[[meshed.base.FuncNode, Callable, Callable[[Callable, Callable], Comparison]], meshed.base.FuncNode] = &lt;function ch_func_node_func&gt;, /, **func_mapping: Callable</em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#meshed.dag.DAG" title="meshed.dag.DAG">meshed.dag.DAG</a><a class="reference internal" href="../../_modules/meshed/dag.html#DAG.ch_funcs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.DAG.ch_funcs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change some of the functions in the DAG.
 More preciseluy get a copy of the DAG where in some of the functions have
 changed.</p>
@@ -503,7 +503,8 @@ signature comparison through a <code class="docutils literal notranslate"><span 
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">on_names</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">sig1</span><span class="p">,</span> <span class="n">sig2</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">sig1</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">sig2</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">same_names</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">compare_signatures</span><span class="p">,</span> <span class="n">signature_comparator</span><span class="o">=</span><span class="n">on_names</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">same_names</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ch_fnode</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">ch_func_node_func</span><span class="p">,</span> <span class="n">func_comparator</span><span class="o">=</span><span class="n">same_names</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">ch_fnode</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span><span class="p">);</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Sig</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 <span class="go">&lt;Sig (a, b, y)&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
@@ -511,7 +512,7 @@ signature comparison through a <code class="docutils literal notranslate"><span 
 </pre></div>
 </div>
 <p>And this one works too:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">same_names</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">200</span><span class="p">:</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span><span class="p">);</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">ch_fnode</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">200</span><span class="p">:</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>But our <code class="docutils literal notranslate"><span class="pre">same_names</span></code> function compared names including their order.
@@ -524,7 +525,8 @@ If we want a function with the signature <code class="docutils literal notransla
 <span class="gp">... </span>        <span class="k">lambda</span> <span class="n">sig1</span><span class="p">,</span> <span class="n">sig2</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="n">sig1</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">sig2</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">same_set_of_names</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="k">lambda</span> <span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ch_fnode2</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">ch_func_node_func</span><span class="p">,</span> <span class="n">func_comparator</span><span class="o">=</span><span class="n">same_set_of_names</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">ch_fnode2</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="k">lambda</span> <span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span><span class="p">);</span>
 </pre></div>
 </div>
 </dd></dl>
