@@ -684,9 +684,11 @@
 <span class="sd">    &gt;&gt;&gt; fn = FuncNode(lambda x, y: x + y, bind={&#39;x&#39;: &#39;X&#39;, &#39;y&#39;: &#39;Y&#39;})</span>
 <span class="sd">    &gt;&gt;&gt; fn.call_on_scope(dict(X=2, Y=3))</span>
 <span class="sd">    5</span>
-<span class="sd">    &gt;&gt;&gt; new_fn = rebind_to_func(fn, lambda a, b, c=7: a * b)</span>
+<span class="sd">    &gt;&gt;&gt; new_fn = rebind_to_func(fn, lambda a, b, c=0: a * (b + c))</span>
 <span class="sd">    &gt;&gt;&gt; new_fn.call_on_scope(dict(X=2, Y=3))</span>
 <span class="sd">    6</span>
+<span class="sd">    &gt;&gt;&gt; new_fn.call_on_scope(dict(X=2, Y=3, c=1))</span>
+<span class="sd">    8</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">new_bind</span> <span class="o">=</span> <span class="n">_new_bind</span><span class="p">(</span><span class="n">fnode</span><span class="p">,</span> <span class="n">new_func</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fnode</span><span class="o">.</span><span class="n">ch_attrs</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">new_func</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">new_bind</span><span class="p">)</span></div>
