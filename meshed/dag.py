@@ -1786,7 +1786,7 @@ def _validate_func_mapping(func_mapping: FuncMapping, func_nodes: DagAble):
 
 FuncMappingValidator = Callable[[FuncMapping, DagAble], None]
 
-# TODO: Redesign. Is terrible both in interface and code. 
+# TODO: Redesign. Is terrible both in interface and code.
 # TODO: Merge with DAG, or with Mesh (when it exists)
 # TODO: Make it work with any FuncNode Iterable
 # TODO: extract egress functionality to decorator?
@@ -1831,9 +1831,7 @@ def ch_funcs(
     # TODO: Optimize (for example, use self._func_node_for)
     def ch_func(dag, key, func):
         condition = lambda fn: fn.name == key or fn.out == key  # TODO: interface ctrl?
-        replacement = lambda fn: ch_func_node_func(
-            fn, func,
-        )
+        replacement = lambda fn: ch_func_node_func(fn, func,)
         return DAG(
             replace_item_in_iterable(
                 dag.func_nodes, condition=condition, replacement=replacement,

@@ -545,9 +545,6 @@ def ch_func_node_func(
         return alternative(fn, func)
 
 
-from i2 import Sig
-
-
 # TODO: Add more control (signature comparison, rebinding rules, renaming rules...)
 # TODO: Should we include this in FuncNode as .ch_func(func)?
 #  Possibly with an argument that specifies how to handle details, aligned with the
@@ -569,7 +566,6 @@ def rebind_to_func(fnode: FuncNode, new_func: Callable):
     # TODO: assert some health stats on old_to_new_names_map
     new_bind = {old_to_new_names_map[k]: v for k, v in old_bind.items()}
     return fnode.ch_attrs(func=new_func, bind=new_bind)
-
 
 def insert_func_if_compatible(func_comparator: CallableComparator = compare_signatures):
     return partial(ch_func_node_func, func_comparator=func_comparator)
