@@ -559,7 +559,10 @@ def _new_bind(fnode, new_func):
     new_bind = {old_to_new_names_map[k]: v for k, v in old_bind.items()}
     return new_bind
 
+
 # TODO: Add more control (signature comparison, rebinding rules, renaming rules...)
+# TODO: For example, can rebind to a function with different defaults, which are ignored.
+#  Should we allow this? Should we allow to specify how to handle this?
 # TODO: Should we include this in FuncNode as .ch_func(func)?
 #  Possibly with an argument that specifies how to handle details, aligned with the
 #  DAG.ch_funcs method. See ch_func_node_func.
