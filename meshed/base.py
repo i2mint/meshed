@@ -532,18 +532,32 @@ def raise_signature_mismatch_error(fn, func):
 #     compare_func = keyed_comparator(signature_comparator, key=Sig)
 
 
+def _ch_func_node_func(fn: FuncNode, func: Callable):
+    return ch_func_node_attrs(fn, func=func)
+
+
 def ch_func_node_func(
     fn: FuncNode,
     func: Callable,
     *,
     func_comparator: CallableComparator = compare_signatures,
+    ch_func_node=_ch_func_node_func,
     alternative=raise_signature_mismatch_error,
 ):
     if func_comparator(fn.func, func):
-        return ch_func_node_attrs(fn, func=func)
+        return ch_func_node(fn, func=func)
     else:
         return alternative(fn, func)
 
+
+def _new_bind(fnode, new_func):
+    old_sig = Sig(fnode.func)
+    new_sig = Sig(new_func)
+    old_bind: dict = fnode.bind
+    old_to_new_names_map = dict(zip(old_sig.names, new_sig.names))
+    # TODO: assert some health stats on old_to_new_names_map
+    new_bind = {old_to_new_names_map[k]: v for k, v in old_bind.items()}
+    return new_bind
 
 # TODO: Add more control (signature comparison, rebinding rules, renaming rules...)
 # TODO: Should we include this in FuncNode as .ch_func(func)?
@@ -559,13 +573,9 @@ def rebind_to_func(fnode: FuncNode, new_func: Callable):
     >>> new_fn.call_on_scope(dict(X=2, Y=3))
     6
     """
-    old_sig = Sig(fnode.func)
-    new_sig = Sig(new_func)
-    old_bind: dict = fnode.bind
-    old_to_new_names_map = dict(zip(old_sig.names, new_sig.names))
-    # TODO: assert some health stats on old_to_new_names_map
-    new_bind = {old_to_new_names_map[k]: v for k, v in old_bind.items()}
+    new_bind = _new_bind(fnode, new_func)
     return fnode.ch_attrs(func=new_func, bind=new_bind)
+
 
 def insert_func_if_compatible(func_comparator: CallableComparator = compare_signatures):
     return partial(ch_func_node_func, func_comparator=func_comparator)
