@@ -572,9 +572,11 @@ def rebind_to_func(fnode: FuncNode, new_func: Callable):
     >>> fn = FuncNode(lambda x, y: x + y, bind={'x': 'X', 'y': 'Y'})
     >>> fn.call_on_scope(dict(X=2, Y=3))
     5
-    >>> new_fn = rebind_to_func(fn, lambda a, b, c=7: a * b)
+    >>> new_fn = rebind_to_func(fn, lambda a, b, c=0: a * (b + c))
     >>> new_fn.call_on_scope(dict(X=2, Y=3))
     6
+    >>> new_fn.call_on_scope(dict(X=2, Y=3, c=1))
+    8
     """
     new_bind = _new_bind(fnode, new_func)
     return fnode.ch_attrs(func=new_func, bind=new_bind)
