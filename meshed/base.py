@@ -456,12 +456,14 @@ def is_func_node(obj) -> bool:
     # A weaker check than an isinstance(obj, FuncNode), which fails when we're
     # developing (therefore changing) FuncNode definition (without relaunching python
     # kernel). This is to be used instead, at least during development times
-    # TODO: Replace with isinstance(obj, FuncNode) is this when development
-    #  stabalizes
+    # TODO: Replace with isinstance(obj, FuncNode) is this when development stabalizes
     # return isinstance(obj, FuncNode)
     cls = type(obj)
     if cls is not type:
-        return any(getattr(x, '__name__', '') == 'FuncNode' for x in cls.mro())
+        try:
+            return isinstance(obj, FuncNode)
+        except Exception:
+            return any(getattr(x, '__name__', '') == 'FuncNode' for x in cls.mro())
     else:
         return False
 
