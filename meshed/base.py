@@ -457,6 +457,7 @@ def is_func_node(obj) -> bool:
     # developing (therefore changing) FuncNode definition (without relaunching python
     # kernel). This is to be used instead, at least during development times
     # TODO: Replace with isinstance(obj, FuncNode) is this when development stabalizes
+    #  See: https://github.com/i2mint/meshed/discussions/57
     # return isinstance(obj, FuncNode)
     cls = type(obj)
     if cls is not type:
