@@ -216,6 +216,7 @@ class FuncNode:
 
     """
 
+    # TODO: Make everything but func keyword-only (check for non-keyword usage before)
     func: Callable
     name: str = field(default=None)
     bind: dict = field(default_factory=dict)
