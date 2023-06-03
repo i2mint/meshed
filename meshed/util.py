@@ -9,6 +9,7 @@ from operator import itemgetter
 
 T = TypeVar('T')
 
+
 def provides(*var_names: str) -> Callable[[Callable], Callable]:
     """Decorator to assign ``var_names`` to a ``provides_`` attribute of function.
     
@@ -39,6 +40,7 @@ def provides(*var_names: str) -> Callable[[Callable], Callable]:
     ('b', 'h')
 
     """
+
     def add_provides_attribute(func):
         if not var_names:
             var_names_ = (name_of_obj(func),)
@@ -48,7 +50,7 @@ def provides(*var_names: str) -> Callable[[Callable], Callable]:
             )
         func._provides = var_names_
         return func
-    
+
     return add_provides_attribute
 
 
