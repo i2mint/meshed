@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.117 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.118 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -594,6 +594,38 @@ and annotation should be used in the interface of the DAG?</p>
 <span class="go">&lt;Parameter &quot;a=42&quot;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">PK</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">same_annotation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">&lt;Parameter &quot;a: int&quot;&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.util.provides">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">provides</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">var_names</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Callable<span class="p">[</span><span class="p">[</span>Callable<span class="p">]</span><span class="p">, </span>Callable<span class="p">]</span><a class="reference internal" href="../../_modules/meshed/util.html#provides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.provides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to assign <code class="docutils literal notranslate"><span class="pre">var_names</span></code> to a <code class="docutils literal notranslate"><span class="pre">provides_</span></code> attribute of function.</p>
+<p>This is meant to be used to indicate to a mesh what var nodes a function can source
+values for.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@provides</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">_provides</span>
+<span class="go">(&#39;a&#39;, &#39;b&#39;)</span>
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">var_names</span></code> are given, then the function name is used as the var name:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@provides</span><span class="p">()</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">_provides</span>
+<span class="go">(&#39;g&#39;,)</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">var_names</span></code> contains <code class="docutils literal notranslate"><span class="pre">'_'</span></code>, then the function name is used as the var name
+for that position:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@provides</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">h</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span><span class="o">.</span><span class="n">_provides</span>
+<span class="go">(&#39;b&#39;, &#39;h&#39;)</span>
 </pre></div>
 </div>
 </dd></dl>
