@@ -9,6 +9,48 @@ from operator import itemgetter
 
 T = TypeVar('T')
 
+def provides(*var_names: str) -> Callable[[Callable], Callable]:
+    """Decorator to assign ``var_names`` to a ``provides_`` attribute of function.
+    
+    This is meant to be used to indicate to a mesh what var nodes a function can source
+    values for.
+
+    >>> @provides('a', 'b')
+    ... def f(x):
+    ...     return x + 1
+    >>> f._provides
+    ('a', 'b')
+
+    If no ``var_names`` are given, then the function name is used as the var name:
+
+    >>> @provides()
+    ... def g(x):
+    ...     return x + 1
+    >>> g._provides
+    ('g',)
+
+    If ``var_names`` contains ``'_'``, then the function name is used as the var name
+    for that position:
+    
+    >>> @provides('b', '_')
+    ... def h(x):
+    ...     return x + 1
+    >>> h._provides
+    ('b', 'h')
+
+    """
+    def add_provides_attribute(func):
+        if not var_names:
+            var_names_ = (name_of_obj(func),)
+        else:
+            var_names_ = tuple(
+                [x if x != '_' else name_of_obj(func) for x in var_names]
+            )
+        func._provides = var_names_
+        return func
+    
+    return add_provides_attribute
+
 
 def if_then_else(if_func, then_func, else_func, *args, **kwargs):
     """
