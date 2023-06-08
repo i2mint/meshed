@@ -608,6 +608,12 @@ class DAG:
             scope = self.new_scope()  # fresh new scope
         if self.cache_last_scope:
             self.last_scope = scope  # just to remember it, for debugging purposes ONLY!
+        return scope
+
+    def _call_func_nodes_on_scope(self, scope):
+        """Loop over ``func_nodes`` calling func_node.call_on_scope on scope."""
+        for func_node in self.func_nodes:
+            func_node.call_on_scope(scope)
 
     def call_on_scope(self, scope=None):
         """Calls the func_nodes using scope (a dict or MutableMapping) both to
@@ -619,11 +625,9 @@ class DAG:
         log read and/or writes to specific keys, or disallow overwriting to an existing
         key (useful for pipeline sanity), etc.
         """
-        self._pre_call_on_scope(scope)
-
-        for func_node in self.func_nodes:
-            func_node.call_on_scope(scope)
-
+        scope = self._pre_call_on_scope(scope)
+        self._call_func_nodes_on_scope(scope)
+        
     # def clone(self, *args, **kwargs):
     #     """Use args, kwargs to make an instance, using self attributes for
     #     unspecified arguments.
