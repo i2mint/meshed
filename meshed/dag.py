@@ -1213,8 +1213,8 @@ class DAG:
 
     def _prepare_other_for_addition(self, other):
         if other == 0:
-            # Note: This is so that we can use sum(dags) to get a union of dags without 
-            # having to specify the initial DAG() value of sum (which is 0 by default). 
+            # Note: This is so that we can use sum(dags) to get a union of dags without
+            # having to specify the initial DAG() value of sum (which is 0 by default).
             other = DAG()
         elif isinstance(other, DAG):
             other = list(other.func_nodes)
