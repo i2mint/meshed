@@ -1211,6 +1211,35 @@ class DAG:
             for k, v in self.graph.items()
         }
 
+    def _prepare_other_for_addition(self, other):
+        if other == 0:
+            # Note: This is so that we can use sum(dags) to get a union of dags without 
+            # having to specify the initial DAG() value of sum (which is 0 by default). 
+            other = DAG()
+        elif isinstance(other, DAG):
+            other = list(other.func_nodes)
+        else:
+            other = list(DAG(other).func_nodes)
+
+        return other
+
+    def __radd__(self, other):
+        """A union of DAGs. See ``__add__`` for more details.
+        
+        >>> dag = sum([DAG(list), DAG(tuple)])
+        >>> print(dag.synopsis_string(bind_info='hybrid'))
+        iterable -> list_ -> list
+        iterable -> tuple_ -> tuple
+        >>> dag([1,2,3])
+        ([1, 2, 3], (1, 2, 3))
+
+        """
+        # We could have just returned self + other to be commutative, but perhaps
+        # we would like to control some orders of things via the order of addition
+        # (thinkg list addition versus set addition for example), so instead we write
+        # the explicit code:
+        return DAG(self._prepare_other_for_addition(other) + list(self.func_nodes))
+
     def __add__(self, other):
         """A union of DAGs.
 
@@ -1223,11 +1252,7 @@ class DAG:
         >>> dag([1,2,3])
         ([1, 2, 3], (1, 2, 3))
         """
-        if isinstance(other, DAG):
-            other = list(other.func_nodes)
-        else:
-            other = list(DAG(other).func_nodes)
-        return DAG(list(self.func_nodes) + other)
+        return DAG(list(self.func_nodes) + self._prepare_other_for_addition(other))
 
     def copy(self, renamer=numbered_suffix_renamer):
         return DAG(ch_names(self.func_nodes, renamer=renamer))
