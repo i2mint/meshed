@@ -50,7 +50,16 @@ https://github.com/i2mint/meshed/discussions/49.
 
 """
 
-from typing import Callable, Mapping, Iterable, Union, NewType, Any, MutableMapping
+from typing import (
+    Callable,
+    Mapping,
+    Iterable,
+    Union,
+    NewType,
+    Any,
+    MutableMapping,
+    Protocol,
+)
 from i2 import Sig, ContextFanout
 
 
@@ -75,26 +84,26 @@ class IteratorExit(BaseException):
 
 DFLT_INTERRUPT_EXCEPTIONS = (StopIteration, IteratorExit, KeyboardInterrupt)
 
-DoNotBreak = type('DoNotBreak', (), {})
+DoNotBreak = type("DoNotBreak", (), {})
 do_not_break = DoNotBreak()
 do_not_break.__doc__ = (
-    'Sentinel that should be used to signal Slabs iteration not to break. '
-    'This sentinel should be returned by exception handlers if they want to tell '
-    'the iteration not to stop (in all other cases, the iteration will stop)'
+    "Sentinel that should be used to signal Slabs iteration not to break. "
+    "This sentinel should be returned by exception handlers if they want to tell "
+    "the iteration not to stop (in all other cases, the iteration will stop)"
 )
 
 IgnoredOutput = Any
 ExceptionHandlerOutput = Union[IgnoredOutput, DoNotBreak]
-ExceptionHandler = NewType('ExceptionHandler', Callable[[], ExceptionHandlerOutput])
-ExceptionHandler.__doc__ = (
-    'An exception handler is an argument-less callable that is called when a handled '
-    'exception occurs during iteration. Most often, the handler does nothing, but '
-    'could be used '
-    'whose output will be ignored, '
-    'unless it is do_not_break, which will signal that the iteration should continue.'
-)
-# TODO: Make HandledExceptionsMap into a NewType
 
+class ExceptionHandler(Protocol):
+    """An exception handler is an argument-less callable that is called when a handled 
+    exception occurs during iteration. Most often, the handler does nothing, 
+    but could be used whose output will be ignored, unless it is do_not_break, 
+    which will signal that the iteration should continue."""
+    def __call__(self) -> ExceptionHandlerOutput:
+        pass
+
+# TODO: Make HandledExceptionsMap into a NewType?
 # doc: A map between exception types and exception handlers (callbacks)
 ExceptionType = type(BaseException)
 HandledExceptionsMap = Mapping[ExceptionType, ExceptionHandler]
@@ -193,7 +202,7 @@ def _conditional_pluralization(n_items, singular_msg, plural_msg):
 def _validate_components(components):
     if not all(map(callable, components.values())):
         not_callable = [k for k, v in components.items() if not callable(v)]
-        not_callable_keys = ', '.join(not_callable)
+        not_callable_keys = ", ".join(not_callable)
         # TODO: Analyze values of components further and enhance error message with
         #  further suggestions. For example, if there's an iterator component c,
         #  suggest that perhaps ``c.__next__`` was intended?
@@ -201,8 +210,8 @@ def _validate_components(components):
         #  argument of _validate_components so that it can be parametrized.
         msg = _conditional_pluralization(
             len(not_callable),
-            f'This component is not callable: {not_callable_keys}',
-            f'These components are not callable: {not_callable_keys}',
+            f"This component is not callable: {not_callable_keys}",
+            f"These components are not callable: {not_callable_keys}",
         )
         raise TypeError(msg)
 
@@ -442,7 +451,7 @@ class Slabs:
         c = dict(normalize_components(self.components))
 
         p = LineParametrized(*c.values())
-        return p.dot_digraph(prefix='rankdir=TD')
+        return p.dot_digraph(prefix="rankdir=TD")
 
 
 SlabsIter = Slabs  # for backward compatibility
