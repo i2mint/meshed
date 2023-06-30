@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.slabs &mdash; meshed 0.1.125 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.slabs &mdash; meshed 0.1.126 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -163,8 +163,18 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">MutableMapping</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">MutableMapping</span><span class="p">,</span>
+    <span class="n">Protocol</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">ContextFanout</span>
+<span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="n">FuncNode</span>
+<span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
 
 
 <div class="viewcode-block" id="ExceptionalException"><a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.ExceptionalException">[docs]</a><span class="k">class</span> <span class="nc">ExceptionalException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -198,16 +208,19 @@
 
 <span class="n">IgnoredOutput</span> <span class="o">=</span> <span class="n">Any</span>
 <span class="n">ExceptionHandlerOutput</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">IgnoredOutput</span><span class="p">,</span> <span class="n">DoNotBreak</span><span class="p">]</span>
-<span class="n">ExceptionHandler</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">&#39;ExceptionHandler&#39;</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">ExceptionHandlerOutput</span><span class="p">])</span>
-<span class="n">ExceptionHandler</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">&#39;An exception handler is an argument-less callable that is called when a handled &#39;</span>
-    <span class="s1">&#39;exception occurs during iteration. Most often, the handler does nothing, but &#39;</span>
-    <span class="s1">&#39;could be used &#39;</span>
-    <span class="s1">&#39;whose output will be ignored, &#39;</span>
-    <span class="s1">&#39;unless it is do_not_break, which will signal that the iteration should continue.&#39;</span>
-<span class="p">)</span>
-<span class="c1"># TODO: Make HandledExceptionsMap into a NewType</span>
 
+
+<div class="viewcode-block" id="ExceptionHandler"><a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.ExceptionHandler">[docs]</a><span class="k">class</span> <span class="nc">ExceptionHandler</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An exception handler is an argument-less callable that is called when a handled</span>
+<span class="sd">    exception occurs during iteration. Most often, the handler does nothing,</span>
+<span class="sd">    but could be used whose output will be ignored, unless it is do_not_break,</span>
+<span class="sd">    which will signal that the iteration should continue.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExceptionHandlerOutput</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<span class="c1"># TODO: Make HandledExceptionsMap into a NewType?</span>
 <span class="c1"># doc: A map between exception types and exception handlers (callbacks)</span>
 <span class="n">ExceptionType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">)</span>
 <span class="n">HandledExceptionsMap</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">ExceptionType</span><span class="p">,</span> <span class="n">ExceptionHandler</span><span class="p">]</span>
@@ -538,24 +551,49 @@
     <span class="fm">__exit__</span> <span class="o">=</span> <span class="n">close</span>
     <span class="fm">__call__</span> <span class="o">=</span> <span class="n">run</span>
 
-    <span class="k">def</span> <span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
-        <span class="kn">from</span> <span class="nn">lined</span> <span class="kn">import</span> <span class="n">LineParametrized</span>  <span class="c1"># TODO: replace with meshed when ready</span>
+<div class="viewcode-block" id="Slabs.from_func_nodes"><a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs.from_func_nodes">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_func_nodes</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMapSpec</span> <span class="o">=</span> <span class="n">DFLT_INTERRUPT_EXCEPTIONS</span><span class="p">,</span>
+        <span class="n">scope_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">MutableMapping</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make&quot;&quot;&quot;</span>
+        <span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">func_nodes</span>
+        <span class="p">),</span> <span class="p">(</span>
+            <span class="s2">&quot;You can&#39;t use `from_func_nodes` (yet) your binds are not trivial. &quot;</span>
+            <span class="s2">&quot;That is, if any of your functions&#39; arguments have different names than &quot;</span>
+            <span class="s2">&quot;the var nodes they&#39;re bound to&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># TODO: Make it work for non-trivial binds by using i2.wrapper</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">func</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">handle_exceptions</span><span class="o">=</span><span class="n">handle_exceptions</span><span class="p">,</span>
+            <span class="n">scope_factory</span><span class="o">=</span><span class="n">scope_factory</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">components</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
-        <span class="k">def</span> <span class="nf">normalize_components</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">to_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-                <span class="nd">@Sig</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-                <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="n">v</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">to_dag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">use_keys_as_func_names</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
 
-                <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">k</span>
-                <span class="k">yield</span> <span class="n">k</span><span class="p">,</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_func_nodes</span><span class="p">()))</span>
 
-        <span class="n">c</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">normalize_components</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">))</span>
-
-        <span class="n">p</span> <span class="o">=</span> <span class="n">LineParametrized</span><span class="p">(</span><span class="o">*</span><span class="n">c</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;rankdir=TD&#39;</span><span class="p">)</span></div>
+    <span class="c1"># TODO: Add @wraps(dot_digraph_body) to have DAG.dot_digraph signature</span>
+<div class="viewcode-block" id="Slabs.dot_digraph"><a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs.dot_digraph">[docs]</a>    <span class="k">def</span> <span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a dot_digraph of the DAG of the SlabsIter (see ``DAG.dot_digraph``)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dag</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span></div></div>
 
 
 <span class="n">SlabsIter</span> <span class="o">=</span> <span class="n">Slabs</span>  <span class="c1"># for backward compatibility</span>
