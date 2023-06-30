@@ -55,12 +55,13 @@ from typing import (
     Mapping,
     Iterable,
     Union,
-    NewType,
     Any,
     MutableMapping,
     Protocol,
 )
 from i2 import Sig, ContextFanout
+from meshed.base import FuncNode
+from meshed.dag import DAG
 
 
 class ExceptionalException(Exception):
@@ -95,13 +96,16 @@ do_not_break.__doc__ = (
 IgnoredOutput = Any
 ExceptionHandlerOutput = Union[IgnoredOutput, DoNotBreak]
 
+
 class ExceptionHandler(Protocol):
-    """An exception handler is an argument-less callable that is called when a handled 
-    exception occurs during iteration. Most often, the handler does nothing, 
-    but could be used whose output will be ignored, unless it is do_not_break, 
+    """An exception handler is an argument-less callable that is called when a handled
+    exception occurs during iteration. Most often, the handler does nothing,
+    but could be used whose output will be ignored, unless it is do_not_break,
     which will signal that the iteration should continue."""
+
     def __call__(self) -> ExceptionHandlerOutput:
         pass
+
 
 # TODO: Make HandledExceptionsMap into a NewType?
 # doc: A map between exception types and exception handlers (callbacks)
@@ -434,24 +438,49 @@ class Slabs:
     __exit__ = close
     __call__ = run
 
-    def dot_digraph(self):
-        from i2 import Sig
-        from lined import LineParametrized  # TODO: replace with meshed when ready
+    @classmethod
+    def from_func_nodes(
+        cls,
+        func_nodes: Iterable[FuncNode],
+        *,
+        handle_exceptions: HandledExceptionsMapSpec = DFLT_INTERRUPT_EXCEPTIONS,
+        scope_factory: Callable[[], MutableMapping] = dict,
+    ):
+        """Make"""
+        func_nodes = list(func_nodes)
+        assert all(
+            list(fn.bind.keys()) == list(fn.bind.values()) for fn in func_nodes
+        ), (
+            "You can't use `from_func_nodes` (yet) your binds are not trivial. "
+            "That is, if any of your functions' arguments have different names than "
+            "the var nodes they're bound to"
+        )
+        # TODO: Make it work for non-trivial binds by using i2.wrapper
+        components = {n.out: n.func for n in func_nodes}
+        return cls(
+            handle_exceptions=handle_exceptions,
+            scope_factory=scope_factory,
+            **components,
+        )
 
-        def normalize_components(components):
-            for k, v in components.items():
+    def to_func_nodes(self) -> Iterable[FuncNode]:
+        for name, func in self.components.items():
+            yield FuncNode(func, name=name, out=name)
 
-                @Sig(v)
-                def func(*args, **kwargs):
-                    return v(*args, **kwargs)
+    def to_dag(self) -> DAG:
+        def use_keys_as_func_names(components):
+            for k, func in components.items():
+                yield FuncNode(func, name=k, out=k)
 
-                func.__name__ = k
-                yield k, func
+        return DAG(list(self.to_func_nodes()))
 
-        c = dict(normalize_components(self.components))
-
-        p = LineParametrized(*c.values())
-        return p.dot_digraph(prefix="rankdir=TD")
+    # TODO: Add @wraps(dot_digraph_body) to have DAG.dot_digraph signature
+    def dot_digraph(self, *args, **kwargs):
+        """
+        Returns a dot_digraph of the DAG of the SlabsIter (see ``DAG.dot_digraph``)
+        """
+        dag = self.to_dag()
+        return dag.dot_digraph()
 
 
 SlabsIter = Slabs  # for backward compatibility
