@@ -463,15 +463,13 @@ class Slabs:
             **components,
         )
 
+    from_dag = from_func_nodes  # TODO: Have a vote if we want this alias.
+    
     def to_func_nodes(self) -> Iterable[FuncNode]:
         for name, func in self.components.items():
             yield FuncNode(func, name=name, out=name)
 
     def to_dag(self) -> DAG:
-        def use_keys_as_func_names(components):
-            for k, func in components.items():
-                yield FuncNode(func, name=k, out=k)
-
         return DAG(list(self.to_func_nodes()))
 
     # TODO: Add @wraps(dot_digraph_body) to have DAG.dot_digraph signature
