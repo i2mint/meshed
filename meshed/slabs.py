@@ -464,7 +464,7 @@ class Slabs:
         )
 
     from_dag = from_func_nodes  # TODO: Have a vote if we want this alias.
-    
+
     def to_func_nodes(self) -> Iterable[FuncNode]:
         for name, func in self.components.items():
             yield FuncNode(func, name=name, out=name)
