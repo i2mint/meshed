@@ -85,12 +85,12 @@ class IteratorExit(BaseException):
 
 DFLT_INTERRUPT_EXCEPTIONS = (StopIteration, IteratorExit, KeyboardInterrupt)
 
-DoNotBreak = type("DoNotBreak", (), {})
+DoNotBreak = type('DoNotBreak', (), {})
 do_not_break = DoNotBreak()
 do_not_break.__doc__ = (
-    "Sentinel that should be used to signal Slabs iteration not to break. "
-    "This sentinel should be returned by exception handlers if they want to tell "
-    "the iteration not to stop (in all other cases, the iteration will stop)"
+    'Sentinel that should be used to signal Slabs iteration not to break. '
+    'This sentinel should be returned by exception handlers if they want to tell '
+    'the iteration not to stop (in all other cases, the iteration will stop)'
 )
 
 IgnoredOutput = Any
@@ -206,7 +206,7 @@ def _conditional_pluralization(n_items, singular_msg, plural_msg):
 def _validate_components(components):
     if not all(map(callable, components.values())):
         not_callable = [k for k, v in components.items() if not callable(v)]
-        not_callable_keys = ", ".join(not_callable)
+        not_callable_keys = ', '.join(not_callable)
         # TODO: Analyze values of components further and enhance error message with
         #  further suggestions. For example, if there's an iterator component c,
         #  suggest that perhaps ``c.__next__`` was intended?
@@ -214,8 +214,8 @@ def _validate_components(components):
         #  argument of _validate_components so that it can be parametrized.
         msg = _conditional_pluralization(
             len(not_callable),
-            f"This component is not callable: {not_callable_keys}",
-            f"These components are not callable: {not_callable_keys}",
+            f'This component is not callable: {not_callable_keys}',
+            f'These components are not callable: {not_callable_keys}',
         )
         raise TypeError(msg)
 
