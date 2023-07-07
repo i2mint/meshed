@@ -43,7 +43,7 @@ DFLT_VAX = 0.5
 
 
 def _factor(vax, vax_factor):
-    assert 0 <= vax <= 1, 'vax should be between 0 and 1: Was {vax}'
+    assert 0 <= vax <= 1, "vax should be between 0 and 1: Was {vax}"
     return vax * vax_factor + (1 - vax)
 
 
@@ -66,3 +66,6 @@ def die(
 
 def death_toll(die: float, population: int = 1e6):
     return int(die * population)
+
+
+funcs = (r, infected, die, death_toll)
