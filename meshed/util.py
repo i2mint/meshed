@@ -964,6 +964,10 @@ def extract_values(d: dict, keys: Iterable):
     - None if not
 
     This is used as the default extractor in DAG
+
+    >>> extract_values({'a': 1, 'b': 2, 'c': 3}, ['a', 'c'])
+    (1, 3)
+    
     """
     tup = tuple(_extract_values(d, keys))
     if len(tup) > 1:
@@ -975,9 +979,23 @@ def extract_values(d: dict, keys: Iterable):
 
 
 def extract_items(d: dict, keys: Iterable):
-    """generator of (k, v) pairs extracted from d for keys"""
+    """generator of (k, v) pairs extracted from d for keys
+    
+    >>> list(extract_items({'a': 1, 'b': 2, 'c': 3}, ['a', 'c']))
+    [('a', 1), ('c', 3)]
+
+    """
     for k in keys:
         yield k, d[k]
+
+
+def extract_dict(d: dict, keys: Iterable):
+    """Extract items from dict ``d``, returning them as a dict.
+    
+    >>> extract_dict({'a': 1, 'b': 2, 'c': 3}, ['a', 'c'])
+    {'a': 1, 'c': 3}
+    """
+    return dict(extract_items(d, keys))
 
 
 ParameterMerger = Callable[[Iterable[Parameter]], Parameter]
