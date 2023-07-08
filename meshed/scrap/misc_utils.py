@@ -10,7 +10,6 @@ with ModuleNotFoundIgnore():
     topological_sort_2 = nx.dag.topological_sort
 
 
-
 from typing import Any, Mapping, Sized, MutableMapping, Iterable
 from meshed.itools import children, parents
 
@@ -52,9 +51,9 @@ def extended_family(g: Mapping, source: Iterable):
         res = res.union(allowed_kids)
 
 
-
 from meshed.dag import DAG
 from meshed.base import FuncNode
+
 
 def funcnode_only(source: Iterable):
     return [item for item in source if isinstance(item, FuncNode)]
