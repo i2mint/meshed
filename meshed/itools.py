@@ -2,11 +2,21 @@
 adjacency Mapping representation.
 
 """
-from typing import Any, Mapping, Sized, MutableMapping, Iterable, Callable, TypeVar
+from typing import (
+    Any,
+    Mapping,
+    Sized,
+    MutableMapping,
+    Iterable,
+    Callable,
+    TypeVar,
+    Union,
+)
 from itertools import product, chain
-from functools import wraps
+from functools import wraps, reduce, partial
 from collections import defaultdict
 from random import sample, randint
+from operator import or_
 
 from i2.signatures import Sig
 
@@ -43,7 +53,7 @@ def _handle_exclude_nodes(func):
     def _func(*args, **kwargs):
         kwargs = sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
         try:
-            _exclude_nodes = kwargs['_exclude_nodes']
+            _exclude_nodes = kwargs["_exclude_nodes"]
         except KeyError:
             raise RuntimeError(f"{func} doesn't have a _exclude_nodes argument")
 
@@ -52,7 +62,7 @@ def _handle_exclude_nodes(func):
         elif not isinstance(_exclude_nodes, set):
             _exclude_nodes = set(_exclude_nodes)
 
-        kwargs['_exclude_nodes'] = _exclude_nodes
+        kwargs["_exclude_nodes"] = _exclude_nodes
         args, kwargs = sig.args_and_kwargs_from_kwargs(kwargs)
         return func(*args, **kwargs)
 
@@ -304,6 +314,18 @@ def root_nodes(g: Mapping):
     return set(g) - set(nodes_having_parents)
 
 
+# TODO: Can be made much more efficient, by looking at the ancestors code itself
+def root_ancestors(graph: dict, nodes: Union[str, Iterable[str]]):
+    """
+    Returns the roots of the sub-dag that contribute to compute the given nodes.
+    """
+    if isinstance(nodes, str):
+        nodes = nodes.split()
+    get_ancestors = partial(ancestors, graph)
+    ancestors_of_nodes = reduce(or_, map(get_ancestors, nodes), set())
+    return ancestors_of_nodes & set(root_nodes(graph))
+
+
 # TODO: Can serious be optimized, and hasn't been tested much: Revise
 def leaf_nodes(g: Mapping):
     """
@@ -463,7 +485,7 @@ def topological_sort(g: Mapping):
 
 from typing import TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def edge_reversed_graph(
