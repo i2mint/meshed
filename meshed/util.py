@@ -9,7 +9,7 @@ from operator import itemgetter
 
 from i2 import Sig, name_of_obj, LiteralVal, FuncFanout, Pipe
 
-T = TypeVar("T")
+T = TypeVar('T')
 
 
 def objects_defined_in_module(
@@ -123,7 +123,7 @@ def provides(*var_names: str) -> Callable[[Callable], Callable]:
             var_names_ = (name_of_obj(func),)
         else:
             var_names_ = tuple(
-                [x if x != "_" else name_of_obj(func) for x in var_names]
+                [x if x != '_' else name_of_obj(func) for x in var_names]
             )
         func._provides = var_names_
         return func
@@ -186,13 +186,13 @@ def funcs_disjunction(*funcs):
     return Pipe(FuncFanout(*funcs), partial(map, itemgetter(1)), any)
 
 
-def extra_wraps(func, name=None, doc_prefix=""):
+def extra_wraps(func, name=None, doc_prefix=''):
     func.__name__ = name or func_name(func)
-    func.__doc__ = doc_prefix + getattr(func, "__name__", "")
+    func.__doc__ = doc_prefix + getattr(func, '__name__', '')
     return func
 
 
-def mywraps(func, name=None, doc_prefix=""):
+def mywraps(func, name=None, doc_prefix=''):
     def wrapper(wrapped):
         return extra_wraps(wraps(func)(wrapped), name=name, doc_prefix=doc_prefix)
 
@@ -258,7 +258,7 @@ def iterize(func, name=None):
     """
     # TODO: See if partialx can be used instead
     wrapper = mywraps(
-        func, name=name, doc_prefix=f"generator version of {func_name(func)}:\n"
+        func, name=name, doc_prefix=f'generator version of {func_name(func)}:\n'
     )
     return wrapper(partial(map, func))
 
@@ -427,13 +427,13 @@ class ConditionalIterize:
             return self.func(*args, **kwargs)
 
     def __repr__(self):
-        return f"<ConditionalIterize {name_of_obj(self)}{Sig(self)}>"
+        return f'<ConditionalIterize {name_of_obj(self)}{Sig(self)}>'
 
     def _new_sig(self):
         if len(self.sig.names) == 0:
             raise TypeError(
-                f"You can only apply conditional iterization on functions that have "
-                f"at least one input. This one had none: {self.func}"
+                f'You can only apply conditional iterization on functions that have '
+                f'at least one input. This one had none: {self.func}'
             )
         first_param = self.sig.names[0]
         new_sig = self.sig  # same sig by default
@@ -465,7 +465,7 @@ class ModuleNotFoundIgnore:
         return True
 
 
-def incremental_str_maker(str_format="{:03.f}"):
+def incremental_str_maker(str_format='{:03.f}'):
     """Make a function that will produce a (incrementally) new string at every call."""
     i = 0
 
@@ -477,8 +477,8 @@ def incremental_str_maker(str_format="{:03.f}"):
     return mk_next_str
 
 
-lambda_name = incremental_str_maker(str_format="lambda_{:03.0f}")
-unnameable_func_name = incremental_str_maker(str_format="unnameable_func_{:03.0f}")
+lambda_name = incremental_str_maker(str_format='lambda_{:03.0f}')
+unnameable_func_name = incremental_str_maker(str_format='unnameable_func_{:03.0f}')
 
 FunctionNamer = Callable[[Callable], str]
 
@@ -491,7 +491,7 @@ def func_name(func) -> str:
     """
     try:
         name = func.__name__
-        if name == "<lambda>":
+        if name == '<lambda>':
             return lambda_name()
         return name
     except AttributeError:
@@ -513,11 +513,11 @@ def args_funcnames(
     for func in funcs:
         sig = signature(func)
         for param in sig.parameters.values():
-            arg_name = ""  # initialize
+            arg_name = ''  # initialize
             if param.kind == Parameter.VAR_POSITIONAL:
-                arg_name += "*"
+                arg_name += '*'
             elif param.kind == Parameter.VAR_KEYWORD:
-                arg_name += "**"
+                arg_name += '**'
             arg_name += param.name  # append name of param
             yield arg_name, name_of_func(func)
 
@@ -527,7 +527,7 @@ def funcs_to_digraph(funcs, graph=None):
 
     graph = graph or Digraph()
     graph.edges(list(args_funcnames(funcs)))
-    graph.body.extend([", ".join(func.__name__ for func in funcs) + " [shape=box]"])
+    graph.body.extend([', '.join(func.__name__ for func in funcs) + ' [shape=box]'])
     return graph
 
 
@@ -567,7 +567,7 @@ def dot_to_ascii(dot: str, fancy: bool = True):
     """
     import requests
 
-    url = "https://dot-to-ascii.ggerganov.com/dot-to-ascii.php"
+    url = 'https://dot-to-ascii.ggerganov.com/dot-to-ascii.php'
     boxart = 0
 
     # use nice box drawing char instead of + , | , -
@@ -576,29 +576,29 @@ def dot_to_ascii(dot: str, fancy: bool = True):
 
     stripped_dot_str = dot.strip()
     if not (
-        stripped_dot_str.startswith("graph") or stripped_dot_str.startswith("digraph")
+        stripped_dot_str.startswith('graph') or stripped_dot_str.startswith('digraph')
     ):
-        dot = "graph {\n" + dot + "\n}"
+        dot = 'graph {\n' + dot + '\n}'
 
     params = {
-        "boxart": boxart,
-        "src": dot,
+        'boxart': boxart,
+        'src': dot,
     }
 
     try:
         response = requests.get(url, params=params).text
     except requests.exceptions.ConnectionError:
-        return "ConnectionError: You need the internet to convert dot into ascii!"
+        return 'ConnectionError: You need the internet to convert dot into ascii!'
 
-    if response == "":
-        raise SyntaxError("DOT string is not formatted correctly")
+    if response == '':
+        raise SyntaxError('DOT string is not formatted correctly')
 
     return response
 
 
 def print_ascii_graph(funcs):
     digraph = funcs_to_digraph(funcs)
-    dot_str = "\n".join(map(lambda x: x[1:], digraph.body[:-1]))
+    dot_str = '\n'.join(map(lambda x: x[1:], digraph.body[:-1]))
     print(dot_to_ascii(dot_str))
 
 
@@ -624,7 +624,7 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
     else:
         i = start_at
         while True:
-            name = f"{prefix}__{i}"
+            name = f'{prefix}__{i}'
             if name not in exclude_names:
                 return name
             i += 1
@@ -634,8 +634,8 @@ def mk_func_name(func, exclude_names=()):
     """Makes a function name that doesn't clash with the exclude_names iterable.
     Tries it's best to not be lazy, but instead extract a name from the function
     itself."""
-    name = name_of_obj(func) or "func"
-    if name == "<lambda>":
+    name = name_of_obj(func) or 'func'
+    if name == '<lambda>':
         name = lambda_name()  # make a lambda name that is a unique identifier
     return find_first_free_name(name, exclude_names)
 
@@ -650,7 +650,7 @@ def arg_names(func, func_name, exclude_names=()):
                 yield name
             else:
                 found_name = find_first_free_name(
-                    f"{func_name}__{name}", _exclude_names
+                    f'{func_name}__{name}', _exclude_names
                 )
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
@@ -676,8 +676,8 @@ def named_partial(func, *args, __name__=None, **keywords):
 
 def _place_holder_func(*args, _sig=None, **kwargs):
     _kwargs = _sig.kwargs_from_args_and_kwargs(args, kwargs)
-    _kwargs_str = ", ".join(f"{k}={v}" for k, v in _kwargs.items())
-    return f"{_sig.name}({_kwargs_str})"
+    _kwargs_str = ', '.join(f'{k}={v}' for k, v in _kwargs.items())
+    return f'{_sig.name}({_kwargs_str})'
 
 
 def mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=()):
@@ -715,7 +715,7 @@ def mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=(
     sig = sig.ch_defaults(**dict(defaults))
     sig = sig.ch_annotations(**dict(annotations))
 
-    sig.name = name or sig.name or "place_holder_func"
+    sig.name = name or sig.name or 'place_holder_func'
 
     func = sig(partial(_place_holder_func, _sig=sig))
     func.__name__ = sig.name
@@ -779,20 +779,20 @@ def _if_none_return_input(func):
     return _func
 
 
-def numbered_suffix_renamer(name, sep="_"):
+def numbered_suffix_renamer(name, sep='_'):
     """
     >>> numbered_suffix_renamer('item')
     'item_1'
     >>> numbered_suffix_renamer('item_1')
     'item_2'
     """
-    p = re.compile(sep + r"(\d+)$")
+    p = re.compile(sep + r'(\d+)$')
     m = p.search(name)
     if m is None:
-        return f"{name}{sep}1"
+        return f'{name}{sep}1'
     else:
         num = int(m.group(1)) + 1
-        return p.sub(f"{sep}{num}", name)
+        return p.sub(f'{sep}{num}', name)
 
 
 class InvalidFunctionParameters(ValueError):
@@ -803,16 +803,16 @@ class InvalidFunctionParameters(ValueError):
 def _suffix(start=0):
     i = start
     while True:
-        yield f"_{i}"
+        yield f'_{i}'
         i += 1
 
 
 def _add_suffix(x, suffix):
-    return f"{x}{suffix}"
+    return f'{x}{suffix}'
 
 
 incremental_suffixes = _suffix()
-_renamers = (lambda x: f"{x}{suffix}" for suffix in incremental_suffixes)
+_renamers = (lambda x: f'{x}{suffix}' for suffix in incremental_suffixes)
 
 
 def _return_val(first_arg, val):
@@ -943,7 +943,7 @@ def _complete_dict_with_iterable_of_required_keys(
 def inverse_dict_asserting_losslessness(d: dict):
     inv_d = {v: k for k, v in d.items()}
     assert len(inv_d) == len(d), (
-        f"can't invert: You have some duplicate values in this dict: " f"{d}"
+        f"can't invert: You have some duplicate values in this dict: " f'{d}'
     )
     return inv_d
 
@@ -1048,7 +1048,7 @@ def parameter_merger(
     >>> parameter_merger(P('a', PK, annotation=int), P('a', PK), same_annotation=False)
     <Parameter "a: int">
     """
-    suggestion_on_error = """To resolve this you have several choices:
+    suggestion_on_error = '''To resolve this you have several choices:
 
     - Change the properties of the param (kind, default, annotation) to be those you 
       want. For example, you can use ``i2.Sig.ch_param_attrs`` on the signatures 
@@ -1064,7 +1064,7 @@ def parameter_merger(
     See https://github.com/i2mint/i2/discussions/63 and 
     https://github.com/i2mint/meshed/issues/7 (description and comments) for more
     info.
-    """
+    '''
     first_param, *_ = params
     if same_name and not all(p.name == first_param.name for p in params):
         raise ValidationError(
@@ -1083,7 +1083,7 @@ def parameter_merger(
     ):
         raise ValidationError(
             f"Some params didn't have the same annotation: "
-            f"{params}\n{suggestion_on_error}"
+            f'{params}\n{suggestion_on_error}'
         )
     return first_param
 
