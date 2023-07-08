@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.131 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.132 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -566,6 +566,56 @@ Therefore, we can partialize class_or_tuple:</p>
 <span class="go">&#39;item_1&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">numbered_suffix_renamer</span><span class="p">(</span><span class="s1">&#39;item_1&#39;</span><span class="p">)</span>
 <span class="go">&#39;item_2&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.util.objects_defined_in_module">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">objects_defined_in_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>module<span class="p">]</span></span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">name_filt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Callable<span class="p">, </span>None<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">obj_filt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Callable<span class="p">, </span>None<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#objects_defined_in_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.objects_defined_in_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>ModuleType</em><em>]</em>) – The module to look up. Can either be the module object itself, or a string specifying the
+module’s fully qualified name (e.g., ‘os.path’).</p></li>
+<li><p><strong>name_filt</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em><em>, </em><em>default=None</em>) – An optional function used to filter the names of objects in the module.
+This function should take a single argument (the object name as a string)
+and return a boolean. Only objects whose names pass the filter (i.e.,
+for which the function returns True) are included.
+If None, no name filtering is applied.</p></li>
+<li><p><strong>obj_filt</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em><em>, </em><em>default=None</em>) – An optional function used to filter the objects in the module. This function should take a
+single argument (the object itself) and return a boolean. Only objects that pass the filter
+(i.e., for which the function returns True) are included.
+If None, no object filtering is applied.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary where keys are names of objects defined in the module (filtered by name_filt and obj_filt)
+and values are the corresponding objects.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">all_os_objects</span> <span class="o">=</span> <span class="n">objects_defined_in_module</span><span class="p">(</span><span class="n">os</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;removedirs&#39;</span> <span class="ow">in</span> <span class="n">all_os_objects</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">all_os_objects</span><span class="p">[</span><span class="s1">&#39;removedirs&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">removedirs</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>See that you can specify the module via a string too, and filter to get only
+callables that don’t start with an underscore:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">this_modules_funcs</span> <span class="o">=</span> <span class="n">objects_defined_in_module</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s1">&#39;meshed.util&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">name_filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">obj_filt</span><span class="o">=</span><span class="nb">callable</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">callable</span><span class="p">(</span><span class="n">this_modules_funcs</span><span class="p">[</span><span class="s1">&#39;objects_defined_in_module&#39;</span><span class="p">])</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 </dd></dl>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.131 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.132 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -114,18 +114,95 @@
 <span></span><span class="sd">&quot;&quot;&quot;util functions&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">getmodule</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">ModuleType</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
 
 <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">name_of_obj</span><span class="p">,</span> <span class="n">LiteralVal</span><span class="p">,</span> <span class="n">FuncFanout</span><span class="p">,</span> <span class="n">Pipe</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="objects_defined_in_module"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.objects_defined_in_module">[docs]</a><span class="k">def</span> <span class="nf">objects_defined_in_module</span><span class="p">(</span>
+    <span class="n">module</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">name_filt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">obj_filt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    module: Union[str, ModuleType]</span>
+<span class="sd">        The module to look up. Can either be the module object itself, or a string specifying the</span>
+<span class="sd">        module&#39;s fully qualified name (e.g., &#39;os.path&#39;).</span>
+
+<span class="sd">    name_filt: Optional[Callable], default=None</span>
+<span class="sd">        An optional function used to filter the names of objects in the module.</span>
+<span class="sd">        This function should take a single argument (the object name as a string)</span>
+<span class="sd">        and return a boolean. Only objects whose names pass the filter (i.e.,</span>
+<span class="sd">        for which the function returns True) are included.</span>
+<span class="sd">        If None, no name filtering is applied.</span>
+
+<span class="sd">    obj_filt: Optional[Callable], default=None</span>
+<span class="sd">        An optional function used to filter the objects in the module. This function should take a</span>
+<span class="sd">        single argument (the object itself) and return a boolean. Only objects that pass the filter</span>
+<span class="sd">        (i.e., for which the function returns True) are included.</span>
+<span class="sd">        If None, no object filtering is applied.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary where keys are names of objects defined in the module (filtered by name_filt and obj_filt)</span>
+<span class="sd">        and values are the corresponding objects.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import os</span>
+<span class="sd">    &gt;&gt;&gt; all_os_objects = objects_defined_in_module(os)</span>
+<span class="sd">    &gt;&gt;&gt; &#39;removedirs&#39; in all_os_objects</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; all_os_objects[&#39;removedirs&#39;] == os.removedirs</span>
+<span class="sd">    True</span>
+
+<span class="sd">    See that you can specify the module via a string too, and filter to get only</span>
+<span class="sd">    callables that don&#39;t start with an underscore:</span>
+
+<span class="sd">    &gt;&gt;&gt; this_modules_funcs = objects_defined_in_module(</span>
+<span class="sd">    ...     &#39;meshed.util&#39;,</span>
+<span class="sd">    ...     name_filt=lambda name: not name.startswith(&#39;_&#39;),</span>
+<span class="sd">    ...     obj_filt=callable,</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; callable(this_modules_funcs[&#39;objects_defined_in_module&#39;])</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+    <span class="n">name_filt</span> <span class="o">=</span> <span class="n">name_filt</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">obj_filt</span> <span class="o">=</span> <span class="n">obj_filt</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">module_objs</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+    <span class="c1"># Note we only filter for names here, not objects, because we want to keep the</span>
+    <span class="c1"># object filtering for after we&#39;ve gotten the module objects</span>
+    <span class="n">name_and_module</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">getmodule</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">module_objs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">name_filt</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">}</span>
+    <span class="n">obj_names</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">obj_name</span>
+        <span class="k">for</span> <span class="n">obj_name</span><span class="p">,</span> <span class="n">obj_module</span> <span class="ow">in</span> <span class="n">name_and_module</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">obj_module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">obj_module</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">module_objs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">obj_names</span> <span class="k">if</span> <span class="n">obj_filt</span><span class="p">(</span><span class="n">module_objs</span><span class="p">[</span><span class="n">k</span><span class="p">])}</span></div>
+
+
 <div class="viewcode-block" id="provides"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.provides">[docs]</a><span class="k">def</span> <span class="nf">provides</span><span class="p">(</span><span class="o">*</span><span class="n">var_names</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator to assign ``var_names`` to a ``provides_`` attribute of function.</span>
-<span class="sd">    </span>
+
 <span class="sd">    This is meant to be used to indicate to a mesh what var nodes a function can source</span>
 <span class="sd">    values for.</span>
 
@@ -145,7 +222,7 @@
 
 <span class="sd">    If ``var_names`` contains ``&#39;_&#39;``, then the function name is used as the var name</span>
 <span class="sd">    for that position:</span>
-<span class="sd">    </span>
+
 <span class="sd">    &gt;&gt;&gt; @provides(&#39;b&#39;, &#39;_&#39;)</span>
 <span class="sd">    ... def h(x):</span>
 <span class="sd">    ...     return x + 1</span>

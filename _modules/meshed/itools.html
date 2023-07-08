@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.itools &mdash; meshed 0.1.131 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.itools &mdash; meshed 0.1.132 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -115,11 +115,21 @@
 <span class="sd">adjacency Mapping representation.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sized</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">Sized</span><span class="p">,</span>
+    <span class="n">MutableMapping</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">TypeVar</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span><span class="p">,</span> <span class="n">chain</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span><span class="p">,</span> <span class="n">reduce</span><span class="p">,</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">sample</span><span class="p">,</span> <span class="n">randint</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">or_</span>
 
 <span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="n">Sig</span>
 
@@ -415,6 +425,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nodes_having_parents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
     <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">nodes_having_parents</span><span class="p">)</span></div>
+
+
+<span class="c1"># TODO: Can be made much more efficient, by looking at the ancestors code itself</span>
+<div class="viewcode-block" id="root_ancestors"><a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.root_ancestors">[docs]</a><span class="k">def</span> <span class="nf">root_ancestors</span><span class="p">(</span><span class="n">graph</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the roots of the sub-dag that contribute to compute the given nodes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">get_ancestors</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">ancestors</span><span class="p">,</span> <span class="n">graph</span><span class="p">)</span>
+    <span class="n">ancestors_of_nodes</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">or_</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">get_ancestors</span><span class="p">,</span> <span class="n">nodes</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">ancestors_of_nodes</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">root_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">))</span></div>
 
 
 <span class="c1"># TODO: Can serious be optimized, and hasn&#39;t been tested much: Revise</span>
