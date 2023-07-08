@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.132 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.133 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -1854,7 +1854,83 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="n">bind_info</span><span class="p">))</span>
 
 
-<span class="c1"># ---------------------------------------------------------------------------------------</span>
+<span class="c1"># --------------------------------------------------------------------------------------</span>
+<span class="c1"># dag tools</span>
+
+<span class="c1"># from typing import Iterable, Union</span>
+<span class="c1"># from i2 import Sig</span>
+<span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">extract_dict</span>
+
+
+<div class="viewcode-block" id="parametrized_dag_factory"><a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.parametrized_dag_factory">[docs]</a><span class="k">def</span> <span class="nf">parametrized_dag_factory</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">param_var_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs a factory for sub-DAGs derived from the input DAG, with values of </span>
+<span class="sd">    specific &#39;parameter&#39; variable nodes precomputed and fixed. These precomputed nodes, </span>
+<span class="sd">    and their ancestor nodes (unless required elsewhere), are omitted from the sub-DAG. </span>
+
+<span class="sd">    The factory function produced by this operation requires arguments corresponding to </span>
+<span class="sd">    the ancestor nodes of the parameter variable nodes. These arguments are used to </span>
+<span class="sd">    compute the values of the parameter nodes.</span>
+
+<span class="sd">    This function reflects the typical structure of a class in object-oriented </span>
+<span class="sd">    programming, where initialization arguments are used to set certain fixed values </span>
+<span class="sd">    (attributes), which are then leveraged in subsequent methods. </span>
+
+<span class="sd">    &gt;&gt;&gt; import i2</span>
+<span class="sd">    &gt;&gt;&gt; from meshed import code_to_dag</span>
+<span class="sd">    &gt;&gt;&gt; @code_to_dag</span>
+<span class="sd">    ... def testdag():</span>
+<span class="sd">    ...     a = criss(aa, aaa)</span>
+<span class="sd">    ...     b = cross(aa, bb)</span>
+<span class="sd">    ...     c = apple(a, b)</span>
+<span class="sd">    ...     d = sauce(a, b)</span>
+<span class="sd">    ...     e = applesauce(c, d)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; dag_factory = parametrized_dag_factory(testdag, &#39;a&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(f&quot;{i2.Sig(dag_factory)}&quot;)</span>
+<span class="sd">    (aa, aaa)</span>
+<span class="sd">    &gt;&gt;&gt; d = dag_factory(aa=1, aaa=2)</span>
+<span class="sd">    &gt;&gt;&gt; print(f&quot;{i2.Sig(d)}&quot;)</span>
+<span class="sd">    (b)</span>
+<span class="sd">    &gt;&gt;&gt; d(b=&#39;bananna&#39;)</span>
+<span class="sd">    &#39;applesauce(c=apple(a=criss(aa=1, aaa=2), b=bananna), d=sauce(a=criss(aa=1, aaa=2), b=bananna))&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param_var_nodes</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">param_var_nodes</span> <span class="o">=</span> <span class="n">param_var_nodes</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="c1"># The dag is split into two parts:</span>
+    <span class="c1">#   Part whose role it is to compute the param_var_nodes from root nodes</span>
+    <span class="n">param_dag</span> <span class="o">=</span> <span class="n">dag</span><span class="p">[:</span><span class="n">param_var_nodes</span><span class="p">]</span>
+    <span class="c1">#   Part that computes the rest based on these (and remaining root nodes)</span>
+    <span class="n">computation_dag</span> <span class="o">=</span> <span class="n">dag</span><span class="p">[</span><span class="n">param_var_nodes</span><span class="p">:]</span>
+    <span class="c1"># Get the intersection of the two parts on the var nodes</span>
+    <span class="n">common_var_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">param_dag</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">computation_dag</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">)</span>
+
+    <span class="nd">@Sig</span><span class="p">(</span><span class="n">param_dag</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">dag_factory</span><span class="p">(</span><span class="o">*</span><span class="n">parametrization_args</span><span class="p">,</span> <span class="o">**</span><span class="n">parametrization_kwargs</span><span class="p">):</span>
+        <span class="c1"># use the param_dag to compute the values of the parameter var nodes</span>
+        <span class="c1"># (and what ever else happens to be in the leaves, but we&#39;ll remove that later)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">param_dag</span><span class="p">(</span><span class="o">*</span><span class="n">parametrization_args</span><span class="p">,</span> <span class="o">**</span><span class="n">parametrization_kwargs</span><span class="p">)</span>
+        <span class="c1"># Get the values for all nodes that are common to param_dag and computation_dag</span>
+        <span class="c1"># (There may be more than just param_var_nodes!)</span>
+        <span class="n">common_var_node_values</span> <span class="o">=</span> <span class="n">extract_dict</span><span class="p">(</span><span class="n">param_dag</span><span class="o">.</span><span class="n">last_scope</span><span class="p">,</span> <span class="n">common_var_nodes</span><span class="p">)</span>
+        <span class="c1"># By fixing those values, you now have a the computation_dag you want</span>
+        <span class="c1"># Note: Also, remove the bound arguments</span>
+        <span class="c1"># (i.e. the arguments that were used to compute the values)</span>
+        <span class="c1"># so that the user doesn&#39;t change those and get inconsistencies!</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">computation_dag</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
+            <span class="o">**</span><span class="n">common_var_node_values</span><span class="p">,</span> <span class="n">_remove_bound_arguments</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="c1"># Remember the var nodes that parametrized the dag</span>
+        <span class="c1"># TODO: Is this a good idea? Meant for debugging really.</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">_common_var_node_values</span> <span class="o">=</span> <span class="n">common_var_node_values</span>
+        <span class="k">return</span> <span class="n">d</span>
+
+    <span class="k">return</span> <span class="n">dag_factory</span></div>
+
+
+<span class="c1"># --------------------------------------------------------------------------------------</span>
 <span class="c1"># reordering funcnodes</span>
 
 <span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">uncurry</span><span class="p">,</span> <span class="n">pairs</span>

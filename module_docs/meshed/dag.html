@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.132 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.133 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -668,6 +668,15 @@ the <code class="docutils literal notranslate"><span class="pre">feedback</span>
 <li><p>None if not</p></li>
 </ul>
 <p>This is used as the default extractor in DAG</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_values</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
+<span class="go">(1, 3)</span>
+</pre></div>
+</div>
+<p>Order matters!</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_values</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">])</span>
+<span class="go">(3, 1)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -984,6 +993,40 @@ to write the output of the function
 <dd><p>Extract attributes from an iterable of objects
 &gt;&gt;&gt; list(attribute_vals([print, map], attrs=[‘__name__’, ‘__module__’]))
 [(‘print’, ‘builtins’), (‘map’, ‘builtins’)]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.dag.parametrized_dag_factory">
+<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">parametrized_dag_factory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dag</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#meshed.dag.DAG" title="meshed.dag.DAG">meshed.dag.DAG</a></span></em>, <em class="sig-param"><span class="n">param_var_nodes</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>Iterable<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#parametrized_dag_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.parametrized_dag_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a factory for sub-DAGs derived from the input DAG, with values of
+specific ‘parameter’ variable nodes precomputed and fixed. These precomputed nodes,
+and their ancestor nodes (unless required elsewhere), are omitted from the sub-DAG.</p>
+<p>The factory function produced by this operation requires arguments corresponding to
+the ancestor nodes of the parameter variable nodes. These arguments are used to
+compute the values of the parameter nodes.</p>
+<p>This function reflects the typical structure of a class in object-oriented
+programming, where initialization arguments are used to set certain fixed values
+(attributes), which are then leveraged in subsequent methods.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">i2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">code_to_dag</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@code_to_dag</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">testdag</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="n">a</span> <span class="o">=</span> <span class="n">criss</span><span class="p">(</span><span class="n">aa</span><span class="p">,</span> <span class="n">aaa</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">b</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">aa</span><span class="p">,</span> <span class="n">bb</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">c</span> <span class="o">=</span> <span class="n">apple</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">d</span> <span class="o">=</span> <span class="n">sauce</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">e</span> <span class="o">=</span> <span class="n">applesauce</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag_factory</span> <span class="o">=</span> <span class="n">parametrized_dag_factory</span><span class="p">(</span><span class="n">testdag</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i2</span><span class="o">.</span><span class="n">Sig</span><span class="p">(</span><span class="n">dag_factory</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">(aa, aaa)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">dag_factory</span><span class="p">(</span><span class="n">aa</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">aaa</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i2</span><span class="o">.</span><span class="n">Sig</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">(b)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="s1">&#39;bananna&#39;</span><span class="p">)</span>
+<span class="go">&#39;applesauce(c=apple(a=criss(aa=1, aaa=2), b=bananna), d=sauce(a=criss(aa=1, aaa=2), b=bananna))&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
