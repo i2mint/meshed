@@ -20,6 +20,7 @@
    module_docs/meshed/scrap/cached_dag
    module_docs/meshed/scrap/conversion
    module_docs/meshed/scrap/dask_graph_language
+   module_docs/meshed/scrap/flow_control_script
    module_docs/meshed/scrap/gk_with_networkx
    module_docs/meshed/scrap/gui_interaction
    module_docs/meshed/scrap/misc_utils
