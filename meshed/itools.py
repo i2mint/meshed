@@ -2,11 +2,21 @@
 adjacency Mapping representation.
 
 """
-from typing import Any, Mapping, Sized, MutableMapping, Iterable, Callable, TypeVar
+from typing import (
+    Any,
+    Mapping,
+    Sized,
+    MutableMapping,
+    Iterable,
+    Callable,
+    TypeVar,
+    Union,
+)
 from itertools import product, chain
-from functools import wraps
+from functools import wraps, reduce, partial
 from collections import defaultdict
 from random import sample, randint
+from operator import or_
 
 from i2.signatures import Sig
 
@@ -302,6 +312,18 @@ def root_nodes(g: Mapping):
     """
     nodes_having_parents = set(chain.from_iterable(g.values()))
     return set(g) - set(nodes_having_parents)
+
+
+# TODO: Can be made much more efficient, by looking at the ancestors code itself
+def root_ancestors(graph: dict, nodes: Union[str, Iterable[str]]):
+    """
+    Returns the roots of the sub-dag that contribute to compute the given nodes.
+    """
+    if isinstance(nodes, str):
+        nodes = nodes.split()
+    get_ancestors = partial(ancestors, graph)
+    ancestors_of_nodes = reduce(or_, map(get_ancestors, nodes), set())
+    return ancestors_of_nodes & set(root_nodes(graph))
 
 
 # TODO: Can serious be optimized, and hasn't been tested much: Revise

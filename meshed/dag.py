@@ -1741,7 +1741,83 @@ def print_dag_string(dag: DAG, bind_info: BindInfo = 'hybrid'):
     print(dag.synopsis_string(bind_info=bind_info))
 
 
-# ---------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------
+# dag tools
+
+# from typing import Iterable, Union
+# from i2 import Sig
+from meshed.util import extract_dict
+
+
+def parametrized_dag_factory(dag: DAG, param_var_nodes: Union[str, Iterable[str]]):
+    """
+    Constructs a factory for sub-DAGs derived from the input DAG, with values of 
+    specific 'parameter' variable nodes precomputed and fixed. These precomputed nodes, 
+    and their ancestor nodes (unless required elsewhere), are omitted from the sub-DAG. 
+
+    The factory function produced by this operation requires arguments corresponding to 
+    the ancestor nodes of the parameter variable nodes. These arguments are used to 
+    compute the values of the parameter nodes.
+
+    This function reflects the typical structure of a class in object-oriented 
+    programming, where initialization arguments are used to set certain fixed values 
+    (attributes), which are then leveraged in subsequent methods. 
+
+    >>> import i2
+    >>> from meshed import code_to_dag
+    >>> @code_to_dag
+    ... def testdag():
+    ...     a = criss(aa, aaa)
+    ...     b = cross(aa, bb)
+    ...     c = apple(a, b)
+    ...     d = sauce(a, b)
+    ...     e = applesauce(c, d)
+    >>>
+    >>> dag_factory = parametrized_dag_factory(testdag, 'a')
+    >>> print(f"{i2.Sig(dag_factory)}")
+    (aa, aaa)
+    >>> d = dag_factory(aa=1, aaa=2)
+    >>> print(f"{i2.Sig(d)}")
+    (b)
+    >>> d(b='bananna')
+    'applesauce(c=apple(a=criss(aa=1, aaa=2), b=bananna), d=sauce(a=criss(aa=1, aaa=2), b=bananna))'
+
+    """
+
+    if isinstance(param_var_nodes, str):
+        param_var_nodes = param_var_nodes.split()
+    # The dag is split into two parts:
+    #   Part whose role it is to compute the param_var_nodes from root nodes
+    param_dag = dag[:param_var_nodes]
+    #   Part that computes the rest based on these (and remaining root nodes)
+    computation_dag = dag[param_var_nodes:]
+    # Get the intersection of the two parts on the var nodes
+    common_var_nodes = set(param_dag.var_nodes) & set(computation_dag.var_nodes)
+
+    @Sig(param_dag)
+    def dag_factory(*parametrization_args, **parametrization_kwargs):
+        # use the param_dag to compute the values of the parameter var nodes
+        # (and what ever else happens to be in the leaves, but we'll remove that later)
+        _ = param_dag(*parametrization_args, **parametrization_kwargs)
+        # Get the values for all nodes that are common to param_dag and computation_dag
+        # (There may be more than just param_var_nodes!)
+        common_var_node_values = extract_dict(param_dag.last_scope, common_var_nodes)
+        # By fixing those values, you now have a the computation_dag you want
+        # Note: Also, remove the bound arguments
+        # (i.e. the arguments that were used to compute the values)
+        # so that the user doesn't change those and get inconsistencies!
+        d = computation_dag.partial(
+            **common_var_node_values, _remove_bound_arguments=True
+        )
+        # Remember the var nodes that parametrized the dag
+        # TODO: Is this a good idea? Meant for debugging really.
+        d._common_var_node_values = common_var_node_values
+        return d
+
+    return dag_factory
+
+
+# --------------------------------------------------------------------------------------
 # reordering funcnodes
 
 from meshed.util import uncurry, pairs

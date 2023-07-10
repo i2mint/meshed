@@ -116,6 +116,42 @@ def test_root_nodes(graph_dict):
     assert sorted(ms.itools.root_nodes(g)) == ['f']
 
 
+def test_root_ancestors():
+    graph = {
+        'exposed': ['r_'],
+        'infect_if_expose': ['r_'],
+        'r_': ['r'],
+        'r': ['infected_'],
+        'vax': ['infected_', 'die_'],
+        'infection_vax_factor': ['infected_'],
+        'infected_': ['infected'],
+        'infected': ['die_'],
+        'die_if_infected': ['die_'],
+        'death_vax_factor': ['die_'],
+        'die_': ['die'],
+        'die': ['death_toll_'],
+        'population': ['death_toll_'],
+        'death_toll_': ['death_toll'],
+    }
+
+    assert ms.itools.root_ancestors(graph, 'r') == {'exposed', 'infect_if_expose'}
+    assert ms.itools.root_ancestors(graph, 'r_') == {'exposed', 'infect_if_expose'}
+    assert ms.itools.root_ancestors(graph, 'infected') == {
+        'exposed',
+        'infect_if_expose',
+        'infection_vax_factor',
+        'vax',
+    }
+    assert ms.itools.root_ancestors(graph, 'r die') == {
+        'death_vax_factor',
+        'die_if_infected',
+        'exposed',
+        'infect_if_expose',
+        'infection_vax_factor',
+        'vax',
+    }
+
+
 def test_leaf_nodes(graph_dict):
     g = graph_dict
     assert sorted(ms.itools.leaf_nodes(g)) == ['f', 'z']

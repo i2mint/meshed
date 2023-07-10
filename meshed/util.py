@@ -1,18 +1,95 @@
 """util functions"""
 import re
 from functools import partial, wraps
-from inspect import Parameter
+from inspect import Parameter, getmodule
+from types import ModuleType
 from typing import Callable, Any, Union, Iterator, Optional, Iterable, Mapping, TypeVar
+from importlib import import_module
+from operator import itemgetter
 
 from i2 import Sig, name_of_obj, LiteralVal, FuncFanout, Pipe
-from operator import itemgetter
 
 T = TypeVar('T')
 
 
+def objects_defined_in_module(
+    module: Union[str, ModuleType],
+    *,
+    name_filt: Optional[Callable] = None,
+    obj_filt: Optional[Callable] = None,
+):
+    """
+    Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.
+
+    Parameters
+    ----------
+    module: Union[str, ModuleType]
+        The module to look up. Can either be the module object itself, or a string specifying the
+        module's fully qualified name (e.g., 'os.path').
+
+    name_filt: Optional[Callable], default=None
+        An optional function used to filter the names of objects in the module.
+        This function should take a single argument (the object name as a string)
+        and return a boolean. Only objects whose names pass the filter (i.e.,
+        for which the function returns True) are included.
+        If None, no name filtering is applied.
+
+    obj_filt: Optional[Callable], default=None
+        An optional function used to filter the objects in the module. This function should take a
+        single argument (the object itself) and return a boolean. Only objects that pass the filter
+        (i.e., for which the function returns True) are included.
+        If None, no object filtering is applied.
+
+    Returns
+    -------
+    dict
+        A dictionary where keys are names of objects defined in the module (filtered by name_filt and obj_filt)
+        and values are the corresponding objects.
+
+    Examples
+    --------
+    >>> import os
+    >>> all_os_objects = objects_defined_in_module(os)
+    >>> 'removedirs' in all_os_objects
+    True
+    >>> all_os_objects['removedirs'] == os.removedirs
+    True
+
+    See that you can specify the module via a string too, and filter to get only
+    callables that don't start with an underscore:
+
+    >>> this_modules_funcs = objects_defined_in_module(
+    ...     'meshed.util',
+    ...     name_filt=lambda name: not name.startswith('_'),
+    ...     obj_filt=callable,
+    ... )
+    >>> callable(this_modules_funcs['objects_defined_in_module'])
+    True
+
+    """
+    if isinstance(module, str):
+        module = import_module(module)
+    name_filt = name_filt or (lambda x: True)
+    obj_filt = obj_filt or (lambda x: True)
+    module_objs = vars(module)
+    # Note we only filter for names here, not objects, because we want to keep the
+    # object filtering for after we've gotten the module objects
+    name_and_module = {
+        name: getmodule(obj)
+        for name, obj in module_objs.items()
+        if name_filt(name) and obj is not None
+    }
+    obj_names = [
+        obj_name
+        for obj_name, obj_module in name_and_module.items()
+        if obj_module is not None and obj_module.__name__ == module.__name__
+    ]
+    return {k: module_objs[k] for k in obj_names if obj_filt(module_objs[k])}
+
+
 def provides(*var_names: str) -> Callable[[Callable], Callable]:
     """Decorator to assign ``var_names`` to a ``provides_`` attribute of function.
-    
+
     This is meant to be used to indicate to a mesh what var nodes a function can source
     values for.
 
@@ -32,7 +109,7 @@ def provides(*var_names: str) -> Callable[[Callable], Callable]:
 
     If ``var_names`` contains ``'_'``, then the function name is used as the var name
     for that position:
-    
+
     >>> @provides('b', '_')
     ... def h(x):
     ...     return x + 1
@@ -887,6 +964,15 @@ def extract_values(d: dict, keys: Iterable):
     - None if not
 
     This is used as the default extractor in DAG
+
+    >>> extract_values({'a': 1, 'b': 2, 'c': 3}, ['a', 'c'])
+    (1, 3)
+
+    Order matters!
+
+    >>> extract_values({'a': 1, 'b': 2, 'c': 3}, ['c', 'a'])
+    (3, 1)
+
     """
     tup = tuple(_extract_values(d, keys))
     if len(tup) > 1:
@@ -898,9 +984,29 @@ def extract_values(d: dict, keys: Iterable):
 
 
 def extract_items(d: dict, keys: Iterable):
-    """generator of (k, v) pairs extracted from d for keys"""
+    """generator of (k, v) pairs extracted from d for keys
+
+    >>> list(extract_items({'a': 1, 'b': 2, 'c': 3}, ['a', 'c']))
+    [('a', 1), ('c', 3)]
+
+    """
     for k in keys:
         yield k, d[k]
+
+
+def extract_dict(d: dict, keys: Iterable):
+    """Extract items from dict ``d``, returning them as a dict.
+
+    >>> extract_dict({'a': 1, 'b': 2, 'c': 3}, ['a', 'c'])
+    {'a': 1, 'c': 3}
+
+    Order matters!
+
+    >>> extract_dict({'a': 1, 'b': 2, 'c': 3}, ['c', 'a'])
+    {'c': 3, 'a': 1}
+
+    """
+    return dict(extract_items(d, keys))
 
 
 ParameterMerger = Callable[[Iterable[Parameter]], Parameter]
