@@ -9,7 +9,7 @@ Case = Any
 Cases = Mapping[Case, Callable]
 
 
-RecordingCommands = Literal["start", "resume", "stop"]
+RecordingCommands = Literal['start', 'resume', 'stop']
 
 
 def mk_test_objects():
@@ -46,7 +46,7 @@ class RecordingSwitchBoard:
 
     def _append(self, chk):
         if self._current_key is None:
-            raise ValueError("Cannot append without first starting recording.")
+            raise ValueError('Cannot append without first starting recording.')
         self.store[self._current_key].extend(chk)
 
     @property
@@ -71,7 +71,7 @@ class SimpleSwitchCase:
     def __call__(self, case, input):
         func = self.cases.get(case, None)
         if func is None:
-            raise ValueError(f"Case {case} not found.")
+            raise ValueError(f'Case {case} not found.')
         return func(input)
 
 
@@ -96,28 +96,25 @@ def mk_recorder_switch(
     recorder = mk_recorder(store)
     return mk_simple_switch_case(
         {
-            "start": lambda key_and_chk: recorder.start(*key_and_chk),
-            "resume": lambda key_and_chk: recorder.resume(*key_and_chk),
-            "stop": lambda key_and_chk: recorder.stop(*key_and_chk),
-            "waiting": lambda x: None,
+            'start': lambda key_and_chk: recorder.start(*key_and_chk),
+            'resume': lambda key_and_chk: recorder.resume(*key_and_chk),
+            'stop': lambda key_and_chk: recorder.stop(*key_and_chk),
+            'waiting': lambda x: None,
         },
-        name="recorder_switch",
-        case_name="state",
-        input_name="key_and_chk",
+        name='recorder_switch',
+        case_name='state',
+        input_name='key_and_chk',
     )
 
 
 def mk_transition_func(
-    trans_func_mapping,
-    initial_state,  # symbol_var_name: str,
+    trans_func_mapping, initial_state,  # symbol_var_name: str,
 ):
     recording_state_transition_func = mapping_to_transition_func(
-        trans_func_mapping,
-        strict=False,
+        trans_func_mapping, strict=False,
     )
     transitioner = BasicAutomata(
-        transition_func=recording_state_transition_func,
-        state=initial_state,
+        transition_func=recording_state_transition_func, state=initial_state,
     )
 
     # @i2.ch_names(symbol=symbol_var_name)
@@ -131,12 +128,12 @@ def mk_transition_func(
 
 # store = mk_recorder_switch(store)
 trans_func_mapping = {
-    ("waiting", 1): "start",
-    ("start", 0): "resume",
-    ("start", 1): "stop",
-    ("resume", 1): "stop",
-    ("stop", 0): "waiting",
-    ("stop", 1): "start",
+    ('waiting', 1): 'start',
+    ('start', 0): 'resume',
+    ('start', 1): 'stop',
+    ('resume', 1): 'stop',
+    ('stop', 0): 'waiting',
+    ('stop', 1): 'start',
 }
 
 # debugging tools
@@ -156,7 +153,7 @@ dag = DAG.from_funcs(
     ),
     # debug = lambda recorder_switch: print(id(recorder_switch)),
     transition_func=lambda trans_func_mapping: mk_transition_func(
-        trans_func_mapping, "waiting"
+        trans_func_mapping, 'waiting'
     ),
     transition_logger=lambda transition_func: logger['transition_func'].append(
         transition_func
@@ -188,7 +185,7 @@ dag = DAG.from_funcs(
 )
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     store = dict()
 
     my_dag = dag.partial(store=store, trans_func_mapping=trans_func_mapping)
