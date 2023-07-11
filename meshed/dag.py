@@ -1610,7 +1610,9 @@ def dot_lines_of_func_parameters(
 
 
 def _parameters_and_names_from_sig(
-    sig: Sig, out=None, func_name=None,
+    sig: Sig,
+    out=None,
+    func_name=None,
 ):
     func_name = func_name or sig.name
     out = out or sig.name
@@ -1749,19 +1751,29 @@ def print_dag_string(dag: DAG, bind_info: BindInfo = 'hybrid'):
 from meshed.util import extract_dict
 
 
+def cut_subdag_and_ancestors(dag, subdag):
+    subdag_nodes = subdag.var_nodes
+    subdag = dag[:subdag_nodes]  # to catch all ancestors
+    subdag_nodes = subdag.var_nodes
+
+    dag_nodes = dag.var_nodes
+    difference = set(dag_nodes) - set(subdag_nodes)
+    return dag[difference:]
+
+
 def parametrized_dag_factory(dag: DAG, param_var_nodes: Union[str, Iterable[str]]):
     """
-    Constructs a factory for sub-DAGs derived from the input DAG, with values of 
-    specific 'parameter' variable nodes precomputed and fixed. These precomputed nodes, 
-    and their ancestor nodes (unless required elsewhere), are omitted from the sub-DAG. 
+    Constructs a factory for sub-DAGs derived from the input DAG, with values of
+    specific 'parameter' variable nodes precomputed and fixed. These precomputed nodes,
+    and their ancestor nodes (unless required elsewhere), are omitted from the sub-DAG.
 
-    The factory function produced by this operation requires arguments corresponding to 
-    the ancestor nodes of the parameter variable nodes. These arguments are used to 
+    The factory function produced by this operation requires arguments corresponding to
+    the ancestor nodes of the parameter variable nodes. These arguments are used to
     compute the values of the parameter nodes.
 
-    This function reflects the typical structure of a class in object-oriented 
-    programming, where initialization arguments are used to set certain fixed values 
-    (attributes), which are then leveraged in subsequent methods. 
+    This function reflects the typical structure of a class in object-oriented
+    programming, where initialization arguments are used to set certain fixed values
+    (attributes), which are then leveraged in subsequent methods.
 
     >>> import i2
     >>> from meshed import code_to_dag
@@ -1793,6 +1805,9 @@ def parametrized_dag_factory(dag: DAG, param_var_nodes: Union[str, Iterable[str]
     computation_dag = dag[param_var_nodes:]
     # Get the intersection of the two parts on the var nodes
     common_var_nodes = set(param_dag.var_nodes) & set(computation_dag.var_nodes)
+    additional_var_nodes = set(computation_dag.var_nodes) - set(param_dag.var_nodes)
+    ancestor_dag = dag[:additional_var_nodes]
+    computation_dag = computation_dag + ancestor_dag
 
     @Sig(param_dag)
     def dag_factory(*parametrization_args, **parametrization_kwargs):
@@ -1966,10 +1981,15 @@ def ch_funcs(
     # TODO: Optimize (for example, use self._func_node_for)
     def ch_func(dag, key, func):
         condition = lambda fn: fn.name == key or fn.out == key  # TODO: interface ctrl?
-        replacement = lambda fn: ch_func_node_func(fn, func,)
+        replacement = lambda fn: ch_func_node_func(
+            fn,
+            func,
+        )
         return DAG(
             replace_item_in_iterable(
-                dag.func_nodes, condition=condition, replacement=replacement,
+                dag.func_nodes,
+                condition=condition,
+                replacement=replacement,
             )
         )
 
