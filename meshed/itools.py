@@ -532,3 +532,33 @@ def edge_reversed_graph(
 #             yield from find_descendants(d, n)
 #     except KeyError:
 #         pass
+
+
+def expand_graph_dict(d):
+    return [(k, item) for k in d for item in d[k]]
+
+
+def remove_nodes(d, nodes):
+    d = {k: v for k, v in d.items() if k not in nodes}  # remove nodes from sources
+    d = {
+        k: [item for item in v if item not in nodes] for k, v in d.items()
+    }  # remove nodes from targets
+    return {k: v for k, v in d.items() if v}  # remove empty lists
+
+
+def dict_from_items(items):
+    d = {}
+    for k, v in items:
+        d.setdefault(k, []).append(v)
+    return d
+
+
+def remove_edges(d, edges):
+    expanded_d = set(expand_graph_dict(d)) - set(edges)
+    result = dict_from_items(expanded_d)
+    return result
+
+
+def graph_subtract(d, e):
+    e_edges = expand_graph_dict(e)
+    return remove_edges(d, e_edges)
