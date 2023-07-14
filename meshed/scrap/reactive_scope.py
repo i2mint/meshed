@@ -122,6 +122,7 @@ class ReactiveScope(MutableMapping):
     <ReactiveScope with .scope: {'b': 3, 'a_plus_b': 5, 'g': 15}>
 
     So now we can access ``g``.
+    
     >>> s['g']
     15
 
