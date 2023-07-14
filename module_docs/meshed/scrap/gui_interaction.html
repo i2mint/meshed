@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.gui_interaction &mdash; meshed 0.1.135 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.gui_interaction &mdash; meshed 0.1.136 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -120,15 +120,9 @@
 and a GUI that will enable the construction of meshes as well as rendering them,
 and possibly running them.</p>
 <dl class="py function">
-<dt id="meshed.scrap.gui_interaction.dag_to_jdict">
-<code class="sig-prename descclassname">meshed.scrap.gui_interaction.</code><code class="sig-name descname">dag_to_jdict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dag</span><span class="p">:</span> <span class="n"><a class="reference internal" href="../dag.html#meshed.dag.DAG" title="meshed.dag.DAG">meshed.dag.DAG</a></span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">func_to_jdict</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/gui_interaction.html#dag_to_jdict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.gui_interaction.dag_to_jdict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will produce a json-serializable dictionary from a dag.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="meshed.scrap.gui_interaction.jdict_to_dag">
-<code class="sig-prename descclassname">meshed.scrap.gui_interaction.</code><code class="sig-name descname">jdict_to_dag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">jdict</span><span class="p">:</span> <span class="n">dict</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">jdict_to_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/gui_interaction.html#jdict_to_dag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.scrap.gui_interaction.jdict_to_dag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will produce a dag from a json-serializable dictionary.</p>
+<dt id="meshed.scrap.gui_interaction.extract_tokens">
+<code class="sig-prename descclassname">meshed.scrap.gui_interaction.</code><code class="sig-name descname">extract_tokens</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">endpos</span><span class="o">=</span><span class="default_value">9223372036854775807</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.scrap.gui_interaction.extract_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all non-overlapping matches of pattern in string.</p>
 </dd></dl>
 
 </section>

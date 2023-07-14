@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.reactive_scope &mdash; meshed 0.1.135 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.reactive_scope &mdash; meshed 0.1.136 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -218,9 +218,11 @@ write values of <code class="docutils literal notranslate"><span class="pre">b</
 <span class="go">&lt;ReactiveScope with .scope: {&#39;b&#39;: 3, &#39;a_plus_b&#39;: 5, &#39;g&#39;: 15}&gt;</span>
 </pre></div>
 </div>
-<p>So now we can access <code class="docutils literal notranslate"><span class="pre">g</span></code>.
-&gt;&gt;&gt; s[‘g’]
-15</p>
+<p>So now we can access <code class="docutils literal notranslate"><span class="pre">g</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;g&#39;</span><span class="p">]</span>
+<span class="go">15</span>
+</pre></div>
+</div>
 <p>Note though, that we first showed that <code class="docutils literal notranslate"><span class="pre">g</span></code> appeared in the scope before we
 explicitly asked for it. This was to show that <code class="docutils literal notranslate"><span class="pre">g</span></code> was computed as a
 side-effect of writing to the scope, not because we asked for it, triggering the
