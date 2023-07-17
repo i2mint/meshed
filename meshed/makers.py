@@ -733,15 +733,16 @@ def fnode_to_jdict(
 
 
 def jdict_to_fnode(jdict: dict, *, jdict_to_func: Callable[[Jdict], Callable] = None):
-    fnode = FuncNode(
-        name=jdict['name'],
-        func_label=jdict['func_label'],
-        bind=jdict['bind'],
-        out=jdict['out'],
-    )
     if jdict_to_func is not None:
-        fnode.func = jdict_to_func(jdict['func'])
-    return fnode
+        return FuncNode(
+            func=jdict_to_func(jdict['func']),
+            name=jdict['name'],
+            func_label=jdict['func_label'],
+            bind=jdict['bind'],
+            out=jdict['out'],
+        )
+    else:
+        raise NotImplementedError("Need a function")
 
 
 def dag_to_jdict(dag: DAG, *, func_to_jdict: Callable = None):
