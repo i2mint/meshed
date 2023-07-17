@@ -7,6 +7,7 @@
    module_docs/meshed/caching
    module_docs/meshed/composition
    module_docs/meshed/dag
+   module_docs/meshed/examples
    module_docs/meshed/examples/online_marketing
    module_docs/meshed/examples/price_elasticity
    module_docs/meshed/examples/vaccine_vs_no_vaccine

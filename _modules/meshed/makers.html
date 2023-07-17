@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.136 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.137 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/composition.html">meshed.composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples.html">meshed.examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
@@ -847,15 +848,16 @@
 
 
 <span class="k">def</span> <span class="nf">jdict_to_fnode</span><span class="p">(</span><span class="n">jdict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">jdict_to_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Jdict</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="n">fnode</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
-        <span class="n">func_label</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func_label&#39;</span><span class="p">],</span>
-        <span class="n">bind</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;bind&#39;</span><span class="p">],</span>
-        <span class="n">out</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">],</span>
-    <span class="p">)</span>
     <span class="k">if</span> <span class="n">jdict_to_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">fnode</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">jdict_to_func</span><span class="p">(</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">fnode</span>
+        <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span>
+            <span class="n">func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">(</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">]),</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+            <span class="n">func_label</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func_label&#39;</span><span class="p">],</span>
+            <span class="n">bind</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;bind&#39;</span><span class="p">],</span>
+            <span class="n">out</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Need a function&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="dag_to_jdict"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.dag_to_jdict">[docs]</a><span class="k">def</span> <span class="nf">dag_to_jdict</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_to_jdict</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
