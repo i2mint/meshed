@@ -6,7 +6,6 @@ and possibly running them.
 
 from warnings import warn
 
-warn("Deprecated: Moved to meshed.makers")
+warn('Deprecated: Moved to meshed.makers')
 
 from meshed.makers import *
-
