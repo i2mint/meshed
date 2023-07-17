@@ -761,5 +761,6 @@ def jdict_to_dag(jdict: dict, *, jdict_to_func: Callable = None):
     """
     jdict_to_fnode_ = partial(jdict_to_fnode, jdict_to_func=jdict_to_func)
     return DAG(
-        name=jdict['name'], func_nodes=list(map(jdict_to_fnode_, jdict['func_nodes'])),
+        name=jdict['name'],
+        func_nodes=list(map(jdict_to_fnode_, jdict['func_nodes'])),
     )
