@@ -86,6 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_util.html">meshed.tests.test_util</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/util.html">meshed.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/viz.html">meshed.viz</a></li>
 </ul>
 
         </div>
@@ -877,7 +878,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">jdict_to_fnode_</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">jdict_to_fnode</span><span class="p">,</span> <span class="n">jdict_to_func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">func_nodes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">jdict_to_fnode_</span><span class="p">,</span> <span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func_nodes&#39;</span><span class="p">])),</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+        <span class="n">func_nodes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">jdict_to_fnode_</span><span class="p">,</span> <span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func_nodes&#39;</span><span class="p">])),</span>
     <span class="p">)</span></div>
 </pre></div>
 
