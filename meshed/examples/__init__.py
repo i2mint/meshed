@@ -6,7 +6,7 @@ from meshed.examples.price_elasticity import funcs as price_elasticity_funcs
 
 
 funcs = {
-    "online_marketing": online_marketing_funcs,
-    "vaccine_vs_no_vaccine": vaccine_vs_no_vaccine_funcs,
-    "price_elasticity": price_elasticity_funcs,
+    'online_marketing': online_marketing_funcs,
+    'vaccine_vs_no_vaccine': vaccine_vs_no_vaccine_funcs,
+    'price_elasticity': price_elasticity_funcs,
 }

@@ -742,7 +742,7 @@ def jdict_to_fnode(jdict: dict, *, jdict_to_func: Callable[[Jdict], Callable] = 
             out=jdict['out'],
         )
     else:
-        raise NotImplementedError("Need a function")
+        raise NotImplementedError('Need a function')
 
 
 def dag_to_jdict(dag: DAG, *, func_to_jdict: Callable = None):
