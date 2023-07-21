@@ -1,11 +1,7 @@
-import graphviz
-
-import networkx as nx
-import ipywidgets as widgets
-from IPython.display import display
-
-
 def visualize_graph(graph):
+    import graphviz
+    from IPython.display import display
+
     dot = graphviz.Digraph()
 
     # Add nodes to the graph
@@ -22,6 +18,12 @@ def visualize_graph(graph):
 
 
 def visualize_graph_interactive(graph):
+    import graphviz
+
+    import networkx as nx
+    import ipywidgets as widgets
+    from IPython.display import display
+
     g = nx.DiGraph(graph)
 
     # Create an empty Graphviz graph

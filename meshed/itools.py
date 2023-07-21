@@ -532,3 +532,28 @@ def edge_reversed_graph(
 #             yield from find_descendants(d, n)
 #     except KeyError:
 #         pass
+
+
+def filter_dict_with_list_values(d, condition):
+    return {k: list(filter(condition, d[k])) for k, v in d.items()}
+
+
+def filter_dict_on_keys(d, condition):
+    return {k: v for k, v in d.items() if condition(k, v)}
+
+
+def nodes_of_graph(graph):
+    return set([*graph.keys(), *graph.values()])
+
+
+def subtract_subgraph(graph, subgraph):
+    subnodes = nodes_of_graph(subgraph)
+    is_not_subnode = lambda x: x not in subnodes
+    not_only_subnodes = lambda x: set(x).issubset(set(subnodes))
+    is_not_empty = lambda k, v: len(v) > 0
+    key_not_subnode = lambda k, v: k not in subnodes
+    graph = filter_dict_with_list_values(graph, is_not_subnode)
+    graph = filter_dict_on_keys(graph, is_not_empty)
+    graph = filter_dict_on_keys(graph, key_not_subnode)
+
+    return graph
