@@ -649,6 +649,31 @@
 <span class="c1">#             yield from find_descendants(d, n)</span>
 <span class="c1">#     except KeyError:</span>
 <span class="c1">#         pass</span>
+
+
+<span class="k">def</span> <span class="nf">filter_dict_with_list_values</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+
+<span class="k">def</span> <span class="nf">filter_dict_on_keys</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)}</span>
+
+
+<span class="k">def</span> <span class="nf">nodes_of_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">([</span><span class="o">*</span><span class="n">graph</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="o">*</span><span class="n">graph</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+
+
+<span class="k">def</span> <span class="nf">subtract_subgraph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">subgraph</span><span class="p">):</span>
+    <span class="n">subnodes</span> <span class="o">=</span> <span class="n">nodes_of_graph</span><span class="p">(</span><span class="n">subgraph</span><span class="p">)</span>
+    <span class="n">is_not_subnode</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subnodes</span>
+    <span class="n">not_only_subnodes</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">subnodes</span><span class="p">))</span>
+    <span class="n">is_not_empty</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">key_not_subnode</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subnodes</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">filter_dict_with_list_values</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">is_not_subnode</span><span class="p">)</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">filter_dict_on_keys</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">is_not_empty</span><span class="p">)</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">filter_dict_on_keys</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">key_not_subnode</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">graph</span>
 </pre></div>
 
            </div>
