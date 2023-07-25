@@ -1,13 +1,13 @@
 """Tools to work with meshed"""
 
+from collections import namedtuple
 from contextlib import contextmanager
-from functools import cached_property
+from functools import cached_property, partial
 import multiprocessing
 import os
 import time
 
-from meshed.dag import DAG
-from meshed.makers import code_to_dag
+import i2
 
 
 HOST = os.environ.get("HOST", "0.0.0.0")
@@ -19,19 +19,24 @@ def find_funcs(dag, func_outs):
     return list(dag.find_funcs(lambda x: x.out in func_outs))
 
 def mk_dag_with_wf_funcs(dag, ws_funcs):
-    return dag.ch_funcs(ws_funcs)
+    return dag.ch_funcs(**ws_funcs)
 
+def launch_funcs_webservice(funcs):
+    from py2http import run_app, mk_app
+
+    ws_app = mk_app(funcs, openapi=dict(base_url=API_URL))
+    run_app(ws_app, host=HOST, port=PORT, server=SERVER)
 
 @contextmanager
-def launch_webservice(ws_app):
+def launch_webservice(funcs_to_cloudify):
     """Launches a web service application in a separate process."""
-    from py2http import run_app
-    mp = multiprocessing.Process(target=run_app, args=(ws_app,), kwargs=dict(host=HOST, port=PORT, server=SERVER))
-    mp.start()
-    time.sleep(5)
-    yield mp
 
-    mp.terminate()
+    ws = multiprocessing.Process(target=launch_funcs_webservice, args=(funcs_to_cloudify,))
+    ws.start()
+    time.sleep(5)
+    yield ws
+
+    ws.terminate()
 
 
 class PyBinderFuncs:
@@ -51,9 +56,18 @@ class PyBinderFuncs:
         return frozenset(f.__name__ for f in self.funcs)
 
     def __getitem__(self, key):
-        if (ws_func := getattr(self.ws_app, key, None)) is not None:
-            return ws_func
-        raise KeyError(key)
+        """Returns a Python function that calls the web service function.
+        HttpClient is queried at the execution of the function.
+        """
+        @i2.Sig(next(f for f in self.funcs if key == f.__name__))
+        def ws_func(*a, **kw):
+            print(f'Getting web service for: {key}')
+            if (_wsf := getattr(self.http_client, key, None)) is not None:
+                print(f'Found web service for: {key}')
+                return _wsf(*a, **kw)
+            raise KeyError(key)
+
+        return ws_func
 
     def __contains__(self, key):
         return key in self.func_names
@@ -82,9 +96,11 @@ def mk_web_service(funcs):
 
     return mk_app(funcs, openapi=dict(base_url=API_URL))
 
-@code_to_dag(func_src=locals())
-def mk_hybrid_dag():
+def mk_hybrid_dag(dag, func_ids_to_cloudify):
     funcs_to_cloudify = find_funcs(dag, func_ids_to_cloudify)
     ws_app = mk_web_service(funcs_to_cloudify)
     ws_funcs = py_binder_funcs(ws_app, funcs_to_cloudify)
     ws_dag = mk_dag_with_wf_funcs(dag, ws_funcs)
+
+    HybridDAG = namedtuple('HybridDAG', ['funcs_to_cloudify', 'ws_app', 'ws_dag', 'ws_funcs'])
+    return HybridDAG(funcs_to_cloudify, ws_app, ws_dag, ws_funcs)
