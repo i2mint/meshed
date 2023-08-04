@@ -159,11 +159,9 @@ from typing import (
     Union,
 )
 from functools import partial
-
-
 from i2 import Sig, name_of_obj, partialx, double_up_as_factory
 from i2.signatures import name_of_obj
-
+from py2json import Ctor
 
 from meshed.dag import DAG
 from meshed.base import FuncNode
@@ -721,28 +719,32 @@ Jdict = dict  # json-serializable dictionary
 def fnode_to_jdict(
     fnode: FuncNode, *, func_to_jdict: Callable[[Callable], Jdict] = None
 ):
+    func_to_jdict = func_to_jdict or Ctor.deconstruct
     jdict = {
         'name': fnode.name,
+        'func': func_to_jdict(fnode.func),
         'func_label': fnode.func_label,
         'bind': fnode.bind,
         'out': fnode.out,
     }
-    if func_to_jdict is not None:
-        jdict['func'] = func_to_jdict(fnode.func)
     return jdict
 
 
 def jdict_to_fnode(jdict: dict, *, jdict_to_func: Callable[[Jdict], Callable] = None):
-    if jdict_to_func is not None:
-        return FuncNode(
-            func=jdict_to_func(jdict['func']),
-            name=jdict['name'],
-            func_label=jdict['func_label'],
-            bind=jdict['bind'],
-            out=jdict['out'],
-        )
-    else:
-        raise NotImplementedError('Need a function')
+    bind = jdict['bind']
+    func_label = jdict['func_label']
+    jdict_to_func = jdict_to_func or Ctor.construct
+    func = jdict_to_func(jdict['func'])
+    if not callable(func):
+        raise RuntimeError('Cannot deserialize func from jdict. Please provide a \
+jdict_to_func function that returns a valid func object.')
+    return FuncNode(
+        func=jdict_to_func(jdict['func']),
+        name=jdict['name'],
+        func_label=func_label,
+        bind=bind,
+        out=jdict['out'],
+    )
 
 
 def dag_to_jdict(dag: DAG, *, func_to_jdict: Callable = None):
