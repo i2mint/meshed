@@ -1,3 +1,4 @@
+"""Visualization utilities for the meshed package."""
 import graphviz
 
 import networkx as nx

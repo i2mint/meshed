@@ -1,3 +1,5 @@
+"""Test hybrid dag that uses a web service for some functions."""
+
 from meshed import code_to_dag, DAG
 from meshed.examples import online_marketing_funcs as funcs
 from meshed.tools import mk_hybrid_dag, launch_webservice
