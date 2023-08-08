@@ -22,10 +22,10 @@ def mk_dag_with_wf_funcs(dag, ws_funcs):
     return dag.ch_funcs(**ws_funcs)
 
 def launch_funcs_webservice(funcs):
-    from py2http import run_app, mk_app
+    from extrude import mk_api, run_api
 
-    ws_app = mk_app(funcs, openapi=dict(base_url=API_URL))
-    run_app(ws_app, host=HOST, port=PORT, server=SERVER)
+    ws_app = mk_api(funcs, openapi=dict(base_url=API_URL))
+    run_api(ws_app, host=HOST, port=PORT, server=SERVER)
 
 @contextmanager
 def launch_webservice(funcs_to_cloudify):

@@ -1,21 +1,24 @@
+import time
 import i2
 
 from meshed import code_to_dag, DAG
 from meshed.examples import online_marketing_funcs as funcs
-from meshed.tools import mk_hybrid_dag, launch_webservice
+from meshed.tools import mk_hybrid_dag, launch_webservice , launch_funcs_webservice
 
 
-def test_hybrid_dag():
-    # The parameters
-    dag = DAG(funcs)
-    funcs_ids_to_cloudify = ['cost', 'revenue']
-    input_dict = dict(
+def test_hybrid_dag(
+    dag_funcs=funcs,
+    funcs_ids_to_cloudify=['cost', 'revenue'],
+    input_dict=dict(
         impressions=1000,
         cost_per_impression=0.02,
         click_per_impression=0.3,
         sales_per_click=0.05,
         revenue_per_sale=100
-    )
+        )
+    ):
+    # The parameters
+    dag = DAG(dag_funcs)
 
     print("Calling mk_hybrid_dag!")
     # Calling mk_hybrid_dag
