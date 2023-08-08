@@ -88,3 +88,8 @@ jobs:
 
       - name: Tag Repository
         run: isee tag-repo $VERSION
+
+      - name: GitHub Pages
+        uses: i2mint/epythet/actions/publish-github-pages@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
