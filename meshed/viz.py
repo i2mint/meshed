@@ -1,4 +1,6 @@
 """Visualization utilities for the meshed package."""
+
+
 def visualize_graph(graph):
     import graphviz
     from IPython.display import display

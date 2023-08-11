@@ -14,14 +14,16 @@ import i2
 from meshed.dag import DAG
 
 
-HOST = os.environ.get("HOST", "0.0.0.0")
-PORT = int(os.environ.get("PORT", 3030))
-API_URL = os.environ.get("API_URL", f"http://localhost:{PORT}")
-SERVER = os.environ.get("SERVER", "wsgiref")
+HOST = os.environ.get('HOST', '0.0.0.0')
+PORT = int(os.environ.get('PORT', 3030))
+API_URL = os.environ.get('API_URL', f'http://localhost:{PORT}')
+SERVER = os.environ.get('SERVER', 'wsgiref')
 OPENAPI_URL = urljoin(API_URL, 'openapi')
+
 
 def find_funcs(dag, func_outs):
     return list(dag.find_funcs(lambda x: x.out in func_outs))
+
 
 def mk_dag_with_ws_funcs(dag: DAG, ws_funcs: dict) -> DAG:
     """Creates a new DAG with the web service functions.
@@ -35,6 +37,7 @@ def mk_dag_with_ws_funcs(dag: DAG, ws_funcs: dict) -> DAG:
     """
     return dag.ch_funcs(**ws_funcs)
 
+
 def launch_funcs_webservice(funcs: List[Callable]):
     """Launches a web service application with the specified functions.
 
@@ -46,10 +49,13 @@ def launch_funcs_webservice(funcs: List[Callable]):
     ws_app = mk_api(funcs, openapi=dict(base_url=API_URL))
     run_api(ws_app, host=HOST, port=PORT, server=SERVER)
 
+
 @contextmanager
 def launch_webservice(funcs_to_cloudify):
     """Context manager to launch a web service application in a separate process."""
-    ws = multiprocessing.Process(target=launch_funcs_webservice, args=(funcs_to_cloudify,))
+    ws = multiprocessing.Process(
+        target=launch_funcs_webservice, args=(funcs_to_cloudify,)
+    )
     ws.start()
     time.sleep(5)
     yield ws
@@ -86,6 +92,7 @@ class CloudFunctions:
         """Returns a Python function that calls the web service function.
         HttpClient is queried at the execution of the function.
         """
+
         @i2.Sig(next(f for f in self.funcs if key == f.__name__))
         def ws_func(*a, **kw):
             self.logger(f'Getting web service for: {key}')

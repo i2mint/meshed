@@ -13,9 +13,9 @@ def test_hybrid_dag(
         cost_per_impression=0.02,
         click_per_impression=0.3,
         sales_per_click=0.05,
-        revenue_per_sale=100
-        )
-    ):
+        revenue_per_sale=100,
+    ),
+):
     """Test hybrid dag that uses a web service for some functions.
 
     :param dag_funcs: list of dag functions, defaults to funcs
@@ -28,11 +28,11 @@ def test_hybrid_dag(
     # The parameters
     dag = DAG(dag_funcs)
 
-    print("Calling mk_hybrid_dag!")
+    print('Calling mk_hybrid_dag!')
     # Calling mk_hybrid_dag
     hybrid_dag = mk_hybrid_dag(dag, funcs_ids_to_cloudify)
 
-    print("Starting web service!")
+    print('Starting web service!')
     with launch_webservice(hybrid_dag.funcs_to_cloudify) as ws:
         print('Web service started!')
         print('Calling dag and ws_dag!')
