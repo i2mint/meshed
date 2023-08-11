@@ -41,6 +41,7 @@
    module_docs/meshed/tests/test_getitem
    module_docs/meshed/tests/test_itools
    module_docs/meshed/tests/test_makers
+   module_docs/meshed/tests/test_tools
    module_docs/meshed/tests/test_util
    module_docs/meshed/tests/utils_for_testing
    module_docs/meshed/tools
