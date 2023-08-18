@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tools &mdash; meshed 0.1.137 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.tools &mdash; meshed 0.1.138 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -132,14 +132,16 @@
 <span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
 
 
-<span class="n">HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">)</span>
-<span class="n">PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PORT&quot;</span><span class="p">,</span> <span class="mi">3030</span><span class="p">))</span>
-<span class="n">API_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;API_URL&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;http://localhost:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="n">SERVER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVER&quot;</span><span class="p">,</span> <span class="s2">&quot;wsgiref&quot;</span><span class="p">)</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HOST&#39;</span><span class="p">,</span> <span class="s1">&#39;0.0.0.0&#39;</span><span class="p">)</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PORT&#39;</span><span class="p">,</span> <span class="mi">3030</span><span class="p">))</span>
+<span class="n">API_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;API_URL&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;http://localhost:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">SERVER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SERVER&#39;</span><span class="p">,</span> <span class="s1">&#39;wsgiref&#39;</span><span class="p">)</span>
 <span class="n">OPENAPI_URL</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">API_URL</span><span class="p">,</span> <span class="s1">&#39;openapi&#39;</span><span class="p">)</span>
+
 
 <span class="k">def</span> <span class="nf">find_funcs</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">func_outs</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">find_funcs</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">out</span> <span class="ow">in</span> <span class="n">func_outs</span><span class="p">))</span>
+
 
 <div class="viewcode-block" id="mk_dag_with_ws_funcs"><a class="viewcode-back" href="../../module_docs/meshed/tools.html#meshed.tools.mk_dag_with_ws_funcs">[docs]</a><span class="k">def</span> <span class="nf">mk_dag_with_ws_funcs</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">ws_funcs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a new DAG with the web service functions.</span>
@@ -153,6 +155,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="o">**</span><span class="n">ws_funcs</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="launch_funcs_webservice"><a class="viewcode-back" href="../../module_docs/meshed/tools.html#meshed.tools.launch_funcs_webservice">[docs]</a><span class="k">def</span> <span class="nf">launch_funcs_webservice</span><span class="p">(</span><span class="n">funcs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Launches a web service application with the specified functions.</span>
 
@@ -164,10 +167,13 @@
     <span class="n">ws_app</span> <span class="o">=</span> <span class="n">mk_api</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="n">openapi</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">API_URL</span><span class="p">))</span>
     <span class="n">run_api</span><span class="p">(</span><span class="n">ws_app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">HOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">PORT</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="n">SERVER</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="launch_webservice"><a class="viewcode-back" href="../../module_docs/meshed/tools.html#meshed.tools.launch_webservice">[docs]</a><span class="nd">@contextmanager</span>
 <span class="k">def</span> <span class="nf">launch_webservice</span><span class="p">(</span><span class="n">funcs_to_cloudify</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Context manager to launch a web service application in a separate process.&quot;&quot;&quot;</span>
-    <span class="n">ws</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">launch_funcs_webservice</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">funcs_to_cloudify</span><span class="p">,))</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+        <span class="n">target</span><span class="o">=</span><span class="n">launch_funcs_webservice</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">funcs_to_cloudify</span><span class="p">,)</span>
+    <span class="p">)</span>
     <span class="n">ws</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
     <span class="k">yield</span> <span class="n">ws</span>
@@ -204,6 +210,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a Python function that calls the web service function.</span>
 <span class="sd">        HttpClient is queried at the execution of the function.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="nd">@i2</span><span class="o">.</span><span class="n">Sig</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">funcs</span> <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
         <span class="k">def</span> <span class="nf">ws_func</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Getting web service for: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
