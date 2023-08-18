@@ -88,7 +88,7 @@ def objects_defined_in_module(
 
 
 def provides(*var_names: str) -> Callable[[Callable], Callable]:
-    """Decorator to assign ``var_names`` to a ``provides_`` attribute of function.
+    """Decorator to assign ``var_names`` to a ``_provides`` attribute of function.
 
     This is meant to be used to indicate to a mesh what var nodes a function can source
     values for.
