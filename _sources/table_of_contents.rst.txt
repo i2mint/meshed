@@ -19,6 +19,7 @@
    module_docs/meshed/scrap
    module_docs/meshed/scrap/annotations_to_meshes
    module_docs/meshed/scrap/cached_dag
+   module_docs/meshed/scrap/collapse_and_expand
    module_docs/meshed/scrap/conversion
    module_docs/meshed/scrap/dask_graph_language
    module_docs/meshed/scrap/flow_control_script
