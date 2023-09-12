@@ -6,6 +6,7 @@ https://github.com/i2mint/meshed/discussions/54
 
 from dataclasses import dataclass
 from i2 import Sig
+from meshed.dag import DAG
 
 
 @dataclass
@@ -21,6 +22,7 @@ class CollapsedDAG:
 
     def __post_init__(self):
         Sig(self.dag)(self)  # so that __call__ gets dag's signature
+        self.__name__ = self.dag.name
 
     def __call__(self, *args, **kwargs):
         return self.dag(*args, **kwargs)

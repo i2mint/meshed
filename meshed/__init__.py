@@ -29,3 +29,4 @@ from meshed.util import (
     replace_item_in_iterable,
     parameter_merger,
 )
+from meshed.tools import Itemgetter, AttrGetter

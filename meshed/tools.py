@@ -135,3 +135,39 @@ def mk_hybrid_dag(dag: DAG, func_ids_to_cloudify: list):
 
     HybridDAG = namedtuple('HybridDAG', ['funcs_to_cloudify', 'ws_dag', 'ws_funcs'])
     return HybridDAG(funcs_to_cloudify, ws_dag, ws_funcs)
+
+
+from i2 import Sig
+from typing import Callable, Any
+from operator import itemgetter, attrgetter
+from dataclasses import dataclass, field
+from functools import partial
+
+
+@dataclass
+class Extractor:
+    extractor_factory: Callable[[Any], Callable]
+    extractor_params: Any
+    name: str = field(default='extractor', kw_only=True)
+    input_name: str = field(default='x', kw_only=True)
+    
+    def __post_init__(self):
+        self.__name__ = self.name
+        self.__signature__ = Sig(f'({self.input_name}, /)')
+        self._call = self.extractor_factory(self.extractor_params)
+
+    def __call__(self, x):
+        return self._call(x)
+
+def _itemgetter(items):
+    if isinstance(items, str):
+        items = [items]
+    return itemgetter(*items)
+
+def _attrgetter(attrs):
+    if isinstance(attrs, str):
+        attrs = [attrs]
+    return attrgetter(*attrs)
+
+Itemgetter = partial(Extractor, _itemgetter, name='itemgetter')
+AttrGetter = partial(Extractor, _attrgetter, name='itemgetter')
