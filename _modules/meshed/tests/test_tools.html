@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.test_tools &mdash; meshed 0.1.140 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.tests.test_tools &mdash; meshed 0.1.141 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -128,7 +128,7 @@
 
 <div class="viewcode-block" id="test_hybrid_dag"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_tools.html#meshed.tests.test_tools.test_hybrid_dag">[docs]</a><span class="k">def</span> <span class="nf">test_hybrid_dag</span><span class="p">(</span>
     <span class="n">dag_funcs</span><span class="o">=</span><span class="n">funcs</span><span class="p">,</span>
-    <span class="n">funcs_ids_to_cloudify</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">,</span> <span class="s2">&quot;revenue&quot;</span><span class="p">],</span>
+    <span class="n">funcs_ids_to_cloudify</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="s1">&#39;revenue&#39;</span><span class="p">],</span>
     <span class="n">input_dict</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
         <span class="n">impressions</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
         <span class="n">cost_per_impression</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
@@ -149,21 +149,21 @@
     <span class="c1"># The parameters</span>
     <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_funcs</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calling mk_hybrid_dag!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calling mk_hybrid_dag!&#39;</span><span class="p">)</span>
     <span class="c1"># Calling mk_hybrid_dag</span>
     <span class="n">hybrid_dag</span> <span class="o">=</span> <span class="n">mk_hybrid_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">funcs_ids_to_cloudify</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting web service!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting web service!&#39;</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">launch_webservice</span><span class="p">(</span><span class="n">hybrid_dag</span><span class="o">.</span><span class="n">funcs_to_cloudify</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Web service started!&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calling dag and ws_dag!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Web service started!&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calling dag and ws_dag!&#39;</span><span class="p">)</span>
         <span class="n">dag_result</span> <span class="o">=</span> <span class="n">dag</span><span class="p">(</span><span class="o">**</span><span class="n">input_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dag_result: </span><span class="si">{</span><span class="n">dag_result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;dag_result: </span><span class="si">{</span><span class="n">dag_result</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">ws_dag_result</span> <span class="o">=</span> <span class="n">hybrid_dag</span><span class="o">.</span><span class="n">ws_dag</span><span class="p">(</span><span class="o">**</span><span class="n">input_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ws_dag_result: </span><span class="si">{</span><span class="n">ws_dag_result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">dag_result</span> <span class="o">==</span> <span class="n">ws_dag_result</span><span class="p">,</span> <span class="s2">&quot;Results are not equal!&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Results are equal!&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done!&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ws_dag_result: </span><span class="si">{</span><span class="n">ws_dag_result</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">dag_result</span> <span class="o">==</span> <span class="n">ws_dag_result</span><span class="p">,</span> <span class="s1">&#39;Results are not equal!&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Results are equal!&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.140 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.dag &mdash; meshed 0.1.141 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -851,92 +851,6 @@ you want to also consider arguments that already had defaults as bound
 <dd><p>Extract attributes from an iterable of objects
 &gt;&gt;&gt; list(attribute_vals([print, map], attrs=[‘__name__’, ‘__module__’]))
 [(‘print’, ‘builtins’), (‘map’, ‘builtins’)]</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="meshed.dag.dot_lines_of_func_nodes">
-<code class="sig-prename descclassname">meshed.dag.</code><code class="sig-name descname">dot_lines_of_func_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span><a class="reference internal" href="base.html#meshed.base.FuncNode" title="meshed.base.FuncNode">meshed.base.FuncNode</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">start_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="n">end_lines</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#dot_lines_of_func_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.dag.dot_lines_of_func_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Got lines generator for the graphviz.DiGraph(body=list(…))</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">mult</span> <span class="o">**</span> <span class="n">a</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">func_nodes</span> <span class="o">=</span> <span class="p">[</span>
-<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;the_product&#39;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
-<span class="gp">... </span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dot_lines_of_func_nodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">lines</span> <span class="o">==</span> <span class="p">[</span>
-<span class="gp">... </span><span class="s1">&#39;x [label=&quot;x&quot; shape=&quot;none&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;_add [label=&quot;_add&quot; shape=&quot;box&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;_add -&gt; x&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;a [label=&quot;a&quot; shape=&quot;none&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;b [label=&quot;b=&quot; shape=&quot;none&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;a -&gt; _add&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;b -&gt; _add&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;mult [label=&quot;mult&quot; shape=&quot;none&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;the_product [label=&quot;the_product&quot; shape=&quot;box&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;the_product -&gt; mult&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;x [label=&quot;x&quot; shape=&quot;none&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;y [label=&quot;y=&quot; shape=&quot;none&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;x -&gt; the_product&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;y -&gt; the_product&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;exp [label=&quot;exp&quot; shape=&quot;none&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;_exp [label=&quot;_exp&quot; shape=&quot;box&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;_exp -&gt; exp&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;mult [label=&quot;mult&quot; shape=&quot;none&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;a [label=&quot;a&quot; shape=&quot;none&quot;]&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;mult -&gt; _exp&#39;</span><span class="p">,</span>
-<span class="gp">... </span><span class="s1">&#39;a -&gt; _exp&#39;</span>
-<span class="gp">... </span><span class="p">]</span>  
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">dot_to_ascii</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dot_to_ascii</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)))</span>  
-
-<span class="go">                a        ─┐</span>
-<span class="go">                          │</span>
-<span class="go">           │              │</span>
-<span class="go">           │              │</span>
-<span class="go">           ▼              │</span>
-<span class="go">         ┌─────────────┐  │</span>
-<span class="go"> b=  ──▶ │    _add     │  │</span>
-<span class="go">         └─────────────┘  │</span>
-<span class="go">           │              │</span>
-<span class="go">           │              │</span>
-<span class="go">           ▼              │</span>
-<span class="go">                          │</span>
-<span class="go">                x         │</span>
-<span class="go">                          │</span>
-<span class="go">           │              │</span>
-<span class="go">           │              │</span>
-<span class="go">           ▼              │</span>
-<span class="go">         ┌─────────────┐  │</span>
-<span class="go"> y=  ──▶ │ the_product │  │</span>
-<span class="go">         └─────────────┘  │</span>
-<span class="go">           │              │</span>
-<span class="go">           │              │</span>
-<span class="go">           ▼              │</span>
-<span class="go">                          │</span>
-<span class="go">              mult        │</span>
-<span class="go">                          │</span>
-<span class="go">           │              │</span>
-<span class="go">           │              │</span>
-<span class="go">           ▼              │</span>
-<span class="go">         ┌─────────────┐  │</span>
-<span class="go">         │    _exp     │ ◀┘</span>
-<span class="go">         └─────────────┘</span>
-<span class="go">           │</span>
-<span class="go">           │</span>
-<span class="go">           ▼</span>
-
-<span class="go">               exp</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="py function">

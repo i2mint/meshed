@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.140 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.base &mdash; meshed 0.1.141 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -257,6 +257,12 @@ can be implemented by providing a custom scope for that.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="meshed.base.FuncNode.dot_lines">
+<code class="sig-name descname">dot_lines</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#FuncNode.dot_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.FuncNode.dot_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of lines that can be used to make a dot graph</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="meshed.base.FuncNode.from_dict">
 <em class="property">classmethod </em><code class="sig-name descname">from_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dictionary</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#FuncNode.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.FuncNode.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>The inverse of to_dict: Make a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> from a dictionary of init args</p>
@@ -437,7 +443,7 @@ digit)</p></li>
 
 <dl class="py function">
 <dt id="meshed.base.identifier_mapping">
-<code class="sig-prename descclassname">meshed.base.</code><code class="sig-name descname">identifier_mapping</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="p">:</span> <span class="n">meshed.base.Bind</span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>meshed.base.Identifier<span class="p">, </span>meshed.base.Identifier<span class="p">]</span><a class="reference internal" href="../../_modules/meshed/base.html#identifier_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.identifier_mapping" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">meshed.base.</code><code class="sig-name descname">identifier_mapping</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>Dict<span class="p">[</span>meshed.base.Identifier<span class="p">, </span>meshed.base.Identifier<span class="p">]</span><span class="p">, </span>Sequence<span class="p">[</span>Union<span class="p">[</span>meshed.base.Identifier<span class="p">, </span>Tuple<span class="p">[</span>meshed.base.Identifier<span class="p">, </span>meshed.base.Identifier<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>meshed.base.Identifier<span class="p">, </span>meshed.base.Identifier<span class="p">]</span><a class="reference internal" href="../../_modules/meshed/base.html#identifier_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.base.identifier_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get an <code class="docutils literal notranslate"><span class="pre">IdentifierMapping</span></code> dict from a more loosely defined <code class="docutils literal notranslate"><span class="pre">Bind</span></code>.</p>
 <p>You can get an identifier mapping (that is, an explicit for for a <code class="docutils literal notranslate"><span class="pre">bind</span></code> argument)
 from…</p>

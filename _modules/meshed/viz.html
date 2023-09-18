@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>meshed.viz &mdash; meshed 0.1.141 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/toggleprompt.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            meshed
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/base.html">meshed.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/components.html">meshed.components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/composition.html">meshed.composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples.html">meshed.examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext.html">meshed.ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/itools.html">meshed.itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/makers.html">meshed.makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/flow_control_script.html">meshed.scrap.flow_control_script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gui_interaction.html">meshed.scrap.gui_interaction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_components.html">meshed.tests.test_components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_defaults.html">meshed.tests.test_dag_defaults</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_variadics.html">meshed.tests.test_dag_variadics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_getitem.html">meshed.tests.test_getitem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_makers.html">meshed.tests.test_makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_tools.html">meshed.tests.test_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_util.html">meshed.tests.test_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tools.html">meshed.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/util.html">meshed.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/viz.html">meshed.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">meshed</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">meshed.viz</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for meshed.viz</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Visualization utilities for the meshed package.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="n">Sig</span>
+
+
+<div class="viewcode-block" id="dot_lines_of_objs"><a class="viewcode-back" href="../../module_docs/meshed/viz.html#meshed.viz.dot_lines_of_objs">[docs]</a><span class="k">def</span> <span class="nf">dot_lines_of_objs</span><span class="p">(</span><span class="n">objs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">start_lines</span><span class="o">=</span><span class="p">(),</span> <span class="n">end_lines</span><span class="o">=</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get lines generator for the graphviz.DiGraph(body=list(...))</span>
+
+<span class="sd">    &gt;&gt;&gt; from meshed.base import FuncNode</span>
+<span class="sd">    &gt;&gt;&gt; def add(a, b=1):</span>
+<span class="sd">    ...     return a + b</span>
+<span class="sd">    &gt;&gt;&gt; def mult(x, y=3):</span>
+<span class="sd">    ...     return x * y</span>
+<span class="sd">    &gt;&gt;&gt; def exp(mult, a):</span>
+<span class="sd">    ...     return mult ** a</span>
+<span class="sd">    &gt;&gt;&gt; func_nodes = [</span>
+<span class="sd">    ...     FuncNode(add, out=&#39;x&#39;),</span>
+<span class="sd">    ...     FuncNode(mult, name=&#39;the_product&#39;),</span>
+<span class="sd">    ...     FuncNode(exp)</span>
+<span class="sd">    ... ]</span>
+<span class="sd">    &gt;&gt;&gt; lines = list(dot_lines_of_objs(func_nodes))</span>
+<span class="sd">    &gt;&gt;&gt; assert lines == [</span>
+<span class="sd">    ... &#39;x [label=&quot;x&quot; shape=&quot;none&quot;]&#39;,</span>
+<span class="sd">    ... &#39;_add [label=&quot;_add&quot; shape=&quot;box&quot;]&#39;,</span>
+<span class="sd">    ... &#39;_add -&gt; x&#39;,</span>
+<span class="sd">    ... &#39;a [label=&quot;a&quot; shape=&quot;none&quot;]&#39;,</span>
+<span class="sd">    ... &#39;b [label=&quot;b=&quot; shape=&quot;none&quot;]&#39;,</span>
+<span class="sd">    ... &#39;a -&gt; _add&#39;,</span>
+<span class="sd">    ... &#39;b -&gt; _add&#39;,</span>
+<span class="sd">    ... &#39;mult [label=&quot;mult&quot; shape=&quot;none&quot;]&#39;,</span>
+<span class="sd">    ... &#39;the_product [label=&quot;the_product&quot; shape=&quot;box&quot;]&#39;,</span>
+<span class="sd">    ... &#39;the_product -&gt; mult&#39;,</span>
+<span class="sd">    ... &#39;x [label=&quot;x&quot; shape=&quot;none&quot;]&#39;,</span>
+<span class="sd">    ... &#39;y [label=&quot;y=&quot; shape=&quot;none&quot;]&#39;,</span>
+<span class="sd">    ... &#39;x -&gt; the_product&#39;,</span>
+<span class="sd">    ... &#39;y -&gt; the_product&#39;,</span>
+<span class="sd">    ... &#39;exp [label=&quot;exp&quot; shape=&quot;none&quot;]&#39;,</span>
+<span class="sd">    ... &#39;_exp [label=&quot;_exp&quot; shape=&quot;box&quot;]&#39;,</span>
+<span class="sd">    ... &#39;_exp -&gt; exp&#39;,</span>
+<span class="sd">    ... &#39;mult [label=&quot;mult&quot; shape=&quot;none&quot;]&#39;,</span>
+<span class="sd">    ... &#39;a [label=&quot;a&quot; shape=&quot;none&quot;]&#39;,</span>
+<span class="sd">    ... &#39;mult -&gt; _exp&#39;,</span>
+<span class="sd">    ... &#39;a -&gt; _exp&#39;</span>
+<span class="sd">    ... ]  # doctest: +SKIP</span>
+
+<span class="sd">    &gt;&gt;&gt; from meshed.util import dot_to_ascii</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; print(dot_to_ascii(&#39;\n&#39;.join(lines)))  # doctest: +SKIP</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">                    a        ─┐</span>
+<span class="sd">                              │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               ▼              │</span>
+<span class="sd">             ┌─────────────┐  │</span>
+<span class="sd">     b=  ──▶ │    _add     │  │</span>
+<span class="sd">             └─────────────┘  │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               ▼              │</span>
+<span class="sd">                              │</span>
+<span class="sd">                    x         │</span>
+<span class="sd">                              │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               ▼              │</span>
+<span class="sd">             ┌─────────────┐  │</span>
+<span class="sd">     y=  ──▶ │ the_product │  │</span>
+<span class="sd">             └─────────────┘  │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               ▼              │</span>
+<span class="sd">                              │</span>
+<span class="sd">                  mult        │</span>
+<span class="sd">                              │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               │              │</span>
+<span class="sd">               ▼              │</span>
+<span class="sd">             ┌─────────────┐  │</span>
+<span class="sd">             │    _exp     │ ◀┘</span>
+<span class="sd">             └─────────────┘</span>
+<span class="sd">               │</span>
+<span class="sd">               │</span>
+<span class="sd">               ▼</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">                   exp</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Should we validate here, or outside this module?</span>
+    <span class="c1"># from meshed.base import validate_that_func_node_names_are_sane</span>
+    <span class="c1"># validate_that_func_node_names_are_sane(func_nodes)</span>
+    <span class="k">yield from</span> <span class="n">start_lines</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+        <span class="k">yield from</span> <span class="n">obj</span><span class="o">.</span><span class="n">dot_lines</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">yield from</span> <span class="n">end_lines</span></div>
+
+
+<span class="n">dot_lines_of_func_nodes</span> <span class="o">=</span> <span class="n">dot_lines_of_objs</span>  <span class="c1"># backwards compatiblity alias</span>
+
+
+<span class="c1"># TODO: Should we integrate this to dot_lines_of_func_parameters directly (decorator?)</span>
+<div class="viewcode-block" id="add_new_line_if_none"><a class="viewcode-back" href="../../module_docs/meshed/viz.html#meshed.viz.add_new_line_if_none">[docs]</a><span class="k">def</span> <span class="nf">add_new_line_if_none</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Since graphviz 0.18, need to have a newline in body lines.</span>
+<span class="sd">    This util is there to address that, adding newlines to body lines</span>
+<span class="sd">    when missing.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">s</span></div>
+
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># Unused -- consider deleting</span>
+<span class="k">def</span> <span class="nf">_parameters_and_names_from_sig</span><span class="p">(</span>
+    <span class="n">sig</span><span class="p">:</span> <span class="n">Sig</span><span class="p">,</span>
+    <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">func_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="n">func_name</span> <span class="ow">or</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="ow">or</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="n">func_name</span> <span class="o">==</span> <span class="n">out</span><span class="p">:</span>
+        <span class="n">func_name</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">func_name</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">func_name</span>
+
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># Old stuff</span>
+
+
+<span class="k">def</span> <span class="nf">visualize_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">graphviz</span>
+    <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+
+    <span class="n">dot</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+
+    <span class="c1"># Add nodes to the graph</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">:</span>
+        <span class="n">dot</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="c1"># Add edges to the graph</span>
+    <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">neighbors</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+            <span class="n">dot</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">neighbor</span><span class="p">)</span>
+
+    <span class="c1"># Render and display the graph in the notebook</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">visualize_graph_interactive</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">graphviz</span>
+
+    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+    <span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
+    <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+
+    <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+    <span class="c1"># Create an empty Graphviz graph</span>
+    <span class="n">dot</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
+
+    <span class="c1"># Add nodes to the Graphviz graph</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="n">dot</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
+
+    <span class="c1"># Add edges to the Graphviz graph</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+        <span class="n">dot</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># Render the initial graph visualization</span>
+    <span class="n">graph_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">dot</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">graph_widget</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">source_node</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">target_node</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+            <span class="n">dot</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
+            <span class="n">graph_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">dot</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">source_node</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">target_node</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">new_node</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="n">dot</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
+            <span class="n">graph_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">dot</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">new_node</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">delete_edge</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">delete_source</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">delete_target</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+            <span class="n">dot</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">graph_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">dot</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">delete_source</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">delete_target</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">delete_node</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">delete_node_value</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="n">dot</span><span class="o">.</span><span class="n">body</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">dot</span><span class="o">.</span><span class="n">body</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">]</span>
+            <span class="n">graph_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">dot</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">delete_node_value</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="n">source_node</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Source Node&quot;</span><span class="p">)</span>
+    <span class="n">target_node</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Target Node&quot;</span><span class="p">)</span>
+    <span class="n">add_edge_button</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Add Edge&quot;</span><span class="p">)</span>
+    <span class="n">add_edge_button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">add_edge</span><span class="p">)</span>
+
+    <span class="n">new_node</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;New Node&quot;</span><span class="p">)</span>
+    <span class="n">add_node_button</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Add Node&quot;</span><span class="p">)</span>
+    <span class="n">add_node_button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">add_node</span><span class="p">)</span>
+
+    <span class="n">delete_source</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Source Node&quot;</span><span class="p">)</span>
+    <span class="n">delete_target</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Target Node&quot;</span><span class="p">)</span>
+    <span class="n">delete_edge_button</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Delete Edge&quot;</span><span class="p">)</span>
+    <span class="n">delete_edge_button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">delete_edge</span><span class="p">)</span>
+
+    <span class="n">delete_node_value</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Node&quot;</span><span class="p">)</span>
+    <span class="n">delete_node_button</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Delete Node&quot;</span><span class="p">)</span>
+    <span class="n">delete_node_button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">delete_node</span><span class="p">)</span>
+
+    <span class="n">controls</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">source_node</span><span class="p">,</span> <span class="n">target_node</span><span class="p">,</span> <span class="n">add_edge_button</span><span class="p">])</span>
+    <span class="n">controls2</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">new_node</span><span class="p">,</span> <span class="n">add_node_button</span><span class="p">])</span>
+    <span class="n">controls3</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">delete_source</span><span class="p">,</span> <span class="n">delete_target</span><span class="p">,</span> <span class="n">delete_edge_button</span><span class="p">])</span>
+    <span class="n">controls4</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">delete_node_value</span><span class="p">,</span> <span class="n">delete_node_button</span><span class="p">])</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">controls</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">controls2</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">controls3</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">controls4</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
