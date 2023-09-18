@@ -14,11 +14,11 @@ import i2
 from meshed.dag import DAG
 
 
-HOST = os.environ.get('HOST', '0.0.0.0')
-PORT = int(os.environ.get('PORT', 3030))
-API_URL = os.environ.get('API_URL', f'http://localhost:{PORT}')
-SERVER = os.environ.get('SERVER', 'wsgiref')
-OPENAPI_URL = urljoin(API_URL, 'openapi')
+HOST = os.environ.get("HOST", "0.0.0.0")
+PORT = int(os.environ.get("PORT", 3030))
+API_URL = os.environ.get("API_URL", f"http://localhost:{PORT}")
+SERVER = os.environ.get("SERVER", "wsgiref")
+OPENAPI_URL = urljoin(API_URL, "openapi")
 
 
 def find_funcs(dag, func_outs):
@@ -95,9 +95,9 @@ class CloudFunctions:
 
         @i2.Sig(next(f for f in self.funcs if key == f.__name__))
         def ws_func(*a, **kw):
-            self.logger(f'Getting web service for: {key}')
+            self.logger(f"Getting web service for: {key}")
             if (_wsf := getattr(self.http_client, key, None)) is not None:
-                self.logger(f'Found web service for: {key}')
+                self.logger(f"Found web service for: {key}")
                 return _wsf(*a, **kw)
             raise KeyError(key)
 
@@ -133,41 +133,5 @@ def mk_hybrid_dag(dag: DAG, func_ids_to_cloudify: list):
     ws_funcs = CloudFunctions(funcs_to_cloudify)
     ws_dag = mk_dag_with_ws_funcs(dag, ws_funcs)
 
-    HybridDAG = namedtuple('HybridDAG', ['funcs_to_cloudify', 'ws_dag', 'ws_funcs'])
+    HybridDAG = namedtuple("HybridDAG", ["funcs_to_cloudify", "ws_dag", "ws_funcs"])
     return HybridDAG(funcs_to_cloudify, ws_dag, ws_funcs)
-
-
-from i2 import Sig
-from typing import Callable, Any
-from operator import itemgetter, attrgetter
-from dataclasses import dataclass, field
-from functools import partial
-
-
-@dataclass
-class Extractor:
-    extractor_factory: Callable[[Any], Callable]
-    extractor_params: Any
-    name: str = field(default='extractor', kw_only=True)
-    input_name: str = field(default='x', kw_only=True)
-    
-    def __post_init__(self):
-        self.__name__ = self.name
-        self.__signature__ = Sig(f'({self.input_name}, /)')
-        self._call = self.extractor_factory(self.extractor_params)
-
-    def __call__(self, x):
-        return self._call(x)
-
-def _itemgetter(items):
-    if isinstance(items, str):
-        items = [items]
-    return itemgetter(*items)
-
-def _attrgetter(attrs):
-    if isinstance(attrs, str):
-        attrs = [attrs]
-    return attrgetter(*attrs)
-
-Itemgetter = partial(Extractor, _itemgetter, name='itemgetter')
-AttrGetter = partial(Extractor, _attrgetter, name='itemgetter')
