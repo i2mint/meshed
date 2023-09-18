@@ -15,7 +15,7 @@ from i2.signatures import (
 from meshed.util import ValidationError, NameValidationError, mk_func_name
 from meshed.itools import add_edge
 
-BindInfo = Literal["var_nodes", "params", "hybrid"]
+BindInfo = Literal['var_nodes', 'params', 'hybrid']
 
 
 def underscore_func_node_names_maker(func: Callable, name=None, out=None):
@@ -33,7 +33,7 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     """
     if name is not None and out is not None:
         if name == out:
-            name = name + "_"
+            name = name + '_'
         return name, out
 
     try:
@@ -41,17 +41,17 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     except NameValidationError as err:
         err_msg = err.args[0]
         err_msg += (
-            f"\nSuggestion: You might want to specify a name explicitly in "
-            f"FuncNode(func, name=name) instead of just giving me the func as is."
+            f'\nSuggestion: You might want to specify a name explicitly in '
+            f'FuncNode(func, name=name) instead of just giving me the func as is.'
         )
         raise NameValidationError(err_msg)
     if name is None and out is None:
-        return name_of_func + "_", name_of_func
+        return name_of_func + '_', name_of_func
     elif out is None:
-        return name, "_" + name
+        return name, '_' + name
     elif name is None:
         if name_of_func == out:
-            name_of_func += "_"
+            name_of_func += '_'
         return name_of_func, out
 
 
@@ -78,19 +78,19 @@ def basic_node_validator(func_node):
 
     names_that_are_not_strings = [name for name in names if not isinstance(name, str)]
     if names_that_are_not_strings:
-        names_that_are_not_strings = ", ".join(map(str, names_that_are_not_strings))
-        raise ValidationError(f"Should be strings: {names_that_are_not_strings}")
+        names_that_are_not_strings = ', '.join(map(str, names_that_are_not_strings))
+        raise ValidationError(f'Should be strings: {names_that_are_not_strings}')
 
     # Make sure there's no name duplicates
     _duplicates = duplicates(names)
     if _duplicates:
-        raise ValidationError(f"{func_node} has duplicate names: {_duplicates}")
+        raise ValidationError(f'{func_node} has duplicate names: {_duplicates}')
 
     # Make sure all names are identifiers
     _non_identifiers = list(filter(lambda name: not name.isidentifier(), names))
     # print(_non_identifiers, names)
     if _non_identifiers:
-        raise ValidationError(f"{func_node} non-identifier names: {_non_identifiers}")
+        raise ValidationError(f'{func_node} non-identifier names: {_non_identifiers}')
 
     # Making sure all src_name keys are in the function's signature
     bind_names_not_in_sig_names = func_node.bind.keys() - func_node.sig.names
@@ -279,7 +279,7 @@ class FuncNode:
     #  a good idea? The hesitation here comes from the fact that the values/keys
     #  language describes the bind data structure (dict), but the var_nodes/params
     #  language describes their contextual use. If had to choose, I'd chose the latter.
-    def synopsis_string(self, bind_info: BindInfo = "values"):
+    def synopsis_string(self, bind_info: BindInfo = 'values'):
         """
 
         :param bind_info: How to represent the bind in the synopsis string. Could be:
@@ -299,22 +299,22 @@ class FuncNode:
         >>> fn.synopsis_string(bind_info='hybrid')
         'y=b,c -> h -> d'
         """
-        if bind_info in {"values", "varnodes", "var_nodes"}:
-            return f"{','.join(self.bind.values())} -> {self.name} " f"-> {self.out}"
-        elif bind_info == "hybrid":
+        if bind_info in {'values', 'varnodes', 'var_nodes'}:
+            return f"{','.join(self.bind.values())} -> {self.name} " f'-> {self.out}'
+        elif bind_info == 'hybrid':
 
             def gen():
                 for k, v in self.bind.items():
                     if k == v:
                         yield k
                     else:
-                        yield f"{k}={v}"
+                        yield f'{k}={v}'
 
-            return f"{','.join(gen())} -> {self.name} " f"-> {self.out}"
-        elif bind_info in {"keys", "params"}:
-            return f"{','.join(self.bind.keys())} -> {self.name} " f"-> {self.out}"
+            return f"{','.join(gen())} -> {self.name} " f'-> {self.out}'
+        elif bind_info in {'keys', 'params'}:
+            return f"{','.join(self.bind.keys())} -> {self.name} " f'-> {self.out}'
         else:
-            raise ValueError(f"Unknown bind_info: {bind_info}")
+            raise ValueError(f'Unknown bind_info: {bind_info}')
 
     def __repr__(self):
         return f'FuncNode({self.synopsis_string(bind_info="hybrid")})'
@@ -342,7 +342,7 @@ class FuncNode:
         and space are used, so could possibly encode as int (for __hash__ method)
         in a way that is reverse-decodable and with reasonable int size.
         """
-        return self.synopsis_string(bind_info="hybrid")
+        return self.synopsis_string(bind_info='hybrid')
         # return ';'.join(self.bind) + '::' + self.out
 
     # TODO: Find a better one. Need to have guidance on hash and eq methods dos-&-donts
@@ -356,7 +356,7 @@ class FuncNode:
         """Deprecated: Don't use. Might be a normal function with a signature"""
         from warnings import warn
 
-        raise DeprecationWarning(f"Deprecated. Use .call_on_scope(scope) instead.")
+        raise DeprecationWarning(f'Deprecated. Use .call_on_scope(scope) instead.')
         # warn(f'Deprecated. Use .call_on_scope(scope) instead.', DeprecationWarning)
         # return self.call_on_scope(scope)
 
@@ -416,9 +416,9 @@ class FuncNode:
         out = self.out
 
         func_id = self.name
-        func_label = getattr(self, "func_label", func_id)
+        func_label = getattr(self, 'func_label', func_id)
         if out == func_id:  # though forbidden in default FuncNode validation
-            func_id = "_" + func_id
+            func_id = '_' + func_id
 
         # Get the Parameter objects for sig, with names changed to bind ones
         params = self.sig.ch_names(**self.bind).params
@@ -437,12 +437,12 @@ from i2.signatures import Parameter, empty, Sig
 # TODO: Merge some of the functionalities around graph displays in lined and meshed
 # TODO: Allow this to be overridden/edited by user, config2py style?
 dflt_configs = dict(
-    fnode_shape="box",
-    vnode_shape="none",
+    fnode_shape='box',
+    vnode_shape='none',
     display_all_arguments=True,
-    edge_kind="to_args_on_edge",
+    edge_kind='to_args_on_edge',
     input_node=True,
-    output_node="output",
+    output_node='output',
     func_display=True,
 )
 
@@ -453,12 +453,12 @@ def dot_lines_of_func_parameters(
     func_id: str,
     *,
     func_label: str = None,
-    vnode_shape: str = dflt_configs["vnode_shape"],
-    fnode_shape: str = dflt_configs["fnode_shape"],
-    func_display: bool = dflt_configs["func_display"],
+    vnode_shape: str = dflt_configs['vnode_shape'],
+    fnode_shape: str = dflt_configs['fnode_shape'],
+    func_display: bool = dflt_configs['func_display'],
 ) -> Iterable[str]:
     assert func_id != out, (
-        f"Your func and output name shouldn't be the " f"same: {out=} {func_id=}"
+        f"Your func and output name shouldn't be the " f'same: {out=} {func_id=}'
     )
     yield f'{out} [label="{out}" shape="{vnode_shape}"]'
     for p in parameters:
@@ -467,21 +467,21 @@ def dot_lines_of_func_parameters(
     if func_display:
         func_label = func_label or func_id
         yield f'{func_id} [label="{func_label}" shape="{fnode_shape}"]'
-        yield f"{func_id} -> {out}"
+        yield f'{func_id} -> {out}'
         for p in parameters:
-            yield f"{p.name} -> {func_id}"
+            yield f'{p.name} -> {func_id}'
     else:
         for p in parameters:
-            yield f"{p.name} -> {out}"
+            yield f'{p.name} -> {out}'
 
 
-def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
+def param_to_dot_definition(p: Parameter, shape=dflt_configs['vnode_shape']):
     if p.default is not empty:
-        name = p.name + "="
+        name = p.name + '='
     elif p.kind == p.VAR_POSITIONAL:
-        name = "*" + p.name
+        name = '*' + p.name
     elif p.kind == p.VAR_KEYWORD:
-        name = "**" + p.name
+        name = '**' + p.name
     else:
         name = p.name
     yield f'{p.name} [label="{name}" shape="{shape}"]'
@@ -494,8 +494,8 @@ def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
 class Mesh:
     func_nodes: Iterable[FuncNode]
 
-    def synopsis_string(self, bind_info: BindInfo = "values"):
-        return "\n".join(
+    def synopsis_string(self, bind_info: BindInfo = 'values'):
+        return '\n'.join(
             func_node.synopsis_string(bind_info) for func_node in self.func_nodes
         )
 
@@ -521,7 +521,7 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
         c = Counter(node_names + outs)
         offending_names = [name for name, count in c.items() if count > 1]
         raise ValueError(
-            f"Some of your node names and/or outs where used more than once. "
+            f'Some of your node names and/or outs where used more than once. '
             f"They shouldn't. These are the names I find offensive: {offending_names}"
         )
 
@@ -567,7 +567,7 @@ def is_func_node(obj) -> bool:
     cls = type(obj)
     if cls is not type:
         try:
-            return any(getattr(x, "__name__", "") == "FuncNode" for x in cls.mro())
+            return any(getattr(x, '__name__', '') == 'FuncNode' for x in cls.mro())
         except Exception:
             return isinstance(obj, FuncNode)
     else:
@@ -618,8 +618,8 @@ def ch_func_node_attrs(fn: FuncNode, **new_attrs_values):
     init_params = get_init_params_of_instance(fn)
     if params_that_are_not_init_params := (new_attrs_values.keys() - init_params):
         raise ValueError(
-            f"These are not params of {type(fn).__name__}: "
-            f"{params_that_are_not_init_params}"
+            f'These are not params of {type(fn).__name__}: '
+            f'{params_that_are_not_init_params}'
         )
     fn_kwargs = dict(init_params, **new_attrs_values)
     return FuncNode(**fn_kwargs)
@@ -627,11 +627,11 @@ def ch_func_node_attrs(fn: FuncNode, **new_attrs_values):
 
 def raise_signature_mismatch_error(fn, func):
     raise ValueError(
-        "You can only change the func of a FuncNode with a another func if the "
-        "signatures match.\n"
-        f"\t{fn=}\n"
-        f"\t{Sig(fn.func)=}\n"
-        f"\t{Sig(func)=}\n"
+        'You can only change the func of a FuncNode with a another func if the '
+        'signatures match.\n'
+        f'\t{fn=}\n'
+        f'\t{Sig(fn.func)=}\n'
+        f'\t{Sig(func)=}\n'
     )
 
 
@@ -697,9 +697,9 @@ def insert_func_if_compatible(func_comparator: CallableComparator = compare_sign
 def _keys_and_values_are_strings_validation(d: dict):
     for k, v in d.items():
         if not isinstance(k, str):
-            raise ValidationError(f"Should be a str: {k}")
+            raise ValidationError(f'Should be a str: {k}')
         if not isinstance(v, str):
-            raise ValidationError(f"Should be a str: {v}")
+            raise ValidationError(f'Should be a str: {v}')
 
 
 def _func_node_args_validation(
@@ -718,15 +718,15 @@ def _func_node_args_validation(
 
     """
     if func is not None and not isinstance(func, Callable):
-        raise ValidationError(f"Should be callable: {func}")
+        raise ValidationError(f'Should be callable: {func}')
     if name is not None and not isinstance(name, str):
-        raise ValidationError(f"Should be a str: {name}")
+        raise ValidationError(f'Should be a str: {name}')
     if bind is not None:
         if not isinstance(bind, dict):
-            raise ValidationError(f"Should be a dict: {bind}")
+            raise ValidationError(f'Should be a dict: {bind}')
         _keys_and_values_are_strings_validation(bind)
     if out is not None and not isinstance(out, str):
-        raise ValidationError(f"Should be a str: {out}")
+        raise ValidationError(f'Should be a str: {out}')
 
 
 def _old_mapped_extraction(extract_from: dict, key_map: dict):
@@ -830,7 +830,7 @@ def _complete_dict_with_iterable_of_required_keys(
 from typing import NewType, Dict, Tuple, Mapping
 
 # TODO: Make a type where ``isinstance(s, Identifier) == s.isidentifier()``
-Identifier = NewType("Identifier", str)  # + should satisfy str.isidentifier
+Identifier = NewType('Identifier', str)  # + should satisfy str.isidentifier
 Bind = Union[
     str,  # Identifier or ' '.join(Iterable[Identifier])
     Dict[Identifier, Identifier],
@@ -881,8 +881,7 @@ FuncNodeAble = Union[FuncNode, Callable]
 
 
 def func_node_transformer(
-    fn: FuncNode,
-    kwargs_transformers=(),
+    fn: FuncNode, kwargs_transformers=(),
 ):
     """Get a modified ``FuncNode`` from an iterable of ``kwargs_trans`` modifiers."""
     func_node_kwargs = fn.to_dict()

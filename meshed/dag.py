@@ -205,7 +205,7 @@ FuncMapping = Union[Mapping[KT, Callable], Iterable[Tuple[KT, Callable]]]
 
 
 def order_subset_from_list(items, sublist):
-    assert set(sublist).issubset(set(items)), f"{sublist} is not contained in {items}"
+    assert set(sublist).issubset(set(items)), f'{sublist} is not contained in {items}'
     d = {k: v for v, k in enumerate(items)}
 
     return sorted(sublist, key=lambda x: d[x])
@@ -217,7 +217,7 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
     else:
         i = start_at
         while True:
-            name = f"{prefix}__{i}"
+            name = f'{prefix}__{i}'
             if name not in exclude_names:
                 return name
             i += 1
@@ -229,16 +229,16 @@ def mk_mock_funcnode(arg, out):
         pass
 
     # name = "_mock_" + str(arg) + "_" + str(out)  # f-string
-    name = f"_mock_{str(arg)}_{str(out)}"  # f-string
+    name = f'_mock_{str(arg)}_{str(out)}'  # f-string
 
     return FuncNode(func=func, out=out, name=name)
 
 
 def mk_func_name(func, exclude_names=()):
-    name = getattr(func, "__name__", "")
-    if name == "<lambda>":
+    name = getattr(func, '__name__', '')
+    if name == '<lambda>':
         name = lambda_name()  # make a lambda name that is a unique identifier
-    elif name == "":
+    elif name == '':
         if isinstance(func, partial):
             return mk_func_name(func.func, exclude_names)
         else:
@@ -256,7 +256,7 @@ def mk_list_names_unique(nodes, exclude_names=()):
                 yield name
                 _exclude_names = _exclude_names + (name,)
             else:
-                found_name = find_first_free_name(f"{name}", _exclude_names)
+                found_name = find_first_free_name(f'{name}', _exclude_names)
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
 
@@ -280,7 +280,7 @@ def arg_names(func, func_name, exclude_names=()):
                 yield name
             else:
                 found_name = find_first_free_name(
-                    f"{func_name}__{name}", _exclude_names
+                    f'{func_name}__{name}', _exclude_names
                 )
                 yield found_name
                 _exclude_names = _exclude_names + (found_name,)
@@ -382,15 +382,15 @@ def _find_unique_element(item, search_iterable, key: Callable[[Any, Any], bool])
 
 
 def modified_func_node(func_node, **modifications) -> FuncNode:
-    modifiable_attrs = {"func", "name", "bind", "out"}
+    modifiable_attrs = {'func', 'name', 'bind', 'out'}
     assert not modifications.keys().isdisjoint(
         modifiable_attrs
     ), f"Can only modify these: {', '.join(modifiable_attrs)}"
     original_func_node_kwargs = {
-        "func": func_node.func,
-        "name": func_node.name,
-        "bind": func_node.bind,
-        "out": func_node.out,
+        'func': func_node.func,
+        'name': func_node.name,
+        'bind': func_node.bind,
+        'out': func_node.out,
     }
     return FuncNode(**dict(original_func_node_kwargs, **modifications))
 
@@ -425,7 +425,7 @@ DagOutput = Any
 
 
 def _name_attr_or_x(x):
-    return getattr(x, "name", x)
+    return getattr(x, 'name', x)
 
 
 def change_value_on_cond(d, cond, func):
@@ -436,8 +436,8 @@ def change_value_on_cond(d, cond, func):
 
 
 def dflt_debugger_feedback(func_node, scope, output, step):
-    print(f"{step} --------------------------------------------------------------")
-    print(f"\t{func_node=}\n\t{scope=}")
+    print(f'{step} --------------------------------------------------------------')
+    print(f'\t{func_node=}\n\t{scope=}')
     return output
 
 
@@ -524,7 +524,7 @@ class DAG:
         # But we want leafs in topological order
         self.leafs = tuple([name for name in self.nodes if name in leafs])
         self.last_scope = None
-        self.__name__ = self.name or "DAG"
+        self.__name__ = self.name or 'DAG'
 
         self.bindings_cleaner()
 
@@ -853,7 +853,7 @@ class DAG:
         return new_dag
 
     def process_item(self, item):
-        assert isinstance(item, slice), f"must be a slice, was: {item}"
+        assert isinstance(item, slice), f'must be a slice, was: {item}'
 
         input_names, outs = item.start, item.stop
 
@@ -871,7 +871,7 @@ class DAG:
                 # TODO: See if we can use _func_node_for instead
                 return list(map(self.get_node_matching, obj))
             else:
-                raise ValidationError(f"Unrecognized variables specification: {obj}")
+                raise ValidationError(f'Unrecognized variables specification: {obj}')
 
         # assert len(item) == 2, f"Only items of size 1 or 2 are supported"
         input_names, outs = map(ensure_variable_list, [input_names, outs])
@@ -884,7 +884,7 @@ class DAG:
             return self._func_node_for[idx]
         elif isinstance(idx, Callable):
             return self._func_node_for[idx]
-        raise NotFound(f"No matching node for idx: {idx}")
+        raise NotFound(f'No matching node for idx: {idx}')
 
     # TODO: Reflect: Should we include functions as keys here? Makes existence of the
     #  item depend on unicity of the function in the DAG, therefore dynamic,
@@ -992,7 +992,7 @@ class DAG:
         ] = ch_func_node_func,
         /,
         **func_mapping: Callable,
-    ) -> "DAG":
+    ) -> 'DAG':
         """
         Change some of the functions in the DAG.
         More preciseluy get a copy of the DAG where in some of the functions have
@@ -1359,8 +1359,8 @@ class DAG:
             if not to_node.bind:
                 raise InvalidFunctionParameters(
                     "You can't add an edge TO a FuncNode whose function has no "
-                    "parameters. "
-                    f"You attempted to add an edge between {from_node=} and {to_node=}."
+                    'parameters. '
+                    f'You attempted to add an edge between {from_node=} and {to_node=}.'
                 )
             else:
                 # first param of .func (i.e. first key of .bind)
@@ -1371,11 +1371,11 @@ class DAG:
             raise ValueError(
                 f"The {to_node} node is already sourcing '{to_param}' from '"
                 f"{existing_bind}'."
-                "Delete that edge to be able before you add a new one"
+                'Delete that edge to be able before you add a new one'
             )
 
         new_to_node_dict = to_node.to_dict()
-        new_bind = new_to_node_dict["bind"].copy()
+        new_bind = new_to_node_dict['bind'].copy()
         new_bind[to_param] = from_node.out  # this is the actual edge creation
         new_to_node = FuncNode.from_dict(dict(new_to_node_dict, bind=new_bind))
         return DAG(
@@ -1480,8 +1480,8 @@ class DAG:
 
     # ------------ display --------------------------------------------------------------
 
-    def synopsis_string(self, bind_info: BindInfo = "var_nodes"):
-        return "\n".join(
+    def synopsis_string(self, bind_info: BindInfo = 'var_nodes'):
+        return '\n'.join(
             func_node.synopsis_string(bind_info) for func_node in self.func_nodes
         )
 
@@ -1491,9 +1491,9 @@ class DAG:
         start_lines=(),
         *,
         end_lines=(),
-        vnode_shape: str = dflt_configs["vnode_shape"],
-        fnode_shape: str = dflt_configs["fnode_shape"],
-        func_display: bool = dflt_configs["func_display"],
+        vnode_shape: str = dflt_configs['vnode_shape'],
+        fnode_shape: str = dflt_configs['fnode_shape'],
+        func_display: bool = dflt_configs['func_display'],
     ):
         """Make lines for dot (graphviz) specification of DAG
 
@@ -1524,7 +1524,7 @@ class DAG:
         """Get an ascii art string that represents the pipeline"""
         from meshed.util import dot_to_ascii
 
-        return dot_to_ascii("\n".join(self.dot_digraph_body(*args, **kwargs)))
+        return dot_to_ascii('\n'.join(self.dot_digraph_body(*args, **kwargs)))
 
     @wraps(dot_digraph_body)
     def dot_digraph(self, *args, **kwargs):
@@ -1532,8 +1532,8 @@ class DAG:
             import graphviz
         except (ModuleNotFoundError, ImportError) as e:
             raise ModuleNotFoundError(
-                f"{e}\nYou may not have graphviz installed. "
-                f"See https://pypi.org/project/graphviz/."
+                f'{e}\nYou may not have graphviz installed. '
+                f'See https://pypi.org/project/graphviz/.'
             )
         # Note: Since graphviz 0.18, need to have a newline in body lines!
         body = list(map(add_new_line_if_none, self.dot_digraph_body(*args, **kwargs)))
@@ -1557,7 +1557,7 @@ def call_func(func, kwargs):
     return Sig(func).source_kwargs(kwargs)
 
 
-def print_dag_string(dag: DAG, bind_info: BindInfo = "hybrid"):
+def print_dag_string(dag: DAG, bind_info: BindInfo = 'hybrid'):
     print(dag.synopsis_string(bind_info=bind_info))
 
 
@@ -1654,7 +1654,7 @@ def reorder_on_constraints(funcnodes, outs):
     funcnodes += extra_nodes
     graph = _func_nodes_to_graph_dict(funcnodes)
     nodes = topological_sort(graph)
-    print("after ordering:", nodes)
+    print('after ordering:', nodes)
     ordered_nodes = [node for node in nodes if node not in extra_nodes]
     func_nodes, var_nodes = _separate_func_nodes_and_var_nodes(ordered_nodes)
 
@@ -1675,7 +1675,7 @@ def attribute_vals(objs: Iterable, attrs: Iterable[str], egress=None):
         return val_tuples
 
 
-names_and_outs = partial(attribute_vals, attrs=("name", "out"), egress=chain)
+names_and_outs = partial(attribute_vals, attrs=('name', 'out'), egress=chain)
 
 DagAble = Union[DAG, Iterable[FuncNodeAble]]
 
@@ -1786,15 +1786,10 @@ def ch_funcs(
     # TODO: Optimize (for example, use self._func_node_for)
     def ch_func(dag, key, func):
         condition = lambda fn: fn.name == key or fn.out == key  # TODO: interface ctrl?
-        replacement = lambda fn: ch_func_node_func(
-            fn,
-            func,
-        )
+        replacement = lambda fn: ch_func_node_func(fn, func,)
         return DAG(
             replace_item_in_iterable(
-                dag.func_nodes,
-                condition=condition,
-                replacement=replacement,
+                dag.func_nodes, condition=condition, replacement=replacement,
             )
         )
 
@@ -1913,11 +1908,11 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
     renamer = renamer or numbered_suffix_renamer
     if isinstance(renamer, str):
         suffix = renamer
-        renamer = lambda name: f"{name}{suffix}"
+        renamer = lambda name: f'{name}{suffix}'
     elif isinstance(renamer, Mapping):
         old_to_new_map = dict(renamer)
         renamer = old_to_new_map.get
-    assert callable(renamer), f"Could not be resolved into a callable: {renamer}"
+    assert callable(renamer), f'Could not be resolved into a callable: {renamer}'
     ktrans = partial(_rename_node, renamer=renamer)
     func_node_trans = partial(func_node_transformer, kwargs_transformers=ktrans)
     return egress(map(func_node_trans, func_nodes))
@@ -1927,10 +1922,10 @@ def _rename_node(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
     fn_kwargs = fn_kwargs.copy()
     # decorate renamer so if the original returns None the decorated will return input
     renamer = _if_none_return_input(renamer)
-    fn_kwargs["name"] = renamer(fn_kwargs["name"])
-    fn_kwargs["out"] = renamer(fn_kwargs["out"])
-    fn_kwargs["bind"] = {
-        param: renamer(var_id) for param, var_id in fn_kwargs["bind"].items()
+    fn_kwargs['name'] = renamer(fn_kwargs['name'])
+    fn_kwargs['out'] = renamer(fn_kwargs['out'])
+    fn_kwargs['bind'] = {
+        param: renamer(var_id) for param, var_id in fn_kwargs['bind'].items()
     }
     return fn_kwargs
 
