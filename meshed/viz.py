@@ -1,5 +1,202 @@
 """Visualization utilities for the meshed package."""
 
+from typing import Iterable
+from i2.signatures import Parameter, empty, Sig
+
+from meshed.base import FuncNode  # depend on abstraction, not implementation
+
+# These are the defaults used in lined.
+# TODO: Merge some of the functionalities around graph displays in lined and meshed
+# TODO: Allow this to be overridden/edited by user, config2py style?
+dflt_configs = dict(
+    fnode_shape="box",
+    vnode_shape="none",
+    display_all_arguments=True,
+    edge_kind="to_args_on_edge",
+    input_node=True,
+    output_node="output",
+    func_display=True,
+)
+
+
+def dot_lines_of_func_nodes(
+    func_nodes: Iterable[FuncNode], start_lines=(), end_lines=(), **kwargs
+):
+    r"""Got lines generator for the graphviz.DiGraph(body=list(...))
+
+    >>> def add(a, b=1):
+    ...     return a + b
+    >>> def mult(x, y=3):
+    ...     return x * y
+    >>> def exp(mult, a):
+    ...     return mult ** a
+    >>> func_nodes = [
+    ...     FuncNode(add, out='x'),
+    ...     FuncNode(mult, name='the_product'),
+    ...     FuncNode(exp)
+    ... ]
+    >>> lines = list(dot_lines_of_func_nodes(func_nodes))
+    >>> assert lines == [
+    ... 'x [label="x" shape="none"]',
+    ... '_add [label="_add" shape="box"]',
+    ... '_add -> x',
+    ... 'a [label="a" shape="none"]',
+    ... 'b [label="b=" shape="none"]',
+    ... 'a -> _add',
+    ... 'b -> _add',
+    ... 'mult [label="mult" shape="none"]',
+    ... 'the_product [label="the_product" shape="box"]',
+    ... 'the_product -> mult',
+    ... 'x [label="x" shape="none"]',
+    ... 'y [label="y=" shape="none"]',
+    ... 'x -> the_product',
+    ... 'y -> the_product',
+    ... 'exp [label="exp" shape="none"]',
+    ... '_exp [label="_exp" shape="box"]',
+    ... '_exp -> exp',
+    ... 'mult [label="mult" shape="none"]',
+    ... 'a [label="a" shape="none"]',
+    ... 'mult -> _exp',
+    ... 'a -> _exp'
+    ... ]  # doctest: +SKIP
+
+    >>> from meshed.util import dot_to_ascii
+    >>>
+    >>> print(dot_to_ascii('\n'.join(lines)))  # doctest: +SKIP
+    <BLANKLINE>
+                    a        ─┐
+                              │
+               │              │
+               │              │
+               ▼              │
+             ┌─────────────┐  │
+     b=  ──▶ │    _add     │  │
+             └─────────────┘  │
+               │              │
+               │              │
+               ▼              │
+                              │
+                    x         │
+                              │
+               │              │
+               │              │
+               ▼              │
+             ┌─────────────┐  │
+     y=  ──▶ │ the_product │  │
+             └─────────────┘  │
+               │              │
+               │              │
+               ▼              │
+                              │
+                  mult        │
+                              │
+               │              │
+               │              │
+               ▼              │
+             ┌─────────────┐  │
+             │    _exp     │ ◀┘
+             └─────────────┘
+               │
+               │
+               ▼
+    <BLANKLINE>
+                   exp
+    <BLANKLINE>
+
+    """
+    # Should we validate here, or outside this module?
+    # from meshed.base import validate_that_func_node_names_are_sane
+    # validate_that_func_node_names_are_sane(func_nodes)
+    yield from start_lines
+    for func_node in func_nodes:
+        yield from dot_lines_of_func_node(func_node, **kwargs)
+    yield from end_lines
+
+
+def dot_lines_of_func_node(func_node: FuncNode, **kwargs):
+    out = func_node.out
+
+    func_id = func_node.name
+    func_label = getattr(func_node, "func_label", func_id)
+    if out == func_id:  # though forbidden in default FuncNode validation
+        func_id = "_" + func_id
+
+    # Get the Parameter objects for sig, with names changed to bind ones
+    params = func_node.sig.ch_names(**func_node.bind).params
+
+    yield from dot_lines_of_func_parameters(
+        params, out=out, func_id=func_id, func_label=func_label, **kwargs
+    )
+
+
+def dot_lines_of_func_parameters(
+    parameters: Iterable[Parameter],
+    out: str,
+    func_id: str,
+    *,
+    func_label: str = None,
+    vnode_shape: str = dflt_configs["vnode_shape"],
+    fnode_shape: str = dflt_configs["fnode_shape"],
+    func_display: bool = dflt_configs["func_display"],
+) -> Iterable[str]:
+    assert func_id != out, (
+        f"Your func and output name shouldn't be the " f"same: {out=} {func_id=}"
+    )
+    yield f'{out} [label="{out}" shape="{vnode_shape}"]'
+    for p in parameters:
+        yield from param_to_dot_definition(p, shape=vnode_shape)
+
+    if func_display:
+        func_label = func_label or func_id
+        yield f'{func_id} [label="{func_label}" shape="{fnode_shape}"]'
+        yield f"{func_id} -> {out}"
+        for p in parameters:
+            yield f"{p.name} -> {func_id}"
+    else:
+        for p in parameters:
+            yield f"{p.name} -> {out}"
+
+
+def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
+    if p.default is not empty:
+        name = p.name + "="
+    elif p.kind == p.VAR_POSITIONAL:
+        name = "*" + p.name
+    elif p.kind == p.VAR_KEYWORD:
+        name = "**" + p.name
+    else:
+        name = p.name
+    yield f'{p.name} [label="{name}" shape="{shape}"]'
+
+
+# TODO: Should we integrate this to dot_lines_of_func_parameters directly (decorator?)
+def add_new_line_if_none(s: str):
+    """Since graphviz 0.18, need to have a newline in body lines.
+    This util is there to address that, adding newlines to body lines
+    when missing."""
+    if s and s[-1] != "\n":
+        return s + "\n"
+    return s
+
+
+# ------------------------------------------------------------------------------
+# Unused -- consider deleting
+def _parameters_and_names_from_sig(
+    sig: Sig,
+    out=None,
+    func_name=None,
+):
+    func_name = func_name or sig.name
+    out = out or sig.name
+    if func_name == out:
+        func_name = "_" + func_name
+    assert isinstance(func_name, str) and isinstance(out, str)
+    return sig.parameters, out, func_name
+
+
+# ------------------------------------------------------------------------------
+# Old stuff
+
 
 def visualize_graph(graph):
     import graphviz
@@ -41,7 +238,7 @@ def visualize_graph_interactive(graph):
         dot.edge(str(edge[0]), str(edge[1]))
 
     # Render the initial graph visualization
-    graph_widget = widgets.HTML(value=dot.pipe(format='svg').decode('utf-8'))
+    graph_widget = widgets.HTML(value=dot.pipe(format="svg").decode("utf-8"))
     display(graph_widget)
 
     def add_edge(sender):
@@ -50,52 +247,52 @@ def visualize_graph_interactive(graph):
         if (source, target) not in g.edges:
             g.add_edge(source, target)
             dot.edge(str(source), str(target))
-            graph_widget.value = dot.pipe(format='svg').decode('utf-8')
-        source_node.value = ''
-        target_node.value = ''
+            graph_widget.value = dot.pipe(format="svg").decode("utf-8")
+        source_node.value = ""
+        target_node.value = ""
 
     def add_node(sender):
         node = new_node.value
         if node not in g.nodes:
             g.add_node(node)
             dot.node(str(node))
-            graph_widget.value = dot.pipe(format='svg').decode('utf-8')
-        new_node.value = ''
+            graph_widget.value = dot.pipe(format="svg").decode("utf-8")
+        new_node.value = ""
 
     def delete_edge(sender):
         source = str(delete_source.value)
         target = str(delete_target.value)
         if (source, target) in g.edges:
             g.remove_edge(source, target)
-            dot.body.remove(f'\t{source} -> {target}\n')
-            graph_widget.value = dot.pipe(format='svg').decode('utf-8')
-        delete_source.value = ''
-        delete_target.value = ''
+            dot.body.remove(f"\t{source} -> {target}\n")
+            graph_widget.value = dot.pipe(format="svg").decode("utf-8")
+        delete_source.value = ""
+        delete_target.value = ""
 
     def delete_node(sender):
         node = delete_node_value.value
         if node in g.nodes:
             g.remove_node(node)
             dot.body[:] = [line for line in dot.body if str(node) not in line]
-            graph_widget.value = dot.pipe(format='svg').decode('utf-8')
-        delete_node_value.value = ''
+            graph_widget.value = dot.pipe(format="svg").decode("utf-8")
+        delete_node_value.value = ""
 
-    source_node = widgets.Text(placeholder='Source Node')
-    target_node = widgets.Text(placeholder='Target Node')
-    add_edge_button = widgets.Button(description='Add Edge')
+    source_node = widgets.Text(placeholder="Source Node")
+    target_node = widgets.Text(placeholder="Target Node")
+    add_edge_button = widgets.Button(description="Add Edge")
     add_edge_button.on_click(add_edge)
 
-    new_node = widgets.Text(placeholder='New Node')
-    add_node_button = widgets.Button(description='Add Node')
+    new_node = widgets.Text(placeholder="New Node")
+    add_node_button = widgets.Button(description="Add Node")
     add_node_button.on_click(add_node)
 
-    delete_source = widgets.Text(placeholder='Source Node')
-    delete_target = widgets.Text(placeholder='Target Node')
-    delete_edge_button = widgets.Button(description='Delete Edge')
+    delete_source = widgets.Text(placeholder="Source Node")
+    delete_target = widgets.Text(placeholder="Target Node")
+    delete_edge_button = widgets.Button(description="Delete Edge")
     delete_edge_button.on_click(delete_edge)
 
-    delete_node_value = widgets.Text(placeholder='Node')
-    delete_node_button = widgets.Button(description='Delete Node')
+    delete_node_value = widgets.Text(placeholder="Node")
+    delete_node_button = widgets.Button(description="Delete Node")
     delete_node_button.on_click(delete_node)
 
     controls = widgets.HBox([source_node, target_node, add_edge_button])
