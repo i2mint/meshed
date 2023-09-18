@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.test_tools &mdash; meshed 0.1.140 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.collapse_and_expand &mdash; meshed 0.1.140 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -109,7 +109,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">meshed.tests.test_tools</li>
+      <li class="breadcrumb-item active">meshed.scrap.collapse_and_expand</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -118,52 +118,58 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for meshed.tests.test_tools</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Test hybrid dag that uses a web service for some functions.&quot;&quot;&quot;</span>
+  <h1>Source code for meshed.scrap.collapse_and_expand</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Ideas on collapsing and expanding nodes</span>
+<span class="sd">See &quot;Collapse and expand nodes&quot; discussion: </span>
+<span class="sd">https://github.com/i2mint/meshed/discussions/54</span>
 
-<span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
-<span class="kn">from</span> <span class="nn">meshed.examples</span> <span class="kn">import</span> <span class="n">online_marketing_funcs</span> <span class="k">as</span> <span class="n">funcs</span>
-<span class="kn">from</span> <span class="nn">meshed.tools</span> <span class="kn">import</span> <span class="n">mk_hybrid_dag</span><span class="p">,</span> <span class="n">launch_webservice</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
+<span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
 
 
-<div class="viewcode-block" id="test_hybrid_dag"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_tools.html#meshed.tests.test_tools.test_hybrid_dag">[docs]</a><span class="k">def</span> <span class="nf">test_hybrid_dag</span><span class="p">(</span>
-    <span class="n">dag_funcs</span><span class="o">=</span><span class="n">funcs</span><span class="p">,</span>
-    <span class="n">funcs_ids_to_cloudify</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">,</span> <span class="s2">&quot;revenue&quot;</span><span class="p">],</span>
-    <span class="n">input_dict</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">impressions</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="n">cost_per_impression</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
-        <span class="n">click_per_impression</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-        <span class="n">sales_per_click</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-        <span class="n">revenue_per_sale</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test hybrid dag that uses a web service for some functions.</span>
+<div class="viewcode-block" id="CollapsedDAG"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/collapse_and_expand.html#meshed.scrap.collapse_and_expand.CollapsedDAG">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CollapsedDAG</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;To collapse a DAG into a single function</span>
 
-<span class="sd">    :param dag_funcs: list of dag functions, defaults to funcs</span>
-<span class="sd">    :type dag_funcs: List[Callable], optional</span>
-<span class="sd">    :param funcs_ids_to_cloudify: list of function ids to be cloudified, defaults to [&#39;cost&#39;, &#39;revenue&#39;]</span>
-<span class="sd">    :type funcs_ids_to_cloudify: list, optional</span>
-<span class="sd">    :param input_dict: kwargs, defaults to dict( impressions=1000, cost_per_impression=0.02, click_per_impression=0.3, sales_per_click=0.05, revenue_per_sale=100 )</span>
-<span class="sd">    :type input_dict: dict, optional</span>
+<span class="sd">    This is useful for when you want to use a DAG as a function,</span>
+<span class="sd">    but you don&#39;t want to see all the arguments.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># The parameters</span>
-    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_funcs</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calling mk_hybrid_dag!&quot;</span><span class="p">)</span>
-    <span class="c1"># Calling mk_hybrid_dag</span>
-    <span class="n">hybrid_dag</span> <span class="o">=</span> <span class="n">mk_hybrid_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">funcs_ids_to_cloudify</span><span class="p">)</span>
+    <span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting web service!&quot;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">launch_webservice</span><span class="p">(</span><span class="n">hybrid_dag</span><span class="o">.</span><span class="n">funcs_to_cloudify</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Web service started!&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calling dag and ws_dag!&quot;</span><span class="p">)</span>
-        <span class="n">dag_result</span> <span class="o">=</span> <span class="n">dag</span><span class="p">(</span><span class="o">**</span><span class="n">input_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dag_result: </span><span class="si">{</span><span class="n">dag_result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">ws_dag_result</span> <span class="o">=</span> <span class="n">hybrid_dag</span><span class="o">.</span><span class="n">ws_dag</span><span class="p">(</span><span class="o">**</span><span class="n">input_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ws_dag_result: </span><span class="si">{</span><span class="n">ws_dag_result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">dag_result</span> <span class="o">==</span> <span class="n">ws_dag_result</span><span class="p">,</span> <span class="s2">&quot;Results are not equal!&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Results are equal!&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done!&quot;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Sig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="p">)(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># so that __call__ gets dag&#39;s signature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span></div>
+
+
+<span class="c1"># TODO: Finish this</span>
+<span class="k">def</span> <span class="nf">expand_nodes</span><span class="p">(</span>
+    <span class="n">dag</span><span class="p">,</span>
+    <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">is_node</span><span class="o">=</span><span class="k">lambda</span> <span class="n">fnode</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">node</span> <span class="ow">or</span> <span class="n">fnode</span><span class="o">.</span><span class="n">out</span> <span class="o">==</span> <span class="n">node</span><span class="p">,</span>
+    <span class="n">expansion_record_store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># TODO: Implement this to keep track of what was expanded</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">nodes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># find all func_nodes that have isinstance(fn.func, CollapsedDAG)</span>
+
+    <span class="k">def</span> <span class="nf">change_node_or_not</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">is_node</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">CollapsedDAG</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">node</span>
+
+    <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">change_node_or_not</span><span class="p">,</span> <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)))</span>
 </pre></div>
 
            </div>

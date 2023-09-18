@@ -5,6 +5,7 @@
    module_docs/meshed
    module_docs/meshed/base
    module_docs/meshed/caching
+   module_docs/meshed/components
    module_docs/meshed/composition
    module_docs/meshed/dag
    module_docs/meshed/examples
@@ -34,6 +35,7 @@
    module_docs/meshed/tests/test_base
    module_docs/meshed/tests/test_caching
    module_docs/meshed/tests/test_ch_funcs
+   module_docs/meshed/tests/test_components
    module_docs/meshed/tests/test_composition
    module_docs/meshed/tests/test_dag
    module_docs/meshed/tests/test_dag_2

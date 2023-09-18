@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.viz &mdash; meshed 0.1.140 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.components &mdash; meshed 0.1.140 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -22,7 +22,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="meshed.util" href="util.html" /> 
+    <link rel="next" title="meshed.composition" href="composition.html" />
+    <link rel="prev" title="meshed.caching" href="caching.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,7 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../meshed.html">meshed</a></li>
 <li class="toctree-l1"><a class="reference internal" href="base.html">meshed.base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="caching.html">meshed.caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components.html">meshed.components</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="composition.html">meshed.composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dag.html">meshed.dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">meshed.examples</a></li>
@@ -93,7 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">meshed.tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="util.html">meshed.util</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.viz</a></li>
+<li class="toctree-l1"><a class="reference internal" href="viz.html">meshed.viz</a></li>
 </ul>
 
         </div>
@@ -110,9 +111,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">meshed.viz</li>
+      <li class="breadcrumb-item active">meshed.components</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/module_docs/meshed/viz.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/module_docs/meshed/components.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -120,16 +121,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-meshed.viz">
-<span id="meshed-viz"></span><h1>meshed.viz<a class="headerlink" href="#module-meshed.viz" title="Permalink to this headline">¶</a></h1>
-<p>Visualization utilities for the meshed package.</p>
+  <section id="module-meshed.components">
+<span id="meshed-components"></span><h1>meshed.components<a class="headerlink" href="#module-meshed.components" title="Permalink to this headline">¶</a></h1>
+<p>Specialized components for meshed.</p>
+<dl class="py class">
+<dt id="meshed.components.Extractor">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.components.</code><code class="sig-name descname">Extractor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">extractor_factory</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Any<span class="p">]</span><span class="p">, </span>Callable<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">extractor_params</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'extractor'</span></em>, <em class="sig-param"><span class="n">input_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'x'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/components.html#Extractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.components.Extractor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="util.html" class="btn btn-neutral float-left" title="meshed.util" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="caching.html" class="btn btn-neutral float-left" title="meshed.caching" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="composition.html" class="btn btn-neutral float-right" title="meshed.composition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
