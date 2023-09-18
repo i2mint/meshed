@@ -759,14 +759,12 @@ from typing import NewType, Dict, Tuple, Mapping
 
 # TODO: Make a type where ``isinstance(s, Identifier) == s.isidentifier()``
 Identifier = NewType("Identifier", str)  # + should satisfy str.isidentifier
-Bind = NewType(
-    "Bind",
-    Union[
-        str,  # Identifier or ' '.join(Iterable[Identifier])
-        Dict[Identifier, Identifier],
-        Sequence[Union[Identifier, Tuple[Identifier, Identifier]]],
-    ],
-)
+Bind = Union[
+    str,  # Identifier or ' '.join(Iterable[Identifier])
+    Dict[Identifier, Identifier],
+    Sequence[Union[Identifier, Tuple[Identifier, Identifier]]],
+]
+
 IdentifierMapping = Dict[Identifier, Identifier]
 
 
