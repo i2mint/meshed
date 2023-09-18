@@ -1,29 +1,14 @@
 """Visualization utilities for the meshed package."""
 
-from typing import Iterable
-from i2.signatures import Parameter, empty, Sig
-
-from meshed.base import FuncNode  # depend on abstraction, not implementation
-
-# These are the defaults used in lined.
-# TODO: Merge some of the functionalities around graph displays in lined and meshed
-# TODO: Allow this to be overridden/edited by user, config2py style?
-dflt_configs = dict(
-    fnode_shape="box",
-    vnode_shape="none",
-    display_all_arguments=True,
-    edge_kind="to_args_on_edge",
-    input_node=True,
-    output_node="output",
-    func_display=True,
-)
+from typing import Iterable, Any
+from i2.signatures import Sig
 
 
-def dot_lines_of_func_nodes(
-    func_nodes: Iterable[FuncNode], start_lines=(), end_lines=(), **kwargs
-):
-    r"""Got lines generator for the graphviz.DiGraph(body=list(...))
+def dot_lines_of_objs(objs: Iterable, start_lines=(), end_lines=(), **kwargs):
+    r"""
+    Get lines generator for the graphviz.DiGraph(body=list(...))
 
+    >>> from meshed.base import FuncNode
     >>> def add(a, b=1):
     ...     return a + b
     >>> def mult(x, y=3):
@@ -35,7 +20,7 @@ def dot_lines_of_func_nodes(
     ...     FuncNode(mult, name='the_product'),
     ...     FuncNode(exp)
     ... ]
-    >>> lines = list(dot_lines_of_func_nodes(func_nodes))
+    >>> lines = list(dot_lines_of_objs(func_nodes))
     >>> assert lines == [
     ... 'x [label="x" shape="none"]',
     ... '_add [label="_add" shape="box"]',
@@ -108,65 +93,12 @@ def dot_lines_of_func_nodes(
     # from meshed.base import validate_that_func_node_names_are_sane
     # validate_that_func_node_names_are_sane(func_nodes)
     yield from start_lines
-    for func_node in func_nodes:
-        yield from dot_lines_of_func_node(func_node, **kwargs)
+    for obj in objs:
+        yield from obj.dot_lines(**kwargs)
     yield from end_lines
 
 
-def dot_lines_of_func_node(func_node: FuncNode, **kwargs):
-    out = func_node.out
-
-    func_id = func_node.name
-    func_label = getattr(func_node, "func_label", func_id)
-    if out == func_id:  # though forbidden in default FuncNode validation
-        func_id = "_" + func_id
-
-    # Get the Parameter objects for sig, with names changed to bind ones
-    params = func_node.sig.ch_names(**func_node.bind).params
-
-    yield from dot_lines_of_func_parameters(
-        params, out=out, func_id=func_id, func_label=func_label, **kwargs
-    )
-
-
-def dot_lines_of_func_parameters(
-    parameters: Iterable[Parameter],
-    out: str,
-    func_id: str,
-    *,
-    func_label: str = None,
-    vnode_shape: str = dflt_configs["vnode_shape"],
-    fnode_shape: str = dflt_configs["fnode_shape"],
-    func_display: bool = dflt_configs["func_display"],
-) -> Iterable[str]:
-    assert func_id != out, (
-        f"Your func and output name shouldn't be the " f"same: {out=} {func_id=}"
-    )
-    yield f'{out} [label="{out}" shape="{vnode_shape}"]'
-    for p in parameters:
-        yield from param_to_dot_definition(p, shape=vnode_shape)
-
-    if func_display:
-        func_label = func_label or func_id
-        yield f'{func_id} [label="{func_label}" shape="{fnode_shape}"]'
-        yield f"{func_id} -> {out}"
-        for p in parameters:
-            yield f"{p.name} -> {func_id}"
-    else:
-        for p in parameters:
-            yield f"{p.name} -> {out}"
-
-
-def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
-    if p.default is not empty:
-        name = p.name + "="
-    elif p.kind == p.VAR_POSITIONAL:
-        name = "*" + p.name
-    elif p.kind == p.VAR_KEYWORD:
-        name = "**" + p.name
-    else:
-        name = p.name
-    yield f'{p.name} [label="{name}" shape="{shape}"]'
+dot_lines_of_func_nodes = dot_lines_of_objs  # backwards compatiblity alias
 
 
 # TODO: Should we integrate this to dot_lines_of_func_parameters directly (decorator?)

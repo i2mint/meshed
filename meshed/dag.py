@@ -164,6 +164,7 @@ from i2.signatures import (
 )
 from meshed.base import (
     FuncNode,
+    dflt_configs,
     BindInfo,
     ch_func_node_func,
     _mk_func_nodes,
@@ -198,8 +199,7 @@ from meshed.itools import (
     ancestors,
 )
 
-from meshed.viz import dflt_configs  # TODO: can we get rid of this dependency?
-from meshed.viz import dot_lines_of_func_nodes, add_new_line_if_none
+from meshed.viz import dot_lines_of_objs, add_new_line_if_none
 
 FuncMapping = Union[Mapping[KT, Callable], Iterable[Tuple[KT, Callable]]]
 
@@ -1515,7 +1515,7 @@ class DAG:
         kwargs = dict(
             vnode_shape=vnode_shape, fnode_shape=fnode_shape, func_display=func_display
         )
-        yield from dot_lines_of_func_nodes(
+        yield from dot_lines_of_objs(
             self.func_nodes, start_lines=start_lines, end_lines=end_lines, **kwargs
         )
 
