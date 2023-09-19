@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.misc_utils &mdash; meshed 0.1.142 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.misc_utils &mdash; meshed 0.1.143 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -133,11 +133,14 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
 
+
 <div class="viewcode-block" id="mermaid_pack_nodes"><a class="viewcode-back" href="../../../module_docs/meshed/scrap/misc_utils.html#meshed.scrap.misc_utils.mermaid_pack_nodes">[docs]</a><span class="k">def</span> <span class="nf">mermaid_pack_nodes</span><span class="p">(</span>
-        <span class="n">mermaid_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">packed_node_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span> 
-        <span class="n">arrow</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;--&gt;&quot;</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">mermaid_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">packed_node_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">arrow</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;--&gt;&#39;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Output mermaid code with nodes packed into a single node.</span>
 
@@ -151,7 +154,7 @@
 <span class="sd">    ... &#39;&#39;&#39;</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; print(mermaid_pack_nodes(mermaid_code, [&#39;B&#39;, &#39;C&#39;, &#39;E&#39;], &#39;BCE&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; print(mermaid_pack_nodes(mermaid_code, [&#39;B&#39;, &#39;C&#39;, &#39;E&#39;], &#39;BCE&#39;))  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">    graph TD</span>
 <span class="sd">    A --&gt;BCE</span>
 <span class="sd">    A --&gt; D</span>
@@ -161,25 +164,25 @@
         <span class="n">packed_node_name</span> <span class="o">=</span> <span class="s1">&#39;__&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">gen_lines</span><span class="p">():</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">mermaid_code</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">mermaid_code</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
             <span class="n">source</span><span class="p">,</span> <span class="n">_arrow</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="n">arrow</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
                 <span class="n">source</span> <span class="o">=</span> <span class="n">packed_node_name</span>
             <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
                 <span class="n">target</span> <span class="o">=</span> <span class="n">packed_node_name</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">source</span> <span class="o">!=</span> <span class="n">target</span><span class="p">)</span> <span class="ow">and</span> <span class="n">source</span> <span class="o">!=</span> <span class="n">packed_node_name</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_arrow</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">])</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_arrow</span><span class="si">}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># If there are any loops within the nodes to be packed,</span>
                 <span class="c1"># they&#39;ll be represented as a loop for the packed node, which we skip.</span>
                 <span class="k">continue</span>
 
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen_lines</span><span class="p">())</span></div>
-
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen_lines</span><span class="p">())</span></div>
 
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sized</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Iterable</span>
 <span class="kn">from</span> <span class="nn">meshed.itools</span> <span class="kn">import</span> <span class="n">children</span><span class="p">,</span> <span class="n">parents</span>
+
 
 <span class="k">def</span> <span class="nf">coparents_sets</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
     <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
