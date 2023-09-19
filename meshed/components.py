@@ -23,8 +23,8 @@ class Extractor:
         extractor_factory: Callable[[Any], Callable],
         extractor_params: Any,
         *,
-        name: str = "extractor",
-        input_name: str = "x",
+        name: str = 'extractor',
+        input_name: str = 'x',
     ):
         self.extractor_factory = extractor_factory
         self.extractor_params = extractor_params
@@ -34,7 +34,7 @@ class Extractor:
 
     def __post_init__(self):
         self.__name__ = self.name
-        self.__signature__ = Sig(f"({self.input_name}, /)")
+        self.__signature__ = Sig(f'({self.input_name}, /)')
         self._call = self.extractor_factory(self.extractor_params)
 
     def __call__(self, x):
@@ -53,5 +53,5 @@ def _attrgetter(attrs):
     return attrgetter(*attrs)
 
 
-Itemgetter = partial(Extractor, _itemgetter, name="itemgetter")
-AttrGetter = partial(Extractor, _attrgetter, name="attrgetter")
+Itemgetter = partial(Extractor, _itemgetter, name='itemgetter')
+AttrGetter = partial(Extractor, _attrgetter, name='attrgetter')
