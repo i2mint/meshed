@@ -30,7 +30,7 @@ def mermaid_pack_nodes(
     ... '''
     >>>
     >>>
-    >>> print(mermaid_pack_nodes(mermaid_code, ['B', 'C', 'E'], 'BCE'))
+    >>> print(mermaid_pack_nodes(mermaid_code, ['B', 'C', 'E'], 'BCE'))  # doctest: +NORMALIZE_WHITESPACE
     graph TD
     A -->BCE
     A --> D

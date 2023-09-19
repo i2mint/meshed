@@ -337,7 +337,7 @@ That is, a dictionary-like interface that specifies the graph by specifying for 
 what nodes it's adjacent to:
 
 ```python
-assert graph[source_node] == iterator_of_nodes_that_source_node_has_edges_to
+assert graph[source_node] == set_of_nodes_that_source_node_has_edges_to
 ```
 
 We emphasize that there is no specific graph instance that you need to squeeze your graph into to
