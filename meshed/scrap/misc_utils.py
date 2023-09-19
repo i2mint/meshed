@@ -12,11 +12,14 @@ with ModuleNotFoundIgnore():
 
 from typing import Iterable
 
+
 def mermaid_pack_nodes(
-        mermaid_code: str, nodes: Iterable[str], packed_node_name: str = None,
-        *, 
-        arrow: str = "-->",
-    ) -> str:
+    mermaid_code: str,
+    nodes: Iterable[str],
+    packed_node_name: str = None,
+    *,
+    arrow: str = '-->',
+) -> str:
     """
     Output mermaid code with nodes packed into a single node.
 
@@ -40,25 +43,25 @@ def mermaid_pack_nodes(
         packed_node_name = '__'.join(nodes)
 
     def gen_lines():
-        for line in mermaid_code.strip().split("\n"):
+        for line in mermaid_code.strip().split('\n'):
             source, _arrow, target = line.partition(arrow)
             if source.strip() in nodes:
                 source = packed_node_name
             if target.strip() in nodes:
                 target = packed_node_name
             if (source != target) and source != packed_node_name:
-                yield f"{_arrow}".join([source, target])
+                yield f'{_arrow}'.join([source, target])
             else:
                 # If there are any loops within the nodes to be packed,
                 # they'll be represented as a loop for the packed node, which we skip.
                 continue
 
-    return "\n".join(gen_lines())
-
+    return '\n'.join(gen_lines())
 
 
 from typing import Any, Mapping, Sized, MutableMapping, Iterable
 from meshed.itools import children, parents
+
 
 def coparents_sets(g: Mapping, source: Iterable):
     res = []
