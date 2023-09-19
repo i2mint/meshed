@@ -10,9 +10,55 @@ with ModuleNotFoundIgnore():
     topological_sort_2 = nx.dag.topological_sort
 
 
+from typing import Iterable
+
+def mermaid_pack_nodes(
+        mermaid_code: str, nodes: Iterable[str], packed_node_name: str = None,
+        *, 
+        arrow: str = "-->",
+    ) -> str:
+    """
+    Output mermaid code with nodes packed into a single node.
+
+    >>> mermaid_code = '''
+    ... graph TD
+    ...   A --> B
+    ...   B --> C
+    ...   A --> D
+    ...   D --> E
+    ...   E --> C
+    ... '''
+    >>>
+    >>>
+    >>> print(mermaid_pack_nodes(mermaid_code, ['B', 'C', 'E'], 'BCE'))
+    graph TD
+    A -->BCE
+    A --> D
+    D -->BCE
+    """
+    if packed_node_name is None:
+        packed_node_name = '__'.join(nodes)
+
+    def gen_lines():
+        for line in mermaid_code.strip().split("\n"):
+            source, _arrow, target = line.partition(arrow)
+            if source.strip() in nodes:
+                source = packed_node_name
+            if target.strip() in nodes:
+                target = packed_node_name
+            if (source != target) and source != packed_node_name:
+                yield f"{_arrow}".join([source, target])
+            else:
+                # If there are any loops within the nodes to be packed,
+                # they'll be represented as a loop for the packed node, which we skip.
+                continue
+
+    return "\n".join(gen_lines())
+
+
+
 from typing import Any, Mapping, Sized, MutableMapping, Iterable
 from meshed.itools import children, parents
-
 
 def coparents_sets(g: Mapping, source: Iterable):
     res = []
