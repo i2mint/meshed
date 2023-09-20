@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.components &mdash; meshed 0.1.143 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.components &mdash; meshed 0.1.144 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -144,8 +144,8 @@
         <span class="n">extractor_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Callable</span><span class="p">],</span>
         <span class="n">extractor_params</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;extractor&quot;</span><span class="p">,</span>
-        <span class="n">input_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;extractor&#39;</span><span class="p">,</span>
+        <span class="n">input_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extractor_factory</span> <span class="o">=</span> <span class="n">extractor_factory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extractor_params</span> <span class="o">=</span> <span class="n">extractor_params</span>
@@ -155,7 +155,7 @@
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_name</span><span class="si">}</span><span class="s2">, /)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_name</span><span class="si">}</span><span class="s1">, /)&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_call</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extractor_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extractor_params</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
@@ -174,8 +174,8 @@
     <span class="k">return</span> <span class="n">attrgetter</span><span class="p">(</span><span class="o">*</span><span class="n">attrs</span><span class="p">)</span>
 
 
-<span class="n">Itemgetter</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">Extractor</span><span class="p">,</span> <span class="n">_itemgetter</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;itemgetter&quot;</span><span class="p">)</span>
-<span class="n">AttrGetter</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">Extractor</span><span class="p">,</span> <span class="n">_attrgetter</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;attrgetter&quot;</span><span class="p">)</span>
+<span class="n">Itemgetter</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">Extractor</span><span class="p">,</span> <span class="n">_itemgetter</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;itemgetter&#39;</span><span class="p">)</span>
+<span class="n">AttrGetter</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">Extractor</span><span class="p">,</span> <span class="n">_attrgetter</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;attrgetter&#39;</span><span class="p">)</span>
 </pre></div>
 
            </div>
