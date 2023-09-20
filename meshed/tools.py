@@ -83,10 +83,13 @@ class CloudFunctions:
     @cached_property
     def http_client(self):
         from http2py import HttpClient
+
         try:
             return HttpClient(url=self.openapi_url)
         except Exception:
-            self.logger(f'Could not connect to {self.openapi_url}. Waiting 10 seconds and trying again.')
+            self.logger(
+                f'Could not connect to {self.openapi_url}. Waiting 10 seconds and trying again.'
+            )
             time.sleep(10)
             return HttpClient(url=self.openapi_url)
 
