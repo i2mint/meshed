@@ -31,6 +31,9 @@ def underscore_func_node_names_maker(func: Callable, name=None, out=None):
     where a function's output will be used as another's input argument when
     that argument has the the function's (output) name.
     """
+    if out is None and hasattr(func, '_provides'):
+        if len(func._provides) > 0:
+            out = func._provides[0]
     if name is not None and out is not None:
         if name == out:
             name = name + '_'

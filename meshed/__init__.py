@@ -28,5 +28,6 @@ from meshed.util import (
     instance_checker,
     replace_item_in_iterable,
     parameter_merger,
+    provides,
 )
 from meshed.components import Itemgetter, AttrGetter
