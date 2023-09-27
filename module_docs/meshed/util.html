@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.146 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.147 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -388,6 +388,20 @@ and annotation should be used in the interface of the DAG?</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="meshed.util.filepath_to_module">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">filepath_to_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#filepath_to_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.filepath_to_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>A context manager to import a Python file as a module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> – The file path of the Python file to import.</p>
+</dd>
+<dt class="field-even">Yield</dt>
+<dd class="field-even"><p>The module object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="meshed.util.func_name">
 <code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">func_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../../_modules/meshed/util.html#func_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.func_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The func.__name__ of a callable func, or makes and returns one if that fails.
@@ -614,8 +628,10 @@ Therefore, we can partialize class_or_tuple:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>module</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>ModuleType</em><em>]</em>) – The module to look up. Can either be the module object itself, or a string specifying the
-module’s fully qualified name (e.g., ‘os.path’).</p></li>
+<li><p><strong>module</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>ModuleType</em><em>]</em>) – The module to look up. Can either be
+- the module object itself,
+- a string specifying the module’s fully qualified name (e.g., ‘os.path’), or
+- a .py filepath to the module</p></li>
 <li><p><strong>name_filt</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em><em>, </em><em>default=None</em>) – An optional function used to filter the names of objects in the module.
 This function should take a single argument (the object name as a string)
 and return a boolean. Only objects whose names pass the filter (i.e.,
