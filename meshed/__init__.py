@@ -29,5 +29,6 @@ from meshed.util import (
     replace_item_in_iterable,
     parameter_merger,
     provides,
+    Pipe,
 )
 from meshed.components import Itemgetter, AttrGetter
