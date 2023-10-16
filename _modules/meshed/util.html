@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.147 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.148 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -130,7 +130,7 @@
 
 <span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">name_of_obj</span><span class="p">,</span> <span class="n">LiteralVal</span><span class="p">,</span> <span class="n">FuncFanout</span><span class="p">,</span> <span class="n">Pipe</span>
 
-<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="objects_defined_in_module"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.objects_defined_in_module">[docs]</a><span class="k">def</span> <span class="nf">objects_defined_in_module</span><span class="p">(</span>
@@ -191,7 +191,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
             <span class="n">module_filepath</span> <span class="o">=</span> <span class="n">module</span>
             <span class="k">with</span> <span class="n">filepath_to_module</span><span class="p">(</span><span class="n">module_filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">module</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">objects_defined_in_module</span><span class="p">(</span>
@@ -241,7 +241,7 @@
     <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">spec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Module </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> could not be imported.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Module </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s1"> could not be imported.&#39;</span><span class="p">)</span>
 
     <span class="c1"># Add the directory of the file to sys.path</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">)</span>
@@ -293,7 +293,7 @@
             <span class="n">var_names_</span> <span class="o">=</span> <span class="p">(</span><span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">),)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">var_names_</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
-                <span class="p">[</span><span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;_&quot;</span> <span class="k">else</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">var_names</span><span class="p">]</span>
+                <span class="p">[</span><span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;_&#39;</span> <span class="k">else</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">var_names</span><span class="p">]</span>
             <span class="p">)</span>
         <span class="n">func</span><span class="o">.</span><span class="n">_provides</span> <span class="o">=</span> <span class="n">var_names_</span>
         <span class="k">return</span> <span class="n">func</span>
@@ -356,13 +356,13 @@
     <span class="k">return</span> <span class="n">Pipe</span><span class="p">(</span><span class="n">FuncFanout</span><span class="p">(</span><span class="o">*</span><span class="n">funcs</span><span class="p">),</span> <span class="n">partial</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nb">any</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">extra_wraps</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">extra_wraps</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc_prefix</span> <span class="o">+</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">&quot;__name__&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc_prefix</span> <span class="o">+</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">func</span>
 
 
-<span class="k">def</span> <span class="nf">mywraps</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">mywraps</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">wrapped</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">extra_wraps</span><span class="p">(</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">wrapped</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="n">doc_prefix</span><span class="p">)</span>
 
@@ -428,7 +428,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: See if partialx can be used instead</span>
     <span class="n">wrapper</span> <span class="o">=</span> <span class="n">mywraps</span><span class="p">(</span>
-        <span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;generator version of </span><span class="si">{</span><span class="n">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;generator version of </span><span class="si">{</span><span class="n">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="si">}</span><span class="s1">:</span><span class="se">\n</span><span class="s1">&#39;</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">wrapper</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span></div>
 
@@ -597,13 +597,13 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;ConditionalIterize </span><span class="si">{</span><span class="n">name_of_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}{</span><span class="n">Sig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;ConditionalIterize </span><span class="si">{</span><span class="n">name_of_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}{</span><span class="n">Sig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s1">&gt;&#39;</span>
 
     <span class="k">def</span> <span class="nf">_new_sig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;You can only apply conditional iterization on functions that have &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;at least one input. This one had none: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s1">&#39;You can only apply conditional iterization on functions that have &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;at least one input. This one had none: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="p">)</span>
         <span class="n">first_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">new_sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span>  <span class="c1"># same sig by default</span>
@@ -635,7 +635,7 @@
         <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="incremental_str_maker"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.incremental_str_maker">[docs]</a><span class="k">def</span> <span class="nf">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s2">&quot;{:03.f}&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="incremental_str_maker"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.incremental_str_maker">[docs]</a><span class="k">def</span> <span class="nf">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;{:03.f}&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a function that will produce a (incrementally) new string at every call.&quot;&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -647,8 +647,8 @@
     <span class="k">return</span> <span class="n">mk_next_str</span></div>
 
 
-<span class="n">lambda_name</span> <span class="o">=</span> <span class="n">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s2">&quot;lambda_</span><span class="si">{:03.0f}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="n">unnameable_func_name</span> <span class="o">=</span> <span class="n">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s2">&quot;unnameable_func_</span><span class="si">{:03.0f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">lambda_name</span> <span class="o">=</span> <span class="n">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;lambda_</span><span class="si">{:03.0f}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">unnameable_func_name</span> <span class="o">=</span> <span class="n">incremental_str_maker</span><span class="p">(</span><span class="n">str_format</span><span class="o">=</span><span class="s1">&#39;unnameable_func_</span><span class="si">{:03.0f}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="n">FunctionNamer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
 
@@ -661,7 +661,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&lt;lambda&gt;&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&lt;lambda&gt;&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">lambda_name</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">name</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -683,11 +683,11 @@
     <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">:</span>
         <span class="n">sig</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">arg_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># initialize</span>
+            <span class="n">arg_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># initialize</span>
             <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">VAR_POSITIONAL</span><span class="p">:</span>
-                <span class="n">arg_name</span> <span class="o">+=</span> <span class="s2">&quot;*&quot;</span>
+                <span class="n">arg_name</span> <span class="o">+=</span> <span class="s1">&#39;*&#39;</span>
             <span class="k">elif</span> <span class="n">param</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">VAR_KEYWORD</span><span class="p">:</span>
-                <span class="n">arg_name</span> <span class="o">+=</span> <span class="s2">&quot;**&quot;</span>
+                <span class="n">arg_name</span> <span class="o">+=</span> <span class="s1">&#39;**&#39;</span>
             <span class="n">arg_name</span> <span class="o">+=</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># append name of param</span>
             <span class="k">yield</span> <span class="n">arg_name</span><span class="p">,</span> <span class="n">name_of_func</span><span class="p">(</span><span class="n">func</span><span class="p">)</span></div>
 
@@ -697,7 +697,7 @@
 
     <span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span> <span class="ow">or</span> <span class="n">Digraph</span><span class="p">()</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">args_funcnames</span><span class="p">(</span><span class="n">funcs</span><span class="p">)))</span>
-    <span class="n">graph</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; [shape=box]&quot;</span><span class="p">])</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; [shape=box]&#39;</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">graph</span>
 
 
@@ -737,7 +737,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">requests</span>
 
-    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://dot-to-ascii.ggerganov.com/dot-to-ascii.php&quot;</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://dot-to-ascii.ggerganov.com/dot-to-ascii.php&#39;</span>
     <span class="n">boxart</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c1"># use nice box drawing char instead of + , | , -</span>
@@ -746,29 +746,29 @@
 
     <span class="n">stripped_dot_str</span> <span class="o">=</span> <span class="n">dot</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
-        <span class="n">stripped_dot_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;graph&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">stripped_dot_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;digraph&quot;</span><span class="p">)</span>
+        <span class="n">stripped_dot_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;graph&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">stripped_dot_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;digraph&#39;</span><span class="p">)</span>
     <span class="p">):</span>
-        <span class="n">dot</span> <span class="o">=</span> <span class="s2">&quot;graph {</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">dot</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">}&quot;</span>
+        <span class="n">dot</span> <span class="o">=</span> <span class="s1">&#39;graph {</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">dot</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">}&#39;</span>
 
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;boxart&quot;</span><span class="p">:</span> <span class="n">boxart</span><span class="p">,</span>
-        <span class="s2">&quot;src&quot;</span><span class="p">:</span> <span class="n">dot</span><span class="p">,</span>
+        <span class="s1">&#39;boxart&#39;</span><span class="p">:</span> <span class="n">boxart</span><span class="p">,</span>
+        <span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="n">dot</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
     <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;ConnectionError: You need the internet to convert dot into ascii!&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;ConnectionError: You need the internet to convert dot into ascii!&#39;</span>
 
-    <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="s2">&quot;DOT string is not formatted correctly&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="s1">&#39;DOT string is not formatted correctly&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">response</span></div>
 
 
 <span class="k">def</span> <span class="nf">print_ascii_graph</span><span class="p">(</span><span class="n">funcs</span><span class="p">):</span>
     <span class="n">digraph</span> <span class="o">=</span> <span class="n">funcs_to_digraph</span><span class="p">(</span><span class="n">funcs</span><span class="p">)</span>
-    <span class="n">dot_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">digraph</span><span class="o">.</span><span class="n">body</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">dot_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">digraph</span><span class="o">.</span><span class="n">body</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">dot_to_ascii</span><span class="p">(</span><span class="n">dot_str</span><span class="p">))</span>
 
 
@@ -794,7 +794,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">start_at</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">name</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -804,8 +804,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Makes a function name that doesn&#39;t clash with the exclude_names iterable.</span>
 <span class="sd">    Tries it&#39;s best to not be lazy, but instead extract a name from the function</span>
 <span class="sd">    itself.&quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;func&quot;</span>
-    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&lt;lambda&gt;&quot;</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;func&#39;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&lt;lambda&gt;&#39;</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">lambda_name</span><span class="p">()</span>  <span class="c1"># make a lambda name that is a unique identifier</span>
     <span class="k">return</span> <span class="n">find_first_free_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span></div>
 
@@ -820,7 +820,7 @@
                 <span class="k">yield</span> <span class="n">name</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">found_name</span> <span class="o">=</span> <span class="n">find_first_free_name</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_exclude_names</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">_exclude_names</span>
                 <span class="p">)</span>
                 <span class="k">yield</span> <span class="n">found_name</span>
                 <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">_exclude_names</span> <span class="o">+</span> <span class="p">(</span><span class="n">found_name</span><span class="p">,)</span>
@@ -846,8 +846,8 @@
 
 <span class="k">def</span> <span class="nf">_place_holder_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">_sig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">_kwargs</span> <span class="o">=</span> <span class="n">_sig</span><span class="o">.</span><span class="n">kwargs_from_args_and_kwargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">_kwargs_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_sig</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">_kwargs_str</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="n">_kwargs_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_sig</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="n">_kwargs_str</span><span class="si">}</span><span class="s1">)&#39;</span>
 
 
 <div class="viewcode-block" id="mk_place_holder_func"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.mk_place_holder_func">[docs]</a><span class="k">def</span> <span class="nf">mk_place_holder_func</span><span class="p">(</span><span class="n">arg_names_or_sig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">(),</span> <span class="n">annotations</span><span class="o">=</span><span class="p">()):</span>
@@ -885,7 +885,7 @@
     <span class="n">sig</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">ch_defaults</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">defaults</span><span class="p">))</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">ch_annotations</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">annotations</span><span class="p">))</span>
 
-    <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;place_holder_func&quot;</span>
+    <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s1">&#39;place_holder_func&#39;</span>
 
     <span class="n">func</span> <span class="o">=</span> <span class="n">sig</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">_place_holder_func</span><span class="p">,</span> <span class="n">_sig</span><span class="o">=</span><span class="n">sig</span><span class="p">))</span>
     <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span>
@@ -949,20 +949,20 @@
     <span class="k">return</span> <span class="n">_func</span>
 
 
-<div class="viewcode-block" id="numbered_suffix_renamer"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.numbered_suffix_renamer">[docs]</a><span class="k">def</span> <span class="nf">numbered_suffix_renamer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="numbered_suffix_renamer"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.numbered_suffix_renamer">[docs]</a><span class="k">def</span> <span class="nf">numbered_suffix_renamer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; numbered_suffix_renamer(&#39;item&#39;)</span>
 <span class="sd">    &#39;item_1&#39;</span>
 <span class="sd">    &gt;&gt;&gt; numbered_suffix_renamer(&#39;item_1&#39;)</span>
 <span class="sd">    &#39;item_2&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">sep</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;(\d+)$&quot;</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">sep</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;(\d+)$&#39;</span><span class="p">)</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">sep</span><span class="si">}</span><span class="s2">1&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">sep</span><span class="si">}</span><span class="s1">1&#39;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sep</span><span class="si">}{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sep</span><span class="si">}{</span><span class="n">num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InvalidFunctionParameters"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.InvalidFunctionParameters">[docs]</a><span class="k">class</span> <span class="nc">InvalidFunctionParameters</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
@@ -973,16 +973,16 @@
 <span class="k">def</span> <span class="nf">_suffix</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">start</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">yield</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
 <span class="k">def</span> <span class="nf">_add_suffix</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">suffix</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
 
 
 <span class="n">incremental_suffixes</span> <span class="o">=</span> <span class="n">_suffix</span><span class="p">()</span>
-<span class="n">_renamers</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">incremental_suffixes</span><span class="p">)</span>
+<span class="n">_renamers</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">incremental_suffixes</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_return_val</span><span class="p">(</span><span class="n">first_arg</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
@@ -1113,7 +1113,7 @@
 <span class="k">def</span> <span class="nf">inverse_dict_asserting_losslessness</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
     <span class="n">inv_d</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">inv_d</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;can&#39;t invert: You have some duplicate values in this dict: &quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;can&#39;t invert: You have some duplicate values in this dict: &quot;</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">inv_d</span>
 
@@ -1218,23 +1218,23 @@
 <span class="sd">    &gt;&gt;&gt; parameter_merger(P(&#39;a&#39;, PK, annotation=int), P(&#39;a&#39;, PK), same_annotation=False)</span>
 <span class="sd">    &lt;Parameter &quot;a: int&quot;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">suggestion_on_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;To resolve this you have several choices:</span>
+    <span class="n">suggestion_on_error</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;To resolve this you have several choices:</span>
 
-<span class="s2">    - Change the properties of the param (kind, default, annotation) to be those you </span>
-<span class="s2">      want. For example, you can use ``i2.Sig.ch_param_attrs`` on the signatures </span>
-<span class="s2">      (or ``i2.Sig.ch_names``, ``i2.Sig.ch_defaults``, ``i2.Sig.ch_kinds``, </span>
-<span class="s2">      ``i2.Sig.ch_annotations``)</span>
-<span class="s2">      to get a function decorator that will do that for you.</span>
-<span class="s2">    - If you&#39;re making a DAG, consider specifying a different ``parameter_merge``.</span>
-<span class="s2">      For example you can use ``functools.partial`` on </span>
-<span class="s2">      ``meshed.parameter_merger``, fixing ``same_kind``, ``same_default``, </span>
-<span class="s2">      and/or ``same_annotation`` to ``False`` to get a more lenient version of it.</span>
-<span class="s2">      (See also i2.signatures.param_comparator.)</span>
+<span class="s1">    - Change the properties of the param (kind, default, annotation) to be those you </span>
+<span class="s1">      want. For example, you can use ``i2.Sig.ch_param_attrs`` on the signatures </span>
+<span class="s1">      (or ``i2.Sig.ch_names``, ``i2.Sig.ch_defaults``, ``i2.Sig.ch_kinds``, </span>
+<span class="s1">      ``i2.Sig.ch_annotations``)</span>
+<span class="s1">      to get a function decorator that will do that for you.</span>
+<span class="s1">    - If you&#39;re making a DAG, consider specifying a different ``parameter_merge``.</span>
+<span class="s1">      For example you can use ``functools.partial`` on </span>
+<span class="s1">      ``meshed.parameter_merger``, fixing ``same_kind``, ``same_default``, </span>
+<span class="s1">      and/or ``same_annotation`` to ``False`` to get a more lenient version of it.</span>
+<span class="s1">      (See also i2.signatures.param_comparator.)</span>
 
-<span class="s2">    See https://github.com/i2mint/i2/discussions/63 and </span>
-<span class="s2">    https://github.com/i2mint/meshed/issues/7 (description and comments) for more</span>
-<span class="s2">    info.</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s1">    See https://github.com/i2mint/i2/discussions/63 and </span>
+<span class="s1">    https://github.com/i2mint/meshed/issues/7 (description and comments) for more</span>
+<span class="s1">    info.</span>
+<span class="s1">    &#39;&#39;&#39;</span>
     <span class="n">first_param</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">params</span>
     <span class="k">if</span> <span class="n">same_name</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">first_param</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
@@ -1253,7 +1253,7 @@
     <span class="p">):</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Some params didn&#39;t have the same annotation: &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">suggestion_on_error</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">suggestion_on_error</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">first_param</span></div>
 

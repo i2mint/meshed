@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.ext.gk_tests &mdash; meshed 0.1.147 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.ext.gk_tests &mdash; meshed 0.1.148 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -124,6 +124,78 @@
   <section id="module-meshed.ext.gk_tests">
 <span id="meshed-ext-gk-tests"></span><h1>meshed.ext.gk_tests<a class="headerlink" href="#module-meshed.ext.gk_tests" title="Permalink to this headline">¶</a></h1>
 <p>Tests for gk.py</p>
+<dl class="py class">
+<dt id="meshed.ext.gk_tests.Mul">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk_tests.</code><code class="sig-name descname">Mul</code><span class="sig-paren">(</span><em class="sig-param">name: str = 'None'</em>, <em class="sig-param">needs: list = None</em>, <em class="sig-param">provides: list = None</em>, <em class="sig-param">params: dict = &lt;factory&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Mul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk_tests.Mul" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="meshed.ext.gk_tests.Mul.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Mul.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk_tests.Mul.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method must be implemented to perform this layer’s feed-forward
+computation on a given set of inputs.
+:param list inputs:</p>
+<blockquote>
+<div><p>A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects on which to run the layer’s
+feed-forward computation.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns list</dt>
+<dd class="field-odd"><p>Should return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects representing
+the results of running the feed-forward computation on
+<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="meshed.ext.gk_tests.Pow">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk_tests.</code><code class="sig-name descname">Pow</code><span class="sig-paren">(</span><em class="sig-param">name: str = 'None'</em>, <em class="sig-param">needs: list = None</em>, <em class="sig-param">provides: list = None</em>, <em class="sig-param">params: dict = &lt;factory&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Pow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk_tests.Pow" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="meshed.ext.gk_tests.Pow.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Pow.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk_tests.Pow.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method must be implemented to perform this layer’s feed-forward
+computation on a given set of inputs.
+:param list inputs:</p>
+<blockquote>
+<div><p>A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects on which to run the layer’s
+feed-forward computation.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns list</dt>
+<dd class="field-odd"><p>Should return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects representing
+the results of running the feed-forward computation on
+<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="meshed.ext.gk_tests.Sum">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.ext.gk_tests.</code><code class="sig-name descname">Sum</code><span class="sig-paren">(</span><em class="sig-param">name: str = 'None'</em>, <em class="sig-param">needs: list = None</em>, <em class="sig-param">provides: list = None</em>, <em class="sig-param">params: dict = &lt;factory&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk_tests.Sum" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="meshed.ext.gk_tests.Sum.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Sum.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.ext.gk_tests.Sum.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method must be implemented to perform this layer’s feed-forward
+computation on a given set of inputs.
+:param list inputs:</p>
+<blockquote>
+<div><p>A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects on which to run the layer’s
+feed-forward computation.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns list</dt>
+<dd class="field-odd"><p>Should return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects representing
+the results of running the feed-forward computation on
+<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

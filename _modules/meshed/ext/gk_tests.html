@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>meshed.ext.gk_tests &mdash; meshed 0.1.148 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/toggleprompt.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            meshed
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/base.html">meshed.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/caching.html">meshed.caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/components.html">meshed.components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/composition.html">meshed.composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples.html">meshed.examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext.html">meshed.ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/itools.html">meshed.itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/makers.html">meshed.makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/flow_control_script.html">meshed.scrap.flow_control_script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/gui_interaction.html">meshed.scrap.gui_interaction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_components.html">meshed.tests.test_components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag_defaults.html">meshed.tests.test_dag_defaults</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag_variadics.html">meshed.tests.test_dag_variadics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_getitem.html">meshed.tests.test_getitem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_makers.html">meshed.tests.test_makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_tools.html">meshed.tests.test_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_util.html">meshed.tests.test_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tools.html">meshed.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/util.html">meshed.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/viz.html">meshed.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">meshed</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">meshed.ext.gk_tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for meshed.ext.gk_tests</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tests for gk.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Copyright 2016, Yahoo Inc.</span>
+<span class="c1"># Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span>
+
+<span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">numpy.testing</span> <span class="kn">import</span> <span class="n">assert_raises</span>
+
+    <span class="kn">from</span> <span class="nn">meshed.ext.gk</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">operation</span><span class="p">,</span>
+        <span class="n">compose</span><span class="p">,</span>
+        <span class="n">Operation</span><span class="p">,</span>
+        <span class="n">optional</span><span class="p">,</span>
+        <span class="n">Network</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_network</span><span class="p">():</span>
+
+        <span class="c1"># Sum operation, late-bind compute function</span>
+        <span class="n">sum_op1</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum_ab&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+
+        <span class="c1"># sum_op1 is callable</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sum_op1</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="c1"># Multiply operation, decorate in-place</span>
+        <span class="nd">@operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mul_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum_ab_times_b&#39;</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">mul_op1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+        <span class="c1"># mul_op1 is callable</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">mul_op1</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="c1"># Pow operation</span>
+        <span class="nd">@operation</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pow_op1&#39;</span><span class="p">,</span>
+            <span class="n">needs</span><span class="o">=</span><span class="s1">&#39;sum_ab&#39;</span><span class="p">,</span>
+            <span class="n">provides</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab_p1&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_ab_p2&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_ab_p3&#39;</span><span class="p">],</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;exponent&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="k">def</span> <span class="nf">pow_op1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">exponent</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">pow_op1</span><span class="o">.</span><span class="n">_compute</span><span class="p">({</span><span class="s1">&#39;sum_ab&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">[</span><span class="s1">&#39;sum_ab_p2&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># Partial operation that is bound at a later time</span>
+        <span class="n">partial_op</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab_p1&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_ab_p2&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;p1_plus_p2&#39;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Bind the partial operation</span>
+        <span class="n">sum_op2</span> <span class="o">=</span> <span class="n">partial_op</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
+
+        <span class="c1"># Sum operation, early-bind compute function</span>
+        <span class="n">sum_op_factory</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
+
+        <span class="n">sum_op3</span> <span class="o">=</span> <span class="n">sum_op_factory</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op3&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum_ab2&#39;</span><span class="p">)</span>
+
+        <span class="c1"># sum_op3 is callable</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sum_op3</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+        <span class="c1"># compose network</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my network&#39;</span><span class="p">)(</span><span class="n">sum_op1</span><span class="p">,</span> <span class="n">mul_op1</span><span class="p">,</span> <span class="n">pow_op1</span><span class="p">,</span> <span class="n">sum_op2</span><span class="p">,</span> <span class="n">sum_op3</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># Running the network</span>
+        <span class="c1">#</span>
+
+        <span class="c1"># get all outputs</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+
+        <span class="c1"># get specific outputs</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab_times_b&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># start with inputs already computed</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net</span><span class="p">({</span><span class="s1">&#39;sum_ab&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab_times_b&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># visualize network graph</span>
+        <span class="c1"># net.plot(show=True)</span>
+
+    <span class="k">def</span> <span class="nf">test_network_simple_merge</span><span class="p">():</span>
+
+        <span class="n">sum_op1</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum1&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op2</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum2&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op3</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op3&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum1&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum3&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">net1</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my network 1&#39;</span><span class="p">)(</span><span class="n">sum_op1</span><span class="p">,</span> <span class="n">sum_op2</span><span class="p">,</span> <span class="n">sum_op3</span><span class="p">)</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net1</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}))</span>
+
+        <span class="n">sum_op4</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op5</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">net2</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my network 2&#39;</span><span class="p">)(</span><span class="n">sum_op4</span><span class="p">,</span> <span class="n">sum_op5</span><span class="p">)</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net2</span><span class="p">({</span><span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}))</span>
+
+        <span class="n">net3</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;merged&#39;</span><span class="p">)(</span><span class="n">net1</span><span class="p">,</span> <span class="n">net2</span><span class="p">)</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net3</span><span class="p">({</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}))</span>
+
+    <span class="k">def</span> <span class="nf">test_network_deep_merge</span><span class="p">():</span>
+
+        <span class="n">sum_op1</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum1&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op2</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum2&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op3</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op3&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum1&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum3&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">net1</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my network 1&#39;</span><span class="p">)(</span><span class="n">sum_op1</span><span class="p">,</span> <span class="n">sum_op2</span><span class="p">,</span> <span class="n">sum_op3</span><span class="p">)</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net1</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}))</span>
+
+        <span class="n">sum_op4</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum1&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op5</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op4&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum1&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum2&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">net2</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my network 2&#39;</span><span class="p">)(</span><span class="n">sum_op4</span><span class="p">,</span> <span class="n">sum_op5</span><span class="p">)</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net2</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+
+        <span class="n">net3</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;merged&#39;</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span><span class="n">net1</span><span class="p">,</span> <span class="n">net2</span><span class="p">)</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net3</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}))</span>
+
+    <span class="k">def</span> <span class="nf">test_input_based_pruning</span><span class="p">():</span>
+        <span class="c1"># Tests to make sure we don&#39;t need to pass graph inputs if we&#39;re provided</span>
+        <span class="c1"># with data further downstream in the graph as an input.</span>
+
+        <span class="n">sum1</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">sum2</span> <span class="o">=</span> <span class="mi">5</span>
+
+        <span class="c1"># Set up a net such that if sum1 and sum2 are provided directly, we don&#39;t</span>
+        <span class="c1"># need to provide a and b.</span>
+        <span class="n">sum_op1</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum1&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op2</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum2&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op3</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op3&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum1&#39;</span><span class="p">,</span> <span class="s1">&#39;sum2&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum3&#39;</span><span class="p">)(</span>
+            <span class="n">add</span>
+        <span class="p">)</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_net&#39;</span><span class="p">)(</span><span class="n">sum_op1</span><span class="p">,</span> <span class="n">sum_op2</span><span class="p">,</span> <span class="n">sum_op3</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">net</span><span class="p">({</span><span class="s1">&#39;sum1&#39;</span><span class="p">:</span> <span class="n">sum1</span><span class="p">,</span> <span class="s1">&#39;sum2&#39;</span><span class="p">:</span> <span class="n">sum2</span><span class="p">})</span>
+
+        <span class="c1"># Make sure we got expected result without having to pass a or b.</span>
+        <span class="k">assert</span> <span class="s1">&#39;sum3&#39;</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="k">assert</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;sum3&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">add</span><span class="p">(</span><span class="n">sum1</span><span class="p">,</span> <span class="n">sum2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_output_based_pruning</span><span class="p">():</span>
+        <span class="c1"># Tests to make sure we don&#39;t need to pass graph inputs if they&#39;re not</span>
+        <span class="c1"># needed to compute the requested outputs.</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">3</span>
+
+        <span class="c1"># Set up a network such that we don&#39;t need to provide a or b if we only</span>
+        <span class="c1"># request sum3 as output.</span>
+        <span class="n">sum_op1</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum1&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op2</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum2&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op3</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op3&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;sum2&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum3&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_net&#39;</span><span class="p">)(</span><span class="n">sum_op1</span><span class="p">,</span> <span class="n">sum_op2</span><span class="p">,</span> <span class="n">sum_op3</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">net</span><span class="p">({</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">},</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum3&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Make sure we got expected result without having to pass a or b.</span>
+        <span class="k">assert</span> <span class="s1">&#39;sum3&#39;</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="k">assert</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;sum3&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_input_output_based_pruning</span><span class="p">():</span>
+        <span class="c1"># Tests to make sure we don&#39;t need to pass graph inputs if they&#39;re not</span>
+        <span class="c1"># needed to compute the requested outputs or of we&#39;re provided with</span>
+        <span class="c1"># inputs that are further downstream in the graph.</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">sum2</span> <span class="o">=</span> <span class="mi">5</span>
+
+        <span class="c1"># Set up a network such that we don&#39;t need to provide a or b d if we only</span>
+        <span class="c1"># request sum3 as output and if we provide sum2.</span>
+        <span class="n">sum_op1</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum1&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op2</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum2&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op3</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op3&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;sum2&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum3&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_net&#39;</span><span class="p">)(</span><span class="n">sum_op1</span><span class="p">,</span> <span class="n">sum_op2</span><span class="p">,</span> <span class="n">sum_op3</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">net</span><span class="p">({</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s1">&#39;sum2&#39;</span><span class="p">:</span> <span class="n">sum2</span><span class="p">},</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum3&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Make sure we got expected result without having to pass a, b, or d.</span>
+        <span class="k">assert</span> <span class="s1">&#39;sum3&#39;</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="k">assert</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;sum3&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">sum2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_pruning_raises_for_bad_output</span><span class="p">():</span>
+        <span class="c1"># Make sure we get a ValueError during the pruning step if we request an</span>
+        <span class="c1"># output that doesn&#39;t exist.</span>
+
+        <span class="c1"># Set up a network that doesn&#39;t have the output sum4, which we&#39;ll request</span>
+        <span class="c1"># later.</span>
+        <span class="n">sum_op1</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum1&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op2</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum2&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">sum_op3</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op3&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;sum2&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum3&#39;</span><span class="p">)(</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_net&#39;</span><span class="p">)(</span><span class="n">sum_op1</span><span class="p">,</span> <span class="n">sum_op2</span><span class="p">,</span> <span class="n">sum_op3</span><span class="p">)</span>
+
+        <span class="c1"># Request two outputs we can compute and one we can&#39;t compute.  Assert</span>
+        <span class="c1"># that this raises a ValueError.</span>
+        <span class="n">assert_raises</span><span class="p">(</span>
+            <span class="ne">ValueError</span><span class="p">,</span>
+            <span class="n">net</span><span class="p">,</span>
+            <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum1&#39;</span><span class="p">,</span> <span class="s1">&#39;sum3&#39;</span><span class="p">,</span> <span class="s1">&#39;sum4&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_optional</span><span class="p">():</span>
+        <span class="c1"># Test that optional() needs work as expected.</span>
+
+        <span class="c1"># Function to add two values plus an optional third value.</span>
+        <span class="k">def</span> <span class="nf">addplusplus</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+
+        <span class="n">sum_op</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">optional</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span>
+        <span class="p">)(</span><span class="n">addplusplus</span><span class="p">)</span>
+
+        <span class="n">net</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_net&#39;</span><span class="p">)(</span><span class="n">sum_op</span><span class="p">)</span>
+
+        <span class="c1"># Make sure output with optional arg is as expected.</span>
+        <span class="n">named_inputs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">named_inputs</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s1">&#39;sum&#39;</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="k">assert</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">sum</span><span class="p">(</span><span class="n">named_inputs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="c1"># Make sure output without optional arg is as expected.</span>
+        <span class="n">named_inputs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">named_inputs</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s1">&#39;sum&#39;</span> <span class="ow">in</span> <span class="n">results</span>
+        <span class="k">assert</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">sum</span><span class="p">(</span><span class="n">named_inputs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">test_deleted_optional</span><span class="p">():</span>
+        <span class="c1"># Test that DeleteInstructions included for optionals do not raise</span>
+        <span class="c1"># exceptions when the corresponding input is not prodided.</span>
+
+        <span class="c1"># Function to add two values plus an optional third value.</span>
+        <span class="k">def</span> <span class="nf">addplusplus</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+
+        <span class="c1"># Here, a DeleteInstruction will be inserted for the optional need &#39;c&#39;.</span>
+        <span class="n">sum_op1</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">optional</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum1&#39;</span><span class="p">,</span>
+        <span class="p">)(</span><span class="n">addplusplus</span><span class="p">)</span>
+        <span class="n">sum_op2</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum1&#39;</span><span class="p">,</span> <span class="s1">&#39;sum1&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;sum2&#39;</span><span class="p">)(</span>
+            <span class="n">add</span>
+        <span class="p">)</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_net&#39;</span><span class="p">)(</span><span class="n">sum_op1</span><span class="p">,</span> <span class="n">sum_op2</span><span class="p">)</span>
+
+        <span class="c1"># DeleteInstructions are used only when a subset of outputs are requested.</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">net</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum2&#39;</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="s1">&#39;sum2&#39;</span> <span class="ow">in</span> <span class="n">results</span>
+
+    <span class="k">def</span> <span class="nf">test_parallel_execution</span><span class="p">():</span>
+        <span class="kn">import</span> <span class="nn">time</span>
+
+        <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;fn </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">))</span>
+            <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x</span>
+
+        <span class="k">def</span> <span class="nf">fn2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;fn2 </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+        <span class="k">def</span> <span class="nf">fn3</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;fn3 </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">z</span> <span class="o">+</span> <span class="n">k</span>
+
+        <span class="n">pipeline</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span>
+            <span class="c1"># the following should execute in parallel under threaded execution mode</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;ao&#39;</span><span class="p">)(</span><span class="n">fn</span><span class="p">),</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;bo&#39;</span><span class="p">)(</span><span class="n">fn</span><span class="p">),</span>
+            <span class="c1"># this should execute after a and b have finished</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ao&#39;</span><span class="p">,</span> <span class="s1">&#39;bo&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;co&#39;</span><span class="p">)(</span><span class="n">fn2</span><span class="p">),</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ao&#39;</span><span class="p">,</span> <span class="n">optional</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;do&#39;</span><span class="p">)(</span><span class="n">fn3</span><span class="p">),</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ao&#39;</span><span class="p">,</span> <span class="s1">&#39;bo&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;eo&#39;</span><span class="p">)(</span><span class="n">fn2</span><span class="p">),</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="s1">&#39;eo&#39;</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;fo&#39;</span><span class="p">)(</span><span class="n">fn</span><span class="p">),</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="s1">&#39;fo&#39;</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;go&#39;</span><span class="p">)(</span><span class="n">fn</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">set_execution_method</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">)</span>
+        <span class="n">result_threaded</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span> <span class="p">[</span><span class="s1">&#39;co&#39;</span><span class="p">,</span> <span class="s1">&#39;go&#39;</span><span class="p">,</span> <span class="s1">&#39;do&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;threaded result&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result_threaded</span><span class="p">)</span>
+
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">set_execution_method</span><span class="p">(</span><span class="s1">&#39;sequential&#39;</span><span class="p">)</span>
+        <span class="n">result_sequential</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span> <span class="p">[</span><span class="s1">&#39;co&#39;</span><span class="p">,</span> <span class="s1">&#39;go&#39;</span><span class="p">,</span> <span class="s1">&#39;do&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequential result&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result_sequential</span><span class="p">)</span>
+
+        <span class="c1"># make sure results are the same using either method</span>
+        <span class="k">assert</span> <span class="n">result_sequential</span> <span class="o">==</span> <span class="n">result_threaded</span>
+
+    <span class="k">def</span> <span class="nf">test_multi_threading</span><span class="p">():</span>
+        <span class="kn">import</span> <span class="nn">time</span>
+        <span class="kn">import</span> <span class="nn">random</span>
+        <span class="kn">from</span> <span class="nn">multiprocessing.dummy</span> <span class="kn">import</span> <span class="n">Pool</span>
+
+        <span class="k">def</span> <span class="nf">op_a</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.02</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+        <span class="k">def</span> <span class="nf">op_b</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.02</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">c</span> <span class="o">+</span> <span class="n">b</span>
+
+        <span class="k">def</span> <span class="nf">op_c</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.02</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+        <span class="n">pipeline</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;pipeline&#39;</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;op_a&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)(</span><span class="n">op_a</span><span class="p">),</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;op_b&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)(</span><span class="n">op_b</span><span class="p">),</span>
+            <span class="n">operation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;op_c&#39;</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">&#39;e&#39;</span><span class="p">)(</span><span class="n">op_c</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">infer</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="c1"># data = open(&quot;616039-bradpitt.jpg&quot;).read()</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">]</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">outputs</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">outputs</span><span class="p">)),</span> <span class="p">(</span>
+                <span class="n">outputs</span><span class="p">,</span>
+                <span class="n">results</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">results</span>
+
+        <span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">):</span>
+            <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">infer</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1">####################################</span>
+    <span class="c1"># Backwards compatibility</span>
+    <span class="c1">####################################</span>
+
+    <span class="c1"># Classes must be defined as members of __main__ for pickleability</span>
+
+    <span class="c1"># We first define some basic operations</span>
+<div class="viewcode-block" id="Sum"><a class="viewcode-back" href="../../../module_docs/meshed/ext/gk_tests.html#meshed.ext.gk_tests.Sum">[docs]</a>    <span class="k">class</span> <span class="nc">Sum</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+<div class="viewcode-block" id="Sum.compute"><a class="viewcode-back" href="../../../module_docs/meshed/ext/gk_tests.html#meshed.ext.gk_tests.Sum.compute">[docs]</a>        <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="Mul"><a class="viewcode-back" href="../../../module_docs/meshed/ext/gk_tests.html#meshed.ext.gk_tests.Mul">[docs]</a>    <span class="k">class</span> <span class="nc">Mul</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+<div class="viewcode-block" id="Mul.compute"><a class="viewcode-back" href="../../../module_docs/meshed/ext/gk_tests.html#meshed.ext.gk_tests.Mul.compute">[docs]</a>        <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">]</span></div></div>
+
+    <span class="c1"># This is an example of an operation that takes a parameter.</span>
+    <span class="c1"># It also illustrates an operation that returns multiple outputs</span>
+<div class="viewcode-block" id="Pow"><a class="viewcode-back" href="../../../module_docs/meshed/ext/gk_tests.html#meshed.ext.gk_tests.Pow">[docs]</a>    <span class="k">class</span> <span class="nc">Pow</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+<div class="viewcode-block" id="Pow.compute"><a class="viewcode-back" href="../../../module_docs/meshed/ext/gk_tests.html#meshed.ext.gk_tests.Pow.compute">[docs]</a>        <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+
+            <span class="n">a</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;exponent&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">outputs</span></div></div>
+
+    <span class="k">def</span> <span class="nf">test_backwards_compatibility</span><span class="p">():</span>
+
+        <span class="n">sum_op1</span> <span class="o">=</span> <span class="n">Sum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op1&#39;</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab&#39;</span><span class="p">],</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">])</span>
+        <span class="n">mul_op1</span> <span class="o">=</span> <span class="n">Mul</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mul_op1&#39;</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab_times_b&#39;</span><span class="p">],</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">pow_op1</span> <span class="o">=</span> <span class="n">Pow</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pow_op1&#39;</span><span class="p">,</span>
+            <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab&#39;</span><span class="p">],</span>
+            <span class="n">provides</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab_p1&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_ab_p2&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_ab_p3&#39;</span><span class="p">],</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;exponent&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">sum_op2</span> <span class="o">=</span> <span class="n">Sum</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sum_op2&#39;</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;p1_plus_p2&#39;</span><span class="p">],</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab_p1&#39;</span><span class="p">,</span> <span class="s1">&#39;sum_ab_p2&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_op</span><span class="p">(</span><span class="n">sum_op1</span><span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_op</span><span class="p">(</span><span class="n">mul_op1</span><span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_op</span><span class="p">(</span><span class="n">pow_op1</span><span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add_op</span><span class="p">(</span><span class="n">sum_op2</span><span class="p">)</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+        <span class="c1"># try the pickling part</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># Running the network</span>
+        <span class="c1">#</span>
+
+        <span class="c1"># get all outputs</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">named_inputs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+
+        <span class="c1"># get specific outputs</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab_times_b&#39;</span><span class="p">],</span> <span class="n">named_inputs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}))</span>
+
+        <span class="c1"># start with inputs already computed</span>
+        <span class="n">pprint</span><span class="p">(</span>
+            <span class="n">net</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sum_ab_times_b&#39;</span><span class="p">],</span> <span class="n">named_inputs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sum_ab&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+        <span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
