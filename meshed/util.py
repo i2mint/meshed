@@ -3,7 +3,18 @@ import re
 from functools import partial, wraps
 from inspect import Parameter, getmodule
 from types import ModuleType
-from typing import Callable, Any, Union, Iterator, Optional, Iterable, Mapping, TypeVar
+from typing import (
+    Callable,
+    Any,
+    Union,
+    Iterator,
+    Optional,
+    Iterable,
+    Mapping,
+    TypeVar,
+    Tuple,
+    List,
+)
 from importlib import import_module
 from operator import itemgetter
 
@@ -770,6 +781,31 @@ def mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=(
     func.__name__ = sig.name
 
     return func
+
+
+# TODO: Probably can improve efficiency and reusability using generators?
+def ordered_set_operations(a: Iterable, b: Iterable) -> Tuple[List, List, List]:
+    """
+    Returns a triple (a-b, a&b, b-a) for two iterables a and b.
+    The operations are performed as if a and b were sets, but the order in a is conserved.
+
+    >>> ordered_set_operations([1, 2, 3, 4], [3, 4, 5, 6])
+    ([1, 2], [3, 4], [5, 6])
+
+    >>> ordered_set_operations("abcde", "cdefg")
+    (['a', 'b'], ['c', 'd', 'e'], ['f', 'g'])
+
+    >>> ordered_set_operations([1, 2, 2, 3], [2, 3, 3, 4])
+    ([1], [2, 3], [4])
+    """
+    set_b = set(b)
+    a = tuple(a)  # because a traversed three times (consider a one-pass algo)
+    a_minus_b = [x for x in a if x not in set_b]
+    a_intersect_b = [x for x in a if x in set_b and not set_b.remove(x)]
+    b_minus_a = [x for x in b if x not in set(a)]
+
+    return a_minus_b, a_intersect_b, b_minus_a
+
 
 
 # utils to reorder funcnodes

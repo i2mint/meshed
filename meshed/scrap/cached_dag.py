@@ -140,7 +140,11 @@ class CachedDag:
 
     We can get ``ww`` because it has a default:
 
-    >>> g('ww')  # we can get this since it has a default
+    (TODO: This (and further tests) stopped working since code_to_dag was enhanced 
+    with the ability to use the wrapped function's signature to determine the 
+    signature of the output dag. Need to fix this.)
+
+    >>> g('ww')
     2
 
     But we can't get ``y`` because we don't have what it depends on:
