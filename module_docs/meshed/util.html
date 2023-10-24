@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.148 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.149 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -669,6 +669,25 @@ callables that don’t start with an underscore:</p>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">callable</span><span class="p">(</span><span class="n">this_modules_funcs</span><span class="p">[</span><span class="s1">&#39;objects_defined_in_module&#39;</span><span class="p">])</span>
 <span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.util.ordered_set_operations">
+<code class="sig-prename descclassname">meshed.util.</code><code class="sig-name descname">ordered_set_operations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">Iterable</span></em>, <em class="sig-param"><span class="n">b</span><span class="p">:</span> <span class="n">Iterable</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">, </span>List<span class="p">, </span>List<span class="p">]</span><a class="reference internal" href="../../_modules/meshed/util.html#ordered_set_operations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.util.ordered_set_operations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a triple (a-b, a&amp;b, b-a) for two iterables a and b.
+The operations are performed as if a and b were sets, but the order in a is conserved.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ordered_set_operations</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="go">([1, 2], [3, 4], [5, 6])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ordered_set_operations</span><span class="p">(</span><span class="s2">&quot;abcde&quot;</span><span class="p">,</span> <span class="s2">&quot;cdefg&quot;</span><span class="p">)</span>
+<span class="go">([&#39;a&#39;, &#39;b&#39;], [&#39;c&#39;, &#39;d&#39;, &#39;e&#39;], [&#39;f&#39;, &#39;g&#39;])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ordered_set_operations</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="go">([1], [2, 3], [4])</span>
 </pre></div>
 </div>
 </dd></dl>

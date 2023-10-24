@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.148 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.149 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -188,7 +188,10 @@ www=  ──▶ │   add    │  │
 </pre></div>
 </div>
 <p>We can get <code class="docutils literal notranslate"><span class="pre">ww</span></code> because it has a default:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;ww&#39;</span><span class="p">)</span>  <span class="c1"># we can get this since it has a default</span>
+<p>(TODO: This (and further tests) stopped working since code_to_dag was enhanced
+with the ability to use the wrapped function’s signature to determine the
+signature of the output dag. Need to fix this.)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">&#39;ww&#39;</span><span class="p">)</span>
 <span class="go">2</span>
 </pre></div>
 </div>

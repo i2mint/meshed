@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.util &mdash; meshed 0.1.148 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.util &mdash; meshed 0.1.149 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -124,7 +124,18 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">getmodule</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">ModuleType</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">Iterator</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">TypeVar</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
 
@@ -891,6 +902,31 @@
     <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span>
 
     <span class="k">return</span> <span class="n">func</span></div>
+
+
+<span class="c1"># TODO: Probably can improve efficiency and reusability using generators?</span>
+<div class="viewcode-block" id="ordered_set_operations"><a class="viewcode-back" href="../../module_docs/meshed/util.html#meshed.dag.ordered_set_operations">[docs]</a><span class="k">def</span> <span class="nf">ordered_set_operations</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a triple (a-b, a&amp;b, b-a) for two iterables a and b.</span>
+<span class="sd">    The operations are performed as if a and b were sets, but the order in a is conserved.</span>
+
+<span class="sd">    &gt;&gt;&gt; ordered_set_operations([1, 2, 3, 4], [3, 4, 5, 6])</span>
+<span class="sd">    ([1, 2], [3, 4], [5, 6])</span>
+
+<span class="sd">    &gt;&gt;&gt; ordered_set_operations(&quot;abcde&quot;, &quot;cdefg&quot;)</span>
+<span class="sd">    ([&#39;a&#39;, &#39;b&#39;], [&#39;c&#39;, &#39;d&#39;, &#39;e&#39;], [&#39;f&#39;, &#39;g&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; ordered_set_operations([1, 2, 2, 3], [2, 3, 3, 4])</span>
+<span class="sd">    ([1], [2, 3], [4])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">set_b</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>  <span class="c1"># because a traversed three times (consider a one-pass algo)</span>
+    <span class="n">a_minus_b</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">a</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">set_b</span><span class="p">]</span>
+    <span class="n">a_intersect_b</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">a</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">set_b</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">set_b</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
+    <span class="n">b_minus_a</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">b</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">a_minus_b</span><span class="p">,</span> <span class="n">a_intersect_b</span><span class="p">,</span> <span class="n">b_minus_a</span></div>
+
 
 
 <span class="c1"># utils to reorder funcnodes</span>
