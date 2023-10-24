@@ -807,7 +807,6 @@ def ordered_set_operations(a: Iterable, b: Iterable) -> Tuple[List, List, List]:
     return a_minus_b, a_intersect_b, b_minus_a
 
 
-
 # utils to reorder funcnodes
 
 
