@@ -210,6 +210,8 @@ def parse_body(body):
     info = _ast_info_str(body)
     if isinstance(body, ast.Assign):
         return parse_assignment(body, info=info)
+    elif isinstance(body, ast.Return):
+        return None  # ignore  # TODO: Would like to actually use this
     else:
         raise ValueError(
             f"Couldn't find a handler for parsing body with {info} ({body=})"
@@ -378,7 +380,8 @@ def parse_steps(src):
     #  return etc.)
     #     return func_body
     for body in func_body.body:
-        yield parse_body(body)
+        if (parsed_body := parse_body(body)) is not None:
+            yield parsed_body
 
 
 parse_assignment_steps = parse_steps  # backcompatible
@@ -512,6 +515,7 @@ def code_to_fnodes(
     func_src = _ensure_func_src(func_src, use_place_holder_fallback)
     # Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG
     return tuple(_code_to_fnodes(src, func_src))
+
 
 def _reconfigure_signature_according_to_src(src, dag):
     if callable(src):
