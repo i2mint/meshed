@@ -3,8 +3,6 @@ from pytest import fixture
 from meshed import DAG
 from i2 import Sig
 
-# from i2.signatures import kwargs_from_args_and_kwargs
-
 
 @fixture
 def foo():
@@ -19,7 +17,7 @@ def test_addition_variadics():
         pass
 
     sig = Sig(foo)
-    # res = sig.kwargs_from_args_and_kwargs(
+    # res = sig.map_arguments(
     #    (11, 22, "you"), dict(z="zoo", other="stuff"), post_process=True
     # )
     # assert res == "{'w': 11, 'x': 22, 'y': 'you', 'z': 'zoo', 'other': 'stuff'}"

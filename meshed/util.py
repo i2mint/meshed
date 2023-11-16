@@ -477,7 +477,7 @@ class ConditionalIterize:
         self.__signature__ = self._new_sig()
 
     def __call__(self, *args, **kwargs):
-        _kwargs = self.sig.kwargs_from_args_and_kwargs(
+        _kwargs = self.sig.map_arguments(
             args, kwargs, apply_defaults=True, allow_partial=True
         )
         first_arg = next(iter(_kwargs.values()))
@@ -735,7 +735,7 @@ def named_partial(func, *args, __name__=None, **keywords):
 
 
 def _place_holder_func(*args, _sig=None, **kwargs):
-    _kwargs = _sig.kwargs_from_args_and_kwargs(args, kwargs)
+    _kwargs = _sig.map_arguments(args, kwargs)
     _kwargs_str = ', '.join(f'{k}={v}' for k, v in _kwargs.items())
     return f'{_sig.name}({_kwargs_str})'
 

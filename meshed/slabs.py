@@ -185,7 +185,7 @@ def _call_from_dict(kwargs: MutableMapping, func: Callable, sig: Sig):
     when there are inputs.
 
     """
-    args, kwargs = sig.args_and_kwargs_from_kwargs(
+    args, kwargs = sig.mk_args_and_kwargs(
         kwargs,
         allow_excess=True,
         ignore_kind=True,

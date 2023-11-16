@@ -330,7 +330,7 @@ class FuncNode:
         an actual interface method. Additional control/constraints on read and writes
         can be implemented by providing a custom scope for that."""
         relevant_kwargs = dict(self.extractor(scope))
-        args, kwargs = self.sig.args_and_kwargs_from_kwargs(relevant_kwargs)
+        args, kwargs = self.sig.mk_args_and_kwargs(relevant_kwargs)
         output = call_somewhat_forgivingly(
             self.func, args, kwargs, enforce_sig=self.sig
         )

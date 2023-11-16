@@ -51,7 +51,7 @@ def _handle_exclude_nodes(func):
 
     @wraps(func)
     def _func(*args, **kwargs):
-        kwargs = sig.kwargs_from_args_and_kwargs(args, kwargs, apply_defaults=True)
+        kwargs = sig.map_arguments(args, kwargs, apply_defaults=True)
         try:
             _exclude_nodes = kwargs['_exclude_nodes']
         except KeyError:
@@ -63,7 +63,7 @@ def _handle_exclude_nodes(func):
             _exclude_nodes = set(_exclude_nodes)
 
         kwargs['_exclude_nodes'] = _exclude_nodes
-        args, kwargs = sig.args_and_kwargs_from_kwargs(kwargs)
+        args, kwargs = sig.mk_args_and_kwargs(kwargs)
         return func(*args, **kwargs)
 
     return _func

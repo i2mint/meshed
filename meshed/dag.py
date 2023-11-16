@@ -571,7 +571,7 @@ class DAG:
         """
         Get a dict of {argname: argval} pairs from positional and keyword arguments.
         """
-        return self.__signature__.kwargs_from_args_and_kwargs(
+        return self.__signature__.map_arguments(
             args, kwargs, apply_defaults=True
         )
 
@@ -831,7 +831,7 @@ class DAG:
         9
         """
 
-        keyword_dflts = self.__signature__.kwargs_from_args_and_kwargs(
+        keyword_dflts = self.__signature__.map_arguments(
             args=positional_dflts,
             kwargs=keyword_dflts,
             apply_defaults=_consider_defaulted_arguments_as_bound,
