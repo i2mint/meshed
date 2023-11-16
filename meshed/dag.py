@@ -571,9 +571,7 @@ class DAG:
         """
         Get a dict of {argname: argval} pairs from positional and keyword arguments.
         """
-        return self.__signature__.map_arguments(
-            args, kwargs, apply_defaults=True
-        )
+        return self.__signature__.map_arguments(args, kwargs, apply_defaults=True)
 
     def _call(self, *args, **kwargs):
         # Get a dict of {argname: argval} pairs from positional and keyword arguments
