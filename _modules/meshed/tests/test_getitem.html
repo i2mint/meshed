@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.test_tools &mdash; meshed 0.1.150 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.tests.test_getitem &mdash; meshed 0.1.150 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -109,7 +109,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">meshed.tests.test_tools</li>
+      <li class="breadcrumb-item active">meshed.tests.test_getitem</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -118,52 +118,93 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for meshed.tests.test_tools</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Test hybrid dag that uses a web service for some functions.&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
-<span class="kn">from</span> <span class="nn">meshed.examples</span> <span class="kn">import</span> <span class="n">online_marketing_funcs</span> <span class="k">as</span> <span class="n">funcs</span>
-<span class="kn">from</span> <span class="nn">meshed.tools</span> <span class="kn">import</span> <span class="n">mk_hybrid_dag</span><span class="p">,</span> <span class="n">launch_webservice</span>
+  <h1>Source code for meshed.tests.test_getitem</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pytest</span>
 
 
-<div class="viewcode-block" id="test_hybrid_dag"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_tools.html#meshed.tests.test_tools.test_hybrid_dag">[docs]</a><span class="k">def</span> <span class="nf">test_hybrid_dag</span><span class="p">(</span>
-    <span class="n">dag_funcs</span><span class="o">=</span><span class="n">funcs</span><span class="p">,</span>
-    <span class="n">funcs_ids_to_cloudify</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="s1">&#39;revenue&#39;</span><span class="p">],</span>
-    <span class="n">input_dict</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">impressions</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="n">cost_per_impression</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
-        <span class="n">click_per_impression</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-        <span class="n">sales_per_click</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-        <span class="n">revenue_per_sale</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test hybrid dag that uses a web service for some functions.</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">FuncNode</span>
+<span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span> <span class="nn">pytest</span> <span class="kn">import</span> <span class="n">fixture</span>
 
-<span class="sd">    :param dag_funcs: list of dag functions, defaults to funcs</span>
-<span class="sd">    :type dag_funcs: List[Callable], optional</span>
-<span class="sd">    :param funcs_ids_to_cloudify: list of function ids to be cloudified, defaults to [&#39;cost&#39;, &#39;revenue&#39;]</span>
-<span class="sd">    :type funcs_ids_to_cloudify: list, optional</span>
-<span class="sd">    :param input_dict: kwargs, defaults to dict( impressions=1000, cost_per_impression=0.02, click_per_impression=0.3, sales_per_click=0.05, revenue_per_sale=100 )</span>
-<span class="sd">    :type input_dict: dict, optional</span>
+
+<span class="k">def</span> <span class="nf">X_test</span><span class="p">(</span><span class="n">train_test_split</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">train_test_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">y_test</span><span class="p">(</span><span class="n">train_test_split</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">train_test_split</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">truth</span><span class="p">(</span><span class="n">y_test</span><span class="p">):</span>  <span class="c1"># to link up truth and test_y</span>
+    <span class="k">return</span> <span class="n">y_test</span>
+
+
+<div class="viewcode-block" id="confusion_count"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.confusion_count">[docs]</a><span class="k">def</span> <span class="nf">confusion_count</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">truth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a dict containing the counts of all combinations of predicction and corresponding truth values.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Counter</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">truth</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="prediction"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.prediction">[docs]</a><span class="k">def</span> <span class="nf">prediction</span><span class="p">(</span><span class="n">predict_proba</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an array of predictions from thresholding the scores of predict_proba array.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">predict_proba</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="predict_proba"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.predict_proba">[docs]</a><span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the prediction_proba scores of a model given some test data&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_aligned_items</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield (k, a_value, b_value) triples for all k that are both a key of a and of b&quot;&quot;&quot;</span>
+    <span class="c1"># reason for casting to dict is to make sure things like pd.Series use the right keys.</span>
+    <span class="c1"># could also use k in a.keys() etc. to solve this.</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">b</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="dot_product"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.dot_product">[docs]</a><span class="k">def</span> <span class="nf">dot_product</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; dot_product({&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}, {&#39;b&#39;: 4, &#39;c&#39;: -1, &#39;d&#39;: &#39;whatever&#39;})</span>
+<span class="sd">    5</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># The parameters</span>
-    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_funcs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ak</span> <span class="o">*</span> <span class="n">bk</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">ak</span><span class="p">,</span> <span class="n">bk</span> <span class="ow">in</span> <span class="n">_aligned_items</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span></div>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calling mk_hybrid_dag!&#39;</span><span class="p">)</span>
-    <span class="c1"># Calling mk_hybrid_dag</span>
-    <span class="n">hybrid_dag</span> <span class="o">=</span> <span class="n">mk_hybrid_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">funcs_ids_to_cloudify</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting web service!&#39;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">launch_webservice</span><span class="p">(</span><span class="n">hybrid_dag</span><span class="o">.</span><span class="n">funcs_to_cloudify</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Web service started!&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calling dag and ws_dag!&#39;</span><span class="p">)</span>
-        <span class="n">dag_result</span> <span class="o">=</span> <span class="n">dag</span><span class="p">(</span><span class="o">**</span><span class="n">input_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;dag_result: </span><span class="si">{</span><span class="n">dag_result</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">ws_dag_result</span> <span class="o">=</span> <span class="n">hybrid_dag</span><span class="o">.</span><span class="n">ws_dag</span><span class="p">(</span><span class="o">**</span><span class="n">input_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ws_dag_result: </span><span class="si">{</span><span class="n">ws_dag_result</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">dag_result</span> <span class="o">==</span> <span class="n">ws_dag_result</span><span class="p">,</span> <span class="s1">&#39;Results are not equal!&#39;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Results are equal!&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="classifier_score"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.classifier_score">[docs]</a><span class="k">def</span> <span class="nf">classifier_score</span><span class="p">(</span><span class="n">confusion_count</span><span class="p">,</span> <span class="n">confusion_value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute a score for a classifier that produced the `confusion_count`, based on the given `confusion_value`.</span>
+<span class="sd">    Meant to be curried by fixing the confusion_value dict.</span>
+
+<span class="sd">    The function is purposely general -- it is not specific to binary classifier outcomes, or even any classifier outcomes.</span>
+<span class="sd">    It simply computes a normalized dot product, depending on the inputs keys to align values to multiply and</span>
+<span class="sd">    considering a missing key as an expression of a null value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dot_product</span><span class="p">(</span><span class="n">confusion_count</span><span class="p">,</span> <span class="n">confusion_value</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">confusion_count</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+
+<span class="nd">@fixture</span>
+<span class="k">def</span> <span class="nf">bigger_dag</span><span class="p">():</span>
+    <span class="n">bigger_dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">classifier_score</span><span class="p">,</span>
+            <span class="n">confusion_count</span><span class="p">,</span>
+            <span class="n">prediction</span><span class="p">,</span>
+            <span class="n">predict_proba</span><span class="p">,</span>
+            <span class="n">X_test</span><span class="p">,</span>
+            <span class="n">y_test</span><span class="p">,</span>
+            <span class="n">truth</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">bigger_dag</span>
+
+
+<span class="k">def</span> <span class="nf">test_full_subgraph</span><span class="p">(</span><span class="n">bigger_dag</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">bigger_dag</span><span class="p">[[</span><span class="s1">&#39;truth&#39;</span><span class="p">,</span> <span class="s1">&#39;prediction&#39;</span><span class="p">]:</span><span class="s1">&#39;confusion_count&#39;</span><span class="p">]</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="s1">&#39;DAG(func_nodes=[FuncNode(prediction,truth -&gt; confusion_count_ -&gt; confusion_count)], name=None)&#39;</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span> <span class="o">==</span> <span class="n">expected</span>
 </pre></div>
 
            </div>

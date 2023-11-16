@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.test_ch_funcs &mdash; meshed 0.1.149 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.tests.test_ch_funcs &mdash; meshed 0.1.150 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -121,8 +121,43 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="meshed-tests-test-ch-funcs">
-<h1>meshed.tests.test_ch_funcs<a class="headerlink" href="#meshed-tests-test-ch-funcs" title="Permalink to this headline">¶</a></h1>
+  <section id="module-meshed.tests.test_ch_funcs">
+<span id="meshed-tests-test-ch-funcs"></span><h1>meshed.tests.test_ch_funcs<a class="headerlink" href="#module-meshed.tests.test_ch_funcs" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="meshed.tests.test_ch_funcs.FlagWithMessage">
+<em class="property">class </em><code class="sig-prename descclassname">meshed.tests.test_ch_funcs.</code><code class="sig-name descname">FlagWithMessage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">flag</span></em>, <em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/tests/test_ch_funcs.html#FlagWithMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.tests.test_ch_funcs.FlagWithMessage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="meshed.tests.test_ch_funcs.FlagWithMessage.flag">
+<code class="sig-name descname">flag</code><em class="property">: bool</em><a class="headerlink" href="#meshed.tests.test_ch_funcs.FlagWithMessage.flag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="meshed.tests.test_ch_funcs.FlagWithMessage.msg">
+<code class="sig-name descname">msg</code><em class="property">: str</em><a class="headerlink" href="#meshed.tests.test_ch_funcs.FlagWithMessage.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.tests.test_ch_funcs.test_validate_bind_attributes">
+<code class="sig-prename descclassname">meshed.tests.test_ch_funcs.</code><code class="sig-name descname">test_validate_bind_attributes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/tests/test_ch_funcs.html#test_validate_bind_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.tests.test_ch_funcs.test_validate_bind_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>in ch_func_node_func: validate compatibility (not equality of sigs)
+we cannot use call_compatibility
+rename everything
+<a class="reference external" href="https://github.com/i2mint/i2/issues/47">https://github.com/i2mint/i2/issues/47</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="meshed.tests.test_ch_funcs.validate_func_mapping_on_signatures">
+<code class="sig-prename descclassname">meshed.tests.test_ch_funcs.</code><code class="sig-name descname">validate_func_mapping_on_signatures</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func_mapping</span></em>, <em class="sig-param"><span class="n">func_nodes</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/tests/test_ch_funcs.html#validate_func_mapping_on_signatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#meshed.tests.test_ch_funcs.validate_func_mapping_on_signatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to give a more detailed report on
+mismatched signatures
+The same can be done by tweaking ch_func_node_func
+and its “alternative” param</p>
+</dd></dl>
+
 </section>
 
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.149 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.150 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -291,7 +291,7 @@
 <span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">mk_place_holder_func</span><span class="p">,</span> <span class="n">ordered_set_operations</span>
 
 
-<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
 
 <span class="c1"># Some restrictions exist and need to be clarified or removed (i.e. more cases handled)</span>
 <span class="c1"># For example,</span>
@@ -304,15 +304,15 @@
 
 
 <span class="k">def</span> <span class="nf">attr_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)}</span>
 
 
 <span class="k">def</span> <span class="nf">is_from_ast_module</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="s2">&quot;__module__&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_ast&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="s1">&#39;__module__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_ast&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_ast_info_str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;lineno=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;lineno=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s1">&#39;</span>
 
 
 <span class="k">def</span> <span class="nf">_itemgetter</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">()):</span>
@@ -348,15 +348,15 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All commands should be assignments, this one wasn&#39;t: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">target</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">targets</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Only one target allowed: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Only one target allowed: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
         <span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">)</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Should be a ast.Name or ast.Tuple: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Should be a ast.Name or ast.Tuple: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="n">value</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">value</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">),</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Only assigned function calls are allowed:&quot;</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s1">&#39;Only assigned function calls are allowed:&#39;</span> <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">target</span><span class="p">,</span> <span class="n">value</span>
@@ -400,10 +400,10 @@
             <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">bind_from_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">):</span>
-        <span class="n">assign_to_names</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span> <span class="n">target</span><span class="o">.</span><span class="n">elts</span><span class="p">))</span>
+        <span class="n">assign_to_names</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">),</span> <span class="n">target</span><span class="o">.</span><span class="n">elts</span><span class="p">))</span>
         <span class="c1"># yield the function call information, assigning to a single variable</span>
         <span class="c1"># TODO: Long. Better way? (careful: need global uniqueness!)</span>
-        <span class="n">func_output_name</span> <span class="o">=</span> <span class="s2">&quot;__&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">assign_to_names</span><span class="p">)</span>
+        <span class="n">func_output_name</span> <span class="o">=</span> <span class="s1">&#39;__&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">assign_to_names</span><span class="p">)</span>
         <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">out</span><span class="o">=</span><span class="n">func_output_name</span><span class="p">,</span>
@@ -413,14 +413,14 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">assign_to_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">assign_to_names</span><span class="p">):</span>
             <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
                 <span class="n">func</span><span class="o">=</span><span class="n">signed_itemgetter</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
-                <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assign_to_name</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">assign_to_name</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                 <span class="n">out</span><span class="o">=</span><span class="n">assign_to_name</span><span class="p">,</span>
                 <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">func_output_name</span><span class="p">},</span>
-                <span class="n">func_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                <span class="n">func_label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="c1"># raise ValueError(f&quot;You&#39;re here: {target=}&quot;)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Should be a ast.Name or ast.Tuple. Was: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Should be a ast.Name or ast.Tuple. Was: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
 <span class="n">FuncNodeFactory</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">FuncNode</span><span class="p">]</span>
@@ -437,7 +437,7 @@
 
 
 <span class="k">def</span> <span class="nf">_remove_indentation</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">indent</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">indent_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span>
@@ -447,9 +447,9 @@
                 <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">indent</span><span class="p">):</span>
                     <span class="k">yield</span> <span class="n">line</span><span class="p">[</span><span class="n">indent_length</span><span class="p">:]</span>
 
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;I found no indent!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;I found no indent!&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
@@ -525,11 +525,11 @@
     <span class="n">exclude_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">exclude_names</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">())</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">target_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parse_assignment_steps</span><span class="p">(</span><span class="n">src</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">node_kwargs</span> <span class="ow">in</span> <span class="n">parsed_to_node_kwargs</span><span class="p">(</span><span class="n">target_value</span><span class="p">):</span>
-            <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;func_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
+            <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;func_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
                 <span class="c1"># need to keep names uniques, so add a prefix to (hope) to get uniqueness</span>
-                <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">02.0f</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">exclude_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+                <span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02.0f</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">exclude_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
             <span class="k">yield</span> <span class="n">node_kwargs_to_func_node_factory</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">)</span></div>
 
 
@@ -549,17 +549,17 @@
 
     <span class="n">factory_kwargs</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">keywords</span>
     <span class="n">name</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">&quot;func_label&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">]</span>
+        <span class="n">factory_kwargs</span><span class="p">[</span><span class="s1">&#39;func_label&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">]</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">name_to_func_map</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">name_to_func_map</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
     <span class="k">elif</span> <span class="n">use_place_holder_fallback</span><span class="p">:</span>
         <span class="n">arg_names</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">k</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">&quot;bind&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="n">k</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s1">&#39;bind&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">mk_place_holder_func</span><span class="p">(</span><span class="n">arg_names</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;name not found in name_to_func_map: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;name not found in name_to_func_map: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="mk_fnodes_from_fn_factories"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.mk_fnodes_from_fn_factories">[docs]</a><span class="k">def</span> <span class="nf">mk_fnodes_from_fn_factories</span><span class="p">(</span>
@@ -578,7 +578,7 @@
     <span class="c1"># TODO: Might be a cleaner design for this...</span>
     <span class="k">for</span> <span class="n">fnode_factory</span> <span class="ow">in</span> <span class="n">fnodes_factories</span><span class="p">:</span>
         <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">fnode_factory</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">n_required</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;func&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">n_required</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;func&#39;</span><span class="p">:</span>
             <span class="c1"># first making sure the fnode_factory is exactly as expected for this case,</span>
             <span class="c1"># get a function for this fnode_factory, then use it to make the fnode</span>
             <span class="n">func</span> <span class="o">=</span> <span class="n">factory_to_func</span><span class="p">(</span><span class="n">fnode_factory</span><span class="p">)</span>
@@ -591,8 +591,8 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;The fnode_factory didn&#39;t have the expected format, so I&#39;m freaking &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;out. It&#39;s supposed to be a no-arguments-required-callable or a &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;functools.partial that needs only a func to make the func node. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;This is the offending fnode_factory: </span><span class="si">{</span><span class="n">fnode_factory</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s1">&#39;functools.partial that needs only a func to make the func node. &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;This is the offending fnode_factory: </span><span class="si">{</span><span class="n">fnode_factory</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="p">)</span></div>
 
 
@@ -610,11 +610,11 @@
 
 <span class="k">def</span> <span class="nf">_extract_name_from_single_func_def</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">body</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">body</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">first_element</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_element</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="p">(</span><span class="n">name</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">first_element</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">name</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">first_element</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="p">):</span>
             <span class="k">return</span> <span class="n">name</span>
     <span class="k">return</span> <span class="n">default</span>
@@ -673,7 +673,7 @@
 <span class="c1"># from typing import Tuple, Iterable, Iterator</span>
 <span class="c1"># from meshed import FuncNode, code_to_dag, code_to_fnodes, DAG</span>
 
-<span class="n">extract_tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;\w+&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span>
+<span class="n">extract_tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;\w+&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span>
 
 
 <div class="viewcode-block" id="triples_to_fnodes"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.triples_to_fnodes">[docs]</a><span class="k">def</span> <span class="nf">triples_to_fnodes</span><span class="p">(</span><span class="n">triples</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
@@ -698,8 +698,8 @@
 <span class="sd">    alpha__bravo -&gt; bravo__1 -&gt; bravo</span>
 <span class="sd">    alpha,echo -&gt; golf -&gt; foxtrot</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_triple_to_func_call_str</span><span class="p">(</span><span class="o">*</span><span class="n">triple</span><span class="p">)</span> <span class="k">for</span> <span class="n">triple</span> <span class="ow">in</span> <span class="n">triples</span><span class="p">)</span>
-    <span class="n">code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;def main():</span><span class="se">\n\t</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n\t</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_triple_to_func_call_str</span><span class="p">(</span><span class="o">*</span><span class="n">triple</span><span class="p">)</span> <span class="k">for</span> <span class="n">triple</span> <span class="ow">in</span> <span class="n">triples</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;def main():</span><span class="se">\n\t</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">return</span> <span class="n">code_to_fnodes</span><span class="p">(</span><span class="n">code</span><span class="p">)</span></div>
 
 
@@ -735,14 +735,14 @@
             <span class="n">name_to_func_map</span><span class="o">=</span><span class="n">name_to_func_map</span><span class="p">,</span>
             <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="n">use_place_holder_fallback</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">Callable</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;func_src should be callable, or a mapping&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">Callable</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;func_src should be callable, or a mapping&#39;</span>
     <span class="k">return</span> <span class="n">func_src</span>
 
 
 <span class="k">def</span> <span class="nf">_ensure_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">src</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">_extract_name_from_single_func_def</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s2">&quot;dag_made_from_code_parsing&quot;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_extract_name_from_single_func_def</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s1">&#39;dag_made_from_code_parsing&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">name</span>
@@ -808,7 +808,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">(</span>
-        <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span> <span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">named_funcs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">_&#39;</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span> <span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">named_funcs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">)</span></div>
 
 
@@ -867,27 +867,27 @@
     <span class="n">fnode</span><span class="p">:</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_to_jdict</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Jdict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
     <span class="n">jdict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="s2">&quot;func_label&quot;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">func_label</span><span class="p">,</span>
-        <span class="s2">&quot;bind&quot;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span>
-        <span class="s2">&quot;out&quot;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s1">&#39;func_label&#39;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">func_label</span><span class="p">,</span>
+        <span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span>
+        <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">func_to_jdict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;func&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_to_jdict</span><span class="p">(</span><span class="n">fnode</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_to_jdict</span><span class="p">(</span><span class="n">fnode</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">jdict</span>
 
 
 <span class="k">def</span> <span class="nf">jdict_to_fnode</span><span class="p">(</span><span class="n">jdict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">jdict_to_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Jdict</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">jdict_to_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span>
-            <span class="n">func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">(</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;func&quot;</span><span class="p">]),</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
-            <span class="n">func_label</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;func_label&quot;</span><span class="p">],</span>
-            <span class="n">bind</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;bind&quot;</span><span class="p">],</span>
-            <span class="n">out</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">],</span>
+            <span class="n">func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">(</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">]),</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+            <span class="n">func_label</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func_label&#39;</span><span class="p">],</span>
+            <span class="n">bind</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;bind&#39;</span><span class="p">],</span>
+            <span class="n">out</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">],</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Need a function&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Need a function&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="dag_to_jdict"><a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.dag_to_jdict">[docs]</a><span class="k">def</span> <span class="nf">dag_to_jdict</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_to_jdict</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -896,8 +896,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fnode_to_jdict_</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">fnode_to_jdict</span><span class="p">,</span> <span class="n">func_to_jdict</span><span class="o">=</span><span class="n">func_to_jdict</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">dag</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="s2">&quot;func_nodes&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">fnode_to_jdict_</span><span class="p">,</span> <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)),</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">dag</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s1">&#39;func_nodes&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">fnode_to_jdict_</span><span class="p">,</span> <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)),</span>
     <span class="p">}</span></div>
 
 
@@ -907,8 +907,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">jdict_to_fnode_</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">jdict_to_fnode</span><span class="p">,</span> <span class="n">jdict_to_func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
-        <span class="n">func_nodes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">jdict_to_fnode_</span><span class="p">,</span> <span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;func_nodes&quot;</span><span class="p">])),</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">func_nodes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">jdict_to_fnode_</span><span class="p">,</span> <span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func_nodes&#39;</span><span class="p">])),</span>
     <span class="p">)</span></div>
 </pre></div>
 

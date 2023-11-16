@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.test_tools &mdash; meshed 0.1.150 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <title>meshed.tests.test_composition &mdash; meshed 0.1.150 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
@@ -109,7 +109,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">meshed.tests.test_tools</li>
+      <li class="breadcrumb-item active">meshed.tests.test_composition</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -118,52 +118,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for meshed.tests.test_tools</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Test hybrid dag that uses a web service for some functions.&quot;&quot;&quot;</span>
+  <h1>Source code for meshed.tests.test_composition</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Test composition&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
 
-<span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
-<span class="kn">from</span> <span class="nn">meshed.examples</span> <span class="kn">import</span> <span class="n">online_marketing_funcs</span> <span class="k">as</span> <span class="n">funcs</span>
-<span class="kn">from</span> <span class="nn">meshed.tools</span> <span class="kn">import</span> <span class="n">mk_hybrid_dag</span><span class="p">,</span> <span class="n">launch_webservice</span>
+<span class="kn">from</span> <span class="nn">meshed.composition</span> <span class="kn">import</span> <span class="n">line_with_dag</span>
 
 
-<div class="viewcode-block" id="test_hybrid_dag"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_tools.html#meshed.tests.test_tools.test_hybrid_dag">[docs]</a><span class="k">def</span> <span class="nf">test_hybrid_dag</span><span class="p">(</span>
-    <span class="n">dag_funcs</span><span class="o">=</span><span class="n">funcs</span><span class="p">,</span>
-    <span class="n">funcs_ids_to_cloudify</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="s1">&#39;revenue&#39;</span><span class="p">],</span>
-    <span class="n">input_dict</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">impressions</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="n">cost_per_impression</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
-        <span class="n">click_per_impression</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-        <span class="n">sales_per_click</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-        <span class="n">revenue_per_sale</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test hybrid dag that uses a web service for some functions.</span>
-
-<span class="sd">    :param dag_funcs: list of dag functions, defaults to funcs</span>
-<span class="sd">    :type dag_funcs: List[Callable], optional</span>
-<span class="sd">    :param funcs_ids_to_cloudify: list of function ids to be cloudified, defaults to [&#39;cost&#39;, &#39;revenue&#39;]</span>
-<span class="sd">    :type funcs_ids_to_cloudify: list, optional</span>
-<span class="sd">    :param input_dict: kwargs, defaults to dict( impressions=1000, cost_per_impression=0.02, click_per_impression=0.3, sales_per_click=0.05, revenue_per_sale=100 )</span>
-<span class="sd">    :type input_dict: dict, optional</span>
+<div class="viewcode-block" id="test_line_with_dag"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_composition.html#meshed.tests.test_composition.test_line_with_dag">[docs]</a><span class="k">def</span> <span class="nf">test_line_with_dag</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Very simple test of a basic usage of line_with_dag</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># The parameters</span>
-    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_funcs</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calling mk_hybrid_dag!&#39;</span><span class="p">)</span>
-    <span class="c1"># Calling mk_hybrid_dag</span>
-    <span class="n">hybrid_dag</span> <span class="o">=</span> <span class="n">mk_hybrid_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">funcs_ids_to_cloudify</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Starting web service!&#39;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">launch_webservice</span><span class="p">(</span><span class="n">hybrid_dag</span><span class="o">.</span><span class="n">funcs_to_cloudify</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Web service started!&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calling dag and ws_dag!&#39;</span><span class="p">)</span>
-        <span class="n">dag_result</span> <span class="o">=</span> <span class="n">dag</span><span class="p">(</span><span class="o">**</span><span class="n">input_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;dag_result: </span><span class="si">{</span><span class="n">dag_result</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">ws_dag_result</span> <span class="o">=</span> <span class="n">hybrid_dag</span><span class="o">.</span><span class="n">ws_dag</span><span class="p">(</span><span class="o">**</span><span class="n">input_dict</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ws_dag_result: </span><span class="si">{</span><span class="n">ws_dag_result</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">dag_result</span> <span class="o">==</span> <span class="n">ws_dag_result</span><span class="p">,</span> <span class="s1">&#39;Results are not equal!&#39;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Results are equal!&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">line_with_dag</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span></div>
 </pre></div>
 
            </div>

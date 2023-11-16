@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>i2.util &mdash; meshed 0.1.149 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>i2.util &mdash; meshed 0.1.150 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -126,7 +126,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
 <span class="kn">import</span> <span class="nn">types</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Mapping</span><span class="p">,</span>
@@ -138,8 +138,37 @@
     <span class="n">Iterable</span><span class="p">,</span>
     <span class="n">TypeVar</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">io</span>
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+
+
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">FileLikeObject</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">io_cls</span><span class="o">=</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">,</span> <span class="n">open_mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Context manager for file-like objects.</span>
+
+<span class="sd">    The purpose of this context manager is to be able to ensure we have a file-like </span>
+<span class="sd">    object interface to work with, regardless of whether we are given a file path,</span>
+<span class="sd">    bytes of a file, or an open file pointer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file (str, bytes, io.IOBase): The file path, bytes of a file, or an open file pointer.</span>
+
+<span class="sd">    Yields:</span>
+<span class="sd">        io.IOBase: A file-like object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># If file is a string, open the file and yield the file pointer</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">open_mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">f</span>  <span class="c1"># TODO: Is f protected by the open context?</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="c1"># If file is bytes, create a BytesIO object and yield it</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">f</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Otherwise, assume file is already a file-like object and yield it</span>
+        <span class="k">yield</span> <span class="n">file</span>
 
 
 <span class="k">def</span> <span class="nf">copy_func</span><span class="p">(</span>
@@ -1279,6 +1308,20 @@
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">raise</span>
         <span class="k">return</span> <span class="n">execdict</span>
+
+
+<span class="k">def</span> <span class="nf">deprecation_of</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">old_name</span><span class="p">):</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;`</span><span class="si">{</span><span class="n">old_name</span><span class="si">}</span><span class="s1">` is deprecated. Use `</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s1">` instead.&#39;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span>
 </pre></div>
 
            </div>

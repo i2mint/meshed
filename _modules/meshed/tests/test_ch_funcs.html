@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>meshed.tests.test_ch_funcs &mdash; meshed 0.1.150 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/toggleprompt.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            meshed
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/base.html">meshed.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/caching.html">meshed.caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/components.html">meshed.components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/composition.html">meshed.composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples.html">meshed.examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext.html">meshed.ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/itools.html">meshed.itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/makers.html">meshed.makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/flow_control_script.html">meshed.scrap.flow_control_script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/gui_interaction.html">meshed.scrap.gui_interaction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_components.html">meshed.tests.test_components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag_defaults.html">meshed.tests.test_dag_defaults</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_dag_variadics.html">meshed.tests.test_dag_variadics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_getitem.html">meshed.tests.test_getitem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_makers.html">meshed.tests.test_makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_tools.html">meshed.tests.test_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/test_util.html">meshed.tests.test_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/tools.html">meshed.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/util.html">meshed.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/meshed/viz.html">meshed.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">meshed</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">meshed.tests.test_ch_funcs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for meshed.tests.test_ch_funcs</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">meshed</span> <span class="k">as</span> <span class="nn">ms</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">import</span> <span class="nn">meshed.base</span>
+<span class="kn">import</span> <span class="nn">meshed.util</span>
+<span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">ch_funcs</span><span class="p">,</span> <span class="n">_validate_func_mapping</span>
+<span class="kn">from</span> <span class="nn">meshed.tests.objects_for_testing</span> <span class="kn">import</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span>
+<span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="n">compare_signatures</span>
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">example_func_nodes</span><span class="p">():</span>
+
+    <span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">meshed</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">_mk_func_nodes</span><span class="p">(</span><span class="n">funcs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">example_func_mapping</span><span class="p">():</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;f_&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">&#39;g_&#39;</span><span class="p">:</span> <span class="n">g</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">mapping</span>
+
+
+<span class="k">def</span> <span class="nf">test_ch_funcs_no_change</span><span class="p">(</span><span class="n">example_func_nodes</span><span class="p">):</span>
+    <span class="n">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">example_func_nodes</span><span class="p">)</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
+
+    <span class="n">dummy_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">funcs</span><span class="p">))</span>
+
+    <span class="n">new_dag</span> <span class="o">=</span> <span class="n">ch_funcs</span><span class="p">(</span><span class="n">func_nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">func_mapping</span><span class="o">=</span><span class="n">dummy_mapping</span><span class="p">,)</span>
+    <span class="n">new_nodes</span> <span class="o">=</span> <span class="n">new_dag</span><span class="p">()</span><span class="o">.</span><span class="n">func_nodes</span>
+    <span class="k">assert</span> <span class="n">nodes</span> <span class="o">==</span> <span class="n">new_nodes</span>
+
+
+<div class="viewcode-block" id="FlagWithMessage"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.FlagWithMessage">[docs]</a><span class="k">class</span> <span class="nc">FlagWithMessage</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="n">flag</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+
+<span class="c1"># This function is used to give a more detailed report on</span>
+<span class="c1"># mismatched signatures</span>
+<span class="c1"># the same can be done by tweaking ch_func_node_func</span>
+<span class="c1"># and its &quot;alternative&quot; param</span>
+<div class="viewcode-block" id="validate_func_mapping_on_signatures"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.validate_func_mapping_on_signatures">[docs]</a><span class="k">def</span> <span class="nf">validate_func_mapping_on_signatures</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function is used to give a more detailed report on</span>
+<span class="sd">    mismatched signatures</span>
+<span class="sd">    The same can be done by tweaking ch_func_node_func</span>
+<span class="sd">    and its &quot;alternative&quot; param</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
+
+    <span class="n">_validate_func_mapping</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">func_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">fnode</span> <span class="o">:=</span> <span class="n">dag</span><span class="o">.</span><span class="n">_func_node_for</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">old_func</span> <span class="o">=</span> <span class="n">fnode</span><span class="o">.</span><span class="n">func</span>
+
+            <span class="k">if</span> <span class="n">compare_signatures</span><span class="p">(</span><span class="n">old_func</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">FlagWithMessage</span><span class="p">(</span><span class="n">flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Signatures disagree for key=</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">FlagWithMessage</span><span class="p">(</span><span class="n">flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;No funcnode matching the key </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">FlagWithMessage</span><span class="p">(</span><span class="n">flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="n">all_flags_true</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flag</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">all_flags_true</span><span class="p">,</span> <span class="n">d</span></div>
+
+
+<span class="k">def</span> <span class="nf">test_validate_func_mapping_based_on_signatures</span><span class="p">(</span>
+    <span class="n">example_func_nodes</span><span class="p">,</span> <span class="n">example_func_mapping</span>
+<span class="p">):</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">example_func_nodes</span><span class="p">)</span>
+    <span class="c1"># funcs = [f, g]</span>
+    <span class="n">func_mapping</span> <span class="o">=</span> <span class="n">example_func_mapping</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">validate_func_mapping_on_signatures</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;f_&#39;</span><span class="p">:</span> <span class="n">FlagWithMessage</span><span class="p">(</span><span class="n">flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;g_&#39;</span><span class="p">:</span> <span class="n">FlagWithMessage</span><span class="p">(</span><span class="n">flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="n">expected</span>
+
+
+<div class="viewcode-block" id="test_validate_bind_attributes"><a class="viewcode-back" href="../../../module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.test_validate_bind_attributes">[docs]</a><span class="k">def</span> <span class="nf">test_validate_bind_attributes</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    in ch_func_node_func: validate compatibility (not equality of sigs)</span>
+<span class="sd">    we cannot use call_compatibility</span>
+<span class="sd">    rename everything</span>
+<span class="sd">    https://github.com/i2mint/i2/issues/47</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
