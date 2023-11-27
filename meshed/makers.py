@@ -191,7 +191,10 @@ def is_from_ast_module(o):
 
 
 def _ast_info_str(x):
-    return f'lineno={x.lineno}'
+    if hasattr(x, 'lineno'):
+        return f'lineno={x.lineno}'
+    else:
+        return 'lineno=unknown'
 
 
 def _itemgetter(sequence, keys=()):
@@ -206,16 +209,44 @@ def signed_itemgetter(*keys):
     return partialx(_itemgetter, keys=keys, _rm_partialize=True)
 
 
-def parse_body(body):
+def _ast_unparse(node):
+    try:
+        import astunparse
+
+        return astunparse.unparse(node)
+    except (ImportError, ModuleNotFoundError):
+        return '<to see the code, pip install astunparse>'
+
+
+def _error_handler(body, info=None):
     info = _ast_info_str(body)
-    if isinstance(body, ast.Assign):
-        return parse_assignment(body, info=info)
-    elif isinstance(body, ast.Return):
-        return None  # ignore  # TODO: Would like to actually use this
+    if isinstance(body, ast.If):
+        raise ValueError(
+            f"At {info}: You cannot have if statements. "
+            f"Replace them with functional equivalents. ({body=})\n"
+            f"{_ast_unparse(body)}"
+        )
     else:
         raise ValueError(
-            f"Couldn't find a handler for parsing body with {info} ({body=})"
+            f"Couldn't find a handler for parsing body with {info} ({body=})\n"
+            f"{_ast_unparse(body)}"
         )
+
+
+def parse_body(body, *, body_index=None):
+    info = _ast_info_str(body)
+    if isinstance(body, (ast.Assign, ast.AnnAssign)):
+        return parse_assignment(body, info=info)
+    elif isinstance(body, ast.Expr) and isinstance(body.value, ast.Call):
+        dummy_var = ast.Name(id=f"_{body_index}", ctx=ast.Store())
+        new_assign = ast.Assign(targets=[dummy_var], value=body.value)
+        return parse_assignment(new_assign)
+    elif isinstance(body, ast.Return):
+        return None  # ignore  # TODO: Would like to actually use this
+    elif isinstance(body, ast.Expr) and isinstance(body.value, (ast.Str, ast.Constant)):
+        return None  # ignore  # TODO: Would like to actually use this
+    else:
+        return _error_handler(body)
 
 
 # Note: generalize? glom?
@@ -223,11 +254,16 @@ def parse_assignment(body: ast.Assign, info=None) -> Tuple:
     # TODO: Make this validation better (at least more help in raised error)
     # TODO: extract validating code out as validation functions?
     info = _ast_info_str(body)
-    if not isinstance(body, ast.Assign):
+    if not isinstance(body, (ast.Assign, ast.AnnAssign)):
         raise ValueError(f"All commands should be assignments, this one wasn't: {info}")
 
-    target = body.targets
+    if isinstance(body, ast.Assign):
+        target = body.targets
+    elif isinstance(body, ast.AnnAssign):
+        target = [body.target]  # ast.AnnAssign has a single target, not a list
+
     assert len(target) == 1, f'Only one target allowed: {info}'
+
     target = target[0]
     assert isinstance(
         target, (ast.Name, ast.Tuple)
@@ -379,8 +415,8 @@ def parse_steps(src):
     # TODO: work with func_body.args to get info on interface (name, args, kwargs,
     #  return etc.)
     #     return func_body
-    for body in func_body.body:
-        if (parsed_body := parse_body(body)) is not None:
+    for body_index, body in enumerate(func_body.body):
+        if (parsed_body := parse_body(body, body_index=body_index)) is not None:
             yield parsed_body
 
 
@@ -786,5 +822,6 @@ def jdict_to_dag(jdict: dict, *, jdict_to_func: Callable = None):
     """
     jdict_to_fnode_ = partial(jdict_to_fnode, jdict_to_func=jdict_to_func)
     return DAG(
-        name=jdict['name'], func_nodes=list(map(jdict_to_fnode_, jdict['func_nodes'])),
+        name=jdict['name'],
+        func_nodes=list(map(jdict_to_fnode_, jdict['func_nodes'])),
     )
