@@ -222,14 +222,14 @@ def _error_handler(body, info=None):
     info = _ast_info_str(body)
     if isinstance(body, ast.If):
         raise ValueError(
-            f"At {info}: You cannot have if statements. "
-            f"Replace them with functional equivalents. ({body=})\n"
-            f"{_ast_unparse(body)}"
+            f'At {info}: You cannot have if statements. '
+            f'Replace them with functional equivalents. ({body=})\n'
+            f'{_ast_unparse(body)}'
         )
     else:
         raise ValueError(
             f"Couldn't find a handler for parsing body with {info} ({body=})\n"
-            f"{_ast_unparse(body)}"
+            f'{_ast_unparse(body)}'
         )
 
 
@@ -238,7 +238,7 @@ def parse_body(body, *, body_index=None):
     if isinstance(body, (ast.Assign, ast.AnnAssign)):
         return parse_assignment(body, info=info)
     elif isinstance(body, ast.Expr) and isinstance(body.value, ast.Call):
-        dummy_var = ast.Name(id=f"_{body_index}", ctx=ast.Store())
+        dummy_var = ast.Name(id=f'_{body_index}', ctx=ast.Store())
         new_assign = ast.Assign(targets=[dummy_var], value=body.value)
         return parse_assignment(new_assign)
     elif isinstance(body, ast.Return):
@@ -822,6 +822,5 @@ def jdict_to_dag(jdict: dict, *, jdict_to_func: Callable = None):
     """
     jdict_to_fnode_ = partial(jdict_to_fnode, jdict_to_func=jdict_to_func)
     return DAG(
-        name=jdict['name'],
-        func_nodes=list(map(jdict_to_fnode_, jdict['func_nodes'])),
+        name=jdict['name'], func_nodes=list(map(jdict_to_fnode_, jdict['func_nodes'])),
     )
