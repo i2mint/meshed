@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.150 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>meshed.makers &mdash; meshed 0.1.151 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -312,7 +312,10 @@
 
 
 <span class="k">def</span> <span class="nf">_ast_info_str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;lineno=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;lineno&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;lineno=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;lineno=unknown&#39;</span>
 
 
 <span class="k">def</span> <span class="nf">_itemgetter</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">()):</span>
@@ -327,16 +330,44 @@
     <span class="k">return</span> <span class="n">partialx</span><span class="p">(</span><span class="n">_itemgetter</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">keys</span><span class="p">,</span> <span class="n">_rm_partialize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">parse_body</span><span class="p">(</span><span class="n">body</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_ast_unparse</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">astunparse</span>
+
+        <span class="k">return</span> <span class="n">astunparse</span><span class="o">.</span><span class="n">unparse</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ModuleNotFoundError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;to see the code, pip install astunparse&gt;&#39;</span>
+
+
+<span class="k">def</span> <span class="nf">_error_handler</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">_ast_info_str</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># ignore  # TODO: Would like to actually use this</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">If</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;At </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">: You cannot have if statements. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Replace them with functional equivalents. (</span><span class="si">{</span><span class="n">body</span><span class="si">=}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_ast_unparse</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Couldn&#39;t find a handler for parsing body with </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">body</span><span class="si">=}</span><span class="s2">)&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Couldn&#39;t find a handler for parsing body with </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">body</span><span class="si">=}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_ast_unparse</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">parse_body</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">body_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">_ast_info_str</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Expr</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">):</span>
+        <span class="n">dummy_var</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">body_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())</span>
+        <span class="n">new_assign</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">dummy_var</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parse_assignment</span><span class="p">(</span><span class="n">new_assign</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># ignore  # TODO: Would like to actually use this</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Expr</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Constant</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># ignore  # TODO: Would like to actually use this</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_error_handler</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
 
 
 <span class="c1"># Note: generalize? glom?</span>
@@ -344,11 +375,16 @@
     <span class="c1"># TODO: Make this validation better (at least more help in raised error)</span>
     <span class="c1"># TODO: extract validating code out as validation functions?</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">_ast_info_str</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All commands should be assignments, this one wasn&#39;t: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">target</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">targets</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">targets</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="p">[</span><span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="p">]</span>  <span class="c1"># ast.AnnAssign has a single target, not a list</span>
+
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Only one target allowed: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s1">&#39;</span>
+
     <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
         <span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">)</span>
@@ -500,8 +536,8 @@
     <span class="c1"># TODO: work with func_body.args to get info on interface (name, args, kwargs,</span>
     <span class="c1">#  return etc.)</span>
     <span class="c1">#     return func_body</span>
-    <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">func_body</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">parsed_body</span> <span class="o">:=</span> <span class="n">parse_body</span><span class="p">(</span><span class="n">body</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">body_index</span><span class="p">,</span> <span class="n">body</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">func_body</span><span class="o">.</span><span class="n">body</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">parsed_body</span> <span class="o">:=</span> <span class="n">parse_body</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">body_index</span><span class="o">=</span><span class="n">body_index</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">parsed_body</span></div>
 
 
@@ -907,7 +943,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">jdict_to_fnode_</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">jdict_to_fnode</span><span class="p">,</span> <span class="n">jdict_to_func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">func_nodes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">jdict_to_fnode_</span><span class="p">,</span> <span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func_nodes&#39;</span><span class="p">])),</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+        <span class="n">func_nodes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">jdict_to_fnode_</span><span class="p">,</span> <span class="n">jdict</span><span class="p">[</span><span class="s1">&#39;func_nodes&#39;</span><span class="p">])),</span>
     <span class="p">)</span></div>
 </pre></div>
 
