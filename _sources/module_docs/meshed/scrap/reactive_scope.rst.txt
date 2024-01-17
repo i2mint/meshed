@@ -1,4 +1,0 @@
-meshed.scrap.reactive_scope
-===========================
-.. automodule:: meshed.scrap.reactive_scope
-   :members:
