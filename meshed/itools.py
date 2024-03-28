@@ -2,6 +2,7 @@
 adjacency Mapping representation.
 
 """
+
 from typing import (
     Any,
     Mapping,
@@ -11,6 +12,7 @@ from typing import (
     Callable,
     TypeVar,
     Union,
+    Optional,
 )
 from itertools import product, chain
 from functools import wraps, reduce, partial
@@ -20,8 +22,25 @@ from operator import or_
 
 from i2.signatures import Sig
 
+N = TypeVar("N")
+Graph = Mapping[N, Iterable[N]]
+MutableGraph = MutableMapping[N, Iterable[N]]
 
-def random_graph(n_nodes=7):
+
+def _import_or_raise(module_name, pip_install_name: Optional[Union[str, bool]] = None):
+    try:
+        return __import__(module_name)
+    except ImportError as e:
+        if pip_install_name is True:
+            pip_install_name = module_name  # use the module name as the install name
+        if pip_install_name:
+            msg = f"You can install it by running: `pip install {pip_install_name}`"
+        else:
+            msg = "Please install it first."
+        raise ImportError(f"Could not import {module_name}. {msg}") from e
+
+
+def random_graph(n_nodes: int = 7):
     """Get a random graph.
 
     >>> random_graph()  # doctest: +SKIP
@@ -46,7 +65,17 @@ def random_graph(n_nodes=7):
     return dict(gen())
 
 
-def _handle_exclude_nodes(func):
+def graphviz_digraph(d: Graph):
+    """Makes a graphviz graph using the links specified by dict d"""
+    graphviz = _import_or_raise("graphviz", "graphviz")
+    dot = graphviz.Digraph()
+    for k, v in d.items():
+        for vv in v:
+            dot.edge(vv, k)
+    return dot
+
+
+def _handle_exclude_nodes(func: Callable):
     sig = Sig(func)
 
     @wraps(func)
@@ -69,7 +98,7 @@ def _handle_exclude_nodes(func):
     return _func
 
 
-def add_edge(g: MutableMapping, node1, node2):
+def add_edge(g: MutableGraph, node1, node2):
     """Add an edge FROM node1 TO node2"""
     if node1 in g:
         g[node1].append(node2)
@@ -77,7 +106,7 @@ def add_edge(g: MutableMapping, node1, node2):
         g[node1] = [node2]
 
 
-def edges(g: Mapping):
+def edges(g: Graph):
     """Generates edges of graph, i.e. ``(from_node, to_node)`` tuples.
 
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
@@ -90,7 +119,7 @@ def edges(g: Mapping):
             yield src, dst
 
 
-def nodes(g: Mapping):
+def nodes(g: Graph):
     """
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> sorted(nodes(g))
@@ -107,7 +136,7 @@ def nodes(g: Mapping):
                 seen.add(dst)
 
 
-def has_node(g: Mapping, node, check_adjacencies=True):
+def has_node(g: Graph, node, check_adjacencies=True):
     """Returns True if the graph has given node
 
     >>> g = {
@@ -155,7 +184,7 @@ def has_node(g: Mapping, node, check_adjacencies=True):
 
 
 @_handle_exclude_nodes
-def successors(g: Mapping, node, _exclude_nodes=None):
+def successors(g: Graph, node, _exclude_nodes=None):
     """Iterator of nodes that have directed paths FROM node
 
     >>> g = {
@@ -176,7 +205,7 @@ def successors(g: Mapping, node, _exclude_nodes=None):
         yield from successors(g, successor_node, _exclude_nodes)
 
 
-def predecessors(g: Mapping, node):
+def predecessors(g: Graph, node):
     """Iterator of nodes that have directed paths TO node
 
     >>> g = {
@@ -217,7 +246,7 @@ def _split_if_str(x):
         return x
 
 
-def children(g: Mapping, source: Iterable):
+def children(g: Graph, source: Iterable[N]):
     """Set of all nodes (not in source) adjacent FROM 'source' in 'g'
 
     >>> g = {
@@ -239,7 +268,7 @@ def children(g: Mapping, source: Iterable):
     return _children - source
 
 
-def parents(g: Mapping, source: Iterable):
+def parents(g: Graph, source: Iterable[N]):
     """Set of all nodes (not in source) adjacent TO 'source' in 'g'
 
     >>> g = {
@@ -257,7 +286,7 @@ def parents(g: Mapping, source: Iterable):
 
 
 @_handle_exclude_nodes
-def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
+def ancestors(g: Graph, source: Iterable[N], _exclude_nodes=None):
     """Set of all nodes (not in source) reachable TO `source` in `g`.
 
     >>> g = {
@@ -283,7 +312,7 @@ def ancestors(g: Mapping, source: Iterable, _exclude_nodes=None):
         return _parents | _ancestors_of_parent
 
 
-def descendants(g: Mapping, source: Iterable, _exclude_nodes=None):
+def descendants(g: Graph, source: Iterable[N], _exclude_nodes=None):
     """Returns the set of all nodes reachable FROM `source` in `g`.
 
     >>> g = {
@@ -301,7 +330,7 @@ def descendants(g: Mapping, source: Iterable, _exclude_nodes=None):
 
 
 # TODO: Can serious be optimized, and hasn't been tested much: Revise
-def root_nodes(g: Mapping):
+def root_nodes(g: Graph):
     """
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> sorted(root_nodes(g))
@@ -327,7 +356,7 @@ def root_ancestors(graph: dict, nodes: Union[str, Iterable[str]]):
 
 
 # TODO: Can serious be optimized, and hasn't been tested much: Revise
-def leaf_nodes(g: Mapping):
+def leaf_nodes(g: Graph):
     """
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> sorted(leaf_nodes(g))
@@ -339,7 +368,7 @@ def leaf_nodes(g: Mapping):
     return root_nodes(edge_reversed_graph(g))
 
 
-def isolated_nodes(g: Mapping):
+def isolated_nodes(g: Graph):
     """Nodes that
     >>> g = dict(a='c', b='ce', c=list('abde'), d='c', e=['c', 'z'], f={})
     >>> set(isolated_nodes(g))
@@ -352,7 +381,7 @@ def isolated_nodes(g: Mapping):
             yield src
 
 
-def find_path(g: Mapping, src, dst, path=None):
+def find_path(g: Graph, src, dst, path=None):
     """find a path from src to dst nodes in graph
 
     >>> g = dict(a='c', b='ce', c=list('abde'), d='c', e=['c', 'z'], f={})
@@ -380,7 +409,7 @@ def find_path(g: Mapping, src, dst, path=None):
     return None
 
 
-def reverse_edges(g: Mapping):
+def reverse_edges(g: Graph):
     """Generator of reversed edges. Like edges but with inverted edges.
 
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
@@ -395,7 +424,44 @@ def reverse_edges(g: Mapping):
         yield from product(dst_nodes, src)
 
 
-def out_degrees(g: Mapping[Any, Sized]):
+def has_cycle(g: Graph):
+    """Returns True if and only if the graph has a cycle.
+
+    >>> g = dict(a=['b'], b=['c', 'd'], c=['e'], d=['e'])
+    >>> has_cycle(g)
+    False
+    >>> g['c'] = ['a']
+    >>> has_cycle(g)
+    True
+
+    """
+    visited = set()
+    rec_stack = set()
+
+    def _has_cycle(node):
+        if node in rec_stack:
+            return True
+        if node in visited:
+            return False
+
+        visited.add(node)
+        rec_stack.add(node)
+
+        for child in g.get(node, []):
+            if _has_cycle(child):
+                return True
+
+        rec_stack.remove(node)
+        return False
+
+    for node in g:
+        if _has_cycle(node):
+            return True
+
+    return False
+
+
+def out_degrees(g: Graph):
     """
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> assert dict(out_degrees(g)) == (
@@ -406,7 +472,7 @@ def out_degrees(g: Mapping[Any, Sized]):
         yield src, len(dst_nodes)
 
 
-def in_degrees(g: Mapping):
+def in_degrees(g: Graph):
     """
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> assert dict(in_degrees(g)) == (
@@ -416,7 +482,7 @@ def in_degrees(g: Mapping):
     return out_degrees(edge_reversed_graph(g))
 
 
-def copy_of_g_with_some_keys_removed(g: Mapping, keys: Iterable):
+def copy_of_g_with_some_keys_removed(g: Graph, keys: Iterable):
     keys = _split_if_str(keys)
     return {k: v for k, v in g.items() if k not in keys}
 
@@ -436,7 +502,7 @@ def _topological_sort_helper(g, parent, visited, stack):
     # print(f"  Inserted {parent}: {stack=}")
 
 
-def topological_sort(g: Mapping):
+def topological_sort(g: Graph):
     """Return the list of nodes in topological sort order.
 
     This order is such that a node parents will all occur before;
@@ -483,16 +549,11 @@ def topological_sort(g: Mapping):
     return stack
 
 
-from typing import TypeVar
-
-T = TypeVar('T')
-
-
 def edge_reversed_graph(
-    g: Mapping[T, Iterable[T]],
-    dst_nodes_factory: Callable[[], Iterable[T]] = list,
-    dst_nodes_append: Callable[[Iterable[T], T], None] = list.append,
-) -> Mapping[T, Iterable[T]]:
+    g: Graph,
+    dst_nodes_factory: Callable[[], Iterable[N]] = list,
+    dst_nodes_append: Callable[[Iterable[N], N], None] = list.append,
+) -> Graph:
     """Invert the from/to direction of the edges of the graph.
 
     >>> g = dict(a='c', b='cd', c='abd', e='')
