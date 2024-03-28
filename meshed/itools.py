@@ -10,6 +10,7 @@ from typing import (
     MutableMapping,
     Iterable,
     Callable,
+    List,
     TypeVar,
     Union,
     Optional,
@@ -424,41 +425,89 @@ def reverse_edges(g: Graph):
         yield from product(dst_nodes, src)
 
 
-def has_cycle(g: Graph):
-    """Returns True if and only if the graph has a cycle.
+def has_cycle(g: Graph) -> List[N]:
+    """
+        Returns a list representing a cycle in the graph if any. An empty list indicates no cycle.
 
-    >>> g = dict(a=['b'], b=['c', 'd'], c=['e'], d=['e'])
-    >>> has_cycle(g)
-    False
-    >>> g['c'] = ['a']
-    >>> has_cycle(g)
-    True
+        :param g: The graph to check for cycles, represented as a dictionary where keys are nodes
+                  and values are lists of nodes pointing to the key node (parents of the key node).
+
+        Example usage:
+        >>> g = dict(e=['c', 'd'], c=['b'], d=['b'], b=['a'])
+        >>> has_cycle(g)
+        []
+
+        >>> g['a'] = ['e']  # Introducing a cycle
+        >>> has_cycle(g)
+        ['e', 'c', 'b', 'a', 'e']
+
+    Design notes:
+
+    - **Graph Representation**: The graph is interpreted such that each key is a child node,
+    and the values are lists of its parents. This representation requires traversing
+    the graph in reverse, from child to parent, to detect cycles.
+    I regret this design choice, which was aligned with the original problem that was
+    being solved, but which doesn't follow the usual representation of a graph.
+    - **Consistent Return Type**: The function systematically returns a list. A non-empty
+    list indicates a cycle (showing the path of the cycle), while an empty list indicates
+    the absence of a cycle.
+    - **Depth-First Search (DFS)**: The function performs a DFS on the graph to detect
+    cycles. It uses a recursion stack (rec_stack) to track the path being explored and
+    a visited set (visited) to avoid re-exploring nodes.
+    - **Cycle Detection and Path Reconstruction**: When a node currently in the recursion
+    stack is encountered again, a cycle is detected. The function then reconstructs the
+    cycle path from the current path explored, including the start and end node to
+    illustrate the cycle closure.
+    - **Efficient Backtracking**: After exploring a node's children, the function
+    backtracks by removing the node from the recursion stack and the current path,
+    ensuring accurate path tracking for subsequent explorations.
 
     """
-    visited = set()
-    rec_stack = set()
+    visited = set()  # Tracks visited nodes to avoid re-processing
+    rec_stack = set()  # Tracks nodes currently in the recursion stack to detect cycles
 
-    def _has_cycle(node):
+    def _has_cycle(node, path):
+        """
+        Helper function to perform DFS on the graph and detect cycles.
+        :param node: Current node being processed
+        :param path: Current path taken from the start node to the current node
+        :return: List representing the cycle, empty if no cycle is found
+        """
         if node in rec_stack:
-            return True
+            # Cycle detected, return the cycle path including the current node for closure
+            cycle_start_index = path.index(node)
+            return path[cycle_start_index:] + [node]
         if node in visited:
-            return False
+            # Node already processed and didn't lead to a cycle, skip
+            return []
 
+        # Mark the current node as visited and add to the recursion stack
         visited.add(node)
         rec_stack.add(node)
+        path.append(node)
 
-        for child in g.get(node, []):
-            if _has_cycle(child):
-                return True
+        # Explore all parent nodes
+        for parent in g.get(node, []):
+            cycle_path = _has_cycle(parent, path)
+            if cycle_path:
+                # Cycle found in the path of the parent node
+                return cycle_path
 
+        # Current path didn't lead to a cycle, backtrack
         rec_stack.remove(node)
-        return False
+        path.pop()
 
+        return []
+
+    # Iterate over all nodes to ensure disconnected components are also checked
     for node in g:
-        if _has_cycle(node):
-            return True
+        cycle_path = _has_cycle(node, [])
+        if cycle_path:
+            # Return the first cycle found
+            return cycle_path
 
-    return False
+    # No cycle found in any component of the graph
+    return []
 
 
 def out_degrees(g: Graph):
