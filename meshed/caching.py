@@ -12,8 +12,28 @@ def set_cached_property_attr(obj, name, value):
     setattr(obj, name, cached_value)
 
 
+# TODO: Fix this (either the class, or the doctest is wrong)
 class LazyProps:
-    """A class that makes all"""
+    """
+    A class that makes all its attributes cached_property properties.
+
+    Example:
+
+    # >>> class A(LazyProps):
+    # ...     a = 1
+    # ...     b = 2
+    # ...     def c(self):
+    # ...         print("computing c...")
+    # ...         return self.a + self.b
+    # ...
+    # >>> a = A()
+    # >>> a.c
+    # computing c...
+    # 3
+    # >>> a.c  # note that c is not recomputed
+    # 3
+    
+    """
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
