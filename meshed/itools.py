@@ -23,7 +23,7 @@ from operator import or_
 
 from i2.signatures import Sig
 
-N = TypeVar("N")
+N = TypeVar('N')
 Graph = Mapping[N, Iterable[N]]
 MutableGraph = MutableMapping[N, Iterable[N]]
 
@@ -35,10 +35,10 @@ def _import_or_raise(module_name, pip_install_name: Optional[Union[str, bool]] =
         if pip_install_name is True:
             pip_install_name = module_name  # use the module name as the install name
         if pip_install_name:
-            msg = f"You can install it by running: `pip install {pip_install_name}`"
+            msg = f'You can install it by running: `pip install {pip_install_name}`'
         else:
-            msg = "Please install it first."
-        raise ImportError(f"Could not import {module_name}. {msg}") from e
+            msg = 'Please install it first.'
+        raise ImportError(f'Could not import {module_name}. {msg}') from e
 
 
 def random_graph(n_nodes: int = 7):
@@ -68,7 +68,7 @@ def random_graph(n_nodes: int = 7):
 
 def graphviz_digraph(d: Graph):
     """Makes a graphviz graph using the links specified by dict d"""
-    graphviz = _import_or_raise("graphviz", "graphviz")
+    graphviz = _import_or_raise('graphviz', 'graphviz')
     dot = graphviz.Digraph()
     for k, v in d.items():
         for vv in v:
