@@ -104,6 +104,7 @@ def with_cached_properties(funcs):
     """
     A decorator to add cached properties to a class.
     """
+
     def add_cached_properties(cls):
         for func in funcs:
             if not callable(func):
