@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.itools &mdash; meshed 0.1.153 documentation</title>
+  <title>meshed.itools &mdash; meshed 0.1.154 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=46249f50"></script>
+        <script src="../../_static/documentation_options.js?v=8dad0f9d"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -148,7 +148,7 @@
 
 <span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="n">Sig</span>
 
-<span class="n">N</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">)</span>
 <span class="n">Graph</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">N</span><span class="p">]]</span>
 <span class="n">MutableGraph</span> <span class="o">=</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">N</span><span class="p">]]</span>
 
@@ -160,10 +160,10 @@
         <span class="k">if</span> <span class="n">pip_install_name</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">pip_install_name</span> <span class="o">=</span> <span class="n">module_name</span>  <span class="c1"># use the module name as the install name</span>
         <span class="k">if</span> <span class="n">pip_install_name</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;You can install it by running: `pip install </span><span class="si">{</span><span class="n">pip_install_name</span><span class="si">}</span><span class="s2">`&quot;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;You can install it by running: `pip install </span><span class="si">{</span><span class="n">pip_install_name</span><span class="si">}</span><span class="s1">`&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Please install it first.&quot;</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not import </span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please install it first.&#39;</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not import </span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s1">. </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
 
 <div class="viewcode-block" id="random_graph">
@@ -198,7 +198,7 @@
 <a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.graphviz_digraph">[docs]</a>
 <span class="k">def</span> <span class="nf">graphviz_digraph</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Graph</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Makes a graphviz graph using the links specified by dict d&quot;&quot;&quot;</span>
-    <span class="n">graphviz</span> <span class="o">=</span> <span class="n">_import_or_raise</span><span class="p">(</span><span class="s2">&quot;graphviz&quot;</span><span class="p">,</span> <span class="s2">&quot;graphviz&quot;</span><span class="p">)</span>
+    <span class="n">graphviz</span> <span class="o">=</span> <span class="n">_import_or_raise</span><span class="p">(</span><span class="s1">&#39;graphviz&#39;</span><span class="p">,</span> <span class="s1">&#39;graphviz&#39;</span><span class="p">)</span>
     <span class="n">dot</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">vv</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>

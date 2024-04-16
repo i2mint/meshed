@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.caching &mdash; meshed 0.1.153 documentation</title>
+  <title>meshed.caching &mdash; meshed 0.1.154 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -17,7 +17,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=46249f50"></script>
+        <script src="../../_static/documentation_options.js?v=8dad0f9d"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -58,6 +58,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#meshed.caching.LazyProps.Literal"><code class="docutils literal notranslate"><span class="pre">LazyProps.Literal</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.caching.add_cached_property"><code class="docutils literal notranslate"><span class="pre">add_cached_property()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.caching.add_cached_property_from_func"><code class="docutils literal notranslate"><span class="pre">add_cached_property_from_func()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.caching.set_cached_property_attr"><code class="docutils literal notranslate"><span class="pre">set_cached_property_attr()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.caching.with_cached_properties"><code class="docutils literal notranslate"><span class="pre">with_cached_properties()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="components.html">meshed.components</a></li>
@@ -139,25 +143,77 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.caching.</span></span><span class="sig-name descname"><span class="pre">LazyProps</span></span><a class="reference internal" href="../../_modules/meshed/caching.html#LazyProps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.caching.LazyProps" title="Link to this definition"></a></dt>
 <dd><p>A class that makes all its attributes cached_property properties.</p>
 <p>Example:</p>
-<p># &gt;&gt;&gt; class A(LazyProps):
-# …     a = 1
-# …     b = 2
-# …     def c(self):
-# …         print(“computing c…”)
-# …         return self.a + self.b
-# …
-# &gt;&gt;&gt; a = A()
-# &gt;&gt;&gt; a.c
-# computing c…
-# 3
-# &gt;&gt;&gt; a.c  # note that c is not recomputed
-# 3</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Klass</span><span class="p">(</span><span class="n">LazyProps</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">... </span>    <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="c1"># methods with one argument are cached</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">c</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;computing c...&quot;</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">d</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">4</span>
+<span class="gp">... </span>    <span class="n">e</span> <span class="o">=</span> <span class="n">LazyProps</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@LazyProps</span><span class="o">.</span><span class="n">Literal</span>  <span class="c1"># to mark that this method should not be cached</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">method1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="mi">7</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="c1"># Methods with more than one argument are not cached</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">method2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">...</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">Klass</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">b</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">c</span>
+<span class="go">computing c...</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">c</span>  <span class="c1"># note that c is not recomputed</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">d</span>  <span class="c1"># d, a lambda with one argument, is treated as a cached property</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">e</span><span class="p">()</span>  <span class="c1"># e is marked as a literal so is not a cached property, so need to call</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">method1</span><span class="p">()</span>  <span class="c1"># method1 has one argument, but marked as a literal</span>
+<span class="go">7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">k</span><span class="o">.</span><span class="n">method2</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># method2 has more than one argument, so is not a cached property</span>
+<span class="go">11</span>
+</pre></div>
+</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="meshed.caching.LazyProps.Literal">
 <span class="sig-name descname"><span class="pre">Literal</span></span><a class="headerlink" href="#meshed.caching.LazyProps.Literal" title="Link to this definition"></a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">LiteralVal</span></code></p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.caching.add_cached_property">
+<span class="sig-prename descclassname"><span class="pre">meshed.caching.</span></span><span class="sig-name descname"><span class="pre">add_cached_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/caching.html#add_cached_property"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.caching.add_cached_property" title="Link to this definition"></a></dt>
+<dd><p>Add a method as a cached property to a class.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.caching.add_cached_property_from_func">
+<span class="sig-prename descclassname"><span class="pre">meshed.caching.</span></span><span class="sig-name descname"><span class="pre">add_cached_property_from_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/caching.html#add_cached_property_from_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.caching.add_cached_property_from_func" title="Link to this definition"></a></dt>
+<dd><p>Add a function cached property to a class.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.caching.set_cached_property_attr">
+<span class="sig-prename descclassname"><span class="pre">meshed.caching.</span></span><span class="sig-name descname"><span class="pre">set_cached_property_attr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/caching.html#set_cached_property_attr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.caching.set_cached_property_attr" title="Link to this definition"></a></dt>
+<dd><p>Helper to set cached properties.</p>
+<p>Reason: When adding cached_property dynamically (not just with the &#64;cached_property)
+the name is not set correctly. This solves that.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.caching.with_cached_properties">
+<span class="sig-prename descclassname"><span class="pre">meshed.caching.</span></span><span class="sig-name descname"><span class="pre">with_cached_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/caching.html#with_cached_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.caching.with_cached_properties" title="Link to this definition"></a></dt>
+<dd><p>A decorator to add cached properties to a class.</p>
 </dd></dl>
 
 </section>
