@@ -32,3 +32,5 @@ from meshed.util import (
     Pipe,
 )
 from meshed.components import Itemgetter, AttrGetter
+from meshed.caching import LazyProps
+

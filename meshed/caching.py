@@ -7,58 +7,88 @@ from meshed.util import func_name, LiteralVal
 
 
 def set_cached_property_attr(obj, name, value):
+    """
+    Helper to set cached properties.
+
+    Reason: When adding cached_property dynamically (not just with the @cached_property)
+    the name is not set correctly. This solves that.
+    """
     cached_value = cached_property(value)
     cached_value.__set_name__(obj, name)
     setattr(obj, name, cached_value)
 
 
-# TODO: Fix this (either the class, or the doctest is wrong)
 class LazyProps:
     """
     A class that makes all its attributes cached_property properties.
 
     Example:
 
-    # >>> class A(LazyProps):
-    # ...     a = 1
-    # ...     b = 2
-    # ...     def c(self):
-    # ...         print("computing c...")
-    # ...         return self.a + self.b
-    # ...
-    # >>> a = A()
-    # >>> a.c
-    # computing c...
-    # 3
-    # >>> a.c  # note that c is not recomputed
-    # 3
-    
+    >>> class Klass(LazyProps):
+    ...     a = 1
+    ...     b = 2
+    ...
+    ...     # methods with one argument are cached
+    ...     def c(self):
+    ...         print("computing c...")
+    ...         return self.a + self.b
+    ...
+    ...     d = lambda x: 4
+    ...     e = LazyProps.Literal(lambda x: 4)
+    ...
+    ...     @LazyProps.Literal  # to mark that this method should not be cached
+    ...     def method1(self):
+    ...         return self.a * 7
+    ...
+    ...     # Methods with more than one argument are not cached
+    ...     def method2(self, x):
+    ...         return x + 1
+    ...
+    ...
+    >>> k = Klass()
+    >>> k.b
+    2
+    >>> k.c
+    computing c...
+    3
+    >>> k.c  # note that c is not recomputed
+    3
+    >>> k.d  # d, a lambda with one argument, is treated as a cached property
+    4
+    >>> k.e()  # e is marked as a literal so is not a cached property, so need to call
+    4
+    >>> k.method1()  # method1 has one argument, but marked as a literal
+    7
+    >>> k.method2(10)  # method2 has more than one argument, so is not a cached property
+    11
     """
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
-        #         cls.__literals = []
-        #         cls.__lazyprops = []
+
         for attr_name in (a for a in dir(cls) if not a.startswith('__')):
             attr_obj = getattr(cls, attr_name)
             if isinstance(attr_obj, LiteralVal):
                 setattr(cls, attr_name, attr_obj.val)
-            #                 cls._LazyProps__literals.append(attr_name)
-            else:
+            elif callable(attr_obj) and len(signature(attr_obj).parameters) == 1:
                 set_cached_property_attr(cls, attr_name, attr_obj)
-
-    #                 cls._LazyProps__lazyprops.append(attr_name)
 
     Literal = LiteralVal  # just to have Literal available as LazyProps.Literal
 
 
 def add_cached_property(cls, method, attr_name=None):
+    """
+    Add a method as a cached property to a class.
+    """
     attr_name = attr_name or func_name(method)
     set_cached_property_attr(cls, attr_name, method)
     return cls
 
 
 def add_cached_property_from_func(cls, func, attr_name=None):
+    """
+    Add a function cached property to a class.
+    """
     params = list(signature(func).parameters)
 
     def method(self):
@@ -71,6 +101,9 @@ def add_cached_property_from_func(cls, func, attr_name=None):
 
 
 def with_cached_properties(funcs):
+    """
+    A decorator to add cached properties to a class.
+    """
     def add_cached_properties(cls):
         for func in funcs:
             if not callable(func):
