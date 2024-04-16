@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>meshed.slabs &mdash; meshed 0.1.153 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=46249f50"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            meshed
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed.html">meshed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/base.html">meshed.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/components.html">meshed.components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/composition.html">meshed.composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/dag.html">meshed.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples.html">meshed.examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext.html">meshed.ext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/itools.html">meshed.itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/makers.html">meshed.makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/flow_control_script.html">meshed.scrap.flow_control_script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gui_interaction.html">meshed.scrap.gui_interaction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests.html">meshed.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_components.html">meshed.tests.test_components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_defaults.html">meshed.tests.test_dag_defaults</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_dag_variadics.html">meshed.tests.test_dag_variadics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_getitem.html">meshed.tests.test_getitem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_makers.html">meshed.tests.test_makers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_meshed_tools.html">meshed.tests.test_meshed_tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/test_util.html">meshed.tests.test_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tests/utils_for_testing.html">meshed.tests.utils_for_testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tools.html">meshed.tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/util.html">meshed.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/viz.html">meshed.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">meshed</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">meshed.slabs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for meshed.slabs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Tools to generate slabs.</span>
+
+<span class="sd">A slab is a dict that holds data generated by a stream for a given interval of time.</span>
+
+<span class="sd">The main object of this module is `Slabs`, and object that defines how to</span>
+<span class="sd">generate multiple streams, in the form of slabs.</span>
+<span class="sd">More precisely, it defines how to source streams, operate on and combine these to create</span>
+<span class="sd">further streams, and even push these streams to further processes, all through a single</span>
+<span class="sd">simple interface: An (ordered) list of components that are called in sequence to either</span>
+<span class="sd">pull data from some sources, compute a new stream based on previous ones, or push some</span>
+<span class="sd">of the streams to further processes (such as visualization, or storage systems).</span>
+
+<span class="sd">A slab is a collection of items of a same interval of time.</span>
+<span class="sd">We represent a slab using a `dict` or mapping.</span>
+<span class="sd">Typically, a slab will be the aggregation of multiple information streams that</span>
+<span class="sd">happened around the same time.</span>
+
+<span class="sd">`Slabs` is a tool that allows you to source multiple streams into a stream of</span>
+<span class="sd">slabs that can contain the original data, or other datas computed from it, or both.</span>
+
+<span class="sd">Note to developers, though the code below is a reduced form of the actual code,</span>
+<span class="sd">it should be enough to understand the general idea.</span>
+<span class="sd">For a discussion about the design of Slabs, see</span>
+<span class="sd">https://github.com/i2mint/meshed/discussions/49.</span>
+
+
+<span class="sd">&gt;&gt;&gt; class Slabs:</span>
+<span class="sd">...     def _call_on_scope(self, scope):</span>
+<span class="sd">...         &#39;&#39;&#39;</span>
+<span class="sd">...         Calls the components 1 by 1, sourcing inputs and writing outputs in scope</span>
+<span class="sd">...         &#39;&#39;&#39;</span>
+<span class="sd">...</span>
+<span class="sd">...     def __next__(self):</span>
+<span class="sd">...         &#39;&#39;&#39;Get the next slab by calling _call_on_scope on an new empty scope.</span>
+<span class="sd">...         At least one of the components will have to be argument-less and provide</span>
+<span class="sd">...         some data for other components to get their inputs from, if any are needed.</span>
+<span class="sd">...         &#39;&#39;&#39;</span>
+<span class="sd">...         return self._call_on_scope(scope={})</span>
+<span class="sd">...</span>
+<span class="sd">...     def __iter__(self):</span>
+<span class="sd">...         &#39;&#39;&#39;Iterates over slabs until a handle exception is raised.&#39;&#39;&#39;</span>
+<span class="sd">...         # Simplified code:</span>
+<span class="sd">...         with self:  # enter all the contexts that need to be entered</span>
+<span class="sd">...             while True:  # loop until you encounter a handled exception</span>
+<span class="sd">...                 try:</span>
+<span class="sd">...                     yield next(self)</span>
+<span class="sd">...                 except self.handle_exceptions as exc_val:</span>
+<span class="sd">...                     # use specific exceptions to signal that iteration should stop</span>
+<span class="sd">...                     break</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">MutableMapping</span><span class="p">,</span>
+    <span class="n">Protocol</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">ContextFanout</span>
+<span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="n">FuncNode</span>
+<span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
+
+
+<div class="viewcode-block" id="ExceptionalException">
+<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.ExceptionalException">[docs]</a>
+<span class="k">class</span> <span class="nc">ExceptionalException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an exception was supposed to be handled, but no matching handler</span>
+<span class="sd">    was found.</span>
+
+<span class="sd">    See the `_handle_exception` function, where it is raised.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="IteratorExit">
+<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.IteratorExit">[docs]</a>
+<span class="k">class</span> <span class="nc">IteratorExit</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an iterator should quit being iterated on, signaling this event</span>
+<span class="sd">    any process that cares to catch the signal.</span>
+<span class="sd">    We chose to inherit directly from `BaseException` instead of `Exception`</span>
+<span class="sd">    for the same reason that `GeneratorExit` does: Because it&#39;s not technically</span>
+<span class="sd">    an error.</span>
+
+<span class="sd">    See: https://docs.python.org/3/library/exceptions.html#GeneratorExit</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<span class="n">DFLT_INTERRUPT_EXCEPTIONS</span> <span class="o">=</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="n">IteratorExit</span><span class="p">,</span> <span class="ne">KeyboardInterrupt</span><span class="p">)</span>
+
+<span class="n">DoNotBreak</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s1">&#39;DoNotBreak&#39;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{})</span>
+<span class="n">do_not_break</span> <span class="o">=</span> <span class="n">DoNotBreak</span><span class="p">()</span>
+<span class="n">do_not_break</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;Sentinel that should be used to signal Slabs iteration not to break. &#39;</span>
+    <span class="s1">&#39;This sentinel should be returned by exception handlers if they want to tell &#39;</span>
+    <span class="s1">&#39;the iteration not to stop (in all other cases, the iteration will stop)&#39;</span>
+<span class="p">)</span>
+
+<span class="n">IgnoredOutput</span> <span class="o">=</span> <span class="n">Any</span>
+<span class="n">ExceptionHandlerOutput</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">IgnoredOutput</span><span class="p">,</span> <span class="n">DoNotBreak</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="ExceptionHandler">
+<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.ExceptionHandler">[docs]</a>
+<span class="k">class</span> <span class="nc">ExceptionHandler</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An exception handler is an argument-less callable that is called when a handled</span>
+<span class="sd">    exception occurs during iteration. Most often, the handler does nothing,</span>
+<span class="sd">    but could be used whose output will be ignored, unless it is do_not_break,</span>
+<span class="sd">    which will signal that the iteration should continue.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExceptionHandlerOutput</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+
+<span class="c1"># TODO: Make HandledExceptionsMap into a NewType?</span>
+<span class="c1"># doc: A map between exception types and exception handlers (callbacks)</span>
+<span class="n">ExceptionType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">)</span>
+<span class="n">HandledExceptionsMap</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">ExceptionType</span><span class="p">,</span> <span class="n">ExceptionHandler</span><span class="p">]</span>
+
+<span class="c1"># doc: If none of the exceptions need handlers, you can just specify a list of them</span>
+<span class="n">HandledExceptionsMapSpec</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
+    <span class="n">HandledExceptionsMap</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span>  <span class="c1"># an iterable of exception types</span>
+    <span class="ne">BaseException</span><span class="p">,</span>  <span class="c1"># or just one exception type</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">do_nothing</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">log_and_return</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="nb">print</span><span class="p">):</span>
+    <span class="n">logger</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">msg</span>
+
+
+<span class="c1"># TODO: Could consider (topologically) ordering the exceptions to reduce the matching</span>
+<span class="c1">#  possibilities (see _handle_exception)</span>
+<span class="k">def</span> <span class="nf">_get_handle_exceptions</span><span class="p">(</span>
+    <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMapSpec</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HandledExceptionsMap</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handle_exceptions</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">):</span>
+        <span class="c1"># Only one? Ensure there&#39;s a tuple of exceptions:</span>
+        <span class="n">handle_exceptions</span> <span class="o">=</span> <span class="p">(</span><span class="n">handle_exceptions</span><span class="p">,)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handle_exceptions</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="n">handle_exceptions</span> <span class="o">=</span> <span class="p">{</span><span class="n">exc_type</span><span class="p">:</span> <span class="n">do_nothing</span> <span class="k">for</span> <span class="n">exc_type</span> <span class="ow">in</span> <span class="n">handle_exceptions</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">handle_exceptions</span>
+
+
+<span class="k">def</span> <span class="nf">_handle_exception</span><span class="p">(</span>
+    <span class="n">instance</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">:</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMap</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExceptionHandlerOutput</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Looks for an exception type matching exc_val and calls the corresponding</span>
+<span class="sd">    handler with</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">exc_val</span><span class="o">=</span><span class="n">exc_val</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc_val</span><span class="p">)</span> <span class="ow">in</span> <span class="n">handle_exceptions</span><span class="p">:</span>  <span class="c1"># try precise matching first</span>
+        <span class="n">exception_handler</span> <span class="o">=</span> <span class="n">handle_exceptions</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">exc_val</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">_call_from_dict</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">exception_handler</span><span class="p">,</span> <span class="n">Sig</span><span class="p">(</span><span class="n">exception_handler</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if not, find the first matching parent</span>
+        <span class="k">for</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exception_handler</span> <span class="ow">in</span> <span class="n">handle_exceptions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">_call_from_dict</span><span class="p">(</span>
+                    <span class="n">inputs</span><span class="p">,</span> <span class="n">exception_handler</span><span class="p">,</span> <span class="n">Sig</span><span class="p">(</span><span class="n">exception_handler</span><span class="p">)</span>
+                <span class="p">)</span>
+    <span class="c1"># You never should get this far, but if you do, there&#39;s a problem, let&#39;s scream it:</span>
+    <span class="k">raise</span> <span class="n">ExceptionalException</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;I couldn&#39;t find that exception in my handlers: </span><span class="si">{</span><span class="n">exc_val</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_call_from_dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="n">Sig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A i2.call_forgivingly optimized for our purpose</span>
+
+<span class="sd">    The sig argument needs to be the Sig(func) to work correctly.</span>
+
+<span class="sd">    Two uses cases here:</span>
+
+<span class="sd">    - using a scope dict as both the source of `Slabs` components, and as a place</span>
+<span class="sd">    to temporarily store the outputs of these components.</span>
+
+<span class="sd">    - exception handlers: We&#39;d like the exception handlers to be easy to express.</span>
+<span class="sd">    Maybe you need the object raising the exception to handle it,</span>
+<span class="sd">    maybe you just want to log the event.</span>
+<span class="sd">    In the first case, you the handler needs the said object to be passed to it,</span>
+<span class="sd">    in the second, we don&#39;t need any arguments at all.</span>
+<span class="sd">    With _call_from_dict, we don&#39;t have to choose, we just have to impose that</span>
+<span class="sd">    the handler use specific keywords (namely `exc_val` and/or `instance`)</span>
+<span class="sd">    when there are inputs.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">mk_args_and_kwargs</span><span class="p">(</span>
+        <span class="n">kwargs</span><span class="p">,</span>
+        <span class="n">allow_excess</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">ignore_kind</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">allow_partial</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">apply_defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_conditional_pluralization</span><span class="p">(</span><span class="n">n_items</span><span class="p">,</span> <span class="n">singular_msg</span><span class="p">,</span> <span class="n">plural_msg</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;To route to the right message (or template) according to ``n_items``&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">n_items</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">singular_msg</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">plural_msg</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_components</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="n">components</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
+        <span class="n">not_callable</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
+        <span class="n">not_callable_keys</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span>
+        <span class="c1"># TODO: Analyze values of components further and enhance error message with</span>
+        <span class="c1">#  further suggestions. For example, if there&#39;s an iterator component c,</span>
+        <span class="c1">#  suggest that perhaps ``c.__next__`` was intended?</span>
+        <span class="c1">#  These component-based suggestions should be placed as a default of an</span>
+        <span class="c1">#  argument of _validate_components so that it can be parametrized.</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">_conditional_pluralization</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">not_callable</span><span class="p">),</span>
+            <span class="sa">f</span><span class="s1">&#39;This component is not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;These components are not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="c1"># TODO: Postelize (or add tooling for) the components specification and add validation.</span>
+<div class="viewcode-block" id="Slabs">
+<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs">[docs]</a>
+<span class="k">class</span> <span class="nc">Slabs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object to source and manipulate multiple streams.</span>
+
+<span class="sd">    A slab is a collection of items of a same interval of time.</span>
+<span class="sd">    We represent a slab using a `dict` or mapping.</span>
+<span class="sd">    Typically, a slab will be the aggregation of multiple information streams that</span>
+<span class="sd">    happened around the same time.</span>
+
+<span class="sd">    For example, say and edge device had a microphone, light, and movement sensor.</span>
+<span class="sd">    An aggregate reading of these sensors could give you something like:</span>
+
+<span class="sd">    &gt;&gt;&gt; slab = {&#39;audio&#39;: [1, 2, 4], &#39;light&#39;: 126, &#39;movement&#39;: None}</span>
+
+<span class="sd">    `movement` is `None` because the sensor is off. If it were on, we&#39;d have True or</span>
+<span class="sd">    False as values.</span>
+
+<span class="sd">    From this information, you&#39;d like to compute a `turn_mov_on` value based on the</span>
+<span class="sd">    formula.</span>
+
+<span class="sd">    &gt;&gt;&gt; from statistics import stdev</span>
+<span class="sd">    &gt;&gt;&gt; vol = stdev</span>
+<span class="sd">    &gt;&gt;&gt; should_turn_movement_sensor_on = lambda audio, light: vol(audio) * light &gt; 50000</span>
+
+<span class="sd">    The produce of the volume and the lumens gives you 192, so you now have...</span>
+
+<span class="sd">    &gt;&gt;&gt; slab = {</span>
+<span class="sd">    ...     &#39;audio&#39;: [1, 2, 4],</span>
+<span class="sd">    ...     &#39;light&#39;: 126,</span>
+<span class="sd">    ...     &#39;should_turn_movement_sensor_on&#39;: False,</span>
+<span class="sd">    ...     &#39;movement&#39;: None</span>
+<span class="sd">    ... }</span>
+
+<span class="sd">    The next slab that comes in is</span>
+
+<span class="sd">    &gt;&gt;&gt; slab = {&#39;audio&#39;: [-96, 89, -92], &#39;light&#39;: 501, &#39;movement&#39;: None}</span>
+
+<span class="sd">    which puts us over the threshold so</span>
+
+<span class="sd">    &gt;&gt;&gt; slab = {</span>
+<span class="sd">    ...     &#39;audio&#39;: [-96, 89, -92],</span>
+<span class="sd">    ...     &#39;light&#39;: 501,</span>
+<span class="sd">    ...     &#39;should_turn_movement_sensor_on&#39;: True,</span>
+<span class="sd">    ...     &#39;movement&#39;: None</span>
+<span class="sd">    ... }</span>
+
+<span class="sd">    and the movement sensor is turned on, the movement is detected, a `human_presence`</span>
+<span class="sd">    signal is computed, and a notification sent if that metric is above a given theshold.</span>
+
+<span class="sd">    The point here is that we incrementally compute various fields, enhancing our slab</span>
+<span class="sd">    of information, and we do so iteratively over over slab that is streaming to us</span>
+<span class="sd">    from our smart home device.</span>
+
+<span class="sd">    `SlabsIter` is there to help you create such slabs, from source to enhanced.</span>
+
+<span class="sd">    The situation above would look something along like this:</span>
+
+<span class="sd">    &gt;&gt;&gt; from statistics import stdev</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; vol = stdev</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # Making a slabs iter object</span>
+<span class="sd">    &gt;&gt;&gt; def make_a_slabs_iter():</span>
+<span class="sd">    ...</span>
+<span class="sd">    ...     # Mocking the sensor readers</span>
+<span class="sd">    ...     audio_sensor_read = iter([[1, 2, 3], [-96, 87, -92], [320, -96, 99]]).__next__</span>
+<span class="sd">    ...     light_sensor_read = iter([126, 501, 523]).__next__</span>
+<span class="sd">    ...     movement_sensor_read = iter([None, None, True]).__next__</span>
+<span class="sd">    ...</span>
+<span class="sd">    ...     return Slabs(</span>
+<span class="sd">    ...         # The first three components get data from the sensors.</span>
+<span class="sd">    ...         # The *_read objects are all callable, returning the next</span>
+<span class="sd">    ...         # chunk of data for that sensor, if any.</span>
+<span class="sd">    ...         audio=audio_sensor_read,</span>
+<span class="sd">    ...         light=light_sensor_read,</span>
+<span class="sd">    ...         movement=movement_sensor_read,</span>
+<span class="sd">    ...         # The next</span>
+<span class="sd">    ...         should_turn_movement_sensor_on = lambda audio, light: vol(audio) * light &gt; 50000,</span>
+<span class="sd">    ...         human_presence_score = lambda audio, light, movement: movement and sum([vol(audio), light]),</span>
+<span class="sd">    ...         should_notify = lambda human_presence_score: human_presence_score and human_presence_score &gt; 700,</span>
+<span class="sd">    ...         notify = lambda should_notify: print(&#39;someone is there&#39;) if should_notify else None</span>
+<span class="sd">    ...     )</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; si = make_a_slabs_iter()</span>
+<span class="sd">    &gt;&gt;&gt; next(si)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    {&#39;audio&#39;: [1, 2, 3],</span>
+<span class="sd">     &#39;light&#39;: 126,</span>
+<span class="sd">     &#39;movement&#39;: None,</span>
+<span class="sd">     &#39;should_turn_movement_sensor_on&#39;: False,</span>
+<span class="sd">     &#39;human_presence_score&#39;: None,</span>
+<span class="sd">     &#39;should_notify&#39;: None,</span>
+<span class="sd">     &#39;notify&#39;: None}</span>
+<span class="sd">    &gt;&gt;&gt; next(si)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    {&#39;audio&#39;: [-96, 87, -92],</span>
+<span class="sd">     &#39;light&#39;: 501,</span>
+<span class="sd">     &#39;movement&#39;: None,</span>
+<span class="sd">     &#39;should_turn_movement_sensor_on&#39;: True,</span>
+<span class="sd">     &#39;human_presence_score&#39;: None,</span>
+<span class="sd">     &#39;should_notify&#39;: None,</span>
+<span class="sd">     &#39;notify&#39;: None}</span>
+<span class="sd">    &gt;&gt;&gt; next(si)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    someone is there</span>
+<span class="sd">    {&#39;audio&#39;: [320, -96, 99],</span>
+<span class="sd">     &#39;light&#39;: 523,</span>
+<span class="sd">     &#39;movement&#39;: True,</span>
+<span class="sd">     &#39;should_turn_movement_sensor_on&#39;: True,</span>
+<span class="sd">     &#39;human_presence_score&#39;: 731.1353726143957,</span>
+<span class="sd">     &#39;should_notify&#39;: True,</span>
+<span class="sd">     &#39;notify&#39;: None}</span>
+
+<span class="sd">    If you ask for the next slab, you&#39;ll get a `StopIteration` (raised by the mocked</span>
+<span class="sd">    sources since they reached the end of their iterators).</span>
+
+<span class="sd">    &gt;&gt;&gt; next(si)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">      ...</span>
+<span class="sd">    StopIteration</span>
+
+<span class="sd">    That said, if you iterate through a `SlabsIter` that handles the `StopIteration`</span>
+<span class="sd">    exception (it does by default), you&#39;ll reach the end of you iteration gracefully.</span>
+
+<span class="sd">    &gt;&gt;&gt; si = make_a_slabs_iter()</span>
+<span class="sd">    &gt;&gt;&gt; for slab in si:</span>
+<span class="sd">    ...     pass</span>
+<span class="sd">    someone is there</span>
+<span class="sd">    &gt;&gt;&gt; si = make_a_slabs_iter()</span>
+<span class="sd">    &gt;&gt;&gt; slabs = list(si)  # gather all the slabs</span>
+<span class="sd">    someone is there</span>
+<span class="sd">    &gt;&gt;&gt; len(slabs)</span>
+<span class="sd">    3</span>
+<span class="sd">    &gt;&gt;&gt; slabs[-1]  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    {&#39;audio&#39;: [320, -96, 99],</span>
+<span class="sd">     &#39;light&#39;: 523,</span>
+<span class="sd">     &#39;movement&#39;: True,</span>
+<span class="sd">     &#39;should_turn_movement_sensor_on&#39;: True,</span>
+<span class="sd">     &#39;human_presence_score&#39;: 731.1353726143957,</span>
+<span class="sd">     &#39;should_notify&#39;: True,</span>
+<span class="sd">     &#39;notify&#39;: None}</span>
+
+<span class="sd">    Note that ``Slabs`` uses a &quot;scope&quot; to store the intermediate results of the</span>
+<span class="sd">    computation. This scope is a `dict` by default, but you can pass any</span>
+<span class="sd">    ``MutableMapping`` to the ``scope_factory`` argument. This means that you can use</span>
+<span class="sd">    other means to store intermediate results simply by wrapping them in a</span>
+<span class="sd">    MutableMapping. For example, you could use message broker such as Redis to</span>
+<span class="sd">    store the intermediate results, and have the components read and write to it.</span>
+
+<span class="sd">    To help you with this, check out the `dol &lt;https://pypi.org/project/dol/&gt;`_</span>
+<span class="sd">    and `py2store &lt;https://pypi.org/project/py2store/&gt;`_ libraries.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_output_of_context_enter</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMapSpec</span> <span class="o">=</span> <span class="n">DFLT_INTERRUPT_EXCEPTIONS</span><span class="p">,</span>
+        <span class="n">scope_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">MutableMapping</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">components</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">_validate_components</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="n">components</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handle_exceptions</span> <span class="o">=</span> <span class="n">_get_handle_exceptions</span><span class="p">(</span><span class="n">handle_exceptions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scope_factory</span> <span class="o">=</span> <span class="n">scope_factory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handled_exception_types</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_exceptions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">Sig</span><span class="o">.</span><span class="n">sig_or_default</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">ContextFanout</span><span class="p">(</span><span class="o">**</span><span class="n">components</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the components 1 by 1, sourcing inputs and writing outputs in scope&quot;&quot;&quot;</span>
+        <span class="c1"># for each component</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># call the component using scope to source any arguments it needs</span>
+            <span class="c1"># and write the result in scope, under the component&#39;s name.</span>
+            <span class="n">scope</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_call_from_dict</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigs</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">scope</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the next slab by calling _call_on_scope on an new empty scope.</span>
+<span class="sd">        At least one of the components will have to be argument-less and provide</span>
+<span class="sd">        some data for other components to get their inputs from, if any are needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scope_factory</span><span class="p">())</span>
+
+    <span class="c1"># TODO: Extend the flow control capabilities of execption handling</span>
+    <span class="c1">#   (see https://github.com/i2mint/meshed/discussions/49)</span>
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterates over slabs until a handle exception is raised.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="p">:</span>  <span class="c1"># enter all the contexts that need to be entered</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>  <span class="c1"># loop until you encounter a handled exception</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handled_exception_types</span> <span class="k">as</span> <span class="n">exc_val</span><span class="p">:</span>
+                    <span class="n">handler_output</span> <span class="o">=</span> <span class="n">_handle_exception</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_exceptions</span>
+                    <span class="p">)</span>
+                    <span class="c1"># break, unless the handler tells us not to</span>
+                    <span class="k">if</span> <span class="n">handler_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">do_not_break</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">exit_value</span> <span class="o">=</span> <span class="n">handler_output</span>  <span class="c1"># remember, in case useful</span>
+                        <span class="k">break</span>
+
+    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_output_of_context_enter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc_val</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc_tb</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_of_context_enter</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="fm">__enter__</span> <span class="o">=</span> <span class="nb">open</span>
+    <span class="fm">__exit__</span> <span class="o">=</span> <span class="n">close</span>
+    <span class="fm">__call__</span> <span class="o">=</span> <span class="n">run</span>
+
+<div class="viewcode-block" id="Slabs.from_func_nodes">
+<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs.from_func_nodes">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_func_nodes</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMapSpec</span> <span class="o">=</span> <span class="n">DFLT_INTERRUPT_EXCEPTIONS</span><span class="p">,</span>
+        <span class="n">scope_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">MutableMapping</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make&quot;&quot;&quot;</span>
+        <span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">func_nodes</span>
+        <span class="p">),</span> <span class="p">(</span>
+            <span class="s2">&quot;You can&#39;t use `from_func_nodes` (yet) your binds are not trivial. &quot;</span>
+            <span class="s2">&quot;That is, if any of your functions&#39; arguments have different names than &quot;</span>
+            <span class="s2">&quot;the var nodes they&#39;re bound to&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># TODO: Make it work for non-trivial binds by using i2.wrapper</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">func</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">handle_exceptions</span><span class="o">=</span><span class="n">handle_exceptions</span><span class="p">,</span>
+            <span class="n">scope_factory</span><span class="o">=</span><span class="n">scope_factory</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">components</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="n">from_dag</span> <span class="o">=</span> <span class="n">from_func_nodes</span>  <span class="c1"># TODO: Have a vote if we want this alias.</span>
+
+    <span class="k">def</span> <span class="nf">to_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_dag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_func_nodes</span><span class="p">()))</span>
+
+    <span class="c1"># TODO: Add @wraps(dot_digraph_body) to have DAG.dot_digraph signature</span>
+<div class="viewcode-block" id="Slabs.dot_digraph">
+<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs.dot_digraph">[docs]</a>
+    <span class="k">def</span> <span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a dot_digraph of the DAG of the SlabsIter (see ``DAG.dot_digraph``)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dag</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span></div>
+</div>
+
+
+
+<span class="n">SlabsIter</span> <span class="o">=</span> <span class="n">Slabs</span>  <span class="c1"># for backward compatibility</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

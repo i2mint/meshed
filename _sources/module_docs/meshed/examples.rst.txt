@@ -1,0 +1,4 @@
+meshed.examples
+===============
+.. automodule:: meshed.examples
+   :members:
