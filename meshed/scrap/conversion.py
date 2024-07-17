@@ -1,6 +1,5 @@
 """Utils to convert graphs from one specification to another"""
 
-from pygraphviz import AGraph
 import os
 
 DFLT_PROG = 'neato'
@@ -19,6 +18,8 @@ def ensure_dot_code(x: str):
 
 
 def dot_to_nx(dot_src):
+    from pygraphviz import AGraph
+
     dot_src = ensure_dot_code(dot_src)
     return AGraph(string=dot_src)
 

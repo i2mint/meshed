@@ -60,7 +60,7 @@ from typing import (
     Protocol,
 )
 from i2 import Sig, ContextFanout
-from meshed.base import FuncNode
+from meshed.base import FuncNode, ensure_func_nodes
 from meshed.dag import DAG
 
 
@@ -446,8 +446,11 @@ class Slabs:
         handle_exceptions: HandledExceptionsMapSpec = DFLT_INTERRUPT_EXCEPTIONS,
         scope_factory: Callable[[], MutableMapping] = dict,
     ):
-        """Make"""
-        func_nodes = list(func_nodes)
+        """Make a Slabs object from a list of functions and/or FuncNodes, DAG, ..."""
+        if hasattr(func_nodes, 'func_nodes'):
+            func_nodes = func_nodes.func_nodes
+        else:
+            func_nodes = list(ensure_func_nodes(func_nodes))
         assert all(
             list(fn.bind.keys()) == list(fn.bind.values()) for fn in func_nodes
         ), (
