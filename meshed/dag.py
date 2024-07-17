@@ -167,7 +167,7 @@ from meshed.base import (
     dflt_configs,
     BindInfo,
     ch_func_node_func,
-    _mk_func_nodes,
+    ensure_func_nodes,
     _func_nodes_to_graph_dict,
     is_func_node,
     FuncNodeAble,
@@ -503,7 +503,7 @@ class DAG:
     )
 
     def __post_init__(self):
-        self.func_nodes = tuple(_mk_func_nodes(self.func_nodes))
+        self.func_nodes = tuple(ensure_func_nodes(self.func_nodes))
         self.graph = _func_nodes_to_graph_dict(self.func_nodes)
         self.nodes = topological_sort(self.graph)
         # reorder the nodes to fit topological order

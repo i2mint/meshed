@@ -1,6 +1,7 @@
 """
 Base functionality of meshed
 """
+
 from collections import Counter
 from dataclasses import dataclass, field, fields
 from functools import partial, cached_property
@@ -529,7 +530,8 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
         )
 
 
-def _mk_func_nodes(func_nodes):
+def ensure_func_nodes(func_nodes):
+    """Converts a list of objects to a list of FuncNodes."""
     # TODO: Take care of names (or track and take care if collision)
     if callable(func_nodes) and not isinstance(func_nodes, Iterable):
         # if input is a single function, make it a list containing that function
@@ -542,6 +544,9 @@ def _mk_func_nodes(func_nodes):
             yield FuncNode(func_node)
         else:
             raise TypeError(f"Can't convert this to a FuncNode: {func_node}")
+
+
+_mk_func_nodes = ensure_func_nodes  # backwards compatibility
 
 
 def _func_nodes_to_graph_dict(func_nodes):
@@ -884,7 +889,8 @@ FuncNodeAble = Union[FuncNode, Callable]
 
 
 def func_node_transformer(
-    fn: FuncNode, kwargs_transformers=(),
+    fn: FuncNode,
+    kwargs_transformers=(),
 ):
     """Get a modified ``FuncNode`` from an iterable of ``kwargs_trans`` modifiers."""
     func_node_kwargs = fn.to_dict()
