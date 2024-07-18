@@ -378,7 +378,6 @@ class Slabs:
         self,
         handle_exceptions: HandledExceptionsMapSpec = DFLT_INTERRUPT_EXCEPTIONS,
         scope_factory: Callable[[], MutableMapping] = dict,
-        finally_handler: Callable[['Slabs'], None] = None,
         **components,
     ):
         _validate_components(components)
@@ -390,7 +389,6 @@ class Slabs:
             name: Sig.sig_or_default(func) for name, func in self.components.items()
         }
         self.context = ContextFanout(**components)
-        self.finally_handler = finally_handler
 
     def _call_on_scope(self, scope: MutableMapping):
         """Calls the components 1 by 1, sourcing inputs and writing outputs in scope"""
@@ -424,12 +422,6 @@ class Slabs:
                     if handler_output is not do_not_break:
                         self.exit_value = handler_output  # remember, in case useful
                         break
-                finally:
-                    self._handle_finally()
-
-    def _handle_finally(self):
-        if self.finally_handler:
-            self.finally_handler(self)
 
     def open(self):
         self._output_of_context_enter = self.context.__enter__()
