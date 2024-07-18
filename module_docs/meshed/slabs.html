@@ -89,6 +89,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.slabs.SlabsIter"><code class="docutils literal notranslate"><span class="pre">SlabsIter</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.slabs.all_arguments_are_none"><code class="docutils literal notranslate"><span class="pre">all_arguments_are_none()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.slabs.conditional_sentinel"><code class="docutils literal notranslate"><span class="pre">conditional_sentinel()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.slabs.output_none_if_none_arguments"><code class="docutils literal notranslate"><span class="pre">output_none_if_none_arguments()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tests.html">meshed.tests</a></li>
@@ -378,6 +381,71 @@ and <a class="reference external" href="https://pypi.org/project/py2store/">py2s
 <dt class="sig sig-object py" id="meshed.slabs.SlabsIter">
 <span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">SlabsIter</span></span><a class="headerlink" href="#meshed.slabs.SlabsIter" title="Link to this definition"></a></dt>
 <dd><p>alias of <a class="reference internal" href="#meshed.slabs.Slabs" title="meshed.slabs.Slabs"><code class="xref py py-class docutils literal notranslate"><span class="pre">Slabs</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.slabs.all_arguments_are_none">
+<span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">all_arguments_are_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#all_arguments_are_none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.all_arguments_are_none" title="Link to this definition"></a></dt>
+<dd><p>Return True if all arguments are None.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.slabs.conditional_sentinel">
+<span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">conditional_sentinel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#conditional_sentinel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.conditional_sentinel" title="Link to this definition"></a></dt>
+<dd><p>Decorator that returns sentinel based on a user-defined condition.</p>
+<p>The condition function should take the arguments and keyword arguments of the
+decorated function as input and return a boolean value. If the condition is met,
+the sentinel value is returned instead of the decorated function’s return value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>condition_func</strong> (<em>Callable</em>) – A function that takes the arguments and keyword
+arguments of the decorated function as input and returns a boolean value.</p></li>
+<li><p><strong>sentinel</strong> (<em>Any</em>) – The value to return if the condition is met.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">division_by_zero</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span>
+<span class="gp">... </span>    <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@conditional_sentinel</span><span class="p">(</span><span class="n">division_by_zero</span><span class="p">,</span> <span class="n">sentinel</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">safe_division</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">safe_division</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">5.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">safe_division</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>See also <cite>output_none_if_none_arguments</cite>, made from <cite>conditional_sentinel</cite>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@output_none_if_none_arguments</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">foo</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.slabs.output_none_if_none_arguments">
+<span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">output_none_if_none_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.slabs.output_none_if_none_arguments" title="Link to this definition"></a></dt>
+<dd><p>Decorator that returns None if all arguments are None.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@output_none_if_none_arguments</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">foo</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>

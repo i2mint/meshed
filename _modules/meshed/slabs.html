@@ -628,6 +628,98 @@
 
 
 <span class="n">SlabsIter</span> <span class="o">=</span> <span class="n">Slabs</span>  <span class="c1"># for backward compatibility</span>
+
+
+<span class="c1"># --------------------------------------------------------------------------------------</span>
+<span class="c1"># Slabs tools and helpers</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+
+
+<div class="viewcode-block" id="conditional_sentinel">
+<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.conditional_sentinel">[docs]</a>
+<span class="k">def</span> <span class="nf">conditional_sentinel</span><span class="p">(</span>
+    <span class="n">condition_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span> <span class="n">sentinel</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator that returns sentinel based on a user-defined condition.</span>
+
+<span class="sd">    The condition function should take the arguments and keyword arguments of the</span>
+<span class="sd">    decorated function as input and return a boolean value. If the condition is met,</span>
+<span class="sd">    the sentinel value is returned instead of the decorated function&#39;s return value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        condition_func (Callable): A function that takes the arguments and keyword</span>
+<span class="sd">            arguments of the decorated function as input and returns a boolean value.</span>
+<span class="sd">        sentinel (Any): The value to return if the condition is met.</span>
+
+<span class="sd">    &gt;&gt;&gt; division_by_zero = lambda args, kwargs: (</span>
+<span class="sd">    ...     (len(args) &gt;= 2 and args[1] == 0) or</span>
+<span class="sd">    ...     kwargs.get(&#39;y&#39;) == 0</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; @conditional_sentinel(division_by_zero, sentinel=0)</span>
+<span class="sd">    ... def safe_division(x, y):</span>
+<span class="sd">    ...     return x / y</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; safe_division(10, 2)</span>
+<span class="sd">    5.0</span>
+<span class="sd">    &gt;&gt;&gt; safe_division(10, 0)</span>
+<span class="sd">    0</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    </span>
+<span class="sd">    See also `output_none_if_none_arguments`, made from `conditional_sentinel`:</span>
+
+<span class="sd">    &gt;&gt;&gt; @output_none_if_none_arguments</span>
+<span class="sd">    ... def foo(x, y):</span>
+<span class="sd">    ...     return x + y</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; foo(1, 2)</span>
+<span class="sd">    3</span>
+<span class="sd">    &gt;&gt;&gt; assert foo(None, None) is None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inner decorator that takes the function and returns a wrapper.&quot;&quot;&quot;</span>
+
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Wrapper function that checks the condition before calling func.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">condition_func</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">sentinel</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+
+<div class="viewcode-block" id="all_arguments_are_none">
+<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.all_arguments_are_none">[docs]</a>
+<span class="k">def</span> <span class="nf">all_arguments_are_none</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if all arguments are None.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="n">output_none_if_none_arguments</span> <span class="o">=</span> <span class="n">conditional_sentinel</span><span class="p">(</span>
+    <span class="n">all_arguments_are_none</span><span class="p">,</span> <span class="n">sentinel</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span>
+
+<span class="n">output_none_if_none_arguments</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Decorator that returns None if all arguments are None.</span>
+
+<span class="s2">&gt;&gt;&gt; @output_none_if_none_arguments</span>
+<span class="s2">... def foo(x, y):</span>
+<span class="s2">...     return x + y</span>
+<span class="s2">&gt;&gt;&gt;</span>
+<span class="s2">&gt;&gt;&gt; foo(1, 2)</span>
+<span class="s2">3</span>
+<span class="s2">&gt;&gt;&gt; assert foo(None, None) is None</span>
+<span class="s2">&quot;&quot;&quot;</span>
 </pre></div>
 
            </div>
