@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tests.test_ch_funcs &mdash; meshed 0.1.154 documentation</title>
+  <title>meshed.tests.test_ch_funcs &mdash; meshed 0.1.155 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=fd3f3429" />
 
   
   <!--[if lt IE 9]>
@@ -17,8 +17,8 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=8dad0f9d"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
         <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -83,16 +83,7 @@
 <li class="toctree-l1"><a class="reference internal" href="objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_caching.html">meshed.tests.test_caching</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.tests.test_ch_funcs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#meshed.tests.test_ch_funcs.FlagWithMessage"><code class="docutils literal notranslate"><span class="pre">FlagWithMessage</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#meshed.tests.test_ch_funcs.FlagWithMessage.flag"><code class="docutils literal notranslate"><span class="pre">FlagWithMessage.flag</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#meshed.tests.test_ch_funcs.FlagWithMessage.msg"><code class="docutils literal notranslate"><span class="pre">FlagWithMessage.msg</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#meshed.tests.test_ch_funcs.test_validate_bind_attributes"><code class="docutils literal notranslate"><span class="pre">test_validate_bind_attributes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#meshed.tests.test_ch_funcs.validate_func_mapping_on_signatures"><code class="docutils literal notranslate"><span class="pre">validate_func_mapping_on_signatures()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.tests.test_ch_funcs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_components.html">meshed.tests.test_components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_composition.html">meshed.tests.test_composition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="test_dag.html">meshed.tests.test_dag</a></li>
@@ -134,43 +125,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-meshed.tests.test_ch_funcs">
-<span id="meshed-tests-test-ch-funcs"></span><h1>meshed.tests.test_ch_funcs<a class="headerlink" href="#module-meshed.tests.test_ch_funcs" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="meshed.tests.test_ch_funcs.FlagWithMessage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.tests.test_ch_funcs.</span></span><span class="sig-name descname"><span class="pre">FlagWithMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/tests/test_ch_funcs.html#FlagWithMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.tests.test_ch_funcs.FlagWithMessage" title="Link to this definition"></a></dt>
-<dd><dl class="py attribute">
-<dt class="sig sig-object py" id="meshed.tests.test_ch_funcs.FlagWithMessage.flag">
-<span class="sig-name descname"><span class="pre">flag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#meshed.tests.test_ch_funcs.FlagWithMessage.flag" title="Link to this definition"></a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="meshed.tests.test_ch_funcs.FlagWithMessage.msg">
-<span class="sig-name descname"><span class="pre">msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#meshed.tests.test_ch_funcs.FlagWithMessage.msg" title="Link to this definition"></a></dt>
-<dd><p>Alias for field number 1</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="meshed.tests.test_ch_funcs.test_validate_bind_attributes">
-<span class="sig-prename descclassname"><span class="pre">meshed.tests.test_ch_funcs.</span></span><span class="sig-name descname"><span class="pre">test_validate_bind_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/tests/test_ch_funcs.html#test_validate_bind_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.tests.test_ch_funcs.test_validate_bind_attributes" title="Link to this definition"></a></dt>
-<dd><p>in ch_func_node_func: validate compatibility (not equality of sigs)
-we cannot use call_compatibility
-rename everything
-<a class="reference external" href="https://github.com/i2mint/i2/issues/47">https://github.com/i2mint/i2/issues/47</a></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="meshed.tests.test_ch_funcs.validate_func_mapping_on_signatures">
-<span class="sig-prename descclassname"><span class="pre">meshed.tests.test_ch_funcs.</span></span><span class="sig-name descname"><span class="pre">validate_func_mapping_on_signatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/tests/test_ch_funcs.html#validate_func_mapping_on_signatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.tests.test_ch_funcs.validate_func_mapping_on_signatures" title="Link to this definition"></a></dt>
-<dd><p>This function is used to give a more detailed report on
-mismatched signatures
-The same can be done by tweaking ch_func_node_func
-and its “alternative” param</p>
-</dd></dl>
-
+  <section id="meshed-tests-test-ch-funcs">
+<h1>meshed.tests.test_ch_funcs<a class="headerlink" href="#meshed-tests-test-ch-funcs" title="Link to this heading"></a></h1>
 </section>
 
 

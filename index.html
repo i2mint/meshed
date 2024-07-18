@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to meshed’s documentation! &mdash; meshed 0.1.154 documentation</title>
+  <title>Welcome to meshed’s documentation! &mdash; meshed 0.1.155 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
 
   
   <!--[if lt IE 9]>
@@ -17,8 +17,8 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=8dad0f9d"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/documentation_options.js?v=29d58b84"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
         <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -138,6 +138,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.Mesh"><code class="docutils literal notranslate"><span class="pre">Mesh</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.basic_node_validator"><code class="docutils literal notranslate"><span class="pre">basic_node_validator()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.ch_func_node_attrs"><code class="docutils literal notranslate"><span class="pre">ch_func_node_attrs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.ensure_func_nodes"><code class="docutils literal notranslate"><span class="pre">ensure_func_nodes()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.func_node_transformer"><code class="docutils literal notranslate"><span class="pre">func_node_transformer()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.get_init_params_of_instance"><code class="docutils literal notranslate"><span class="pre">get_init_params_of_instance()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.identifier_mapping"><code class="docutils literal notranslate"><span class="pre">identifier_mapping()</span></code></a></li>
@@ -305,33 +306,14 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/objects_for_testing.html">meshed.tests.objects_for_testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_base.html">meshed.tests.test_base</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_caching.html">meshed.tests.test_caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.FlagWithMessage"><code class="docutils literal notranslate"><span class="pre">FlagWithMessage</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.test_validate_bind_attributes"><code class="docutils literal notranslate"><span class="pre">test_validate_bind_attributes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_ch_funcs.html#meshed.tests.test_ch_funcs.validate_func_mapping_on_signatures"><code class="docutils literal notranslate"><span class="pre">validate_func_mapping_on_signatures()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_ch_funcs.html">meshed.tests.test_ch_funcs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_components.html">meshed.tests.test_components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_composition.html#meshed.tests.test_composition.test_line_with_dag"><code class="docutils literal notranslate"><span class="pre">test_line_with_dag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_dag.html#meshed.tests.test_dag.test_binding_to_a_root_node"><code class="docutils literal notranslate"><span class="pre">test_binding_to_a_root_node()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_dag.html#meshed.tests.test_dag.test_funcnode_bind"><code class="docutils literal notranslate"><span class="pre">test_funcnode_bind()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_composition.html">meshed.tests.test_composition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_dag.html">meshed.tests.test_dag</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_dag_2.html">meshed.tests.test_dag_2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_dag_defaults.html">meshed.tests.test_dag_defaults</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_dag_variadics.html">meshed.tests.test_dag_variadics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_getitem.html">meshed.tests.test_getitem</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.classifier_score"><code class="docutils literal notranslate"><span class="pre">classifier_score()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.confusion_count"><code class="docutils literal notranslate"><span class="pre">confusion_count()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.dot_product"><code class="docutils literal notranslate"><span class="pre">dot_product()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.predict_proba"><code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tests/test_getitem.html#meshed.tests.test_getitem.prediction"><code class="docutils literal notranslate"><span class="pre">prediction()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_getitem.html">meshed.tests.test_getitem</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_itools.html">meshed.tests.test_itools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_makers.html">meshed.tests.test_makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tests/test_meshed_tools.html">meshed.tests.test_meshed_tools</a><ul>
@@ -400,8 +382,8 @@
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-<p>Release: 0.1.154</p>
-<p>Last change: Apr 16, 2024</p>
+<p>Release: 0.1.155</p>
+<p>Last change: Jul 18, 2024</p>
 </section>
 
 
