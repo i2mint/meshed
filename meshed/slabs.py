@@ -485,3 +485,89 @@ class Slabs:
 
 
 SlabsIter = Slabs  # for backward compatibility
+
+
+# --------------------------------------------------------------------------------------
+# Slabs tools and helpers
+
+from functools import wraps
+
+
+def conditional_sentinel(
+    condition_func: Callable[[tuple, dict], bool], sentinel: Any = None
+):
+    """Decorator that returns sentinel based on a user-defined condition.
+
+    The condition function should take the arguments and keyword arguments of the
+    decorated function as input and return a boolean value. If the condition is met,
+    the sentinel value is returned instead of the decorated function's return value.
+
+    Args:
+        condition_func (Callable): A function that takes the arguments and keyword
+            arguments of the decorated function as input and returns a boolean value.
+        sentinel (Any): The value to return if the condition is met.
+
+    >>> division_by_zero = lambda args, kwargs: (
+    ...     (len(args) >= 2 and args[1] == 0) or
+    ...     kwargs.get('y') == 0
+    ... )
+    >>>
+    >>> @conditional_sentinel(division_by_zero, sentinel=0)
+    ... def safe_division(x, y):
+    ...     return x / y
+    ...
+    >>> safe_division(10, 2)
+    5.0
+    >>> safe_division(10, 0)
+    0
+    >>>
+    
+    See also `output_none_if_none_arguments`, made from `conditional_sentinel`:
+
+    >>> @output_none_if_none_arguments
+    ... def foo(x, y):
+    ...     return x + y
+    >>>
+    >>> foo(1, 2)
+    3
+    >>> assert foo(None, None) is None
+
+    """
+
+    def decorator(func):
+        """Inner decorator that takes the function and returns a wrapper."""
+
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            """Wrapper function that checks the condition before calling func."""
+            if condition_func(args, kwargs):
+                return sentinel
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def all_arguments_are_none(args, kwargs):
+    """Return True if all arguments are None."""
+    return all(arg is None for arg in args) and all(
+        val is None for val in kwargs.values()
+    )
+
+
+output_none_if_none_arguments = conditional_sentinel(
+    all_arguments_are_none, sentinel=None
+)
+
+output_none_if_none_arguments.__doc__ = """
+Decorator that returns None if all arguments are None.
+
+>>> @output_none_if_none_arguments
+... def foo(x, y):
+...     return x + y
+>>>
+>>> foo(1, 2)
+3
+>>> assert foo(None, None) is None
+"""
