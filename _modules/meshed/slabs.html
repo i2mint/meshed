@@ -514,7 +514,6 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMapSpec</span> <span class="o">=</span> <span class="n">DFLT_INTERRUPT_EXCEPTIONS</span><span class="p">,</span>
         <span class="n">scope_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">MutableMapping</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="n">finally_handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;Slabs&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">components</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">_validate_components</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
@@ -526,7 +525,6 @@
             <span class="n">name</span><span class="p">:</span> <span class="n">Sig</span><span class="o">.</span><span class="n">sig_or_default</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">ContextFanout</span><span class="p">(</span><span class="o">**</span><span class="n">components</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">finally_handler</span> <span class="o">=</span> <span class="n">finally_handler</span>
 
     <span class="k">def</span> <span class="nf">_call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the components 1 by 1, sourcing inputs and writing outputs in scope&quot;&quot;&quot;</span>
@@ -560,12 +558,6 @@
                     <span class="k">if</span> <span class="n">handler_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">do_not_break</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">exit_value</span> <span class="o">=</span> <span class="n">handler_output</span>  <span class="c1"># remember, in case useful</span>
                         <span class="k">break</span>
-                <span class="k">finally</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_handle_finally</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">_handle_finally</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">finally_handler</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">finally_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_output_of_context_enter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
