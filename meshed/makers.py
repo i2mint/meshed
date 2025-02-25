@@ -142,7 +142,6 @@ But see below that the dag is now using the functions we specified:
 
 """
 
-
 import ast
 import re
 import inspect
@@ -573,7 +572,7 @@ def code_to_dag(
         src, func_src=func_src, use_place_holder_fallback=use_place_holder_fallback
     )
     dag = DAG(fnodes, name=_ensure_name(name, src))
-
+    dag._code_to_dag_src = src
     return _reconfigure_signature_according_to_src(src, dag)
 
 
@@ -582,7 +581,6 @@ def code_to_digraph(src):
 
 
 simple_code_to_digraph = code_to_digraph  # back-compatability alias
-
 
 # import re
 # from typing import Tuple, Iterable, Iterator
@@ -822,5 +820,6 @@ def jdict_to_dag(jdict: dict, *, jdict_to_func: Callable = None):
     """
     jdict_to_fnode_ = partial(jdict_to_fnode, jdict_to_func=jdict_to_func)
     return DAG(
-        name=jdict['name'], func_nodes=list(map(jdict_to_fnode_, jdict['func_nodes'])),
+        name=jdict['name'],
+        func_nodes=list(map(jdict_to_fnode_, jdict['func_nodes'])),
     )
