@@ -79,7 +79,7 @@ def remove_decorator_code(
 def get_src_string(src: Union[str, DAG]) -> str:
     if isinstance(src, str):
         return src
-    elif hasattr(src, '_code_to_dag_src'):
+    elif hasattr(src, "_code_to_dag_src"):
         return get_src_string(src._code_to_dag_src)
     elif callable(src):
         import inspect
@@ -95,9 +95,9 @@ def get_src_string(src: Union[str, DAG]) -> str:
 # TODO: Generalize to src that is any DAG
 def collapse_function_calls(
     src: Union[str, DAG],
-    call_func_name='call',
+    call_func_name="call",
     *,
-    rm_decorator='code_to_dag',
+    rm_decorator="code_to_dag",
     include: Optional[Union[Iterable[str], Callable[[str], bool]]] = None,
 ):
     """
@@ -119,7 +119,7 @@ def collapse_function_calls(
             return include(func_name)
         return False
 
-    pattern = call_func_name + r'\(([^,]+),\s*([^)]+)\)'
+    pattern = call_func_name + r"\(([^,]+),\s*([^)]+)\)"
 
     def replace(match):
         func_name, args = match.groups()
@@ -137,7 +137,7 @@ def collapse_function_calls(
 
 def expand_function_calls(
     src: Union[str, "DAG"],
-    call_func_name='call',
+    call_func_name="call",
     *,
     include: Optional[Union[Iterable[str], Callable[[str], bool]]] = None,
 ) -> str:
@@ -160,17 +160,17 @@ def expand_function_calls(
             return include(func_name)
         return False
 
-    pattern = r'(\b[a-zA-Z_]\w*)\(([^)]*)\)'
+    pattern = r"(\b[a-zA-Z_]\w*)\(([^)]*)\)"
 
     def replace(match):
         # Get the start index of the match
         index = match.start()
         # Find the beginning of the current line
-        line_start = src_string.rfind('\n', 0, index) + 1
+        line_start = src_string.rfind("\n", 0, index) + 1
         # Extract the text from the start of the line up to the match
         current_line = src_string[line_start:index]
         # If the current line starts with a function definition, skip expansion.
-        if re.match(r'^\s*def\s', current_line):
+        if re.match(r"^\s*def\s", current_line):
             return match.group(0)
         func_name, args = match.groups()
         if should_include(func_name):
@@ -180,7 +180,6 @@ def expand_function_calls(
     new_src = re.sub(pattern, replace, src_string)
 
     return new_src if isinstance(src, str) else code_to_dag(new_src)
-
 
 
 # ------------------------------------------------------------------------------
