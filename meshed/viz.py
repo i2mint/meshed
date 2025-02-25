@@ -106,20 +106,22 @@ def add_new_line_if_none(s: str):
     """Since graphviz 0.18, need to have a newline in body lines.
     This util is there to address that, adding newlines to body lines
     when missing."""
-    if s and s[-1] != '\n':
-        return s + '\n'
+    if s and s[-1] != "\n":
+        return s + "\n"
     return s
 
 
 # ------------------------------------------------------------------------------
 # Unused -- consider deleting
 def _parameters_and_names_from_sig(
-    sig: Sig, out=None, func_name=None,
+    sig: Sig,
+    out=None,
+    func_name=None,
 ):
     func_name = func_name or sig.name
     out = out or sig.name
     if func_name == out:
-        func_name = '_' + func_name
+        func_name = "_" + func_name
     assert isinstance(func_name, str) and isinstance(out, str)
     return sig.parameters, out, func_name
 
@@ -168,7 +170,7 @@ def visualize_graph_interactive(graph):
         dot.edge(str(edge[0]), str(edge[1]))
 
     # Render the initial graph visualization
-    graph_widget = widgets.HTML(value=dot.pipe(format='svg').decode('utf-8'))
+    graph_widget = widgets.HTML(value=dot.pipe(format="svg").decode("utf-8"))
     display(graph_widget)
 
     def add_edge(sender):
@@ -177,52 +179,52 @@ def visualize_graph_interactive(graph):
         if (source, target) not in g.edges:
             g.add_edge(source, target)
             dot.edge(str(source), str(target))
-            graph_widget.value = dot.pipe(format='svg').decode('utf-8')
-        source_node.value = ''
-        target_node.value = ''
+            graph_widget.value = dot.pipe(format="svg").decode("utf-8")
+        source_node.value = ""
+        target_node.value = ""
 
     def add_node(sender):
         node = new_node.value
         if node not in g.nodes:
             g.add_node(node)
             dot.node(str(node))
-            graph_widget.value = dot.pipe(format='svg').decode('utf-8')
-        new_node.value = ''
+            graph_widget.value = dot.pipe(format="svg").decode("utf-8")
+        new_node.value = ""
 
     def delete_edge(sender):
         source = str(delete_source.value)
         target = str(delete_target.value)
         if (source, target) in g.edges:
             g.remove_edge(source, target)
-            dot.body.remove(f'\t{source} -> {target}\n')
-            graph_widget.value = dot.pipe(format='svg').decode('utf-8')
-        delete_source.value = ''
-        delete_target.value = ''
+            dot.body.remove(f"\t{source} -> {target}\n")
+            graph_widget.value = dot.pipe(format="svg").decode("utf-8")
+        delete_source.value = ""
+        delete_target.value = ""
 
     def delete_node(sender):
         node = delete_node_value.value
         if node in g.nodes:
             g.remove_node(node)
             dot.body[:] = [line for line in dot.body if str(node) not in line]
-            graph_widget.value = dot.pipe(format='svg').decode('utf-8')
-        delete_node_value.value = ''
+            graph_widget.value = dot.pipe(format="svg").decode("utf-8")
+        delete_node_value.value = ""
 
-    source_node = widgets.Text(placeholder='Source Node')
-    target_node = widgets.Text(placeholder='Target Node')
-    add_edge_button = widgets.Button(description='Add Edge')
+    source_node = widgets.Text(placeholder="Source Node")
+    target_node = widgets.Text(placeholder="Target Node")
+    add_edge_button = widgets.Button(description="Add Edge")
     add_edge_button.on_click(add_edge)
 
-    new_node = widgets.Text(placeholder='New Node')
-    add_node_button = widgets.Button(description='Add Node')
+    new_node = widgets.Text(placeholder="New Node")
+    add_node_button = widgets.Button(description="Add Node")
     add_node_button.on_click(add_node)
 
-    delete_source = widgets.Text(placeholder='Source Node')
-    delete_target = widgets.Text(placeholder='Target Node')
-    delete_edge_button = widgets.Button(description='Delete Edge')
+    delete_source = widgets.Text(placeholder="Source Node")
+    delete_target = widgets.Text(placeholder="Target Node")
+    delete_edge_button = widgets.Button(description="Delete Edge")
     delete_edge_button.on_click(delete_edge)
 
-    delete_node_value = widgets.Text(placeholder='Node')
-    delete_node_button = widgets.Button(description='Delete Node')
+    delete_node_value = widgets.Text(placeholder="Node")
+    delete_node_button = widgets.Button(description="Delete Node")
     delete_node_button.on_click(delete_node)
 
     controls = widgets.HBox([source_node, target_node, add_edge_button])

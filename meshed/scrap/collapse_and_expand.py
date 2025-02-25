@@ -1,5 +1,5 @@
 """Ideas on collapsing and expanding nodes
-See "Collapse and expand nodes" discussion: 
+See "Collapse and expand nodes" discussion:
 https://github.com/i2mint/meshed/discussions/54
 
 """

@@ -3,7 +3,6 @@
 See https://docs.dask.org/en/latest/graphs.html#example for the specification
 """
 
-
 from meshed import FuncNode, DAG
 from i2 import Sig
 
@@ -24,7 +23,7 @@ def add(a, b):
     return a + b
 
 
-d = {'y': (inc, 'x'), 'z': (add, 'y', 'a')}
+d = {"y": (inc, "x"), "z": (add, "y", "a")}
 
 dag = DAG(node_funcs_from_dask_graph_dict(d))
 

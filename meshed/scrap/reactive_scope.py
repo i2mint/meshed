@@ -122,7 +122,7 @@ class ReactiveScope(MutableMapping):
     <ReactiveScope with .scope: {'b': 3, 'a_plus_b': 5, 'g': 15}>
 
     So now we can access ``g``.
-    
+
     >>> s['g']
     15
 
@@ -190,9 +190,9 @@ class ReactiveScope(MutableMapping):
         # TODO: Could use the same mechanism as setitem to propagate the deletion through the network
         raise NotImplementedError(
             "deletion of keys are not implemented, since cache invalidation hasn't. "
-            'You can clear the whole scope with the `.clear()` method. '
+            "You can clear the whole scope with the `.clear()` method. "
             "(Note: This actually doesn't clear the mapping, but rather, resets it to it's original state.)"
         )
 
     def __repr__(self):
-        return f'<{type(self).__qualname__} with .scope: {repr(self.scope)}>'
+        return f"<{type(self).__qualname__} with .scope: {repr(self.scope)}>"

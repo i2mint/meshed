@@ -9,7 +9,7 @@ Case = Any
 Cases = Mapping[Case, Callable]
 
 
-RecordingCommands = Literal['start', 'resume', 'stop']
+RecordingCommands = Literal["start", "resume", "stop"]
 
 
 def mk_test_objects():
@@ -37,7 +37,7 @@ class RecordingSwitchBoard:
         self._append(chk)
 
     def resume(self, key, chk):
-        print(f'resume called')
+        print(f"resume called")
         self._append(chk)
 
     def stop(self, key, chk):
@@ -46,7 +46,7 @@ class RecordingSwitchBoard:
 
     def _append(self, chk):
         if self._current_key is None:
-            raise ValueError('Cannot append without first starting recording.')
+            raise ValueError("Cannot append without first starting recording.")
         self.store[self._current_key].extend(chk)
 
     @property
@@ -71,7 +71,7 @@ class SimpleSwitchCase:
     def __call__(self, case, input):
         func = self.cases.get(case, None)
         if func is None:
-            raise ValueError(f'Case {case} not found.')
+            raise ValueError(f"Case {case} not found.")
         return func(input)
 
 
@@ -96,25 +96,28 @@ def mk_recorder_switch(
     recorder = mk_recorder(store)
     return mk_simple_switch_case(
         {
-            'start': lambda key_and_chk: recorder.start(*key_and_chk),
-            'resume': lambda key_and_chk: recorder.resume(*key_and_chk),
-            'stop': lambda key_and_chk: recorder.stop(*key_and_chk),
-            'waiting': lambda x: None,
+            "start": lambda key_and_chk: recorder.start(*key_and_chk),
+            "resume": lambda key_and_chk: recorder.resume(*key_and_chk),
+            "stop": lambda key_and_chk: recorder.stop(*key_and_chk),
+            "waiting": lambda x: None,
         },
-        name='recorder_switch',
-        case_name='state',
-        input_name='key_and_chk',
+        name="recorder_switch",
+        case_name="state",
+        input_name="key_and_chk",
     )
 
 
 def mk_transition_func(
-    trans_func_mapping, initial_state,  # symbol_var_name: str,
+    trans_func_mapping,
+    initial_state,  # symbol_var_name: str,
 ):
     recording_state_transition_func = mapping_to_transition_func(
-        trans_func_mapping, strict=False,
+        trans_func_mapping,
+        strict=False,
     )
     transitioner = BasicAutomata(
-        transition_func=recording_state_transition_func, state=initial_state,
+        transition_func=recording_state_transition_func,
+        state=initial_state,
     )
 
     # @i2.ch_names(symbol=symbol_var_name)
@@ -128,51 +131,51 @@ def mk_transition_func(
 
 # store = mk_recorder_switch(store)
 trans_func_mapping = {
-    ('waiting', 1): 'start',
-    ('start', 0): 'resume',
-    ('start', 1): 'stop',
-    ('resume', 1): 'stop',
-    ('stop', 0): 'waiting',
-    ('stop', 1): 'start',
+    ("waiting", 1): "start",
+    ("start", 0): "resume",
+    ("start", 1): "stop",
+    ("resume", 1): "stop",
+    ("stop", 0): "waiting",
+    ("stop", 1): "start",
 }
 
 # debugging tools
 logger = {
-    'symbol': [],
-    'state': [],
-    'state_func': [],
-    'transition_func': [],
-    'recorder': [],
+    "symbol": [],
+    "state": [],
+    "state_func": [],
+    "transition_func": [],
+    "recorder": [],
 }
 
 # TFunc = mk_transition_func(trans_func_mapping, "waiting")
 dag = DAG.from_funcs(
     recorder_switch=lambda store: mk_recorder_switch(store),
-    recorder_logger=lambda recorder_switch: logger['recorder'].append(
+    recorder_logger=lambda recorder_switch: logger["recorder"].append(
         id(recorder_switch)
     ),
     # debug = lambda recorder_switch: print(id(recorder_switch)),
     transition_func=lambda trans_func_mapping: mk_transition_func(
-        trans_func_mapping, 'waiting'
+        trans_func_mapping, "waiting"
     ),
-    transition_logger=lambda transition_func: logger['transition_func'].append(
+    transition_logger=lambda transition_func: logger["transition_func"].append(
         transition_func
     ),
     symbol=lambda plc: plc,
-    symbol_logger=lambda symbol: logger['symbol'].append(symbol),
+    symbol_logger=lambda symbol: logger["symbol"].append(symbol),
     state=lambda transition_func, symbol: transition_func(symbol),
     # tFunc=lambda: TFunc,
     # state=lambda tFunc, symbol: tFunc(symbol),
-    state_logger=lambda state: logger['state'].append(state),
+    state_logger=lambda state: logger["state"].append(state),
     key_and_chk=lambda key, chk: (key, chk),
     # key_and_chk_logger=lambda key_and_chk: logger['key_and_chk'].append(key_and_chk),
     state_func=lambda recorder_switch, state, key_and_chk: recorder_switch(
         state, key_and_chk
     ),
-    state_func_logger=lambda state_func: logger['state_func'].append(state_func),
-    output=lambda state_func, key_and_chk: state_func(*key_and_chk)
-    if state_func is not None
-    else None,
+    state_func_logger=lambda state_func: logger["state_func"].append(state_func),
+    output=lambda state_func, key_and_chk: (
+        state_func(*key_and_chk) if state_func is not None else None
+    ),
     result=lambda recorder_switch, transition_func, symbol, state, key_and_chk, state_func, output: dict(
         recorder_switch=recorder_switch,
         transition_func=transition_func,
@@ -185,7 +188,7 @@ dag = DAG.from_funcs(
 )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     store = dict()
 
     my_dag = dag.partial(store=store, trans_func_mapping=trans_func_mapping)
@@ -211,10 +214,10 @@ if __name__ == '__main__':
         )
 
         # print(store)  # Careful: use keyword
-    print(logger['symbol'])
+    print(logger["symbol"])
 
-    print(logger['state'])
-    print(logger['recorder'])
+    print(logger["state"])
+    print(logger["recorder"])
 
     # transitioner = logger['transition_func'][-1]
     transitioner = TFunc

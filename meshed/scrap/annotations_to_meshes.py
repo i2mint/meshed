@@ -6,7 +6,6 @@ https://github.com/i2mint/meshed/discussions/55
 
 """
 
-
 import typing
 from typing import Dict, Protocol, Callable, TypeVar, Any
 from collections.abc import Callable as CallableGenericAlias
@@ -16,12 +15,12 @@ from functools import wraps
 import builtins
 import re
 
-_camel_pattern = re.compile(r'(?<!^)(?=[A-Z])')
+_camel_pattern = re.compile(r"(?<!^)(?=[A-Z])")
 PK = Parameter.POSITIONAL_OR_KEYWORD
 
 
 def _camel_to_snake(x):
-    return _camel_pattern.sub('_', x)
+    return _camel_pattern.sub("_", x)
 
 
 _is_lower = lambda x: x == x.lower()
@@ -35,9 +34,9 @@ MkArgname = Callable[[Annotation, ArgPosition, MethodName], Argname]
 def try_annotation_name(
     arg_annotation: Annotation, arg_position: ArgPosition, method_name: MethodName
 ) -> Argname:
-    argname = getattr(arg_annotation, '__name__', None)
+    argname = getattr(arg_annotation, "__name__", None)
     if argname is None or argname in _builtin_lower_names:
-        argname = f'arg_{arg_position:02.0f}'
+        argname = f"arg_{arg_position:02.0f}"
     return argname.lower()
 
 
@@ -64,14 +63,14 @@ def callable_annots_to_signature(
     """
     origin = typing.get_origin(callable_annots)
     if not _is_callable_type_annot(origin):
-        raise ValueError('The provided type is not a Callable generic alias')
+        raise ValueError("The provided type is not a Callable generic alias")
 
     input_annots, return_annot = typing.get_args(callable_annots)
     arg_params = [
         Parameter(mk_argname(annot, i, None), PK, annotation=annot)
         for i, annot in enumerate(input_annots)
     ]
-    self_param = Parameter('self', PK)
+    self_param = Parameter("self", PK)
     return Signature([self_param] + arg_params, return_annotation=return_annot)
 
 
@@ -105,8 +104,8 @@ def func_types_to_protocol(
 def test_func_types_to_protocol():
     from typing import Iterable, Any, NewType, Callable
 
-    Group = NewType('Group', str)
-    Item = NewType('Item', Any)
+    Group = NewType("Group", str)
+    Item = NewType("Item", Any)
 
     class Groups:
         add_item_to_group: Callable[[Item, Group], Any]
@@ -138,32 +137,34 @@ def func_types_to_scaffold(
     """Produces a scaffold class containing the said methods, with given annotations"""
 
     if name is None:
-        name = 'GeneratedClass'
+        name = "GeneratedClass"
 
     methods = []
     for method_name, callable_type in func_types.items():
         sig = callable_annots_to_signature(callable_type)
-        arg_str = ', '.join(
-            f'{param.name}: {param.annotation.__name__}'
-            if param.annotation != Parameter.empty
-            else f'{param.name}'
+        arg_str = ", ".join(
+            (
+                f"{param.name}: {param.annotation.__name__}"
+                if param.annotation != Parameter.empty
+                else f"{param.name}"
+            )
             for param in sig.parameters.values()
         )
         return_annotation = (
             sig.return_annotation.__name__
             if sig.return_annotation != Parameter.empty
-            else 'None'
+            else "None"
         )
         method_str = (
-            f'def {method_name}({arg_str}) -> {return_annotation}:\n    \tpass\n'
+            f"def {method_name}({arg_str}) -> {return_annotation}:\n    \tpass\n"
         )
         methods.append(method_str)
 
-    class_str = f'\nclass {name}:\n    ' + '\n    '.join(methods)
+    class_str = f"\nclass {name}:\n    " + "\n    ".join(methods)
     return class_str
 
 
-_expected_scaffold = '''
+_expected_scaffold = """
 class GeneratedClass:
     def add_item_to_group(self, item: Item, group: Group) -> Any:
     	pass
@@ -176,14 +177,14 @@ class GeneratedClass:
 
     def items_for_group(self, group: Group) -> Iterable:
     	pass
-'''
+"""
 
 
 def test_func_types_to_scaffold():
     from typing import Iterable, Any, NewType, Callable
 
-    Group = NewType('Group', str)
-    Item = NewType('Item', Any)
+    Group = NewType("Group", str)
+    Item = NewType("Item", Any)
 
     class Groups:
         add_item_to_group: Callable[[Item, Group], Any]

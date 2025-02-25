@@ -1,4 +1,5 @@
 """Test composition"""
+
 import pytest
 
 from meshed.composition import line_with_dag

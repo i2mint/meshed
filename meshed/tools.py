@@ -14,11 +14,11 @@ import i2
 from meshed.dag import DAG
 
 
-HOST = os.environ.get('HOST', '0.0.0.0')
-PORT = int(os.environ.get('PORT', 3030))
-API_URL = os.environ.get('API_URL', f'http://localhost:{PORT}')
-SERVER = os.environ.get('SERVER', 'wsgiref')
-OPENAPI_URL = urljoin(API_URL, 'openapi')
+HOST = os.environ.get("HOST", "0.0.0.0")
+PORT = int(os.environ.get("PORT", 3030))
+API_URL = os.environ.get("API_URL", f"http://localhost:{PORT}")
+SERVER = os.environ.get("SERVER", "wsgiref")
+OPENAPI_URL = urljoin(API_URL, "openapi")
 
 
 def find_funcs(dag, func_outs):
@@ -88,7 +88,7 @@ class CloudFunctions:
             return HttpClient(url=self.openapi_url)
         except Exception:
             self.logger(
-                f'Could not connect to {self.openapi_url}. Waiting 10 seconds and trying again.'
+                f"Could not connect to {self.openapi_url}. Waiting 10 seconds and trying again."
             )
             time.sleep(10)
             return HttpClient(url=self.openapi_url)
@@ -104,9 +104,9 @@ class CloudFunctions:
 
         @i2.Sig(next(f for f in self.funcs if key == f.__name__))
         def ws_func(*a, **kw):
-            self.logger(f'Getting web service for: {key}')
+            self.logger(f"Getting web service for: {key}")
             if (_wsf := getattr(self.http_client, key, None)) is not None:
-                self.logger(f'Found web service for: {key}')
+                self.logger(f"Found web service for: {key}")
                 return _wsf(*a, **kw)
             raise KeyError(key)
 
@@ -142,5 +142,5 @@ def mk_hybrid_dag(dag: DAG, func_ids_to_cloudify: list):
     ws_funcs = CloudFunctions(funcs_to_cloudify)
     ws_dag = mk_dag_with_ws_funcs(dag, ws_funcs)
 
-    HybridDAG = namedtuple('HybridDAG', ['funcs_to_cloudify', 'ws_dag', 'ws_funcs'])
+    HybridDAG = namedtuple("HybridDAG", ["funcs_to_cloudify", "ws_dag", "ws_funcs"])
     return HybridDAG(funcs_to_cloudify, ws_dag, ws_funcs)

@@ -1,4 +1,5 @@
 """Test dags"""
+
 import pytest
 
 from meshed.makers import code_to_dag
@@ -50,10 +51,10 @@ def test_dag_operations():
 
     from i2 import Sig
 
-    assert str(Sig(dag)) == '(w, ww, www)'
+    assert str(Sig(dag)) == "(w, ww, www)"
 
     assert (
-        dag(1, 2, 3) == 'subtract(x=mult(w=1, ww=2), y=add(x=mult(w=1, ww=2), www=3))'
+        dag(1, 2, 3) == "subtract(x=mult(w=1, ww=2), y=add(x=mult(w=1, ww=2), www=3))"
     )
 
     dag = dag.ch_funcs(
@@ -62,7 +63,7 @@ def test_dag_operations():
         subtract=lambda x, y: x - y,
     )
 
-    assert str(Sig(dag)) == '(w, ww, www)'
+    assert str(Sig(dag)) == "(w, ww, www)"
     assert dag(1, 2, 3) == -3
 
 
@@ -81,15 +82,15 @@ def test_funcnode_bind():
         return a_plus_b * d
 
     # here we specify that the output of f will be injected in g as an argument for the parameter a_plus_b
-    f_node = FuncNode(func=f, out='a_plus_b')
+    f_node = FuncNode(func=f, out="a_plus_b")
     g_node = FuncNode(func=g)
     dag = DAG((f_node, g_node))
     assert dag(a=1, b=2, d=3) == 9
 
     # we can do more complex renaming as well, for example here we specify that the value for b is also the value for d,
     # resulting in the dag being now 2 variable dag
-    f_node = FuncNode(func=f, out='a_plus_b')
-    g_node = FuncNode(func=g, bind={'d': 'b'})
+    f_node = FuncNode(func=f, out="a_plus_b")
+    g_node = FuncNode(func=g, bind={"d": "b"})
     dag = DAG((f_node, g_node))
     assert dag(a=1, b=2) == 6
 
@@ -154,8 +155,8 @@ def test_binding_to_a_root_node():
         return a_plus_b * d
 
     # we bind d to b, and it works!
-    f_node = FuncNode(func=f, out='a_plus_b')
-    g_node = FuncNode(func=g, bind={'d': 'b'})
+    f_node = FuncNode(func=f, out="a_plus_b")
+    g_node = FuncNode(func=g, bind={"d": "b"})
     dag = DAG((f_node, g_node))
     assert dag(a=1, b=2) == 6
 
@@ -165,7 +166,7 @@ def test_binding_to_a_root_node():
     def gg(a_plus_b, d=4):
         return a_plus_b * d
 
-    gg_node = FuncNode(func=gg, bind={'d': 'b'})
+    gg_node = FuncNode(func=gg, bind={"d": "b"})
 
     with pytest.raises(ValidationError) as e_info:
         _ = DAG((f_node, gg_node))
@@ -180,7 +181,7 @@ def test_binding_to_a_root_node():
     def ff(a, b=4):
         return f(a, b)
 
-    ff_node = FuncNode(func=ff, out='a_plus_b')
+    ff_node = FuncNode(func=ff, out="a_plus_b")
     dag = DAG((ff_node, gg_node))
     assert dag(a=1, b=2) == 6
 
@@ -188,7 +189,7 @@ def test_binding_to_a_root_node():
     from i2 import Sig
 
     give_default_to_b = lambda func: Sig(func).ch_defaults(b=4)(func)
-    ff_node = FuncNode(func=give_default_to_b(f), out='a_plus_b')
+    ff_node = FuncNode(func=give_default_to_b(f), out="a_plus_b")
     dag = DAG((ff_node, gg_node))
     assert dag(a=1, b=2) == 6
     # And if you don't specify b, it has that default you set!
@@ -207,7 +208,7 @@ def test_binding_to_a_root_node():
     def ggg(a_plus_b, d: int):  # note that d has no default, but an annotation
         return a_plus_b * d
 
-    ggg_node = FuncNode(func=ggg, bind={'d': 'b'})
+    ggg_node = FuncNode(func=ggg, bind={"d": "b"})
     with pytest.raises(ValidationError) as e_info:
         _ = DAG((f_node, ggg_node))
     assert "didn't have the same annotation" in e_info.value.args[0]
@@ -215,7 +216,7 @@ def test_binding_to_a_root_node():
     # Solution (with i2.Sig)
 
     give_annotation_to_b = lambda func: Sig(func).ch_annotations(b=int)(func)
-    ff_node = FuncNode(func=give_annotation_to_b(f), out='a_plus_b')
+    ff_node = FuncNode(func=give_annotation_to_b(f), out="a_plus_b")
     dag = DAG((ff_node, ggg_node))
     assert dag(a=1, b=2) == 6
 
@@ -241,8 +242,8 @@ def test_binding_to_a_root_node():
 
     lenient_dag_maker = partial(DAG, parameter_merge=first_wins_all_merger)
 
-    f_node = FuncNode(func=f, out='a_plus_b')
-    g_node = FuncNode(func=g, bind={'d': 'b'})
+    f_node = FuncNode(func=f, out="a_plus_b")
+    g_node = FuncNode(func=g, bind={"d": "b"})
     dag = lenient_dag_maker([f_node, g_node])
     assert dag(1, 2) == 6
     # Note we can't do dag(a=1, b=2) since (like f) it's position-only.
@@ -265,19 +266,19 @@ def test_dag_partialize():
         return a - b
 
     f = DAG([foo])
-    assert str(Sig(f)) == '(a, b)'
+    assert str(Sig(f)) == "(a, b)"
 
     # if we give ``b`` a default:
     ff = f.partial(b=9)
-    assert str(Sig(ff)) == '(a, b=9)'
+    assert str(Sig(ff)) == "(a, b=9)"
     # note that the Sig of the partial of foo is '(a, *, b=9)' though
-    assert str(Sig(partial(foo, b=9))) == '(a, *, b=9)'
+    assert str(Sig(partial(foo, b=9))) == "(a, *, b=9)"
     assert ff(10) == ff(a=10) == 1
 
     # if we give ``a`` (the first arg) a default but not ``b`` (the second arg)
     fff = f.partial(a=4)  # fixing a, which is before b
     # note that this fixing a reorders the parameters (so we have a valid signature!)
-    assert str(Sig(fff)) == '(b, a=4)'
+    assert str(Sig(fff)) == "(b, a=4)"
 
     fn = fff.func_nodes[0]
     assert fn.call_on_scope(dict(b=3)) == 1
@@ -295,4 +296,4 @@ def test_dag_partialize():
 
     new_dag = larger_dag.partial(c=3, a=1)
     assert new_dag(b=5, d=6) == 12
-    assert str(signature(new_dag)) == '(b, a=1, c=3, d=4)'
+    assert str(signature(new_dag)) == "(b, a=1, c=3, d=4)"
