@@ -1,27 +1,25 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.dag &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -256,13 +254,13 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span><span class="p">,</span> <span class="n">cached_property</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span><span class="p">,</span> <span class="n">cached_property</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span><span class="p">,</span> <span class="n">eq</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">attrgetter</span><span class="p">,</span> <span class="n">eq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Callable</span><span class="p">,</span>
     <span class="n">MutableMapping</span><span class="p">,</span>
     <span class="n">Union</span><span class="p">,</span>
@@ -274,10 +272,10 @@
     <span class="n">KT</span><span class="p">,</span>
     <span class="n">VT</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
 
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">double_up_as_factory</span><span class="p">,</span> <span class="n">MultiFunc</span>
-<span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">double_up_as_factory</span><span class="p">,</span> <span class="n">MultiFunc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2.signatures</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">call_somewhat_forgivingly</span><span class="p">,</span>
     <span class="n">call_forgivingly</span><span class="p">,</span>
     <span class="n">Parameter</span><span class="p">,</span>
@@ -287,7 +285,7 @@
     <span class="c1"># SignatureComparator,</span>
     <span class="n">CallableComparator</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">FuncNode</span><span class="p">,</span>
     <span class="n">dflt_configs</span><span class="p">,</span>
     <span class="n">BindInfo</span><span class="p">,</span>
@@ -300,7 +298,7 @@
     <span class="c1"># compare_signatures,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">lambda_name</span><span class="p">,</span>
     <span class="n">ValidationError</span><span class="p">,</span>
     <span class="n">NotUniqueError</span><span class="p">,</span>
@@ -316,7 +314,7 @@
     <span class="n">ParameterMerger</span><span class="p">,</span>
     <span class="n">conservative_parameter_merge</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">meshed.itools</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.itools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">topological_sort</span><span class="p">,</span>
     <span class="n">leaf_nodes</span><span class="p">,</span>
     <span class="n">root_nodes</span><span class="p">,</span>
@@ -324,19 +322,19 @@
     <span class="n">ancestors</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">meshed.viz</span> <span class="kn">import</span> <span class="n">dot_lines_of_objs</span><span class="p">,</span> <span class="n">add_new_line_if_none</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">dot_lines_of_objs</span><span class="p">,</span> <span class="n">add_new_line_if_none</span>
 
 <span class="n">FuncMapping</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="n">KT</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">KT</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]]</span>
 
 
-<span class="k">def</span> <span class="nf">order_subset_from_list</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">sublist</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">order_subset_from_list</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">sublist</span><span class="p">):</span>
     <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">sublist</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">items</span><span class="p">)),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sublist</span><span class="si">}</span><span class="s1"> is not contained in </span><span class="si">{</span><span class="n">items</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">)}</span>
 
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sublist</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
 
 
-<span class="k">def</span> <span class="nf">find_first_free_name</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">(),</span> <span class="n">start_at</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_first_free_name</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">(),</span> <span class="n">start_at</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">prefix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">prefix</span>
     <span class="k">else</span><span class="p">:</span>
@@ -348,9 +346,9 @@
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
-<span class="k">def</span> <span class="nf">mk_mock_funcnode</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mk_mock_funcnode</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
     <span class="nd">@Sig</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">():</span>
         <span class="k">pass</span>
 
     <span class="c1"># name = &quot;_mock_&quot; + str(arg) + &quot;_&quot; + str(out)  # f-string</span>
@@ -359,7 +357,7 @@
     <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&lt;lambda&gt;&#39;</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">lambda_name</span><span class="p">()</span>  <span class="c1"># make a lambda name that is a unique identifier</span>
@@ -371,10 +369,10 @@
     <span class="k">return</span> <span class="n">find_first_free_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">mk_list_names_unique</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mk_list_names_unique</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
     <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">():</span>
         <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">exclude_names</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_exclude_names</span><span class="p">:</span>
@@ -388,17 +386,17 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
 
 
-<span class="k">def</span> <span class="nf">mk_nodes_names_unique</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mk_nodes_names_unique</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
     <span class="n">new_names</span> <span class="o">=</span> <span class="n">mk_list_names_unique</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">new_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">new_names</span><span class="p">):</span>
         <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span>
     <span class="k">return</span> <span class="n">nodes</span>
 
 
-<span class="k">def</span> <span class="nf">arg_names</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">arg_names</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
     <span class="n">names</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">names</span>
 
-    <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">():</span>
         <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">exclude_names</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_exclude_names</span><span class="p">:</span>
@@ -415,7 +413,7 @@
 
 <div class="viewcode-block" id="named_partial">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.named_partial">[docs]</a>
-<span class="k">def</span> <span class="nf">named_partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">named_partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;functools.partial, but with a __name__</span>
 
 <span class="sd">    &gt;&gt;&gt; f = named_partial(print, sep=&#39;\\n&#39;)</span>
@@ -432,12 +430,12 @@
 
 
 
-<span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="n">ch_func_to_all_pk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2.signatures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ch_func_to_all_pk</span>
 
 
 <div class="viewcode-block" id="hook_up">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.hook_up">[docs]</a>
-<span class="k">def</span> <span class="nf">hook_up</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hook_up</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Source inputs and write outputs to given variables mapping.</span>
 
 <span class="sd">    Returns inputless and outputless function that will, when called,</span>
@@ -477,14 +475,14 @@
     <span class="k">if</span> <span class="n">output_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">output_key</span> <span class="o">=</span> <span class="n">_func</span><span class="o">.</span><span class="vm">__name__</span>
 
-    <span class="k">def</span> <span class="nf">source_from_decorated</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">source_from_decorated</span><span class="p">():</span>
         <span class="n">variables</span><span class="p">[</span><span class="n">output_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">call_somewhat_forgivingly</span><span class="p">(</span><span class="n">_func</span><span class="p">,</span> <span class="p">(),</span> <span class="n">variables</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">source_from_decorated</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">_separate_func_nodes_and_var_nodes</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_separate_func_nodes_and_var_nodes</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
     <span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="n">var_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
@@ -498,7 +496,7 @@
 <span class="n">_not_found</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_find_unique_element</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">search_iterable</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_unique_element</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">search_iterable</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find item in search_iterable, using key as the matching function,</span>
 <span class="sd">    raising a NotFound error if no match and a NotUniqueError if more than one.&quot;&quot;&quot;</span>
     <span class="n">it</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">key</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">search_iterable</span><span class="p">)</span>
@@ -512,7 +510,7 @@
     <span class="k">return</span> <span class="n">first</span>
 
 
-<span class="k">def</span> <span class="nf">modified_func_node</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="o">**</span><span class="n">modifications</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncNode</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">modified_func_node</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="o">**</span><span class="n">modifications</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncNode</span><span class="p">:</span>
     <span class="n">modifiable_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;func&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;bind&#39;</span><span class="p">,</span> <span class="s1">&#39;out&#39;</span><span class="p">}</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">modifications</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span>
         <span class="n">modifiable_attrs</span>
@@ -526,11 +524,11 @@
     <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">original_func_node_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">modifications</span><span class="p">))</span>
 
 
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">partialx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">partialx</span>
 
 
 <span class="c1"># TODO: doctests</span>
-<span class="k">def</span> <span class="nf">partialized_funcnodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="o">**</span><span class="n">keyword_defaults</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">partialized_funcnodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="o">**</span><span class="n">keyword_defaults</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">argnames_to_be_bound</span> <span class="o">:=</span> <span class="nb">set</span><span class="p">(</span><span class="n">keyword_defaults</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
             <span class="n">func_node</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span>
@@ -555,18 +553,18 @@
 <span class="n">DagOutput</span> <span class="o">=</span> <span class="n">Any</span>
 
 
-<span class="k">def</span> <span class="nf">_name_attr_or_x</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_name_attr_or_x</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">change_value_on_cond</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">change_value_on_cond</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">cond</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
             <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">d</span>
 
 
-<span class="k">def</span> <span class="nf">dflt_debugger_feedback</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dflt_debugger_feedback</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s1"> --------------------------------------------------------------&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\t</span><span class="si">{</span><span class="n">func_node</span><span class="si">=}</span><span class="se">\n\t</span><span class="si">{</span><span class="n">scope</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">output</span>
@@ -578,7 +576,7 @@
 <div class="viewcode-block" id="DAG">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">DAG</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DAG</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; from meshed.dag import DAG, Sig</span>
 <span class="sd">    &gt;&gt;&gt;</span>
@@ -635,7 +633,7 @@
         <span class="n">default</span><span class="o">=</span><span class="n">extract_values</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ensure_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">_func_nodes_to_graph_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">topological_sort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
@@ -665,7 +663,7 @@
 <div class="viewcode-block" id="DAG.from_funcs">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.from_funcs">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_funcs</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">funcs</span><span class="p">,</span> <span class="o">**</span><span class="n">named_funcs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_funcs</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">funcs</span><span class="p">,</span> <span class="o">**</span><span class="n">named_funcs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param funcs:</span>
@@ -692,7 +690,7 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">bindings_cleaner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bindings_cleaner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="o">=</span> <span class="n">mk_nodes_names_unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
         <span class="n">funcnodes_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">]</span>
         <span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">out</span>
@@ -700,16 +698,16 @@
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">:</span>
             <span class="n">node</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">change_value_on_cond</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a dict of {argname: argval} pairs from positional and keyword arguments.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span><span class="o">.</span><span class="n">map_arguments</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">apply_defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># Get a dict of {argname: argval} pairs from positional and keyword arguments</span>
         <span class="c1"># How positionals are resolved is determined by self.__signature__</span>
         <span class="c1"># The result is the initial ``scope`` the func nodes will both read from</span>
@@ -722,7 +720,7 @@
         <span class="c1"># extract the desired final output and return it</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_output_from_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leafs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_preprocess_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_preprocess_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Take care of the stuff that needs to be taking care of before looping</span>
 <span class="sd">        though the func_nodes and calling them on scope. Namely:</span>
 
@@ -736,12 +734,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">last_scope</span> <span class="o">=</span> <span class="n">scope</span>  <span class="c1"># just to remember it, for debugging purposes ONLY!</span>
         <span class="k">return</span> <span class="n">scope</span>
 
-    <span class="k">def</span> <span class="nf">_call_func_nodes_on_scope_gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call_func_nodes_on_scope_gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Loop over ``func_nodes`` yielding ``func_node.call_on_scope(scope)``.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">func_node</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_call_func_nodes_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call_func_nodes_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loop over ``func_nodes`` calling func_node.call_on_scope on scope.</span>
 <span class="sd">        (Really, just &quot;consumes&quot; the generator output by _call_func_nodes_on_scope_gen)</span>
@@ -751,7 +749,7 @@
 
 <div class="viewcode-block" id="DAG.call_on_scope">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.call_on_scope">[docs]</a>
-    <span class="k">def</span> <span class="nf">call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the func_nodes using scope (a dict or MutableMapping) both to</span>
 <span class="sd">        source it&#39;s arguments and write it&#39;s results.</span>
 
@@ -767,7 +765,7 @@
 
 <div class="viewcode-block" id="DAG.call_on_scope_iteratively">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.call_on_scope_iteratively">[docs]</a>
-    <span class="k">def</span> <span class="nf">call_on_scope_iteratively</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_on_scope_iteratively</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the ``func_nodes`` using scope (a dict or MutableMapping) both to</span>
 <span class="sd">        source it&#39;s arguments and write it&#39;s results.</span>
 
@@ -783,7 +781,7 @@
     <span class="c1">#     unspecified arguments.</span>
     <span class="c1">#     &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a sub-dag from a specification of (var or fun) input and output nodes.</span>
 
 <span class="sd">        ``dag[input_nodes:output_nodes]`` is the sub-dag made of intersection of all</span>
@@ -898,14 +896,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getitem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_getitem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getitem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
             <span class="n">func_nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ordered_subgraph_nodes</span><span class="p">(</span><span class="n">item</span><span class="p">),</span>
             <span class="n">cache_last_scope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_last_scope</span><span class="p">,</span>
             <span class="n">parameter_merge</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_merge</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_ordered_subgraph_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ordered_subgraph_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="n">subgraph_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subgraph_nodes</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="c1"># TODO: When clone ready, use to do `constructor = type(self)` instead of DAG</span>
         <span class="c1"># constructor = type(self)  # instead of DAG</span>
@@ -913,7 +911,7 @@
         <span class="n">ordered_subgraph_nodes</span> <span class="o">=</span> <span class="n">order_subset_from_list</span><span class="p">(</span><span class="n">initial_nodes</span><span class="p">,</span> <span class="n">subgraph_nodes</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ordered_subgraph_nodes</span>
 
-    <span class="k">def</span> <span class="nf">_subgraph_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_subgraph_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="n">ins</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="n">_descendants</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
             <span class="nb">filter</span><span class="p">(</span><span class="n">FuncNode</span><span class="o">.</span><span class="n">has_as_instance</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">ins</span><span class="p">)</span> <span class="o">|</span> <span class="n">descendants</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">ins</span><span class="p">))</span>
@@ -928,7 +926,7 @@
     <span class="c1">#   See https://github.com/i2mint/meshed/issues/14 for more information.</span>
 <div class="viewcode-block" id="DAG.partial">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.partial">[docs]</a>
-    <span class="k">def</span> <span class="nf">partial</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">partial</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">positional_dflts</span><span class="p">,</span>
         <span class="n">_remove_bound_arguments</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -995,14 +993,14 @@
         <span class="k">return</span> <span class="n">new_dag</span></div>
 
 
-    <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">slice</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;must be a slice, was: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">stop</span>
 
         <span class="n">empty_slice</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">ensure_variable_list</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">ensure_variable_list</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -1020,7 +1018,7 @@
         <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">ensure_variable_list</span><span class="p">,</span> <span class="p">[</span><span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span>
 
-    <span class="k">def</span> <span class="nf">get_node_matching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_node_matching</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">idx</span>
@@ -1034,7 +1032,7 @@
     <span class="c1">#  so instable?</span>
     <span class="c1">#  Should this node indexing be controllable by user?</span>
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">_func_node_for</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_func_node_for</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;A dictionary mapping identifiers and functions to their FuncNode instances</span>
 <span class="sd">        in the DAG. The keys of this dictionary will include:</span>
 
@@ -1094,12 +1092,12 @@
         <span class="c1"># remove the items marked for removal and return</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">find_func_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_func_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">FuncNode</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">node</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Yields the self.func_nodes</span>
 <span class="sd">        Note: The raison d&#39;etre of this ``__iter__`` is simply because if no custom one</span>
 <span class="sd">        is provided, python defaults to yielding ``__getitem__[i]`` for integers,</span>
@@ -1129,7 +1127,7 @@
     <span class="c1">#  func_mapping keys.</span>
 <div class="viewcode-block" id="DAG.ch_funcs">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.ch_funcs">[docs]</a>
-    <span class="k">def</span> <span class="nf">ch_funcs</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ch_funcs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="c1"># func_comparator: CallableComparator = compare_signatures,</span>
         <span class="n">ch_func_node_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
@@ -1296,7 +1294,7 @@
     <span class="c1"># ------------ utils --------------------------------------------------------------</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">params_for_src</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">params_for_src</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The ``{src_name: list_of_params_using_that_src,...}`` dictionary.</span>
 <span class="sd">        That is, a ``dict`` having lists of all ``Parameter`` objs that are used by a</span>
 <span class="sd">        ``node.bind`` source (value of ``node.bind``) for each such source in the graph</span>
@@ -1318,7 +1316,7 @@
 
 <div class="viewcode-block" id="DAG.src_name_params">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.src_name_params">[docs]</a>
-    <span class="k">def</span> <span class="nf">src_name_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">src_name_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate Parameter instances that are needed to compute ``src_names``&quot;&quot;&quot;</span>
         <span class="c1"># see params_for_src property to see what d is</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_for_src</span>
@@ -1345,7 +1343,7 @@
 
     <span class="c1"># TODO: Find more representative (and possibly shorter) doctest:</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">graph_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">graph_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The dict representing the ``{from_node: to_nodes}`` graph.</span>
 <span class="sd">        Like ``.graph``, but with node ids (names).</span>
 
@@ -1370,7 +1368,7 @@
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">_prepare_other_for_addition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_other_for_addition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DAG</span><span class="p">):</span>
             <span class="n">other</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">other</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1382,7 +1380,7 @@
 
         <span class="k">return</span> <span class="n">other</span>
 
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;A union of DAGs. See ``__add__`` for more details.</span>
 
 <span class="sd">        &gt;&gt;&gt; dag = sum([DAG(list), DAG(tuple)])</span>
@@ -1399,7 +1397,7 @@
         <span class="c1"># the explicit code:</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_other_for_addition</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;A union of DAGs.</span>
 
 <span class="sd">        :param other: Another DAG or a valid object to make one with ``DAG(other)``.</span>
@@ -1413,12 +1411,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_other_for_addition</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">numbered_suffix_renamer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">numbered_suffix_renamer</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="n">ch_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">))</span>
 
 <div class="viewcode-block" id="DAG.add_edge">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.add_edge">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_node</span><span class="p">,</span> <span class="n">to_node</span><span class="p">,</span> <span class="n">to_param</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_node</span><span class="p">,</span> <span class="n">to_node</span><span class="p">,</span> <span class="n">to_param</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an e</span>
 
 <span class="sd">        :param from_node:</span>
@@ -1541,7 +1539,7 @@
     <span class="c1"># TODO: There are optimization and pre-validation opportunities here!</span>
 <div class="viewcode-block" id="DAG.add_edges">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.add_edges">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds multiple edges by applying ``DAG.add_edge`` multiple times.</span>
 
 <span class="sd">        :param edges: An iterable of ``(from_node, to_node)`` pairs or</span>
@@ -1562,7 +1560,7 @@
 
 <div class="viewcode-block" id="DAG.debugger">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.debugger">[docs]</a>
-    <span class="k">def</span> <span class="nf">debugger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">dflt_debugger_feedback</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">debugger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">dflt_debugger_feedback</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility to debug DAGs by computing each step sequentially, with feedback.</span>
 
@@ -1624,7 +1622,7 @@
 
         <span class="c1"># TODO: Add feedback callable validation</span>
         <span class="nd">@Sig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">launch_debugger</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">launch_debugger</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_kwargs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">):</span>
                 <span class="n">output</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
@@ -1638,7 +1636,7 @@
 
     <span class="c1"># ------------ display --------------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s1">&#39;var_nodes&#39;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s1">&#39;var_nodes&#39;</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">func_node</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span>
         <span class="p">)</span>
@@ -1646,7 +1644,7 @@
     <span class="c1"># TODO: Give more control (merge with lined)</span>
 <div class="viewcode-block" id="DAG.dot_digraph_body">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.dot_digraph_body">[docs]</a>
-    <span class="k">def</span> <span class="nf">dot_digraph_body</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dot_digraph_body</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">start_lines</span><span class="o">=</span><span class="p">(),</span>
         <span class="o">*</span><span class="p">,</span>
@@ -1683,9 +1681,9 @@
 <div class="viewcode-block" id="DAG.dot_digraph_ascii">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.dot_digraph_ascii">[docs]</a>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">dot_digraph_body</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">dot_digraph_ascii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dot_digraph_ascii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an ascii art string that represents the pipeline&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">dot_to_ascii</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">dot_to_ascii</span>
 
         <span class="k">return</span> <span class="n">dot_to_ascii</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dot_digraph_body</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span></div>
 
@@ -1693,9 +1691,9 @@
 <div class="viewcode-block" id="DAG.dot_digraph">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.dot_digraph">[docs]</a>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">dot_digraph_body</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">graphviz</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s1">You may not have graphviz installed. &#39;</span>
@@ -1708,24 +1706,24 @@
 
     <span class="c1"># NOTE: &quot;sig = property(__signature__)&quot; is not working. So, doing the following instead.</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">sig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span>
 
     <span class="nd">@sig</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">sig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="k">def</span> <span class="nf">find_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filt</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">FuncNode</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filt</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">FuncNode</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">func</span> <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">call_func</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">call_func</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
     <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="k">return</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">source_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">print_dag_string</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_dag_string</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="n">bind_info</span><span class="p">))</span>
 
 
@@ -1734,12 +1732,12 @@
 
 <span class="c1"># from typing import Iterable, Union</span>
 <span class="c1"># from i2 import Sig</span>
-<span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">extract_dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_dict</span>
 
 
 <div class="viewcode-block" id="parametrized_dag_factory">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.parametrized_dag_factory">[docs]</a>
-<span class="k">def</span> <span class="nf">parametrized_dag_factory</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">param_var_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parametrized_dag_factory</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">param_var_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a factory for sub-DAGs derived from the input DAG, with values of</span>
 <span class="sd">    specific &#39;parameter&#39; variable nodes precomputed and fixed. These precomputed nodes,</span>
@@ -1785,7 +1783,7 @@
     <span class="n">common_var_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">param_dag</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">computation_dag</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">)</span>
 
     <span class="nd">@Sig</span><span class="p">(</span><span class="n">param_dag</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">dag_factory</span><span class="p">(</span><span class="o">*</span><span class="n">parametrization_args</span><span class="p">,</span> <span class="o">**</span><span class="n">parametrization_kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dag_factory</span><span class="p">(</span><span class="o">*</span><span class="n">parametrization_args</span><span class="p">,</span> <span class="o">**</span><span class="n">parametrization_kwargs</span><span class="p">):</span>
         <span class="c1"># use the param_dag to compute the values of the parameter var nodes</span>
         <span class="c1"># (and what ever else happens to be in the leaves, but we&#39;ll remove that later)</span>
         <span class="n">_</span> <span class="o">=</span> <span class="n">param_dag</span><span class="p">(</span><span class="o">*</span><span class="n">parametrization_args</span><span class="p">,</span> <span class="o">**</span><span class="n">parametrization_kwargs</span><span class="p">)</span>
@@ -1811,16 +1809,16 @@
 <span class="c1"># --------------------------------------------------------------------------------------</span>
 <span class="c1"># reordering funcnodes</span>
 
-<span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">uncurry</span><span class="p">,</span> <span class="n">pairs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">uncurry</span><span class="p">,</span> <span class="n">pairs</span>
 
 <span class="n">mk_mock_funcnode_from_tuple</span> <span class="o">=</span> <span class="n">uncurry</span><span class="p">(</span><span class="n">mk_mock_funcnode</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">funcnodes_from_pairs</span><span class="p">(</span><span class="n">pairs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">funcnodes_from_pairs</span><span class="p">(</span><span class="n">pairs</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">mk_mock_funcnode_from_tuple</span><span class="p">,</span> <span class="n">pairs</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">reorder_on_constraints</span><span class="p">(</span><span class="n">funcnodes</span><span class="p">,</span> <span class="n">outs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reorder_on_constraints</span><span class="p">(</span><span class="n">funcnodes</span><span class="p">,</span> <span class="n">outs</span><span class="p">):</span>
     <span class="n">extra_nodes</span> <span class="o">=</span> <span class="n">funcnodes_from_pairs</span><span class="p">(</span><span class="n">pairs</span><span class="p">(</span><span class="n">outs</span><span class="p">))</span>
     <span class="n">funcnodes</span> <span class="o">+=</span> <span class="n">extra_nodes</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">_func_nodes_to_graph_dict</span><span class="p">(</span><span class="n">funcnodes</span><span class="p">)</span>
@@ -1834,7 +1832,7 @@
 
 <div class="viewcode-block" id="attribute_vals">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.attribute_vals">[docs]</a>
-<span class="k">def</span> <span class="nf">attribute_vals</span><span class="p">(</span><span class="n">objs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">egress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">attribute_vals</span><span class="p">(</span><span class="n">objs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">egress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract attributes from an iterable of objects</span>
 <span class="sd">    &gt;&gt;&gt; list(attribute_vals([print, map], attrs=[&#39;__name__&#39;, &#39;__module__&#39;]))</span>
 <span class="sd">    [(&#39;print&#39;, &#39;builtins&#39;), (&#39;map&#39;, &#39;builtins&#39;)]</span>
@@ -1856,7 +1854,7 @@
 
 <span class="c1"># TODO: Extract hardcoded &quot;.name or .out&quot; condition so indexing/condition can be</span>
 <span class="c1">#  controlled by user.</span>
-<span class="k">def</span> <span class="nf">_validate_func_mapping</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">:</span> <span class="n">FuncMapping</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_func_mapping</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">:</span> <span class="n">FuncMapping</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates a ``FuncMapping`` against an iterable of ``FuncNodes``.</span>
 
 <span class="sd">    That is, it assures that:</span>
@@ -1920,7 +1918,7 @@
 <span class="c1"># TODO: Make it work with any FuncNode Iterable</span>
 <span class="c1"># TODO: extract egress functionality to decorator?</span>
 <span class="nd">@double_up_as_factory</span>
-<span class="k">def</span> <span class="nf">ch_funcs</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ch_funcs</span><span class="p">(</span>
     <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">func_mapping</span><span class="p">:</span> <span class="n">FuncMapping</span> <span class="o">=</span> <span class="p">(),</span>
@@ -1958,7 +1956,7 @@
     <span class="c1">#     )</span>
 
     <span class="c1"># TODO: Optimize (for example, use self._func_node_for)</span>
-    <span class="k">def</span> <span class="nf">ch_func</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ch_func</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
         <span class="n">condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">fn</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">key</span> <span class="ow">or</span> <span class="n">fn</span><span class="o">.</span><span class="n">out</span> <span class="o">==</span> <span class="n">key</span>  <span class="c1"># TODO: interface ctrl?</span>
         <span class="n">replacement</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">fn</span><span class="p">:</span> <span class="n">ch_func_node_func</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="p">,)</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
@@ -1996,7 +1994,7 @@
 <span class="c1"># TODO: Include as method of DAG?</span>
 <span class="c1"># TODO: extract egress functionality to decorator</span>
 <span class="nd">@double_up_as_factory</span>
-<span class="k">def</span> <span class="nf">ch_names</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ch_names</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.</span>
 
 <span class="sd">    :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``</span>
@@ -2092,7 +2090,7 @@
     <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">func_node_trans</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_rename_node</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_rename_node</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
     <span class="n">fn_kwargs</span> <span class="o">=</span> <span class="n">fn_kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="c1"># decorate renamer so if the original returns None the decorated will return input</span>
     <span class="n">renamer</span> <span class="o">=</span> <span class="n">_if_none_return_input</span><span class="p">(</span><span class="n">renamer</span><span class="p">)</span>

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -5,24 +7,20 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.slabs &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -161,20 +159,20 @@ slabs that can contain the original data, or other datas computed from it, or bo
 it should be enough to understand the general idea.
 For a discussion about the design of Slabs, see
 <a class="reference external" href="https://github.com/i2mint/meshed/discussions/49">https://github.com/i2mint/meshed/discussions/49</a>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Slabs</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">_call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Slabs</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">_call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="gp">... </span><span class="sd">        Calls the components 1 by 1, sourcing inputs and writing outputs in scope</span>
 <span class="gp">... </span><span class="sd">        &#39;&#39;&#39;</span>
 <span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">        </span><span class="sd">&#39;&#39;&#39;Get the next slab by calling _call_on_scope on an new empty scope.</span>
 <span class="gp">... </span><span class="sd">        At least one of the components will have to be argument-less and provide</span>
 <span class="gp">... </span><span class="sd">        some data for other components to get their inputs from, if any are needed.</span>
 <span class="gp">... </span><span class="sd">        &#39;&#39;&#39;</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="p">{})</span>
 <span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">        </span><span class="sd">&#39;&#39;&#39;Iterates over slabs until a handle exception is raised.&#39;&#39;&#39;</span>
 <span class="gp">... </span>        <span class="c1"># Simplified code:</span>
 <span class="gp">... </span>        <span class="k">with</span> <span class="bp">self</span><span class="p">:</span>  <span class="c1"># enter all the contexts that need to be entered</span>
@@ -231,7 +229,7 @@ An aggregate reading of these sensors could give you something like:</p>
 False as values.</p>
 <p>From this information, you’d like to compute a <cite>turn_mov_on</cite> value based on the
 formula.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">statistics</span> <span class="kn">import</span> <span class="n">stdev</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">statistics</span><span class="w"> </span><span class="kn">import</span> <span class="n">stdev</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vol</span> <span class="o">=</span> <span class="n">stdev</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">should_turn_movement_sensor_on</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">audio</span><span class="p">,</span> <span class="n">light</span><span class="p">:</span> <span class="n">vol</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span> <span class="o">*</span> <span class="n">light</span> <span class="o">&gt;</span> <span class="mi">50000</span>
 </pre></div>
@@ -265,12 +263,12 @@ of information, and we do so iteratively over over slab that is streaming to us
 from our smart home device.</p>
 <p><cite>SlabsIter</cite> is there to help you create such slabs, from source to enhanced.</p>
 <p>The situation above would look something along like this:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">statistics</span> <span class="kn">import</span> <span class="n">stdev</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">statistics</span><span class="w"> </span><span class="kn">import</span> <span class="n">stdev</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vol</span> <span class="o">=</span> <span class="n">stdev</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Making a slabs iter object</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">make_a_slabs_iter</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">make_a_slabs_iter</span><span class="p">():</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="c1"># Mocking the sensor readers</span>
 <span class="gp">... </span>    <span class="n">audio_sensor_read</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">96</span><span class="p">,</span> <span class="mi">87</span><span class="p">,</span> <span class="o">-</span><span class="mi">92</span><span class="p">],</span> <span class="p">[</span><span class="mi">320</span><span class="p">,</span> <span class="o">-</span><span class="mi">96</span><span class="p">,</span> <span class="mi">99</span><span class="p">]])</span><span class="o">.</span><span class="fm">__next__</span>
@@ -411,7 +409,7 @@ arguments of the decorated function as input and returns a boolean value.</p></l
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nd">@conditional_sentinel</span><span class="p">(</span><span class="n">division_by_zero</span><span class="p">,</span> <span class="n">sentinel</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">safe_division</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">safe_division</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">y</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">safe_division</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -423,7 +421,7 @@ arguments of the decorated function as input and returns a boolean value.</p></l
 </div>
 <p>See also <cite>output_none_if_none_arguments</cite>, made from <cite>conditional_sentinel</cite>:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@output_none_if_none_arguments</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -438,7 +436,7 @@ arguments of the decorated function as input and returns a boolean value.</p></l
 <span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">output_none_if_none_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.slabs.output_none_if_none_arguments" title="Link to this definition"></a></dt>
 <dd><p>Decorator that returns None if all arguments are None.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@output_none_if_none_arguments</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>

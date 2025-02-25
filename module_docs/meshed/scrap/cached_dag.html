@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
@@ -5,24 +7,20 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.scrap.cached_dag &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -142,16 +140,16 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">CachedDag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#CachedDag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.CachedDag" title="Link to this definition"></a></dt>
 <dd><p>Wraps a DAG, using it to compute any of it’s var nodes from it’s dependents,
 with the capability of caching intermediate var nodes for later reuse.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">code_to_dag</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">code_to_dag</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nd">@code_to_dag</span><span class="p">(</span><span class="n">func_src</span><span class="o">=</span><span class="nb">locals</span><span class="p">())</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">dag</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">,</span> <span class="n">www</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">dag</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">,</span> <span class="n">www</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">mult</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">www</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">z</span> <span class="o">=</span> <span class="n">subtract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -195,7 +193,7 @@ www=  ──▶ │   add    │  │
                z
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">CachedDag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signature</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
 <span class="go">&lt;Signature (k, /, **input_kwargs)&gt;</span>
@@ -272,9 +270,9 @@ But we need to protect the user from such effects!</p>
 <dt class="sig sig-object py" id="meshed.scrap.cached_dag.CachedDag.roots_for">
 <span class="sig-name descname"><span class="pre">roots_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#CachedDag.roots_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.CachedDag.roots_for" title="Link to this definition"></a></dt>
 <dd><p>The set of roots that lead to <code class="docutils literal notranslate"><span class="pre">node</span></code>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">code_to_dag</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.makers</span><span class="w"> </span><span class="kn">import</span> <span class="n">code_to_dag</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nd">@code_to_dag</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">dag</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">dag</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">mult</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">www</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">z</span> <span class="o">=</span> <span class="n">subtract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>

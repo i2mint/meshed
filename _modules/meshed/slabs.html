@@ -1,27 +1,25 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.slabs &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -175,7 +173,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Callable</span><span class="p">,</span>
     <span class="n">Mapping</span><span class="p">,</span>
     <span class="n">Iterable</span><span class="p">,</span>
@@ -184,14 +182,14 @@
     <span class="n">MutableMapping</span><span class="p">,</span>
     <span class="n">Protocol</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">ContextFanout</span>
-<span class="kn">from</span> <span class="nn">meshed.base</span> <span class="kn">import</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="n">ensure_func_nodes</span>
-<span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">ContextFanout</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="n">ensure_func_nodes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.dag</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
 
 
 <div class="viewcode-block" id="ExceptionalException">
 <a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.ExceptionalException">[docs]</a>
-<span class="k">class</span> <span class="nc">ExceptionalException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExceptionalException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an exception was supposed to be handled, but no matching handler</span>
 <span class="sd">    was found.</span>
 
@@ -202,7 +200,7 @@
 
 <div class="viewcode-block" id="IteratorExit">
 <a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.IteratorExit">[docs]</a>
-<span class="k">class</span> <span class="nc">IteratorExit</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IteratorExit</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an iterator should quit being iterated on, signaling this event</span>
 <span class="sd">    any process that cares to catch the signal.</span>
 <span class="sd">    We chose to inherit directly from `BaseException` instead of `Exception`</span>
@@ -230,13 +228,13 @@
 
 <div class="viewcode-block" id="ExceptionHandler">
 <a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.ExceptionHandler">[docs]</a>
-<span class="k">class</span> <span class="nc">ExceptionHandler</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExceptionHandler</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An exception handler is an argument-less callable that is called when a handled</span>
 <span class="sd">    exception occurs during iteration. Most often, the handler does nothing,</span>
 <span class="sd">    but could be used whose output will be ignored, unless it is do_not_break,</span>
 <span class="sd">    which will signal that the iteration should continue.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExceptionHandlerOutput</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExceptionHandlerOutput</span><span class="p">:</span>
         <span class="k">pass</span></div>
 
 
@@ -254,18 +252,18 @@
 <span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">do_nothing</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">do_nothing</span><span class="p">():</span>
     <span class="k">pass</span>
 
 
-<span class="k">def</span> <span class="nf">log_and_return</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="nb">print</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_and_return</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="nb">print</span><span class="p">):</span>
     <span class="n">logger</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">msg</span>
 
 
 <span class="c1"># TODO: Could consider (topologically) ordering the exceptions to reduce the matching</span>
 <span class="c1">#  possibilities (see _handle_exception)</span>
-<span class="k">def</span> <span class="nf">_get_handle_exceptions</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_handle_exceptions</span><span class="p">(</span>
     <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMapSpec</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HandledExceptionsMap</span><span class="p">:</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handle_exceptions</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">):</span>
@@ -276,7 +274,7 @@
     <span class="k">return</span> <span class="n">handle_exceptions</span>
 
 
-<span class="k">def</span> <span class="nf">_handle_exception</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_exception</span><span class="p">(</span>
     <span class="n">instance</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">:</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMap</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExceptionHandlerOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Looks for an exception type matching exc_val and calls the corresponding</span>
@@ -299,7 +297,7 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_call_from_dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="n">Sig</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_call_from_dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="n">Sig</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A i2.call_forgivingly optimized for our purpose</span>
 
 <span class="sd">    The sig argument needs to be the Sig(func) to work correctly.</span>
@@ -329,7 +327,7 @@
     <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_conditional_pluralization</span><span class="p">(</span><span class="n">n_items</span><span class="p">,</span> <span class="n">singular_msg</span><span class="p">,</span> <span class="n">plural_msg</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_conditional_pluralization</span><span class="p">(</span><span class="n">n_items</span><span class="p">,</span> <span class="n">singular_msg</span><span class="p">,</span> <span class="n">plural_msg</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;To route to the right message (or template) according to ``n_items``&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">n_items</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">singular_msg</span>
@@ -337,7 +335,7 @@
         <span class="k">return</span> <span class="n">plural_msg</span>
 
 
-<span class="k">def</span> <span class="nf">_validate_components</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_components</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="n">components</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
         <span class="n">not_callable</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
         <span class="n">not_callable_keys</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span>
@@ -357,7 +355,7 @@
 <span class="c1"># TODO: Postelize (or add tooling for) the components specification and add validation.</span>
 <div class="viewcode-block" id="Slabs">
 <a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs">[docs]</a>
-<span class="k">class</span> <span class="nc">Slabs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Slabs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Object to source and manipulate multiple streams.</span>
 
 <span class="sd">    A slab is a collection of items of a same interval of time.</span>
@@ -510,7 +508,7 @@
 
     <span class="n">_output_of_context_enter</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMapSpec</span> <span class="o">=</span> <span class="n">DFLT_INTERRUPT_EXCEPTIONS</span><span class="p">,</span>
         <span class="n">scope_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">MutableMapping</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">,</span>
@@ -526,7 +524,7 @@
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">ContextFanout</span><span class="p">(</span><span class="o">**</span><span class="n">components</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the components 1 by 1, sourcing inputs and writing outputs in scope&quot;&quot;&quot;</span>
         <span class="c1"># for each component</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -535,7 +533,7 @@
             <span class="n">scope</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_call_from_dict</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigs</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">scope</span>
 
-    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the next slab by calling _call_on_scope on an new empty scope.</span>
 <span class="sd">        At least one of the components will have to be argument-less and provide</span>
 <span class="sd">        some data for other components to get their inputs from, if any are needed.</span>
@@ -544,7 +542,7 @@
 
     <span class="c1"># TODO: Extend the flow control capabilities of execption handling</span>
     <span class="c1">#   (see https://github.com/i2mint/meshed/discussions/49)</span>
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterates over slabs until a handle exception is raised.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="p">:</span>  <span class="c1"># enter all the contexts that need to be entered</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>  <span class="c1"># loop until you encounter a handled exception</span>
@@ -559,14 +557,14 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">exit_value</span> <span class="o">=</span> <span class="n">handler_output</span>  <span class="c1"># remember, in case useful</span>
                         <span class="k">break</span>
 
-    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_output_of_context_enter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc_val</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc_tb</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc_val</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc_tb</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_of_context_enter</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">pass</span>
 
@@ -577,7 +575,7 @@
 <div class="viewcode-block" id="Slabs.from_func_nodes">
 <a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs.from_func_nodes">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_func_nodes</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_func_nodes</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
@@ -607,17 +605,17 @@
 
     <span class="n">from_dag</span> <span class="o">=</span> <span class="n">from_func_nodes</span>  <span class="c1"># TODO: Have a vote if we want this alias.</span>
 
-    <span class="k">def</span> <span class="nf">to_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">yield</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">to_dag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_func_nodes</span><span class="p">()))</span>
 
     <span class="c1"># TODO: Add @wraps(dot_digraph_body) to have DAG.dot_digraph signature</span>
 <div class="viewcode-block" id="Slabs.dot_digraph">
 <a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs.dot_digraph">[docs]</a>
-    <span class="k">def</span> <span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a dot_digraph of the DAG of the SlabsIter (see ``DAG.dot_digraph``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -633,12 +631,12 @@
 <span class="c1"># --------------------------------------------------------------------------------------</span>
 <span class="c1"># Slabs tools and helpers</span>
 
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
 
 
 <div class="viewcode-block" id="conditional_sentinel">
 <a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.conditional_sentinel">[docs]</a>
-<span class="k">def</span> <span class="nf">conditional_sentinel</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">conditional_sentinel</span><span class="p">(</span>
     <span class="n">condition_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span> <span class="n">sentinel</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator that returns sentinel based on a user-defined condition.</span>
@@ -679,11 +677,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Inner decorator that takes the function and returns a wrapper.&quot;&quot;&quot;</span>
 
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Wrapper function that checks the condition before calling func.&quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="n">condition_func</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">sentinel</span>
@@ -697,7 +695,7 @@
 
 <div class="viewcode-block" id="all_arguments_are_none">
 <a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.all_arguments_are_none">[docs]</a>
-<span class="k">def</span> <span class="nf">all_arguments_are_none</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">all_arguments_are_none</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if all arguments are None.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span>
         <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>

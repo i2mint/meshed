@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -5,24 +7,20 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.util &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -167,7 +165,7 @@
 <dd><p>A decorator that “iterizes” a function call if input satisfies a condition.
 That is, apply <code class="docutils literal notranslate"><span class="pre">map(func,</span> <span class="pre">input)</span></code> (iterize) or <code class="docutils literal notranslate"><span class="pre">func(input)</span></code> according to some
 conidition on <code class="docutils literal notranslate"><span class="pre">input</span></code>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
 </pre></div>
 </div>
@@ -184,7 +182,7 @@ conidition on <code class="docutils literal notranslate"><span class="pre">input
 <span class="go">[2, 4, 6]</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_foo</span> <span class="o">=</span> <span class="n">ConditionalIterize</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">new_foo</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">6</span>
@@ -213,7 +211,7 @@ tuples, sets, etc.</p>
 <p>See in the following that <code class="docutils literal notranslate"><span class="pre">ConditionalIterize</span></code> also has a <code class="docutils literal notranslate"><span class="pre">wrap</span></code> class method
 that can be used to wrap a function at definition time.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@ConditionalIterize</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">Iterator</span><span class="p">)</span>  <span class="c1"># Iterator is the default, so no need here</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">6</span>
@@ -240,13 +238,13 @@ If you need more complex conditions though, you can specify it through the
 annotate the resulting wrapped function if it’s first argument is annotated.
 As a consequence, <code class="docutils literal notranslate"><span class="pre">iterize_type</span></code> needs to be a “generic” type.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@ConditionalIterize</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)))</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">6</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">foo</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
 <span class="go">[2, 4, 6]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature</span>
 </pre></div>
 </div>
 <p>We annotated <code class="docutils literal notranslate"><span class="pre">x</span></code> as <code class="docutils literal notranslate"><span class="pre">int</span></code>, so see now the annotation of the wrapped function:</p>
@@ -297,7 +295,7 @@ them.</p>
 <dt class="sig sig-object py" id="meshed.util.conditional_trans">
 <span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">conditional_trans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#conditional_trans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.conditional_trans" title="Link to this definition"></a></dt>
 <dd><p>Conditionally transform an object unless it is marked as a literal.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">conditional_trans</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="nb">str</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">,</span> <span class="n">trans</span><span class="o">=</span><span class="nb">float</span>
 <span class="gp">... </span><span class="p">)</span>
@@ -325,7 +323,7 @@ names). When the name of an argument is used more than once, which kind, default
 and annotation should be used in the interface of the DAG?</p>
 <p>If they’re all the same, there’s no problem.</p>
 <p>But if they’re not the same, we need to provide control on which to ignore.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span> <span class="k">as</span> <span class="n">P</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span> <span class="k">as</span> <span class="n">P</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">PK</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">KO</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">PK</span><span class="p">))</span>
@@ -483,7 +481,7 @@ doesn’t need to, and if it were, we’d get an error (length of a number?!).</
 <dt class="sig sig-object py" id="meshed.util.if_then_else">
 <span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">if_then_else</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">if_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">then_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">else_func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/util.html#if_then_else"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.if_then_else" title="Link to this definition"></a></dt>
 <dd><p>Tool to “functionalize” the if-then-else logic.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">if_then_else</span><span class="p">,</span> <span class="nb">str</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s1">&#39;a string&#39;</span><span class="p">)</span>
 <span class="go">&#39;a string&#39;</span>
@@ -528,7 +526,7 @@ iterable, thus the name.</p>
 </pre></div>
 </div>
 <p>Consider the following pipeline:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Pipe</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipe</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;hello </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">&#39;hello 2&#39;</span>
@@ -553,9 +551,9 @@ of such objects.
 (You might be familiar (if you use <cite>numpy</cite> for example) with the related
 concept of “vectorization”,
 or [array programming](<a class="reference external" href="https://en.wikipedia.org/wiki/Array_programming">https://en.wikipedia.org/wiki/Array_programming</a>).)</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Pipe</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.util</span> <span class="kn">import</span> <span class="n">iterize</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipe</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">iterize</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">iterize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span>
@@ -607,7 +605,7 @@ understand. For instance, it could be a function itself.
 See how the function takes on <code class="docutils literal notranslate"><span class="pre">mk_place_holder_func</span></code>’s signature and name in the
 following example:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">mk_place_holder_func</span><span class="p">(</span><span class="n">mk_place_holder_func</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>  <span class="c1"># should give the same signature as mk_place_holder_func</span>
 <span class="go">&#39;(arg_names_or_sig, name=None, defaults=(), annotations=())&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">defaults</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -689,7 +687,7 @@ and values are the corresponding objects.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">all_os_objects</span> <span class="o">=</span> <span class="n">objects_defined_in_module</span><span class="p">(</span><span class="n">os</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;removedirs&#39;</span> <span class="ow">in</span> <span class="n">all_os_objects</span>
 <span class="go">True</span>
@@ -738,7 +736,7 @@ names). When the name of an argument is used more than once, which kind, default
 and annotation should be used in the interface of the DAG?</p>
 <p>If they’re all the same, there’s no problem.</p>
 <p>But if they’re not the same, we need to provide control on which to ignore.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span> <span class="k">as</span> <span class="n">P</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span> <span class="k">as</span> <span class="n">P</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">PK</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">KO</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">PK</span><span class="p">))</span>
@@ -764,7 +762,7 @@ and annotation should be used in the interface of the DAG?</p>
 <p>This is meant to be used to indicate to a mesh what var nodes a function can source
 values for.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@provides</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">_provides</span>
 <span class="go">(&#39;a&#39;, &#39;b&#39;)</span>
@@ -772,7 +770,7 @@ values for.</p>
 </div>
 <p>If no <code class="docutils literal notranslate"><span class="pre">var_names</span></code> are given, then the function name is used as the var name:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@provides</span><span class="p">()</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">_provides</span>
 <span class="go">(&#39;g&#39;,)</span>
@@ -781,7 +779,7 @@ values for.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">var_names</span></code> contains <code class="docutils literal notranslate"><span class="pre">'_'</span></code>, then the function name is used as the var name
 for that position:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@provides</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">h</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">h</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">h</span><span class="o">.</span><span class="n">_provides</span>
 <span class="go">(&#39;b&#39;, &#39;h&#39;)</span>

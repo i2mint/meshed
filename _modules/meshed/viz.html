@@ -1,27 +1,25 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.viz &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -125,13 +123,13 @@
   <h1>Source code for meshed.viz</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Visualization utilities for the meshed package.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="n">Sig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2.signatures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span>
 
 
 <div class="viewcode-block" id="dot_lines_of_objs">
 <a class="viewcode-back" href="../../module_docs/meshed/viz.html#meshed.viz.dot_lines_of_objs">[docs]</a>
-<span class="k">def</span> <span class="nf">dot_lines_of_objs</span><span class="p">(</span><span class="n">objs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">start_lines</span><span class="o">=</span><span class="p">(),</span> <span class="n">end_lines</span><span class="o">=</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_lines_of_objs</span><span class="p">(</span><span class="n">objs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">start_lines</span><span class="o">=</span><span class="p">(),</span> <span class="n">end_lines</span><span class="o">=</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get lines generator for the graphviz.DiGraph(body=list(...))</span>
 
@@ -232,7 +230,7 @@
 <span class="c1"># TODO: Should we integrate this to dot_lines_of_func_parameters directly (decorator?)</span>
 <div class="viewcode-block" id="add_new_line_if_none">
 <a class="viewcode-back" href="../../module_docs/meshed/viz.html#meshed.viz.add_new_line_if_none">[docs]</a>
-<span class="k">def</span> <span class="nf">add_new_line_if_none</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_new_line_if_none</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Since graphviz 0.18, need to have a newline in body lines.</span>
 <span class="sd">    This util is there to address that, adding newlines to body lines</span>
 <span class="sd">    when missing.&quot;&quot;&quot;</span>
@@ -244,7 +242,7 @@
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># Unused -- consider deleting</span>
-<span class="k">def</span> <span class="nf">_parameters_and_names_from_sig</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parameters_and_names_from_sig</span><span class="p">(</span>
     <span class="n">sig</span><span class="p">:</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">func_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">func_name</span> <span class="o">=</span> <span class="n">func_name</span> <span class="ow">or</span> <span class="n">sig</span><span class="o">.</span><span class="n">name</span>
@@ -259,9 +257,9 @@
 <span class="c1"># Old stuff</span>
 
 
-<span class="k">def</span> <span class="nf">visualize_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">graphviz</span>
-    <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">visualize_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
 
     <span class="n">dot</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
 
@@ -278,12 +276,12 @@
     <span class="n">display</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">visualize_graph_interactive</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">visualize_graph_interactive</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span>
 
-    <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-    <span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="nn">widgets</span>
-    <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">ipywidgets</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">widgets</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
 
     <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 
@@ -302,7 +300,7 @@
     <span class="n">graph_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">dot</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
     <span class="n">display</span><span class="p">(</span><span class="n">graph_widget</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_edge</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
         <span class="n">source</span> <span class="o">=</span> <span class="n">source_node</span><span class="o">.</span><span class="n">value</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">target_node</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
@@ -312,7 +310,7 @@
         <span class="n">source_node</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">target_node</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_node</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">new_node</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
             <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
@@ -320,7 +318,7 @@
             <span class="n">graph_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">dot</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
         <span class="n">new_node</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">delete_edge</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_edge</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
         <span class="n">source</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">delete_source</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="n">target</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">delete_target</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
@@ -330,7 +328,7 @@
         <span class="n">delete_source</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="n">delete_target</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">delete_node</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_node</span><span class="p">(</span><span class="n">sender</span><span class="p">):</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">delete_node_value</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
             <span class="n">g</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>

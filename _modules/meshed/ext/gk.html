@@ -1,27 +1,25 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.ext.gk &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -133,7 +131,7 @@
 
 <div class="viewcode-block" id="Data">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Data">[docs]</a>
-<span class="k">class</span> <span class="nc">Data</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Data</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This wraps any data that is consumed or produced</span>
 <span class="sd">    by a Operation. This data should also know how to serialize</span>
@@ -142,24 +140,24 @@
 <span class="sd">    any class working with data in the HiC framework.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="k">def</span> <span class="nf">set_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 
 
 <div class="viewcode-block" id="Operation">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Operation">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Operation</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Operation</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is an abstract class representing a data transformation. To use this,</span>
 <span class="sd">    please inherit from this class and customize the ``.compute`` method to your</span>
@@ -183,7 +181,7 @@
     <span class="n">provides</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method is a hook for you to override. It gets called after this</span>
 <span class="sd">        object has been initialized with its ``needs``, ``provides``, ``name``,</span>
@@ -193,14 +191,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Operation equality is based on name of layer.</span>
 <span class="sd">        (__eq__ and __hash__ must be overridden together)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Operation equality is based on name of layer.</span>
 <span class="sd">        (__eq__ and __hash__ must be overridden together)</span>
@@ -209,7 +207,7 @@
 
 <div class="viewcode-block" id="Operation.compute">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Operation.compute">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method must be implemented to perform this layer&#39;s feed-forward</span>
 <span class="sd">        computation on a given set of inputs.</span>
@@ -225,7 +223,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">named_inputs</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">needs</span><span class="p">]</span>
         <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
 
@@ -236,7 +234,7 @@
 
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This allows your operation to be pickled.</span>
 <span class="sd">        Everything needed to instantiate your operation should be defined by the</span>
@@ -255,7 +253,7 @@
 
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        load from pickle and instantiate the detector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -263,7 +261,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__postinit__</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display more informative names for the Operation class</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -278,23 +276,23 @@
 
 <div class="viewcode-block" id="NetworkOperation">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.NetworkOperation">[docs]</a>
-<span class="k">class</span> <span class="nc">NetworkOperation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NetworkOperation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;net&#39;</span><span class="p">)</span>
         <span class="n">Operation</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># set execution mode to single-threaded sequential by default</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_execution_method</span> <span class="o">=</span> <span class="s1">&#39;sequential&#39;</span>
 
-    <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_execution_method</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="NetworkOperation.set_execution_method">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.NetworkOperation.set_execution_method">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_execution_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_execution_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine how the network will be executed.</span>
 <span class="sd">        Args:</span>
@@ -307,10 +305,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_execution_method</span> <span class="o">=</span> <span class="n">method</span></div>
 
 
-    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">state</span> <span class="o">=</span> <span class="n">Operation</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">state</span><span class="p">[</span><span class="s1">&#39;net&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;net&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">state</span></div>
@@ -332,7 +330,7 @@
 
 <div class="viewcode-block" id="optional">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.optional">[docs]</a>
-<span class="k">class</span> <span class="nc">optional</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">optional</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Input values in ``needs`` may be designated as optional using this modifier.</span>
 <span class="sd">    If this modifier is applied to an input value, that value will be input to</span>
@@ -370,53 +368,53 @@
 <span class="c1"># Copyright 2016, Yahoo Inc.</span>
 <span class="c1"># Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.</span>
 
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="c1"># import networkx as nx</span>
-<span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">itools</span> <span class="k">as</span> <span class="n">gr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">itools</span> <span class="k">as</span> <span class="n">gr</span>
 
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
 
 <span class="c1"># uses base.Operation</span>
 
 
 <div class="viewcode-block" id="DataPlaceholderNode">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.DataPlaceholderNode">[docs]</a>
-<span class="k">class</span> <span class="nc">DataPlaceholderNode</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataPlaceholderNode</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A node for the Network graph that describes the name of a Data instance</span>
 <span class="sd">    produced or required by a layer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;DataPlaceholderNode(&quot;</span><span class="si">%s</span><span class="s1">&quot;)&#39;</span> <span class="o">%</span> <span class="bp">self</span></div>
 
 
 
 <div class="viewcode-block" id="DeleteInstruction">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.DeleteInstruction">[docs]</a>
-<span class="k">class</span> <span class="nc">DeleteInstruction</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DeleteInstruction</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An instruction for the compiled list of evaluation steps to free or delete</span>
 <span class="sd">    a Data instance from the Network&#39;s cache after it is no longer needed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;DeleteInstruction(&quot;</span><span class="si">%s</span><span class="s1">&quot;)&#39;</span> <span class="o">%</span> <span class="bp">self</span></div>
 
 
 
 <div class="viewcode-block" id="Network">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Network">[docs]</a>
-<span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is the main network implementation. The class contains all of the</span>
 <span class="sd">    code necessary to weave together operations into a directed-acyclic-graph (DAG)</span>
 <span class="sd">    and pass data through.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
 
         <span class="c1"># directed graph of layer instances and data-names defining the net.</span>
@@ -437,7 +435,7 @@
 
 <div class="viewcode-block" id="Network.add_op">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.add_op">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds the given operation and its data requirements to the network graph</span>
 <span class="sd">        based on the name of the operation, the names of the operation&#39;s needs, and</span>
@@ -466,13 +464,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
-    <span class="k">def</span> <span class="nf">list_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="s1">&#39;network must be compiled before listing layers.&#39;</span>
         <span class="k">return</span> <span class="p">[(</span><span class="n">s</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Operation</span><span class="p">)]</span>
 
 <div class="viewcode-block" id="Network.show_layers">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.show_layers">[docs]</a>
-    <span class="k">def</span> <span class="nf">show_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Shows info (name, needs, and provides) about all layers in this network.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_layers</span><span class="p">():</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;layer_name: &#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -483,7 +481,7 @@
 
 <div class="viewcode-block" id="Network.compile">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.compile">[docs]</a>
-    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a set of steps for evaluating layers</span>
 <span class="sd">        and freeing memory as necessary&quot;&quot;&quot;</span>
 
@@ -525,7 +523,7 @@
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unrecognized network graph node&#39;</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_find_necessary_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_necessary_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines what graph steps need to pe run to get to the requested</span>
 <span class="sd">        outputs from the provided inputs.  Eliminates steps that come before</span>
@@ -602,7 +600,7 @@
 
 <div class="viewcode-block" id="Network.compute">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.compute">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run the graph. Any inputs to the network must be passed in by name.</span>
 
@@ -633,7 +631,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_sequential_method</span><span class="p">(</span><span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_compute_thread_pool_barrier_method</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_thread_pool_barrier_method</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">thread_pool_size</span><span class="o">=</span><span class="mi">10</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -641,7 +639,7 @@
 <span class="sd">        You may achieve lower total latency if your graph is sufficiently</span>
 <span class="sd">        sub divided into operations using this method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">multiprocessing.dummy</span> <span class="kn">import</span> <span class="n">Pool</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing.dummy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span>
 
         <span class="c1"># if we have not already created a thread_pool, create one</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_thread_pool&#39;</span><span class="p">):</span>
@@ -696,7 +694,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">cache</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">cache</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">_compute_sequential_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_sequential_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method runs the graph one operation at a time in a single thread</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -762,7 +760,7 @@
 
 <div class="viewcode-block" id="Network.plot">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Network.plot">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the graph.</span>
 
@@ -779,16 +777,16 @@
 <span class="sd">            An instance of the pydot graph</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">suppress</span>
 
         <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">):</span>
-            <span class="kn">import</span> <span class="nn">pydot</span>
-            <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-            <span class="kn">import</span> <span class="nn">matplotlib.image</span> <span class="k">as</span> <span class="nn">mpimg</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">pydot</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.image</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpimg</span>
 
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-            <span class="k">def</span> <span class="nf">get_node_name</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">get_node_name</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">DataPlaceholderNode</span><span class="p">):</span>
                     <span class="k">return</span> <span class="n">a</span>
                 <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span>
@@ -844,7 +842,7 @@
 
 <div class="viewcode-block" id="ready_to_schedule_operation">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.ready_to_schedule_operation">[docs]</a>
-<span class="k">def</span> <span class="nf">ready_to_schedule_operation</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">has_executed</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ready_to_schedule_operation</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">has_executed</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines if a Operation is ready to be scheduled for execution based on</span>
 <span class="sd">    what has already been executed.</span>
@@ -869,7 +867,7 @@
 
 <div class="viewcode-block" id="ready_to_delete_data_node">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.ready_to_delete_data_node">[docs]</a>
-<span class="k">def</span> <span class="nf">ready_to_delete_data_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">has_executed</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ready_to_delete_data_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">has_executed</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines if a DataPlaceholderNode is ready to be deleted from the</span>
 <span class="sd">    cache.</span>
@@ -891,7 +889,7 @@
 
 <div class="viewcode-block" id="get_data_node">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.get_data_node">[docs]</a>
-<span class="k">def</span> <span class="nf">get_data_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_data_node</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gets a data node from a graph using its name</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -907,7 +905,7 @@
 <span class="c1"># Copyright 2016, Yahoo Inc.</span>
 <span class="c1"># Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.</span>
 
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
 
 <span class="c1"># uses Operation, NetworkOperation from base</span>
 <span class="c1"># uses Network from network</span>
@@ -915,12 +913,12 @@
 
 <div class="viewcode-block" id="FunctionalOperation">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.FunctionalOperation">[docs]</a>
-<span class="k">class</span> <span class="nc">FunctionalOperation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FunctionalOperation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;fn&#39;</span><span class="p">)</span>
         <span class="n">Operation</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">named_inputs</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">needs</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">optional</span><span class="p">)]</span>
 
         <span class="c1"># Find any optional inputs in named_inputs.  Get only the ones that</span>
@@ -944,10 +942,10 @@
 
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">state</span> <span class="o">=</span> <span class="n">Operation</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">state</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">state</span></div>
@@ -956,7 +954,7 @@
 
 <div class="viewcode-block" id="operation">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.operation">[docs]</a>
-<span class="k">class</span> <span class="nc">operation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">operation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This object represents an operation in a computation graph.  Its</span>
 <span class="sd">    relationship to other operations in the graph is specified via its</span>
@@ -983,11 +981,11 @@
 <span class="sd">        ``args`` or ``kwargs`` of ``fn`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">fn</span>
         <span class="n">Operation</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_normalize_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
 
         <span class="c1"># Allow single value for needs parameter</span>
         <span class="k">if</span> <span class="s1">&#39;needs&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;needs&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
@@ -1011,7 +1009,7 @@
 
         <span class="k">return</span> <span class="n">kwargs</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This enables ``operation`` to act as a decorator or as a functional</span>
 <span class="sd">        operation, for example::</span>
@@ -1044,7 +1042,7 @@
 
         <span class="k">return</span> <span class="n">FunctionalOperation</span><span class="p">(</span><span class="o">**</span><span class="n">total_kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display more informative names for the Operation class</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1060,7 +1058,7 @@
 
 <div class="viewcode-block" id="compose">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.compose">[docs]</a>
-<span class="k">class</span> <span class="nc">compose</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">compose</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a simple class that&#39;s used to compose ``operation`` instances into</span>
 <span class="sd">    a computation graph.</span>
@@ -1081,12 +1079,12 @@
 <span class="sd">        of multiple times (one for each time the operation appears).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">assert</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;compose needs a name&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">merge</span> <span class="o">=</span> <span class="n">merge</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">operations</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">operations</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Composes a collection of operations into a single computation graph,</span>
 <span class="sd">        obeying the ``merge`` property, if set in the constructor.</span>
@@ -1112,7 +1110,7 @@
                     <span class="n">merge_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
             <span class="n">operations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merge_set</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">order_preserving_uniquifier</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">seen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">order_preserving_uniquifier</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">seen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="n">seen</span> <span class="o">=</span> <span class="n">seen</span> <span class="k">if</span> <span class="n">seen</span> <span class="k">else</span> <span class="nb">set</span><span class="p">()</span>
             <span class="n">seen_add</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">seq</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">seen</span> <span class="ow">or</span> <span class="n">seen_add</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span>

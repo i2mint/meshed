@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -5,24 +7,20 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.makers &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -146,7 +144,7 @@
 <p>Makers</p>
 <p>This module contains tools to make meshed objects in different ways.</p>
 <p>Let’s start with an example where we have some code representing a user story:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">user_story</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">user_story</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="n">wfs</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span><span class="n">src_to_wf</span><span class="p">,</span> <span class="n">data_src</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">chks_iter</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">chunker</span><span class="p">,</span> <span class="n">wfs</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">chks</span> <span class="o">=</span> <span class="n">chain</span><span class="p">(</span><span class="n">chks_iter</span><span class="p">)</span>
@@ -156,14 +154,14 @@
 </div>
 <p>If the code is compliant (has only function calls and assignments of their result),
 we can extract <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> factories from these lines (uses AST behind the scenes).</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">src_to_func_node_factory</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.makers</span><span class="w"> </span><span class="kn">import</span> <span class="n">src_to_func_node_factory</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fnodes_factories</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">src_to_func_node_factory</span><span class="p">(</span><span class="n">user_story</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Each factory is a curried version of <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code>, set up to be able to make a <code class="docutils literal notranslate"><span class="pre">DAG</span></code>
 equivalent to the user story, once we provide the necessary functions (<code class="docutils literal notranslate"><span class="pre">call</span></code>,
 <code class="docutils literal notranslate"><span class="pre">map</span></code>, and <code class="docutils literal notranslate"><span class="pre">chain</span></code>).</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
 <span class="gp">... </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">partial</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">FuncNode</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fnodes_factories</span>
 <span class="gp">... </span><span class="p">)</span>
@@ -202,8 +200,8 @@ to use).</p>
 <p>What can we do with that?</p>
 <p>Well, provide the functions, so the DAG can actually compute.</p>
 <p>You can do it yourself, or get a little help with <code class="docutils literal notranslate"><span class="pre">mk_fnodes_from_fn_factories</span></code>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.dag</span> <span class="kn">import</span> <span class="n">DAG</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">mk_fnodes_from_fn_factories</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.dag</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.makers</span><span class="w"> </span><span class="kn">import</span> <span class="n">mk_fnodes_from_fn_factories</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fnodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mk_fnodes_from_fn_factories</span><span class="p">(</span><span class="n">fnodes_factories</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">fnodes</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
@@ -219,7 +217,7 @@ What happened?!?
 What happened is that <code class="docutils literal notranslate"><span class="pre">mk_fnodes_from_fn_factories</span></code> just made some for us.
 It used the convenient <code class="docutils literal notranslate"><span class="pre">meshed.util.mk_place_holder_func</span></code> which makes a function
 (that happens to actually compute something and be picklable).</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">dag</span><span class="p">))</span>
 <span class="go">&#39;(src_to_wf, data_src, chunker, featurizer, model)&#39;</span>
 </pre></div>
@@ -232,19 +230,19 @@ It used the convenient <code class="docutils literal notranslate"><span class="p
 <p>If you don’t want <code class="docutils literal notranslate"><span class="pre">mk_fnodes_from_fn_factories</span></code> to do that (because you are in
 prod and need to make sure as much as possible is explicitly as expected, you can
 simply use a different <code class="docutils literal notranslate"><span class="pre">factory_to_func</span></code> argument. The default one is:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">dlft_factory_to_func</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.makers</span><span class="w"> </span><span class="kn">import</span> <span class="n">dlft_factory_to_func</span>
 </pre></div>
 </div>
 <p>which you can also reuse to make your own.
 See below how we provide a <code class="docutils literal notranslate"><span class="pre">name_to_func_map</span></code> to specify how <code class="docutils literal notranslate"><span class="pre">func_label``s</span> <span class="pre">should</span>
 <span class="pre">map</span> <span class="pre">to</span> <span class="pre">actual</span> <span class="pre">functions,</span> <span class="pre">and</span> <span class="pre">set</span> <span class="pre">``use_place_holder_fallback=False</span></code> to make
 sure that we don’t ever fallback on a placeholder function as we did above.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="c1"># would use operator.methodcaller(&#39;__call__&#39;) but doesn&#39;t have a __name__</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">_chain</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">_chain</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">factory_to_func</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
@@ -310,7 +308,7 @@ of the dag signature, names, and relationships between these names:</p>
 <dd><p>Make some components (kwargs) based on the <code class="docutils literal notranslate"><span class="pre">.out</span></code> and <code class="docutils literal notranslate"><span class="pre">.func</span></code> of the
 <a href="#id1"><span class="problematic" id="id2">``</span></a>FuncNode``s.</p>
 <p>Example use: To get from <code class="docutils literal notranslate"><span class="pre">DAG</span></code> to <code class="docutils literal notranslate"><span class="pre">Slabs</span></code>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">FuncNode</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">FuncNode</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span>
 <span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">),</span>
 <span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,),</span>
@@ -368,7 +366,7 @@ what kind of function to make).</p></li>
 <dd><p>Make <code class="docutils literal notranslate"><span class="pre">FuncNode``s</span> <span class="pre">from</span> <span class="pre">keyword</span> <span class="pre">arguments,</span> <span class="pre">using</span> <span class="pre">the</span> <span class="pre">key</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">``.out</span></code> of the
 <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> and the value as the <code class="docutils literal notranslate"><span class="pre">.func</span></code> of the <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code>.</p>
 <p>Example use: To get from <code class="docutils literal notranslate"><span class="pre">Slabs</span></code> to <code class="docutils literal notranslate"><span class="pre">DAG</span></code>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">named_funcs_to_func_nodes</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">a</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">b</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
@@ -399,8 +397,8 @@ what kind of function to make).</p></li>
 <dd class="field-even"><p>And generator of “target_values”</p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">parse_steps</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.makers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_steps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">func1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">func2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">target_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_steps</span><span class="p">(</span><span class="n">foo</span><span class="p">))</span>
@@ -439,8 +437,8 @@ what kind of function to make).</p></li>
 <dd class="field-even"><p>And generator of “target_values”</p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">parse_steps</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.makers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_steps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">func1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">func2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">target_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_steps</span><span class="p">(</span><span class="n">foo</span><span class="p">))</span>
@@ -480,8 +478,8 @@ what kind of function to make).</p></li>
 </dd>
 </dl>
 <p>Where can you make make target_values? With the <code class="docutils literal notranslate"><span class="pre">parse_assignment_steps</span></code> function.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed.makers</span> <span class="kn">import</span> <span class="n">parse_assignment_steps</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.makers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_assignment_steps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">func1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">func2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">func1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">target_value</span> <span class="ow">in</span> <span class="n">parse_assignment_steps</span><span class="p">(</span><span class="n">foo</span><span class="p">):</span>
@@ -523,7 +521,7 @@ what kind of function to make).</p></li>
 <p>Note how the python identifiers are extracted (on the basis of “an unbroken
 sequence of alphanumerical (and underscore) characters”, ignoring all other
 characters).</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">DAG</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">triples_to_fnodes</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">[</span>

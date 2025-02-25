@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
@@ -5,24 +7,20 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.scrap.collapse_and_expand &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -71,6 +69,8 @@
 <li class="toctree-l1"><a class="reference internal" href="cached_dag.html">meshed.scrap.cached_dag</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.scrap.collapse_and_expand</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.scrap.collapse_and_expand.CollapsedDAG"><code class="docutils literal notranslate"><span class="pre">CollapsedDAG</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.scrap.collapse_and_expand.contract_function_calls"><code class="docutils literal notranslate"><span class="pre">contract_function_calls()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.scrap.collapse_and_expand.remove_decorator_code"><code class="docutils literal notranslate"><span class="pre">remove_decorator_code()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="conversion.html">meshed.scrap.conversion</a></li>
@@ -139,6 +139,46 @@ See “Collapse and expand nodes” discussion:
 <dd><p>To collapse a DAG into a single function</p>
 <p>This is useful for when you want to use a DAG as a function,
 but you don’t want to see all the arguments.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.scrap.collapse_and_expand.contract_function_calls">
+<span class="sig-prename descclassname"><span class="pre">meshed.scrap.collapse_and_expand.</span></span><span class="sig-name descname"><span class="pre">contract_function_calls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_func_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rm_decorator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'code_to_dag'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/collapse_and_expand.html#contract_function_calls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.collapse_and_expand.contract_function_calls" title="Link to this definition"></a></dt>
+<dd><p>Contract function calls in a source code string.</p>
+<p>That is, in source code, or a dag made from code_to_dag, replace calls of the form
+<cite>call(func, arg)</cite> with <cite>func(arg)</cite>.</p>
+<p>Note: Doesn’t work with arbitrary DAG src, only those made from code_to_dag.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.scrap.collapse_and_expand.remove_decorator_code">
+<span class="sig-prename descclassname"><span class="pre">meshed.scrap.collapse_and_expand.</span></span><span class="sig-name descname"><span class="pre">remove_decorator_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decorator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/meshed/scrap/collapse_and_expand.html#remove_decorator_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.collapse_and_expand.remove_decorator_code" title="Link to this definition"></a></dt>
+<dd><p>Remove the code corresponding to decorators from a source code string.
+If decorator_names is None, will remove all decorators.
+If decorator_names is an iterable of strings, will remove the decorators with those names.</p>
+<p>Examples:
+&gt;&gt;&gt; src = ‘’’
+… &#64;decorator
+… def func():
+…     pass
+… ‘’’
+&gt;&gt;&gt; print(remove_decorator_code(src))
+def func():</p>
+<blockquote>
+<div><p>pass</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">src</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">... </span><span class="s1">@decorator1</span>
+<span class="gp">... </span><span class="s1">@decorator2</span>
+<span class="gp">... </span><span class="s1">def func():</span>
+<span class="gp">... </span><span class="s1">    pass</span>
+<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">remove_decorator_code</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s2">&quot;decorator1&quot;</span><span class="p">))</span>
+<span class="go">@decorator2</span>
+<span class="go">def func():</span>
+<span class="go">    pass</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>

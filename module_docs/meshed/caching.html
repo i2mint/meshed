@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -5,24 +7,20 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>meshed.caching &mdash; meshed 0.1.155 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=29d58b84"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -143,12 +141,12 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.caching.</span></span><span class="sig-name descname"><span class="pre">LazyProps</span></span><a class="reference internal" href="../../_modules/meshed/caching.html#LazyProps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.caching.LazyProps" title="Link to this definition"></a></dt>
 <dd><p>A class that makes all its attributes cached_property properties.</p>
 <p>Example:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Klass</span><span class="p">(</span><span class="n">LazyProps</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Klass</span><span class="p">(</span><span class="n">LazyProps</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="gp">... </span>    <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="c1"># methods with one argument are cached</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">c</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;computing c...&quot;</span><span class="p">)</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
 <span class="gp">...</span>
@@ -156,11 +154,11 @@
 <span class="gp">... </span>    <span class="n">e</span> <span class="o">=</span> <span class="n">LazyProps</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">4</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="nd">@LazyProps</span><span class="o">.</span><span class="n">Literal</span>  <span class="c1"># to mark that this method should not be cached</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">method1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">method1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="mi">7</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="c1"># Methods with more than one argument are not cached</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">method2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">method2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="gp">...</span>
 <span class="gp">...</span>
