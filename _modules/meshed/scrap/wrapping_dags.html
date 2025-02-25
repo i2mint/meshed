@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.wrapping_dags &mdash; meshed 0.1.155 documentation</title>
+  <title>meshed.scrap.wrapping_dags &mdash; meshed 0.1.160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../../_static/documentation_options.js?v=dc8c65f6"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -156,7 +156,7 @@
     <span class="k">assert</span> <span class="n">d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">9</span>  <span class="c1"># can call</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span>
 
-    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">Sig</span><span class="p">(</span><span class="n">d</span><span class="p">))</span> <span class="o">==</span> <span class="s1">&#39;(a, b=2, c=3)&#39;</span>  <span class="c1"># has correct signature</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">Sig</span><span class="p">(</span><span class="n">d</span><span class="p">))</span> <span class="o">==</span> <span class="s2">&quot;(a, b=2, c=3)&quot;</span>  <span class="c1"># has correct signature</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">dec</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">_dec</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.collapse_and_expand &mdash; meshed 0.1.155 documentation</title>
+  <title>meshed.scrap.collapse_and_expand &mdash; meshed 0.1.160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../../_static/documentation_options.js?v=dc8c65f6"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -69,7 +69,8 @@
 <li class="toctree-l1"><a class="reference internal" href="cached_dag.html">meshed.scrap.cached_dag</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.scrap.collapse_and_expand</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.scrap.collapse_and_expand.CollapsedDAG"><code class="docutils literal notranslate"><span class="pre">CollapsedDAG</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#meshed.scrap.collapse_and_expand.contract_function_calls"><code class="docutils literal notranslate"><span class="pre">contract_function_calls()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.scrap.collapse_and_expand.collapse_function_calls"><code class="docutils literal notranslate"><span class="pre">collapse_function_calls()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.scrap.collapse_and_expand.expand_function_calls"><code class="docutils literal notranslate"><span class="pre">expand_function_calls()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.scrap.collapse_and_expand.remove_decorator_code"><code class="docutils literal notranslate"><span class="pre">remove_decorator_code()</span></code></a></li>
 </ul>
 </li>
@@ -142,12 +143,23 @@ but you don’t want to see all the arguments.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="meshed.scrap.collapse_and_expand.contract_function_calls">
-<span class="sig-prename descclassname"><span class="pre">meshed.scrap.collapse_and_expand.</span></span><span class="sig-name descname"><span class="pre">contract_function_calls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_func_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rm_decorator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'code_to_dag'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/collapse_and_expand.html#contract_function_calls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.collapse_and_expand.contract_function_calls" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="meshed.scrap.collapse_and_expand.collapse_function_calls">
+<span class="sig-prename descclassname"><span class="pre">meshed.scrap.collapse_and_expand.</span></span><span class="sig-name descname"><span class="pre">collapse_function_calls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="../dag.html#meshed.dag.DAG" title="meshed.dag.DAG"><span class="pre">DAG</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_func_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rm_decorator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'code_to_dag'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/collapse_and_expand.html#collapse_function_calls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.collapse_and_expand.collapse_function_calls" title="Link to this definition"></a></dt>
 <dd><p>Contract function calls in a source code string.</p>
 <p>That is, in source code, or a dag made from code_to_dag, replace calls of the form
 <cite>call(func, arg)</cite> with <cite>func(arg)</cite>.</p>
 <p>Note: Doesn’t work with arbitrary DAG src, only those made from code_to_dag.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.scrap.collapse_and_expand.expand_function_calls">
+<span class="sig-prename descclassname"><span class="pre">meshed.scrap.collapse_and_expand.</span></span><span class="sig-name descname"><span class="pre">expand_function_calls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="../dag.html#meshed.dag.DAG" title="meshed.dag.DAG"><span class="pre">DAG</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_func_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/meshed/scrap/collapse_and_expand.html#expand_function_calls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.collapse_and_expand.expand_function_calls" title="Link to this definition"></a></dt>
+<dd><p>Inverse of collapse_function_calls.
+It replaces calls of the form <cite>func(arg)</cite> with <cite>call(func, arg)</cite>,
+except when the function call is part of a function definition header.
+If include is None, it expands all function calls.
+If include is a list of function names, only those functions are expanded.
+If include is a callable, it’s used as a filter function.</p>
 </dd></dl>
 
 <dl class="py function">

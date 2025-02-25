@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.slabs &mdash; meshed 0.1.155 documentation</title>
+  <title>meshed.slabs &mdash; meshed 0.1.160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/documentation_options.js?v=dc8c65f6"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -214,12 +214,12 @@
 
 <span class="n">DFLT_INTERRUPT_EXCEPTIONS</span> <span class="o">=</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="n">IteratorExit</span><span class="p">,</span> <span class="ne">KeyboardInterrupt</span><span class="p">)</span>
 
-<span class="n">DoNotBreak</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s1">&#39;DoNotBreak&#39;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{})</span>
+<span class="n">DoNotBreak</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;DoNotBreak&quot;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{})</span>
 <span class="n">do_not_break</span> <span class="o">=</span> <span class="n">DoNotBreak</span><span class="p">()</span>
 <span class="n">do_not_break</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">&#39;Sentinel that should be used to signal Slabs iteration not to break. &#39;</span>
-    <span class="s1">&#39;This sentinel should be returned by exception handlers if they want to tell &#39;</span>
-    <span class="s1">&#39;the iteration not to stop (in all other cases, the iteration will stop)&#39;</span>
+    <span class="s2">&quot;Sentinel that should be used to signal Slabs iteration not to break. &quot;</span>
+    <span class="s2">&quot;This sentinel should be returned by exception handlers if they want to tell &quot;</span>
+    <span class="s2">&quot;the iteration not to stop (in all other cases, the iteration will stop)&quot;</span>
 <span class="p">)</span>
 
 <span class="n">IgnoredOutput</span> <span class="o">=</span> <span class="n">Any</span>
@@ -338,7 +338,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_validate_components</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="n">components</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
         <span class="n">not_callable</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
-        <span class="n">not_callable_keys</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span>
+        <span class="n">not_callable_keys</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span>
         <span class="c1"># TODO: Analyze values of components further and enhance error message with</span>
         <span class="c1">#  further suggestions. For example, if there&#39;s an iterator component c,</span>
         <span class="c1">#  suggest that perhaps ``c.__next__`` was intended?</span>
@@ -346,8 +346,8 @@
         <span class="c1">#  argument of _validate_components so that it can be parametrized.</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">_conditional_pluralization</span><span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">not_callable</span><span class="p">),</span>
-            <span class="sa">f</span><span class="s1">&#39;This component is not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s1">&#39;These components are not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;This component is not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;These components are not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
@@ -583,7 +583,7 @@
         <span class="n">scope_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">MutableMapping</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a Slabs object from a list of functions and/or FuncNodes, DAG, ...&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="s1">&#39;func_nodes&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="s2">&quot;func_nodes&quot;</span><span class="p">):</span>
             <span class="n">func_nodes</span> <span class="o">=</span> <span class="n">func_nodes</span><span class="o">.</span><span class="n">func_nodes</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ensure_func_nodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">))</span>
@@ -664,7 +664,7 @@
 <span class="sd">    &gt;&gt;&gt; safe_division(10, 0)</span>
 <span class="sd">    0</span>
 <span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    </span>
+
 <span class="sd">    See also `output_none_if_none_arguments`, made from `conditional_sentinel`:</span>
 
 <span class="sd">    &gt;&gt;&gt; @output_none_if_none_arguments</span>

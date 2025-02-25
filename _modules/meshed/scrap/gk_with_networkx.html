@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.gk_with_networkx &mdash; meshed 0.1.155 documentation</title>
+  <title>meshed.scrap.gk_with_networkx &mdash; meshed 0.1.160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../../_static/documentation_options.js?v=dc8c65f6"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -175,7 +175,7 @@
 <span class="sd">                        argument must be pickelable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
     <span class="n">needs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">provides</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
@@ -195,7 +195,7 @@
 <span class="sd">        Operation equality is based on name of layer.</span>
 <span class="sd">        (__eq__ and __hash__ must be overridden together)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -244,11 +244,11 @@
         <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># this check should get deprecated soon. its for downward compatibility</span>
         <span class="c1"># with earlier pickled operation objects</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">):</span>
-            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span>
-        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;needs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;needs&#39;</span><span class="p">]</span>
-        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;provides&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;provides&#39;</span><span class="p">]</span>
-        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;needs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;needs&quot;</span><span class="p">]</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;provides&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;provides&quot;</span><span class="p">]</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">result</span>
 
@@ -277,11 +277,11 @@
 <a class="viewcode-back" href="../../../module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.NetworkOperation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NetworkOperation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;net&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;net&quot;</span><span class="p">)</span>
         <span class="n">Operation</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># set execution mode to single-threaded sequential by default</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_execution_method</span> <span class="o">=</span> <span class="s1">&#39;sequential&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_execution_method</span> <span class="o">=</span> <span class="s2">&quot;sequential&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_execution_method</span><span class="p">)</span>
@@ -299,7 +299,7 @@
 <span class="sd">                If &quot;parallel&quot;, execute graph operations concurrently</span>
 <span class="sd">                using a threadpool.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="s1">&#39;sequential&#39;</span><span class="p">]</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="s2">&quot;sequential&quot;</span><span class="p">]</span>
         <span class="k">assert</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_execution_method</span> <span class="o">=</span> <span class="n">method</span></div>
 
@@ -309,7 +309,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">state</span> <span class="o">=</span> <span class="n">Operation</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;net&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;net&#39;</span><span class="p">]</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;net&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;net&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">state</span></div>
 
 
@@ -409,7 +409,7 @@
 
             <span class="c1"># directed graph of layer instances and data-names defining the net.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
             <span class="c1"># this holds the timing information for eache layer</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">times</span> <span class="o">=</span> <span class="p">{}</span>
@@ -433,7 +433,7 @@
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="c1"># assert layer and its data requirements are named.</span>
-            <span class="k">assert</span> <span class="n">operation</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;Operation must be named&#39;</span>
+            <span class="k">assert</span> <span class="n">operation</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Operation must be named&quot;</span>
             <span class="k">assert</span> <span class="n">operation</span><span class="o">.</span><span class="n">needs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Operation&#39;s &#39;needs&#39; must be named&quot;</span>
             <span class="k">assert</span> <span class="p">(</span>
                 <span class="n">operation</span><span class="o">.</span><span class="n">provides</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -442,7 +442,7 @@
             <span class="c1"># assert layer is only added once to graph</span>
             <span class="k">assert</span> <span class="p">(</span>
                 <span class="n">operation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span>
-            <span class="p">),</span> <span class="s1">&#39;Operation may only be added once&#39;</span>
+            <span class="p">),</span> <span class="s2">&quot;Operation may only be added once&quot;</span>
 
             <span class="c1"># add nodes and edges to graph describing the data needs for this layer</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">operation</span><span class="o">.</span><span class="n">needs</span><span class="p">:</span>
@@ -456,16 +456,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">list_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="s1">&#39;network must be compiled before listing layers.&#39;</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="s2">&quot;network must be compiled before listing layers.&quot;</span>
             <span class="k">return</span> <span class="p">[(</span><span class="n">s</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">Operation</span><span class="p">)]</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">show_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Shows info (name, needs, and provides) about all layers in this network.&quot;&quot;&quot;</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_layers</span><span class="p">():</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;layer_name: &#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;needs: &#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">needs</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;provides: &#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">provides</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;layer_name: &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;needs: &quot;</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">needs</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;provides: &quot;</span><span class="p">,</span> <span class="n">step</span><span class="o">.</span><span class="n">provides</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Create a set of steps for evaluating layers</span>
@@ -493,7 +493,7 @@
                     <span class="c1"># is no longer needed by future Operations.</span>
                     <span class="k">for</span> <span class="n">predecessor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;checking if node </span><span class="si">%s</span><span class="s1"> can be deleted&#39;</span> <span class="o">%</span> <span class="n">predecessor</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;checking if node </span><span class="si">%s</span><span class="s2"> can be deleted&quot;</span> <span class="o">%</span> <span class="n">predecessor</span><span class="p">)</span>
                         <span class="n">predecessor_still_needed</span> <span class="o">=</span> <span class="kc">False</span>
                         <span class="k">for</span> <span class="n">future_node</span> <span class="ow">in</span> <span class="n">ordered_nodes</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]:</span>
                             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">future_node</span><span class="p">,</span> <span class="n">Operation</span><span class="p">):</span>
@@ -503,12 +503,12 @@
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">predecessor_still_needed</span><span class="p">:</span>
                             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
                                 <span class="nb">print</span><span class="p">(</span>
-                                    <span class="s1">&#39;  adding delete instruction for </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">predecessor</span>
+                                    <span class="s2">&quot;  adding delete instruction for </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">predecessor</span>
                                 <span class="p">)</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DeleteInstruction</span><span class="p">(</span><span class="n">predecessor</span><span class="p">))</span>
 
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unrecognized network graph node&#39;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized network graph node&quot;</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_find_necessary_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
@@ -569,8 +569,8 @@
                 <span class="k">for</span> <span class="n">output_name</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_node</span><span class="p">(</span><span class="n">output_name</span><span class="p">):</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                            <span class="s1">&#39;graphkit graph does not have an output &#39;</span>
-                            <span class="s1">&#39;node named </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">output_name</span>
+                            <span class="s2">&quot;graphkit graph does not have an output &quot;</span>
+                            <span class="s2">&quot;node named </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">output_name</span>
                         <span class="p">)</span>
                     <span class="n">necessary_nodes</span> <span class="o">|=</span> <span class="n">nx</span><span class="o">.</span><span class="n">ancestors</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">output_name</span><span class="p">)</span>
 
@@ -604,13 +604,13 @@
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="c1"># assert that network has been compiled</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="s1">&#39;network must be compiled before calling compute.&#39;</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="s2">&quot;network must be compiled before calling compute.&quot;</span>
             <span class="k">assert</span> <span class="p">(</span>
                 <span class="nb">isinstance</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">or</span> <span class="n">outputs</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="p">),</span> <span class="s1">&#39;The outputs argument must be a list&#39;</span>
+            <span class="p">),</span> <span class="s2">&quot;The outputs argument must be a list&quot;</span>
 
             <span class="c1"># choose a method of execution</span>
-            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;parallel&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;parallel&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_thread_pool_barrier_method</span><span class="p">(</span><span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_sequential_method</span><span class="p">(</span><span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
@@ -626,7 +626,7 @@
             <span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing.dummy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span>
 
             <span class="c1"># if we have not already created a thread_pool, create one</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_thread_pool&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_thread_pool&quot;</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_thread_pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">thread_pool_size</span><span class="p">)</span>
             <span class="n">pool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_pool</span>
 
@@ -698,8 +698,8 @@
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">Operation</span><span class="p">):</span>
 
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">32</span><span class="p">)</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;executing step: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">32</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;executing step: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
                     <span class="c1"># time execution...</span>
                     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -714,7 +714,7 @@
                     <span class="n">t_complete</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">t_complete</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;step completion time: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">t_complete</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;step completion time: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">t_complete</span><span class="p">)</span>
 
                 <span class="c1"># Process DeleteInstructions by deleting the corresponding data</span>
                 <span class="c1"># if possible.</span>
@@ -730,7 +730,7 @@
                             <span class="n">cache</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unrecognized instruction.&#39;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized instruction.&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">outputs</span><span class="p">:</span>
                 <span class="c1"># Return the whole cache as output, including input and</span>
@@ -773,14 +773,14 @@
                         <span class="k">return</span> <span class="n">a</span>
                     <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span>
 
-                <span class="n">g</span> <span class="o">=</span> <span class="n">pydot</span><span class="o">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">graph_type</span><span class="o">=</span><span class="s1">&#39;digraph&#39;</span><span class="p">)</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="n">pydot</span><span class="o">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">graph_type</span><span class="o">=</span><span class="s2">&quot;digraph&quot;</span><span class="p">)</span>
 
                 <span class="c1"># draw nodes</span>
                 <span class="k">for</span> <span class="n">nx_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nx_node</span><span class="p">,</span> <span class="n">DataPlaceholderNode</span><span class="p">):</span>
-                        <span class="n">node</span> <span class="o">=</span> <span class="n">pydot</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">nx_node</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;rect&#39;</span><span class="p">)</span>
+                        <span class="n">node</span> <span class="o">=</span> <span class="n">pydot</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">nx_node</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;rect&quot;</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">node</span> <span class="o">=</span> <span class="n">pydot</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">nx_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;circle&#39;</span><span class="p">)</span>
+                        <span class="n">node</span> <span class="o">=</span> <span class="n">pydot</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">nx_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s2">&quot;circle&quot;</span><span class="p">)</span>
                     <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 
                 <span class="c1"># draw edges</span>
@@ -793,20 +793,20 @@
                 <span class="c1"># save plot</span>
                 <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
                     <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;.png&#39;</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.png&quot;</span><span class="p">:</span>
                             <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">create_png</span><span class="p">())</span>
-                        <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;.dot&#39;</span><span class="p">:</span>
+                        <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.dot&quot;</span><span class="p">:</span>
                             <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
-                        <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;.jpeg&#39;</span><span class="p">]:</span>
+                        <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;.jpeg&quot;</span><span class="p">]:</span>
                             <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">create_jpeg</span><span class="p">())</span>
-                        <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">:</span>
+                        <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">:</span>
                             <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">create_pdf</span><span class="p">())</span>
-                        <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;.svg&#39;</span><span class="p">:</span>
+                        <span class="k">elif</span> <span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.svg&quot;</span><span class="p">:</span>
                             <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">create_svg</span><span class="p">())</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                                <span class="s1">&#39;Unknown file format for saving graph: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">ext</span>
+                                <span class="s2">&quot;Unknown file format for saving graph: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ext</span>
                             <span class="p">)</span>
 
                 <span class="c1"># display graph via matplotlib</span>
@@ -814,7 +814,7 @@
                     <span class="n">png</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">create_png</span><span class="p">()</span>
                     <span class="n">sio</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">png</span><span class="p">)</span>
                     <span class="n">img</span> <span class="o">=</span> <span class="n">mpimg</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">sio</span><span class="p">)</span>
-                    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
                     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
                 <span class="k">return</span> <span class="n">g</span>
@@ -879,7 +879,7 @@
 
     <span class="k">class</span><span class="w"> </span><span class="nc">FunctionalOperation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;fn&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;fn&quot;</span><span class="p">)</span>
             <span class="n">Operation</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -913,7 +913,7 @@
 
         <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="n">state</span> <span class="o">=</span> <span class="n">Operation</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="n">state</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">]</span>
+            <span class="n">state</span><span class="p">[</span><span class="s2">&quot;fn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;fn&quot;</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">state</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">operation</span><span class="p">(</span><span class="n">Operation</span><span class="p">):</span>
@@ -950,26 +950,26 @@
         <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
 
             <span class="c1"># Allow single value for needs parameter</span>
-            <span class="k">if</span> <span class="s1">&#39;needs&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;needs&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
-                <span class="k">assert</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;needs&#39;</span><span class="p">],</span> <span class="s1">&#39;empty string provided for `needs` parameters&#39;</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;needs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;needs&#39;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="s2">&quot;needs&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;needs&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;needs&quot;</span><span class="p">],</span> <span class="s2">&quot;empty string provided for `needs` parameters&quot;</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;needs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;needs&quot;</span><span class="p">]]</span>
 
             <span class="c1"># Allow single value for provides parameter</span>
-            <span class="k">if</span> <span class="s1">&#39;provides&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;provides&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;provides&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;provides&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
                 <span class="k">assert</span> <span class="n">kwargs</span><span class="p">[</span>
-                    <span class="s1">&#39;provides&#39;</span>
-                <span class="p">],</span> <span class="s1">&#39;empty string provided for `needs` parameters&#39;</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;provides&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;provides&#39;</span><span class="p">]]</span>
+                    <span class="s2">&quot;provides&quot;</span>
+                <span class="p">],</span> <span class="s2">&quot;empty string provided for `needs` parameters&quot;</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;provides&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;provides&quot;</span><span class="p">]]</span>
 
-            <span class="k">assert</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;operation needs a name&#39;</span>
-            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;needs&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">list</span><span class="p">,</span> <span class="s1">&#39;no `needs` parameter provided&#39;</span>
-            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;provides&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">list</span><span class="p">,</span> <span class="s1">&#39;no `provides` parameter provided&#39;</span>
+            <span class="k">assert</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;operation needs a name&quot;</span>
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;needs&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">list</span><span class="p">,</span> <span class="s2">&quot;no `needs` parameter provided&quot;</span>
+            <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;provides&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="nb">list</span><span class="p">,</span> <span class="s2">&quot;no `provides` parameter provided&quot;</span>
             <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">],</span> <span class="s1">&#39;__call__&#39;</span>
-            <span class="p">),</span> <span class="s1">&#39;operation was not provided with a callable&#39;</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;fn&quot;</span><span class="p">],</span> <span class="s2">&quot;__call__&quot;</span>
+            <span class="p">),</span> <span class="s2">&quot;operation was not provided with a callable&quot;</span>
 
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">dict</span><span class="p">:</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">dict</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
             <span class="k">return</span> <span class="n">kwargs</span>
 
@@ -1040,7 +1040,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-            <span class="k">assert</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;compose needs a name&#39;</span>
+            <span class="k">assert</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;compose needs a name&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">merge</span> <span class="o">=</span> <span class="n">merge</span>
 
@@ -1057,7 +1057,7 @@
 <span class="sd">                Returns a special type of operation class, which represents an</span>
 <span class="sd">                entire computation graph as a single operation.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">operations</span><span class="p">),</span> <span class="s1">&#39;no operations provided to compose&#39;</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">operations</span><span class="p">),</span> <span class="s2">&quot;no operations provided to compose&quot;</span>
 
             <span class="c1"># If merge is desired, deduplicate operations before building network</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge</span><span class="p">:</span>

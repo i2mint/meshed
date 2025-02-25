@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.collapse_and_expand &mdash; meshed 0.1.155 documentation</title>
+  <title>meshed.scrap.collapse_and_expand &mdash; meshed 0.1.160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../../_static/documentation_options.js?v=dc8c65f6"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -122,13 +122,15 @@
              
   <h1>Source code for meshed.scrap.collapse_and_expand</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Ideas on collapsing and expanding nodes</span>
-<span class="sd">See &quot;Collapse and expand nodes&quot; discussion: </span>
+<span class="sd">See &quot;Collapse and expand nodes&quot; discussion:</span>
 <span class="sd">https://github.com/i2mint/meshed/discussions/54</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.dag</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.makers</span><span class="w"> </span><span class="kn">import</span> <span class="n">code_to_dag</span>
 
 
 <div class="viewcode-block" id="remove_decorator_code">
@@ -200,11 +202,31 @@
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">get_src_string</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DAG</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">src</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s1">&#39;_code_to_dag_src&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">get_src_string</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">_code_to_dag_src</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+
+        <span class="k">return</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;src should be a string or have a _code_to_dag_src (meaning the src was &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;made with code_to_dag), not a </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+
 <span class="c1"># TODO: Generalize to src that is any DAG</span>
-<div class="viewcode-block" id="contract_function_calls">
-<a class="viewcode-back" href="../../../module_docs/meshed/scrap/collapse_and_expand.html#meshed.scrap.collapse_and_expand.contract_function_calls">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">contract_function_calls</span><span class="p">(</span>
-    <span class="n">src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">call_func_name</span><span class="o">=</span><span class="s1">&#39;call&#39;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">rm_decorator</span><span class="o">=</span><span class="s1">&#39;code_to_dag&#39;</span>
+<div class="viewcode-block" id="collapse_function_calls">
+<a class="viewcode-back" href="../../../module_docs/meshed/scrap/collapse_and_expand.html#meshed.scrap.collapse_and_expand.collapse_function_calls">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">collapse_function_calls</span><span class="p">(</span>
+    <span class="n">src</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DAG</span><span class="p">],</span>
+    <span class="n">call_func_name</span><span class="o">=</span><span class="s1">&#39;call&#39;</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">rm_decorator</span><span class="o">=</span><span class="s1">&#39;code_to_dag&#39;</span><span class="p">,</span>
+    <span class="n">include</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Contract function calls in a source code string.</span>
@@ -214,30 +236,82 @@
 
 <span class="sd">    Note: Doesn&#39;t work with arbitrary DAG src, only those made from code_to_dag.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s1">&#39;_code_to_dag_src&#39;</span><span class="p">):</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+    <span class="n">src_string</span> <span class="o">=</span> <span class="n">get_src_string</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
 
-        <span class="n">dag_of_code_to_dag</span> <span class="o">=</span> <span class="n">src</span>
-        <span class="n">src_string</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">dag_of_code_to_dag</span><span class="o">.</span><span class="n">_code_to_dag_src</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">src_string</span> <span class="o">=</span> <span class="n">src</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;src should be a string or have a _code_to_dag_src (meaning the src was &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;made with code_to_dag), not a </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_include</span><span class="p">(</span><span class="n">func_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">include</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">include</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">func_name</span> <span class="ow">in</span> <span class="n">include</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">include</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">include</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="n">new_src</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">call_func_name</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;\(([^,]+),\s*([^)]+)\)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1(\2)&#39;</span><span class="p">,</span> <span class="n">src_string</span><span class="p">)</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">call_func_name</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;\(([^,]+),\s*([^)]+)\)&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">replace</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+        <span class="n">func_name</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">should_include</span><span class="p">(</span><span class="n">func_name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">new_src</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">replace</span><span class="p">,</span> <span class="n">src_string</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">rm_decorator</span><span class="p">:</span>
-        <span class="c1"># Remove the docorator code</span>
-        <span class="c1"># TODO: If the decorator has arguments, we&#39;ll lose those here</span>
         <span class="n">new_src</span> <span class="o">=</span> <span class="n">remove_decorator_code</span><span class="p">(</span><span class="n">new_src</span><span class="p">,</span> <span class="n">decorator_names</span><span class="o">=</span><span class="n">rm_decorator</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">new_src</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># TODO: If the decorator has arguments, this will not restore the original code</span>
-        <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">new_src</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">new_src</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">new_src</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="expand_function_calls">
+<a class="viewcode-back" href="../../../module_docs/meshed/scrap/collapse_and_expand.html#meshed.scrap.collapse_and_expand.expand_function_calls">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">expand_function_calls</span><span class="p">(</span>
+    <span class="n">src</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;DAG&quot;</span><span class="p">],</span>
+    <span class="n">call_func_name</span><span class="o">=</span><span class="s1">&#39;call&#39;</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">include</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inverse of collapse_function_calls.</span>
+<span class="sd">    It replaces calls of the form `func(arg)` with `call(func, arg)`,</span>
+<span class="sd">    except when the function call is part of a function definition header.</span>
+<span class="sd">    If include is None, it expands all function calls.</span>
+<span class="sd">    If include is a list of function names, only those functions are expanded.</span>
+<span class="sd">    If include is a callable, it&#39;s used as a filter function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">src_string</span> <span class="o">=</span> <span class="n">get_src_string</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_include</span><span class="p">(</span><span class="n">func_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">include</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">include</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">func_name</span> <span class="ow">in</span> <span class="n">include</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">include</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">include</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(\b[a-zA-Z_]\w*)\(([^)]*)\)&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">replace</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+        <span class="c1"># Get the start index of the match</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="c1"># Find the beginning of the current line</span>
+        <span class="n">line_start</span> <span class="o">=</span> <span class="n">src_string</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1"># Extract the text from the start of the line up to the match</span>
+        <span class="n">current_line</span> <span class="o">=</span> <span class="n">src_string</span><span class="p">[</span><span class="n">line_start</span><span class="p">:</span><span class="n">index</span><span class="p">]</span>
+        <span class="c1"># If the current line starts with a function definition, skip expansion.</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s*def\s&#39;</span><span class="p">,</span> <span class="n">current_line</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">func_name</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">should_include</span><span class="p">(</span><span class="n">func_name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">call_func_name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">new_src</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">replace</span><span class="p">,</span> <span class="n">src_string</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">new_src</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">new_src</span><span class="p">)</span></div>
+
 
 
 

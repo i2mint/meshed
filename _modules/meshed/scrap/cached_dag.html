@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.155 documentation</title>
+  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../../_static/documentation_options.js?v=dc8c65f6"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -146,7 +146,7 @@
     <span class="n">seq_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">seq_length</span><span class="p">:</span>
         <span class="k">assert</span> <span class="n">seq_length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;There should be one and one only item in the &#39;</span> <span class="sa">f</span><span class="s1">&#39;sequence: </span><span class="si">{</span><span class="n">seq</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s2">&quot;There should be one and one only item in the &quot;</span> <span class="sa">f</span><span class="s2">&quot;sequence: </span><span class="si">{</span><span class="n">seq</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">seq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
@@ -194,13 +194,14 @@
         <span class="k">elif</span> <span class="n">value</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="n">OverWritesNotAllowedError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> key already exists and you&#39;re not allowed to change its &quot;</span>
-                <span class="sa">f</span><span class="s1">&#39;value&#39;</span>
+                <span class="sa">f</span><span class="s2">&quot;value&quot;</span>
             <span class="p">)</span></div>
 
         <span class="c1"># else, don&#39;t even write the value since it&#39;s the same</span>
 
 
-<span class="n">NoSuchKey</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s1">&#39;NoSuchKey&#39;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{})</span>
+<span class="n">NoSuchKey</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;NoSuchKey&quot;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{})</span>
+
 
 <span class="c1"># TODO: Cache validation and invalidation</span>
 <span class="c1"># TODO: Continue constructing uppward towards lazyprop-using class (instances are</span>
@@ -274,8 +275,8 @@
 
 <span class="sd">    We can get ``ww`` because it has a default:</span>
 
-<span class="sd">    (TODO: This (and further tests) stopped working since code_to_dag was enhanced </span>
-<span class="sd">    with the ability to use the wrapped function&#39;s signature to determine the </span>
+<span class="sd">    (TODO: This (and further tests) stopped working since code_to_dag was enhanced</span>
+<span class="sd">    with the ability to use the wrapped function&#39;s signature to determine the</span>
 <span class="sd">    signature of the output dag. Need to fix this.)</span>
 
 <span class="sd">    &gt;&gt;&gt; g(&#39;ww&#39;)</span>
@@ -356,8 +357,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">NoOverwritesDict</span><span class="p">()</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-                <span class="s1">&#39;This type of cache is not implemented (must resolve to a Mapping): &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cache</span><span class="si">=}</span><span class="s1">&#39;</span>
+                <span class="s2">&quot;This type of cache is not implemented (must resolve to a Mapping): &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cache</span><span class="si">=}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="n">ChainMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span>
 
@@ -384,7 +385,7 @@
             <span class="c1">#  intermediates would also satisfy requirements.</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;input_kwargs can&#39;t contain any keys that are already in cache! &quot;</span>
-                <span class="sa">f</span><span class="s1">&#39;These names were in both: </span><span class="si">{</span><span class="n">intersection</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="sa">f</span><span class="s2">&quot;These names were in both: </span><span class="si">{</span><span class="n">intersection</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="n">_cache</span> <span class="o">=</span> <span class="n">ChainMap</span><span class="p">(</span><span class="n">input_kwargs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_cache</span><span class="p">:</span>
@@ -409,13 +410,13 @@
                 <span class="c1">#                 print(f&quot;result -&gt; {output}&quot;)</span>
                 <span class="k">return</span> <span class="n">output</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># k is a root node</span>
-            <span class="k">assert</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Was expecting this to be a root node: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">assert</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Was expecting this to be a root node: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">inputs</span> <span class="o">=</span> <span class="n">ChainMap</span><span class="p">(</span><span class="n">input_kwargs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">output</span> <span class="o">:=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">NoSuchKey</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NoSuchKey</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">output</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;The input_kwargs of a </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> call is missing 1 required &#39;</span>
+                    <span class="sa">f</span><span class="s2">&quot;The input_kwargs of a </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> call is missing 1 required &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;argument: &#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
                 <span class="p">)</span>
 
@@ -497,9 +498,9 @@
     <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">])</span>
 
     <span class="n">c</span> <span class="o">=</span> <span class="n">CachedDag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
-    <span class="n">c</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">c</span><span class="o">.</span><span class="n">cache</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;g&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-    <span class="k">assert</span> <span class="n">c</span><span class="p">(</span><span class="s1">&#39;f&#39;</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span></div>
+    <span class="n">c</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">c</span><span class="o">.</span><span class="n">cache</span> <span class="o">==</span> <span class="p">{</span><span class="s2">&quot;g&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="n">c</span><span class="p">(</span><span class="s2">&quot;f&quot;</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span></div>
 
 
 
@@ -512,7 +513,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">exp</span><span class="p">(</span><span class="n">mult</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">mult</span> <span class="o">**</span> <span class="n">n</span>
+    <span class="k">return</span> <span class="n">mult</span><span class="o">**</span><span class="n">n</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>

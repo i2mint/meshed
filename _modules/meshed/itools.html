@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.itools &mdash; meshed 0.1.155 documentation</title>
+  <title>meshed.itools &mdash; meshed 0.1.160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/documentation_options.js?v=dc8c65f6"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -146,7 +146,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">i2.signatures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span>
 
-<span class="n">N</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">)</span>
 <span class="n">Graph</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">N</span><span class="p">]]</span>
 <span class="n">MutableGraph</span> <span class="o">=</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">N</span><span class="p">]]</span>
 
@@ -158,10 +158,10 @@
         <span class="k">if</span> <span class="n">pip_install_name</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">pip_install_name</span> <span class="o">=</span> <span class="n">module_name</span>  <span class="c1"># use the module name as the install name</span>
         <span class="k">if</span> <span class="n">pip_install_name</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;You can install it by running: `pip install </span><span class="si">{</span><span class="n">pip_install_name</span><span class="si">}</span><span class="s1">`&#39;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;You can install it by running: `pip install </span><span class="si">{</span><span class="n">pip_install_name</span><span class="si">}</span><span class="s2">`&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please install it first.&#39;</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not import </span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s1">. </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Please install it first.&quot;</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not import </span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
 
 <div class="viewcode-block" id="random_graph">
@@ -196,7 +196,7 @@
 <a class="viewcode-back" href="../../module_docs/meshed/itools.html#meshed.itools.graphviz_digraph">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">graphviz_digraph</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Graph</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Makes a graphviz graph using the links specified by dict d&quot;&quot;&quot;</span>
-    <span class="n">graphviz</span> <span class="o">=</span> <span class="n">_import_or_raise</span><span class="p">(</span><span class="s1">&#39;graphviz&#39;</span><span class="p">,</span> <span class="s1">&#39;graphviz&#39;</span><span class="p">)</span>
+    <span class="n">graphviz</span> <span class="o">=</span> <span class="n">_import_or_raise</span><span class="p">(</span><span class="s2">&quot;graphviz&quot;</span><span class="p">,</span> <span class="s2">&quot;graphviz&quot;</span><span class="p">)</span>
     <span class="n">dot</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">vv</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
@@ -212,7 +212,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">map_arguments</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">apply_defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">_exclude_nodes</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;_exclude_nodes&#39;</span><span class="p">]</span>
+            <span class="n">_exclude_nodes</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;_exclude_nodes&quot;</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func</span><span class="si">}</span><span class="s2"> doesn&#39;t have a _exclude_nodes argument&quot;</span><span class="p">)</span>
 
@@ -221,7 +221,7 @@
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_exclude_nodes</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
             <span class="n">_exclude_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">_exclude_nodes</span><span class="p">)</span>
 
-        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;_exclude_nodes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_exclude_nodes</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;_exclude_nodes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_exclude_nodes</span>
         <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">mk_args_and_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 

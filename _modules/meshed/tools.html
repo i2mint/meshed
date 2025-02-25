@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.tools &mdash; meshed 0.1.155 documentation</title>
+  <title>meshed.tools &mdash; meshed 0.1.160 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=29d58b84"></script>
+      <script src="../../_static/documentation_options.js?v=dc8c65f6"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -137,11 +137,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">meshed.dag</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
 
 
-<span class="n">HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HOST&#39;</span><span class="p">,</span> <span class="s1">&#39;0.0.0.0&#39;</span><span class="p">)</span>
-<span class="n">PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PORT&#39;</span><span class="p">,</span> <span class="mi">3030</span><span class="p">))</span>
-<span class="n">API_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;API_URL&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;http://localhost:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">SERVER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SERVER&#39;</span><span class="p">,</span> <span class="s1">&#39;wsgiref&#39;</span><span class="p">)</span>
-<span class="n">OPENAPI_URL</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">API_URL</span><span class="p">,</span> <span class="s1">&#39;openapi&#39;</span><span class="p">)</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">)</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PORT&quot;</span><span class="p">,</span> <span class="mi">3030</span><span class="p">))</span>
+<span class="n">API_URL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;API_URL&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;http://localhost:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">SERVER</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVER&quot;</span><span class="p">,</span> <span class="s2">&quot;wsgiref&quot;</span><span class="p">)</span>
+<span class="n">OPENAPI_URL</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">API_URL</span><span class="p">,</span> <span class="s2">&quot;openapi&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">find_funcs</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">func_outs</span><span class="p">):</span>
@@ -220,7 +220,7 @@
             <span class="k">return</span> <span class="n">HttpClient</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">openapi_url</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Could not connect to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">openapi_url</span><span class="si">}</span><span class="s1">. Waiting 10 seconds and trying again.&#39;</span>
+                <span class="sa">f</span><span class="s2">&quot;Could not connect to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">openapi_url</span><span class="si">}</span><span class="s2">. Waiting 10 seconds and trying again.&quot;</span>
             <span class="p">)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">HttpClient</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">openapi_url</span><span class="p">)</span>
@@ -236,9 +236,9 @@
 
         <span class="nd">@i2</span><span class="o">.</span><span class="n">Sig</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">funcs</span> <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">ws_func</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Getting web service for: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Getting web service for: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">_wsf</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">http_client</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Found web service for: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found web service for: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">_wsf</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
@@ -276,7 +276,7 @@
     <span class="n">ws_funcs</span> <span class="o">=</span> <span class="n">CloudFunctions</span><span class="p">(</span><span class="n">funcs_to_cloudify</span><span class="p">)</span>
     <span class="n">ws_dag</span> <span class="o">=</span> <span class="n">mk_dag_with_ws_funcs</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">ws_funcs</span><span class="p">)</span>
 
-    <span class="n">HybridDAG</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;HybridDAG&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;funcs_to_cloudify&#39;</span><span class="p">,</span> <span class="s1">&#39;ws_dag&#39;</span><span class="p">,</span> <span class="s1">&#39;ws_funcs&#39;</span><span class="p">])</span>
+    <span class="n">HybridDAG</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;HybridDAG&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;funcs_to_cloudify&quot;</span><span class="p">,</span> <span class="s2">&quot;ws_dag&quot;</span><span class="p">,</span> <span class="s2">&quot;ws_funcs&quot;</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">HybridDAG</span><span class="p">(</span><span class="n">funcs_to_cloudify</span><span class="p">,</span> <span class="n">ws_dag</span><span class="p">,</span> <span class="n">ws_funcs</span><span class="p">)</span></div>
 
 </pre></div>
