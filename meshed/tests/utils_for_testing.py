@@ -6,18 +6,18 @@ from i2 import Sig
 
 
 def parse_names(string):
-    return list(map(str.strip, string.split(',')))
+    return list(map(str.strip, string.split(",")))
 
 
 def string_to_func(dot_string):
-    arg_names, func_name = map(parse_names, dot_string.split('->'))
+    arg_names, func_name = map(parse_names, dot_string.split("->"))
     assert len(func_name) == 1
     func_name = func_name[0]
     return mk_place_holder_func(arg_names, func_name)
 
 
 def string_to_func_node(dot_string):
-    arg_names, func_name, output_name = map(parse_names, dot_string.split('->'))
+    arg_names, func_name, output_name = map(parse_names, dot_string.split("->"))
     assert len(func_name) == 1
 
     func_name = func_name[0]
@@ -45,5 +45,5 @@ def string_to_dag(dot_string):
     <Sig (a, b, c, f)>
     >>> sorted(dag(1,2,3,4))
     ['g(b=2, f=4)', 'i(a=1, e=d(a=1, b=2, c=3))']"""
-    func_nodes = list(map(string_to_func_node, filter(bool, dot_string.split('\n'))))
+    func_nodes = list(map(string_to_func_node, filter(bool, dot_string.split("\n"))))
     return DAG(func_nodes)

@@ -2,15 +2,15 @@
 
 import os
 
-DFLT_PROG = 'neato'
+DFLT_PROG = "neato"
 graph_template = 'strict graph "" {{\n{dot_str}\n}}'
 digraph_template = 'strict digraph "" {{\n{dot_str}\n}}'
 
 
 def ensure_dot_code(x: str):
-    if not x.startswith('strict'):
-        if '--' in x:
-            print('asdfdf')
+    if not x.startswith("strict"):
+        if "--" in x:
+            print("asdfdf")
             x = graph_template.format(dot_str=x)
         else:  # if '->' in dot_str
             x = digraph_template.format(dot_str=x)
@@ -24,7 +24,7 @@ def dot_to_nx(dot_src):
     return AGraph(string=dot_src)
 
 
-def dot_to_ipython_image(dot_src, *, prog=DFLT_PROG, tmp_file='__tmp_file.png'):
+def dot_to_ipython_image(dot_src, *, prog=DFLT_PROG, tmp_file="__tmp_file.png"):
     from IPython.display import Image
 
     dot_src = ensure_dot_code(dot_src)

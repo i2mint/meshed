@@ -13,7 +13,7 @@ def foo():
 
 
 def test_addition_variadics():
-    def foo(w, /, x: float, y='YY', *, z: str = 'ZZ', **rest):
+    def foo(w, /, x: float, y="YY", *, z: str = "ZZ", **rest):
         pass
 
     sig = Sig(foo)

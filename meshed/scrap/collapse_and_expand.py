@@ -1,5 +1,5 @@
 """Ideas on collapsing and expanding nodes
-See "Collapse and expand nodes" discussion: 
+See "Collapse and expand nodes" discussion:
 https://github.com/i2mint/meshed/discussions/54
 
 """
@@ -76,7 +76,7 @@ def remove_decorator_code(
 
 # TODO: Generalize to src that is any DAG
 def contract_function_calls(
-    src: str, call_func_name='call', *, rm_decorator='code_to_dag'
+    src: str, call_func_name="call", *, rm_decorator="code_to_dag"
 ):
     """
     Contract function calls in a source code string.
@@ -86,7 +86,7 @@ def contract_function_calls(
 
     Note: Doesn't work with arbitrary DAG src, only those made from code_to_dag.
     """
-    if hasattr(src, '_code_to_dag_src'):
+    if hasattr(src, "_code_to_dag_src"):
         import inspect
 
         dag_of_code_to_dag = src
@@ -99,7 +99,7 @@ def contract_function_calls(
             f"made with code_to_dag), not a {type(src)}"
         )
 
-    new_src = re.sub(call_func_name + r'\(([^,]+),\s*([^)]+)\)', r'\1(\2)', src_string)
+    new_src = re.sub(call_func_name + r"\(([^,]+),\s*([^)]+)\)", r"\1(\2)", src_string)
     if rm_decorator:
         # Remove the docorator code
         # TODO: If the decorator has arguments, we'll lose those here

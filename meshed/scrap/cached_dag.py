@@ -17,7 +17,7 @@ def get_first_item_and_assert_unicity(seq):
     seq_length = len(seq)
     if seq_length:
         assert seq_length == 1, (
-            f'There should be one and one only item in the ' f'sequence: {seq}'
+            f"There should be one and one only item in the " f"sequence: {seq}"
         )
         return seq[0]
     else:
@@ -63,12 +63,13 @@ class NoOverwritesDict(dict):
         elif value != self[key]:
             raise OverWritesNotAllowedError(
                 f"The {key} key already exists and you're not allowed to change its "
-                f'value'
+                f"value"
             )
         # else, don't even write the value since it's the same
 
 
-NoSuchKey = type('NoSuchKey', (), {})
+NoSuchKey = type("NoSuchKey", (), {})
+
 
 # TODO: Cache validation and invalidation
 # TODO: Continue constructing uppward towards lazyprop-using class (instances are
@@ -140,8 +141,8 @@ class CachedDag:
 
     We can get ``ww`` because it has a default:
 
-    (TODO: This (and further tests) stopped working since code_to_dag was enhanced 
-    with the ability to use the wrapped function's signature to determine the 
+    (TODO: This (and further tests) stopped working since code_to_dag was enhanced
+    with the ability to use the wrapped function's signature to determine the
     signature of the output dag. Need to fix this.)
 
     >>> g('ww')
@@ -222,8 +223,8 @@ class CachedDag:
             self.cache = NoOverwritesDict()
         elif not isinstance(cache, Mapping):
             raise NotImplementedError(
-                'This type of cache is not implemented (must resolve to a Mapping): '
-                f'{cache=}'
+                "This type of cache is not implemented (must resolve to a Mapping): "
+                f"{cache=}"
             )
         self._cache = ChainMap(self.defaults, self.cache)
 
@@ -250,7 +251,7 @@ class CachedDag:
             #  intermediates would also satisfy requirements.
             raise ValueError(
                 f"input_kwargs can't contain any keys that are already in cache! "
-                f'These names were in both: {intersection}'
+                f"These names were in both: {intersection}"
             )
         _cache = ChainMap(input_kwargs, self._cache)
         if k in _cache:
@@ -275,13 +276,13 @@ class CachedDag:
                 #                 print(f"result -> {output}")
                 return output
         else:  # k is a root node
-            assert k in self.roots, f'Was expecting this to be a root node: {k}'
+            assert k in self.roots, f"Was expecting this to be a root node: {k}"
             inputs = ChainMap(input_kwargs, self._cache)
             if (output := inputs.get(k, NoSuchKey)) is not NoSuchKey:
                 return output
             else:
                 raise TypeError(
-                    f'The input_kwargs of a {self.__name__} call is missing 1 required '
+                    f"The input_kwargs of a {self.__name__} call is missing 1 required "
                     f"argument: '{k}'"
                 )
 
@@ -357,9 +358,9 @@ def cached_dag_test():
     dag = DAG([f, g])
 
     c = CachedDag(dag)
-    c('g', a=1)
-    assert c.cache == {'g': 2, 'a': 1}
-    assert c('f' == 2)
+    c("g", a=1)
+    assert c.cache == {"g": 2, "a": 1}
+    assert c("f" == 2)
 
 
 def add(a, b=1):
@@ -371,7 +372,7 @@ def mult(x, y=2):
 
 
 def exp(mult, n=3):
-    return mult ** n
+    return mult**n
 
 
 def subtract(a, b=4):

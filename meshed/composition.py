@@ -30,10 +30,10 @@ def func_node_kwargs_trans(func: Callable) -> FuncNodeKwargsTrans:
         return func
     else:
         raise InvalidFunctionParameters(
-            f'A FuncNodeKwargsTrans is expected to only have required params that are '
-            f'also '
+            f"A FuncNodeKwargsTrans is expected to only have required params that are "
+            f"also "
             f"FuncNode fields ({', '.join(_func_node_fields)}). "
-            'Function {func} had signature: {Sig(func)}'
+            "Function {func} had signature: {Sig(func)}"
         )
 
 
@@ -78,10 +78,11 @@ def suffix_ids(
         egress = list
     if isinstance(renamer, str):
         suffix = renamer
-        renamer = lambda name: f'{name}{suffix}'
-    assert callable(suffix), f'suffix needs to be callable'
+        renamer = lambda name: f"{name}{suffix}"
+    assert callable(suffix), f"suffix needs to be callable"
     func_node_trans = func_node_name_trans(
-        renamer, also_apply_to_func_label=also_apply_to_func_label,
+        renamer,
+        also_apply_to_func_label=also_apply_to_func_label,
     )
     return egress(map(func_node_trans, func_nodes))
 
@@ -115,13 +116,13 @@ def line_with_dag(*steps):
     """
 
     step_counter = 0
-    first_node = FuncNode(steps[0], out=f'step_{step_counter}')
+    first_node = FuncNode(steps[0], out=f"step_{step_counter}")
     func_nodes = [first_node]
     for step in steps[1:]:
         step_node = FuncNode(
             step,
-            out=f'step_{step_counter + 1}',
-            bind={get_param(step): f'step_{step_counter}'},
+            out=f"step_{step_counter + 1}",
+            bind={get_param(step): f"step_{step_counter}"},
         )
         step_counter += 1
         func_nodes.append(step_node)
