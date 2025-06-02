@@ -828,7 +828,6 @@ class DAG:
         >>> new_dag(1, 2)  # same as dag(c=3, a=1, b=2, d=4), so:
         9
         """
-
         keyword_dflts = self.__signature__.map_arguments(
             args=positional_dflts,
             kwargs=keyword_dflts,
@@ -1036,10 +1035,6 @@ class DAG:
         >>> Sig(dag)
         <Sig (a, b, f=2, y=1)>
         >>>
-
-        If you replace by a different function with exactly the same signature,
-        all goes well:
-
         >>> dag.ch_funcs(g=lambda y=1, z=2: y / z)
         DAG(func_nodes=[FuncNode(a,b -> f -> _f), FuncNode(z=_f,y -> g -> _g)], name=None)
 
@@ -1476,7 +1471,10 @@ class DAG:
 
         return launch_debugger
 
-    # ------------ display --------------------------------------------------------------
+    # ------------ display -------------------------------------------------------------
+
+    def to_code(self):
+        return dag_to_code(self)
 
     def synopsis_string(self, bind_info: BindInfo = "var_nodes"):
         return "\n".join(
@@ -1565,7 +1563,60 @@ def print_dag_string(dag: DAG, bind_info: BindInfo = "hybrid"):
 # from typing import Iterable, Union
 # from i2 import Sig
 from meshed.util import extract_dict
+from meshed.base import func_nodes_to_code
 
+def dag_to_code(dag):
+    """
+    Convert a DAG to code.
+
+    >>> from meshed import code_to_dag
+    >>> @code_to_dag
+    ... def test_pipeline():
+    ...     a = func1(x, y)
+    ...     b = func2(a, z)
+    ...     c = func3(a, w=b)
+    >>> 
+    >>> print("Original DAG:")
+    Original DAG:
+    >>> print(test_pipeline.synopsis_string())
+    x,y -> func1 -> a
+    a,z -> func2 -> b
+    a,b -> func3 -> c
+    <BLANKLINE>
+    >>> print("Generated code using dag_to_code function:")
+    Generated code using dag_to_code function:
+    >>> code1 = dag_to_code(test_pipeline)
+    >>> print(code1)
+    def test_pipeline():
+        a = func1(x, y)
+        b = func2(a, z)
+        c = func3(a, w=b)
+    <BLANKLINE>
+    >>> print("Generated code using DAG.to_code method:")
+    Generated code using DAG.to_code method:
+    >>> code2 = test_pipeline.to_code()
+    >>> print(code2)
+    def test_pipeline():
+        a = func1(x, y)
+        b = func2(a, z)
+        c = func3(a, w=b)
+    <BLANKLINE>
+    >>> # Test round-trip conversion
+    >>> print("Round-trip test:")
+    Round-trip test:
+    >>> dag2 = code_to_dag(code1)
+    >>> print(dag2.synopsis_string())
+    x,y -> func1 -> a
+    a,z -> func2 -> b
+    a,b -> func3 -> c
+    <BLANKLINE>
+    >>> # Verify they're equivalent
+    >>> assert test_pipeline.synopsis_string() == dag2.synopsis_string()
+    >>> print("✓ Round-trip conversion successful!")
+    ✓ Round-trip conversion successful!
+    
+    """
+    return func_nodes_to_code(dag.func_nodes, dag.name)
 
 def parametrized_dag_factory(dag: DAG, param_var_nodes: Union[str, Iterable[str]]):
     """

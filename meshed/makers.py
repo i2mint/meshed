@@ -567,7 +567,14 @@ def code_to_dag(
     use_place_holder_fallback=False,
     name: str = None,
 ) -> DAG:
-    """Get a ``meshed.DAG`` from src code"""
+    """Get a ``meshed.DAG`` from src code
+
+    This function parses Python code and creates a DAG that represents the
+    computational flow. The inverse operation is available through ``dag_to_code``
+    which can convert a DAG back to executable Python code.
+
+    See also: ``dag_to_code`` for the inverse operation.
+    """
     fnodes = code_to_fnodes(
         src, func_src=func_src, use_place_holder_fallback=use_place_holder_fallback
     )

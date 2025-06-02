@@ -900,3 +900,106 @@ def func_node_transformer(
         if (new_kwargs := trans(func_node_kwargs)) is not None:
             func_node_kwargs = new_kwargs
     return FuncNode.from_dict(func_node_kwargs)
+
+
+def func_nodes_to_code(
+    func_nodes: Iterable[FuncNode],
+    func_name: str = "generated_pipeline",
+    *,
+    favor_positional: bool = True,
+) -> str:
+    """Convert an iterable of FuncNodes back to executable Python code.
+
+    This is the inverse operation of code_to_fnodes - it takes FuncNodes and generates
+    Python code that would create equivalent FuncNodes when parsed.
+    When favor_positional is True, any keyword argument with key equal to its value
+    is moved to the positional arguments list:
+
+        func(a=a, b=b, c=z, d=d)  ->  func(a, b, c=z, d=d)
+
+    :param func_nodes: Iterable of FuncNode instances to convert to code
+    :param func_name: Name for the generated function
+    :param favor_positional: When True, transforms kwargs of the form key=key into positional args.
+    :return: String containing Python code
+
+
+    """
+
+    def lines():
+        yield f"def {func_name}():"
+        for func_node in func_nodes:
+            line = _func_node_to_assignment_line(
+                func_node, favor_positional=favor_positional
+            )
+            yield f"    {line}"
+
+    return "\n".join(lines())
+
+
+def _func_node_to_assignment_line(func_node: FuncNode, favor_positional=True) -> str:
+    """Convert a single FuncNode to a Python assignment line.
+
+    :param func_node: The FuncNode to convert
+    :param favor_positional: When True, transforms kwargs of the form key=key into positional args
+    :return: String like "output = func_name(arg1, arg2=value)"
+    """
+    # Get the function name - use func_label if available, otherwise name
+    func_name = getattr(func_node, 'func_label', None) or func_node.name
+
+    # Handle special cases for generated functions
+    if func_name.endswith('__0') or func_name.endswith('__1'):
+        # This is likely an itemgetter from tuple unpacking
+        if hasattr(func_node.func, 'keywords') and 'keys' in func_node.func.keywords:
+            keys = func_node.func.keywords['keys']
+            if len(keys) == 1:
+                # Single item extraction
+                source_var = list(func_node.bind.values())[0]
+                return f"{func_node.out} = {source_var}[{keys[0]}]"
+
+    # Build argument list
+    args = []
+    kwargs = []
+
+    # Process bind dictionary to separate positional and keyword arguments
+    for param, source in func_node.bind.items():
+        if isinstance(param, int):
+            # Positional argument
+            args.append((param, source))
+        else:
+            # Keyword argument - check if favor_positional applies
+            if favor_positional and param == source:
+                # Convert to positional argument by using the parameter order from signature
+                try:
+                    param_index = list(func_node.sig.names).index(param)
+                    args.append((param_index, source))
+                except (ValueError, AttributeError):
+                    # If we can't determine order, keep as keyword
+                    kwargs.append((param, source))
+            else:
+                kwargs.append((param, source))
+
+    # Sort positional arguments by their index
+    args.sort(key=lambda x: x[0])
+
+    # Build the argument string
+    arg_parts = []
+
+    # Add positional arguments
+    for _, source in args:
+        arg_parts.append(str(source))
+
+    # Add keyword arguments
+    for param, source in kwargs:
+        arg_parts.append(f"{param}={source}")
+
+    arg_string = ", ".join(arg_parts)
+
+    # Handle tuple unpacking in output
+    if "__" in func_node.out and not func_node.out.endswith(('__0', '__1')):
+        # This might be a tuple output that was created from tuple unpacking
+        output_parts = func_node.out.split("__")
+        if len(output_parts) > 1:
+            output = ", ".join(output_parts)
+            return f"{output} = {func_name}({arg_string})"
+
+    return f"{func_node.out} = {func_name}({arg_string})"
