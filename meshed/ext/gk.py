@@ -692,7 +692,7 @@ def ready_to_schedule_operation(op, has_executed, graph):
         execution based on what has already been executed.
     """
     dependencies = set(
-        filter(lambda v: isinstance(v, Operation), gr.ancestors(graph, op))
+        filter(lambda v: isinstance(v, Operation), gr.ancestors(graph, op.needs))
     )
     return dependencies.issubset(has_executed)
 
