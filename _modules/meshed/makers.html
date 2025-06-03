@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.160 documentation</title>
+  <title>meshed.makers &mdash; meshed 0.1.161 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=dc8c65f6"></script>
+      <script src="../../_static/documentation_options.js?v=78f4e1ef"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -711,7 +711,14 @@
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a ``meshed.DAG`` from src code&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a ``meshed.DAG`` from src code</span>
+
+<span class="sd">    This function parses Python code and creates a DAG that represents the</span>
+<span class="sd">    computational flow. The inverse operation is available through ``dag_to_code``</span>
+<span class="sd">    which can convert a DAG back to executable Python code.</span>
+
+<span class="sd">    See also: ``dag_to_code`` for the inverse operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fnodes</span> <span class="o">=</span> <span class="n">code_to_fnodes</span><span class="p">(</span>
         <span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="o">=</span><span class="n">func_src</span><span class="p">,</span> <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="n">use_place_holder_fallback</span>
     <span class="p">)</span>

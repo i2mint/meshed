@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.160 documentation</title>
+  <title>meshed.dag &mdash; meshed 0.1.161 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=dc8c65f6"></script>
+      <script src="../../_static/documentation_options.js?v=78f4e1ef"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -80,6 +80,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.dag.attribute_vals"><code class="docutils literal notranslate"><span class="pre">attribute_vals()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.dag.dag_to_code"><code class="docutils literal notranslate"><span class="pre">dag_to_code()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.dag.hook_up"><code class="docutils literal notranslate"><span class="pre">hook_up()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.dag.named_partial"><code class="docutils literal notranslate"><span class="pre">named_partial()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.dag.names_and_outs"><code class="docutils literal notranslate"><span class="pre">names_and_outs()</span></code></a></li>
@@ -502,11 +503,7 @@ function you want to change it by.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Sig</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
 <span class="go">&lt;Sig (a, b, f=2, y=1)&gt;</span>
 <span class="gp">&gt;&gt;&gt;</span>
-</pre></div>
-</div>
-<p>If you replace by a different function with exactly the same signature,
-all goes well:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">g</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">g</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span><span class="p">)</span>
 <span class="go">DAG(func_nodes=[FuncNode(a,b -&gt; f -&gt; _f), FuncNode(z=_f,y -&gt; g -&gt; _g)], name=None)</span>
 </pre></div>
 </div>
@@ -880,6 +877,58 @@ you want to also consider arguments that already had defaults as bound
 <dd><p>Extract attributes from an iterable of objects
 &gt;&gt;&gt; list(attribute_vals([print, map], attrs=[‘__name__’, ‘__module__’]))
 [(‘print’, ‘builtins’), (‘map’, ‘builtins’)]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.dag_to_code">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">dag_to_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/dag.html#dag_to_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.dag_to_code" title="Link to this definition"></a></dt>
+<dd><p>Convert a DAG to code.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">code_to_dag</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@code_to_dag</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">test_pipeline</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="n">a</span> <span class="o">=</span> <span class="n">func1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">b</span> <span class="o">=</span> <span class="n">func2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">c</span> <span class="o">=</span> <span class="n">func3</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Original DAG:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">test_pipeline</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>  
+<span class="go">x,y -&gt; func1 -&gt; a</span>
+<span class="go">a,z -&gt; func2 -&gt; b</span>
+<span class="go">a,b -&gt; func3 -&gt; c</span>
+</pre></div>
+</div>
+<p>Generated code using dag_to_code function:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">code1</span> <span class="o">=</span> <span class="n">dag_to_code</span><span class="p">(</span><span class="n">test_pipeline</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">code1</span><span class="p">)</span>  
+<span class="go">def test_pipeline():</span>
+<span class="go">    a = func1(x, y)</span>
+<span class="go">    b = func2(a, z)</span>
+<span class="go">    c = func3(a, w=b)</span>
+</pre></div>
+</div>
+<p>Generated code using <cite>DAG.to_code</cite> method:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">code2</span> <span class="o">=</span> <span class="n">dag_to_code</span><span class="p">(</span><span class="n">test_pipeline</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">code2</span><span class="p">)</span>  
+<span class="go">def test_pipeline():</span>
+<span class="go">    a = func1(x, y)</span>
+<span class="go">    b = func2(a, z)</span>
+<span class="go">    c = func3(a, w=b)</span>
+</pre></div>
+</div>
+<p>Test round-trip conversion:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dag2</span> <span class="o">=</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">code1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag2</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>  
+<span class="go">x,y -&gt; func1 -&gt; a</span>
+<span class="go">a,z -&gt; func2 -&gt; b</span>
+<span class="go">a,b -&gt; func3 -&gt; c</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Verify they&#39;re equivalent:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">test_pipeline</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span> <span class="o">==</span> <span class="n">dag2</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">

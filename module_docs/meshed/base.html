@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.160 documentation</title>
+  <title>meshed.base &mdash; meshed 0.1.161 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=dc8c65f6"></script>
+      <script src="../../_static/documentation_options.js?v=78f4e1ef"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -68,6 +68,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#meshed.base.ch_func_node_attrs"><code class="docutils literal notranslate"><span class="pre">ch_func_node_attrs()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.base.ensure_func_nodes"><code class="docutils literal notranslate"><span class="pre">ensure_func_nodes()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.base.func_node_transformer"><code class="docutils literal notranslate"><span class="pre">func_node_transformer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meshed.base.func_nodes_to_code"><code class="docutils literal notranslate"><span class="pre">func_nodes_to_code()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.base.get_init_params_of_instance"><code class="docutils literal notranslate"><span class="pre">get_init_params_of_instance()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.base.identifier_mapping"><code class="docutils literal notranslate"><span class="pre">identifier_mapping()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meshed.base.is_func_node"><code class="docutils literal notranslate"><span class="pre">is_func_node()</span></code></a></li>
@@ -466,6 +467,31 @@ digit)</p></li>
 <dt class="sig sig-object py" id="meshed.base.func_node_transformer">
 <span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">func_node_transformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#meshed.base.FuncNode" title="meshed.base.FuncNode"><span class="pre">FuncNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs_transformers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/base.html#func_node_transformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.func_node_transformer" title="Link to this definition"></a></dt>
 <dd><p>Get a modified <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> from an iterable of <code class="docutils literal notranslate"><span class="pre">kwargs_trans</span></code> modifiers.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.base.func_nodes_to_code">
+<span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">func_nodes_to_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#meshed.base.FuncNode" title="meshed.base.FuncNode"><span class="pre">FuncNode</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'generated_pipeline'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">favor_positional</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/meshed/base.html#func_nodes_to_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.func_nodes_to_code" title="Link to this definition"></a></dt>
+<dd><p>Convert an iterable of FuncNodes back to executable Python code.</p>
+<p>This is the inverse operation of code_to_fnodes - it takes FuncNodes and generates
+Python code that would create equivalent FuncNodes when parsed.
+When favor_positional is True, any keyword argument with key equal to its value
+is moved to the positional arguments list:</p>
+<blockquote>
+<div><p>func(a=a, b=b, c=z, d=d)  -&gt;  func(a, b, c=z, d=d)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_nodes</strong> – Iterable of FuncNode instances to convert to code</p></li>
+<li><p><strong>func_name</strong> – Name for the generated function</p></li>
+<li><p><strong>favor_positional</strong> – When True, transforms kwargs of the form key=key into positional args.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String containing Python code</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.ext.gk &mdash; meshed 0.1.160 documentation</title>
+  <title>meshed.ext.gk &mdash; meshed 0.1.161 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=dc8c65f6"></script>
+      <script src="../../../_static/documentation_options.js?v=78f4e1ef"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -153,8 +153,17 @@
              
   <section id="module-meshed.ext.gk">
 <span id="meshed-ext-gk"></span><h1>meshed.ext.gk<a class="headerlink" href="#module-meshed.ext.gk" title="Link to this heading"></a></h1>
-<p>This module was based on yahoo/graphkit
-Made to without networkx, amongst other things</p>
+<p>This module is meant to explore a different representation of a computation graph
+and a different way of executing it.
+It is based on Yahoo’s graphkit library. The library hasn’t been maintained since 2018,
+so vendored and modified here).
+One of the main differences is that we got rid of the networkx dependency,
+which was used to represent the computation graph.
+Instead, this module uses meshed’s itools library to represent the computation graph.</p>
+<p># Yahoo’s graphkit library is under Apache License 2.0:
+# Copyright 2016, Yahoo Inc.
+# Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.</p>
+<p>NOTE: This module is only meant to an exploratory “extension”. It is not planned to be maintained.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.ext.gk.Data">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk.html#Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Data" title="Link to this definition"></a></dt>

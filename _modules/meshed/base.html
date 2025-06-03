@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.160 documentation</title>
+  <title>meshed.base &mdash; meshed 0.1.161 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=dc8c65f6"></script>
+      <script src="../../_static/documentation_options.js?v=78f4e1ef"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -1083,6 +1083,112 @@
             <span class="n">func_node_kwargs</span> <span class="o">=</span> <span class="n">new_kwargs</span>
     <span class="k">return</span> <span class="n">FuncNode</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">func_node_kwargs</span><span class="p">)</span></div>
 
+
+
+<div class="viewcode-block" id="func_nodes_to_code">
+<a class="viewcode-back" href="../../module_docs/meshed/base.html#meshed.base.func_nodes_to_code">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">func_nodes_to_code</span><span class="p">(</span>
+    <span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">],</span>
+    <span class="n">func_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;generated_pipeline&quot;</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">favor_positional</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an iterable of FuncNodes back to executable Python code.</span>
+
+<span class="sd">    This is the inverse operation of code_to_fnodes - it takes FuncNodes and generates</span>
+<span class="sd">    Python code that would create equivalent FuncNodes when parsed.</span>
+<span class="sd">    When favor_positional is True, any keyword argument with key equal to its value</span>
+<span class="sd">    is moved to the positional arguments list:</span>
+
+<span class="sd">        func(a=a, b=b, c=z, d=d)  -&gt;  func(a, b, c=z, d=d)</span>
+
+<span class="sd">    :param func_nodes: Iterable of FuncNode instances to convert to code</span>
+<span class="sd">    :param func_name: Name for the generated function</span>
+<span class="sd">    :param favor_positional: When True, transforms kwargs of the form key=key into positional args.</span>
+<span class="sd">    :return: String containing Python code</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">lines</span><span class="p">():</span>
+        <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;def </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">():&quot;</span>
+        <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">_func_node_to_assignment_line</span><span class="p">(</span>
+                <span class="n">func_node</span><span class="p">,</span> <span class="n">favor_positional</span><span class="o">=</span><span class="n">favor_positional</span>
+            <span class="p">)</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">())</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_func_node_to_assignment_line</span><span class="p">(</span><span class="n">func_node</span><span class="p">:</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="n">favor_positional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a single FuncNode to a Python assignment line.</span>
+
+<span class="sd">    :param func_node: The FuncNode to convert</span>
+<span class="sd">    :param favor_positional: When True, transforms kwargs of the form key=key into positional args</span>
+<span class="sd">    :return: String like &quot;output = func_name(arg1, arg2=value)&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the function name - use func_label if available, otherwise name</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="s1">&#39;func_label&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="c1"># Handle special cases for generated functions</span>
+    <span class="k">if</span> <span class="n">func_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;__0&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;__1&#39;</span><span class="p">):</span>
+        <span class="c1"># This is likely an itemgetter from tuple unpacking</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;keywords&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;keys&#39;</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">keywords</span><span class="p">:</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s1">&#39;keys&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Single item extraction</span>
+                <span class="n">source_var</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">source_var</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span>
+
+    <span class="c1"># Build argument list</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Process bind dictionary to separate positional and keyword arguments</span>
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="c1"># Positional argument</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">param</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Keyword argument - check if favor_positional applies</span>
+            <span class="k">if</span> <span class="n">favor_positional</span> <span class="ow">and</span> <span class="n">param</span> <span class="o">==</span> <span class="n">source</span><span class="p">:</span>
+                <span class="c1"># Convert to positional argument by using the parameter order from signature</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">param_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+                    <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">param_index</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+                    <span class="c1"># If we can&#39;t determine order, keep as keyword</span>
+                    <span class="n">kwargs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">param</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">param</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span>
+
+    <span class="c1"># Sort positional arguments by their index</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Build the argument string</span>
+    <span class="n">arg_parts</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Add positional arguments</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">arg_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+
+    <span class="c1"># Add keyword arguments</span>
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">arg_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">arg_string</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg_parts</span><span class="p">)</span>
+
+    <span class="c1"># Handle tuple unpacking in output</span>
+    <span class="k">if</span> <span class="s2">&quot;__&quot;</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;__0&#39;</span><span class="p">,</span> <span class="s1">&#39;__1&#39;</span><span class="p">)):</span>
+        <span class="c1"># This might be a tuple output that was created from tuple unpacking</span>
+        <span class="n">output_parts</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_parts</span><span class="p">)</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">arg_string</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">arg_string</span><span class="si">}</span><span class="s2">)&quot;</span>
 </pre></div>
 
            </div>

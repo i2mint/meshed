@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.ext.gk_tests &mdash; meshed 0.1.160 documentation</title>
+  <title>meshed.ext.gk_tests &mdash; meshed 0.1.161 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=dc8c65f6"></script>
+      <script src="../../../_static/documentation_options.js?v=78f4e1ef"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -61,21 +61,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ext.html">meshed.ext</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gk.html">meshed.ext.gk</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.ext.gk_tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#meshed.ext.gk_tests.Mul"><code class="docutils literal notranslate"><span class="pre">Mul</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#meshed.ext.gk_tests.Mul.compute"><code class="docutils literal notranslate"><span class="pre">Mul.compute()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#meshed.ext.gk_tests.Pow"><code class="docutils literal notranslate"><span class="pre">Pow</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#meshed.ext.gk_tests.Pow.compute"><code class="docutils literal notranslate"><span class="pre">Pow.compute()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#meshed.ext.gk_tests.Sum"><code class="docutils literal notranslate"><span class="pre">Sum</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#meshed.ext.gk_tests.Sum.compute"><code class="docutils literal notranslate"><span class="pre">Sum.compute()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">meshed.ext.gk_tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../itools.html">meshed.itools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../makers.html">meshed.makers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scrap.html">meshed.scrap</a></li>
@@ -137,81 +123,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-meshed.ext.gk_tests">
-<span id="meshed-ext-gk-tests"></span><h1>meshed.ext.gk_tests<a class="headerlink" href="#module-meshed.ext.gk_tests" title="Link to this heading"></a></h1>
-<p>Tests for gk.py</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk_tests.Mul">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk_tests.</span></span><span class="sig-name descname"><span class="pre">Mul</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs:</span> <span class="pre">list</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provides:</span> <span class="pre">list</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Mul"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Mul" title="Link to this definition"></a></dt>
-<dd><dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk_tests.Mul.compute">
-<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Mul.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Mul.compute" title="Link to this definition"></a></dt>
-<dd><p>This method must be implemented to perform this layer’s feed-forward
-computation on a given set of inputs.
-:param list inputs:</p>
-<blockquote>
-<div><p>A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects on which to run the layer’s
-feed-forward computation.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns list<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Should return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects representing
-the results of running the feed-forward computation on
-<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk_tests.Pow">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk_tests.</span></span><span class="sig-name descname"><span class="pre">Pow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs:</span> <span class="pre">list</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provides:</span> <span class="pre">list</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Pow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Pow" title="Link to this definition"></a></dt>
-<dd><dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk_tests.Pow.compute">
-<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Pow.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Pow.compute" title="Link to this definition"></a></dt>
-<dd><p>This method must be implemented to perform this layer’s feed-forward
-computation on a given set of inputs.
-:param list inputs:</p>
-<blockquote>
-<div><p>A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects on which to run the layer’s
-feed-forward computation.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns list<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Should return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects representing
-the results of running the feed-forward computation on
-<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="meshed.ext.gk_tests.Sum">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk_tests.</span></span><span class="sig-name descname"><span class="pre">Sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs:</span> <span class="pre">list</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provides:</span> <span class="pre">list</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Sum" title="Link to this definition"></a></dt>
-<dd><dl class="py method">
-<dt class="sig sig-object py" id="meshed.ext.gk_tests.Sum.compute">
-<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/ext/gk_tests.html#Sum.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk_tests.Sum.compute" title="Link to this definition"></a></dt>
-<dd><p>This method must be implemented to perform this layer’s feed-forward
-computation on a given set of inputs.
-:param list inputs:</p>
-<blockquote>
-<div><p>A list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects on which to run the layer’s
-feed-forward computation.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns list<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Should return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code> objects representing
-the results of running the feed-forward computation on
-<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="meshed-ext-gk-tests">
+<h1>meshed.ext.gk_tests<a class="headerlink" href="#meshed-ext-gk-tests" title="Link to this heading"></a></h1>
 </section>
 
 
