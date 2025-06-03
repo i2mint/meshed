@@ -1571,7 +1571,7 @@ def dag_to_code(dag):
 
     >>> from meshed import code_to_dag
     >>> @code_to_dag
-    ... def test_pipeline():
+    ... def dag():
     ...     a = func1(x, y)
     ...     b = func2(a, z)
     ...     c = func3(a, w=b)
@@ -1579,7 +1579,7 @@ def dag_to_code(dag):
 
     Original DAG:
 
-    >>> print(test_pipeline.synopsis_string())  # doctest: +NORMALIZE_WHITESPACE
+    >>> print(dag.synopsis_string())  # doctest: +NORMALIZE_WHITESPACE
     x,y -> func1 -> a
     a,z -> func2 -> b
     a,b -> func3 -> c
@@ -1587,19 +1587,9 @@ def dag_to_code(dag):
     
     Generated code using dag_to_code function:
 
-    >>> code1 = dag_to_code(test_pipeline)
-    >>> print(code1)  # doctest: +NORMALIZE_WHITESPACE
-    def test_pipeline():
-        a = func1(x, y)
-        b = func2(a, z)
-        c = func3(a, w=b)
-    <BLANKLINE>
-
-    Generated code using `DAG.to_code` method:
-
-    >>> code2 = dag_to_code(test_pipeline)
-    >>> print(code2)  # doctest: +NORMALIZE_WHITESPACE
-    def test_pipeline():
+    >>> code = dag_to_code(dag)
+    >>> print(code)  # doctest: +NORMALIZE_WHITESPACE
+    def dag():
         a = func1(x, y)
         b = func2(a, z)
         c = func3(a, w=b)
@@ -1607,14 +1597,14 @@ def dag_to_code(dag):
 
     Test round-trip conversion:
 
-    >>> dag2 = code_to_dag(code1)
+    >>> dag2 = code_to_dag(code)
     >>> print(dag2.synopsis_string())  # doctest: +NORMALIZE_WHITESPACE
     x,y -> func1 -> a
     a,z -> func2 -> b
     a,b -> func3 -> c
     <BLANKLINE>
     >>> # Verify they're equivalent:
-    >>> test_pipeline.synopsis_string() == dag2.synopsis_string()
+    >>> dag.synopsis_string() == dag2.synopsis_string()
     True
 
     
