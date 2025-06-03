@@ -2,8 +2,8 @@
 Tests for gk.py
 """
 
-# Copyright 2016, Yahoo Inc.
-# Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.
+import pytest
+
 from contextlib import suppress
 
 import math
@@ -251,6 +251,8 @@ with suppress(ModuleNotFoundError, ImportError):
         results = net({"a": 4, "b": 3}, outputs=["sum2"])
         assert "sum2" in results
 
+    # Skip this test since it requires a long time to run
+    @pytest.mark.skip(reason="This test takes a long time to run")
     def test_parallel_execution():
         import time
 

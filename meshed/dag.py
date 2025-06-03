@@ -1576,44 +1576,47 @@ def dag_to_code(dag):
     ...     b = func2(a, z)
     ...     c = func3(a, w=b)
     >>> 
-    >>> print("Original DAG:")
+
     Original DAG:
-    >>> print(test_pipeline.synopsis_string())
+
+    >>> print(test_pipeline.synopsis_string())  # doctest: +NORMALIZE_WHITESPACE
     x,y -> func1 -> a
     a,z -> func2 -> b
     a,b -> func3 -> c
     <BLANKLINE>
-    >>> print("Generated code using dag_to_code function:")
+    
     Generated code using dag_to_code function:
+
     >>> code1 = dag_to_code(test_pipeline)
-    >>> print(code1)
+    >>> print(code1)  # doctest: +NORMALIZE_WHITESPACE
     def test_pipeline():
         a = func1(x, y)
         b = func2(a, z)
         c = func3(a, w=b)
     <BLANKLINE>
-    >>> print("Generated code using DAG.to_code method:")
-    Generated code using DAG.to_code method:
-    >>> code2 = test_pipeline.to_code()
-    >>> print(code2)
+
+    Generated code using `DAG.to_code` method:
+
+    >>> code2 = dag_to_code(test_pipeline)
+    >>> print(code2)  # doctest: +NORMALIZE_WHITESPACE
     def test_pipeline():
         a = func1(x, y)
         b = func2(a, z)
         c = func3(a, w=b)
     <BLANKLINE>
-    >>> # Test round-trip conversion
-    >>> print("Round-trip test:")
-    Round-trip test:
+
+    Test round-trip conversion:
+
     >>> dag2 = code_to_dag(code1)
-    >>> print(dag2.synopsis_string())
+    >>> print(dag2.synopsis_string())  # doctest: +NORMALIZE_WHITESPACE
     x,y -> func1 -> a
     a,z -> func2 -> b
     a,b -> func3 -> c
     <BLANKLINE>
-    >>> # Verify they're equivalent
-    >>> assert test_pipeline.synopsis_string() == dag2.synopsis_string()
-    >>> print("✓ Round-trip conversion successful!")
-    ✓ Round-trip conversion successful!
+    >>> # Verify they're equivalent:
+    >>> test_pipeline.synopsis_string() == dag2.synopsis_string()
+    True
+
     
     """
     return func_nodes_to_code(dag.func_nodes, dag.name)

@@ -1,6 +1,17 @@
 """
-This module was based on yahoo/graphkit
-Made to without networkx, amongst other things
+This module is meant to explore a different representation of a computation graph
+and a different way of executing it.
+It is based on Yahoo's graphkit library. The library hasn't been maintained since 2018,
+so vendored and modified here).
+One of the main differences is that we got rid of the networkx dependency,
+which was used to represent the computation graph.
+Instead, this module uses meshed's itools library to represent the computation graph.
+
+# Yahoo's graphkit library is under Apache License 2.0:
+# Copyright 2016, Yahoo Inc.
+# Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.
+
+NOTE: This module is only meant to an exploratory "extension". It is not planned to be maintained.
 """
 
 # ---------- base --------------------------------------------------------------
