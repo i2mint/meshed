@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.base &mdash; meshed 0.1.161 documentation</title>
+  <title>meshed.base &mdash; meshed 0.1.162 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=78f4e1ef"></script>
+      <script src="../../_static/documentation_options.js?v=4f0c6b85"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -1130,13 +1130,13 @@
 <span class="sd">    :return: String like &quot;output = func_name(arg1, arg2=value)&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Get the function name - use func_label if available, otherwise name</span>
-    <span class="n">func_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="s1">&#39;func_label&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">func_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="s2">&quot;func_label&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span>
 
     <span class="c1"># Handle special cases for generated functions</span>
-    <span class="k">if</span> <span class="n">func_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;__0&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;__1&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">func_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;__0&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;__1&quot;</span><span class="p">):</span>
         <span class="c1"># This is likely an itemgetter from tuple unpacking</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;keywords&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;keys&#39;</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">keywords</span><span class="p">:</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s1">&#39;keys&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="s2">&quot;keywords&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;keys&quot;</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">keywords</span><span class="p">:</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">keywords</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c1"># Single item extraction</span>
                 <span class="n">source_var</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
@@ -1181,7 +1181,7 @@
     <span class="n">arg_string</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg_parts</span><span class="p">)</span>
 
     <span class="c1"># Handle tuple unpacking in output</span>
-    <span class="k">if</span> <span class="s2">&quot;__&quot;</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;__0&#39;</span><span class="p">,</span> <span class="s1">&#39;__1&#39;</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="s2">&quot;__&quot;</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;__0&quot;</span><span class="p">,</span> <span class="s2">&quot;__1&quot;</span><span class="p">)):</span>
         <span class="c1"># This might be a tuple output that was created from tuple unpacking</span>
         <span class="n">output_parts</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>

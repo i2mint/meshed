@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.161 documentation</title>
+  <title>meshed.dag &mdash; meshed 0.1.162 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=78f4e1ef"></script>
+      <script src="../../_static/documentation_options.js?v=4f0c6b85"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -1733,6 +1733,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_dict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">meshed.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">func_nodes_to_code</span>
 
+
 <div class="viewcode-block" id="dag_to_code">
 <a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.dag_to_code">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dag_to_code</span><span class="p">(</span><span class="n">dag</span><span class="p">):</span>
@@ -1741,35 +1742,25 @@
 
 <span class="sd">    &gt;&gt;&gt; from meshed import code_to_dag</span>
 <span class="sd">    &gt;&gt;&gt; @code_to_dag</span>
-<span class="sd">    ... def test_pipeline():</span>
+<span class="sd">    ... def dag():</span>
 <span class="sd">    ...     a = func1(x, y)</span>
 <span class="sd">    ...     b = func2(a, z)</span>
 <span class="sd">    ...     c = func3(a, w=b)</span>
-<span class="sd">    &gt;&gt;&gt; </span>
+<span class="sd">    &gt;&gt;&gt;</span>
 
 <span class="sd">    Original DAG:</span>
 
-<span class="sd">    &gt;&gt;&gt; print(test_pipeline.synopsis_string())  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    &gt;&gt;&gt; print(dag.synopsis_string())  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">    x,y -&gt; func1 -&gt; a</span>
 <span class="sd">    a,z -&gt; func2 -&gt; b</span>
 <span class="sd">    a,b -&gt; func3 -&gt; c</span>
 <span class="sd">    &lt;BLANKLINE&gt;</span>
-<span class="sd">    </span>
+
 <span class="sd">    Generated code using dag_to_code function:</span>
 
-<span class="sd">    &gt;&gt;&gt; code1 = dag_to_code(test_pipeline)</span>
-<span class="sd">    &gt;&gt;&gt; print(code1)  # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    def test_pipeline():</span>
-<span class="sd">        a = func1(x, y)</span>
-<span class="sd">        b = func2(a, z)</span>
-<span class="sd">        c = func3(a, w=b)</span>
-<span class="sd">    &lt;BLANKLINE&gt;</span>
-
-<span class="sd">    Generated code using `DAG.to_code` method:</span>
-
-<span class="sd">    &gt;&gt;&gt; code2 = dag_to_code(test_pipeline)</span>
-<span class="sd">    &gt;&gt;&gt; print(code2)  # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    def test_pipeline():</span>
+<span class="sd">    &gt;&gt;&gt; code = dag_to_code(dag)</span>
+<span class="sd">    &gt;&gt;&gt; print(code)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    def dag():</span>
 <span class="sd">        a = func1(x, y)</span>
 <span class="sd">        b = func2(a, z)</span>
 <span class="sd">        c = func3(a, w=b)</span>
@@ -1777,19 +1768,20 @@
 
 <span class="sd">    Test round-trip conversion:</span>
 
-<span class="sd">    &gt;&gt;&gt; dag2 = code_to_dag(code1)</span>
+<span class="sd">    &gt;&gt;&gt; dag2 = code_to_dag(code)</span>
 <span class="sd">    &gt;&gt;&gt; print(dag2.synopsis_string())  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">    x,y -&gt; func1 -&gt; a</span>
 <span class="sd">    a,z -&gt; func2 -&gt; b</span>
 <span class="sd">    a,b -&gt; func3 -&gt; c</span>
 <span class="sd">    &lt;BLANKLINE&gt;</span>
 <span class="sd">    &gt;&gt;&gt; # Verify they&#39;re equivalent:</span>
-<span class="sd">    &gt;&gt;&gt; test_pipeline.synopsis_string() == dag2.synopsis_string()</span>
+<span class="sd">    &gt;&gt;&gt; dag.synopsis_string() == dag2.synopsis_string()</span>
 <span class="sd">    True</span>
 
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">func_nodes_to_code</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">dag</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="parametrized_dag_factory">
