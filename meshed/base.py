@@ -944,13 +944,13 @@ def _func_node_to_assignment_line(func_node: FuncNode, favor_positional=True) ->
     :return: String like "output = func_name(arg1, arg2=value)"
     """
     # Get the function name - use func_label if available, otherwise name
-    func_name = getattr(func_node, 'func_label', None) or func_node.name
+    func_name = getattr(func_node, "func_label", None) or func_node.name
 
     # Handle special cases for generated functions
-    if func_name.endswith('__0') or func_name.endswith('__1'):
+    if func_name.endswith("__0") or func_name.endswith("__1"):
         # This is likely an itemgetter from tuple unpacking
-        if hasattr(func_node.func, 'keywords') and 'keys' in func_node.func.keywords:
-            keys = func_node.func.keywords['keys']
+        if hasattr(func_node.func, "keywords") and "keys" in func_node.func.keywords:
+            keys = func_node.func.keywords["keys"]
             if len(keys) == 1:
                 # Single item extraction
                 source_var = list(func_node.bind.values())[0]
@@ -995,7 +995,7 @@ def _func_node_to_assignment_line(func_node: FuncNode, favor_positional=True) ->
     arg_string = ", ".join(arg_parts)
 
     # Handle tuple unpacking in output
-    if "__" in func_node.out and not func_node.out.endswith(('__0', '__1')):
+    if "__" in func_node.out and not func_node.out.endswith(("__0", "__1")):
         # This might be a tuple output that was created from tuple unpacking
         output_parts = func_node.out.split("__")
         if len(output_parts) > 1:

@@ -1565,6 +1565,7 @@ def print_dag_string(dag: DAG, bind_info: BindInfo = "hybrid"):
 from meshed.util import extract_dict
 from meshed.base import func_nodes_to_code
 
+
 def dag_to_code(dag):
     """
     Convert a DAG to code.
@@ -1575,7 +1576,7 @@ def dag_to_code(dag):
     ...     a = func1(x, y)
     ...     b = func2(a, z)
     ...     c = func3(a, w=b)
-    >>> 
+    >>>
 
     Original DAG:
 
@@ -1584,7 +1585,7 @@ def dag_to_code(dag):
     a,z -> func2 -> b
     a,b -> func3 -> c
     <BLANKLINE>
-    
+
     Generated code using dag_to_code function:
 
     >>> code1 = dag_to_code(test_pipeline)
@@ -1617,9 +1618,10 @@ def dag_to_code(dag):
     >>> test_pipeline.synopsis_string() == dag2.synopsis_string()
     True
 
-    
+
     """
     return func_nodes_to_code(dag.func_nodes, dag.name)
+
 
 def parametrized_dag_factory(dag: DAG, param_var_nodes: Union[str, Iterable[str]]):
     """
