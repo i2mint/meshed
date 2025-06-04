@@ -30,23 +30,6 @@
    module_docs/meshed/scrap/reactive_scope
    module_docs/meshed/scrap/wrapping_dags
    module_docs/meshed/slabs
-   module_docs/meshed/tests
-   module_docs/meshed/tests/objects_for_testing
-   module_docs/meshed/tests/test_base
-   module_docs/meshed/tests/test_caching
-   module_docs/meshed/tests/test_ch_funcs
-   module_docs/meshed/tests/test_components
-   module_docs/meshed/tests/test_composition
-   module_docs/meshed/tests/test_dag
-   module_docs/meshed/tests/test_dag_2
-   module_docs/meshed/tests/test_dag_defaults
-   module_docs/meshed/tests/test_dag_variadics
-   module_docs/meshed/tests/test_getitem
-   module_docs/meshed/tests/test_itools
-   module_docs/meshed/tests/test_makers
-   module_docs/meshed/tests/test_meshed_tools
-   module_docs/meshed/tests/test_util
-   module_docs/meshed/tests/utils_for_testing
    module_docs/meshed/tools
    module_docs/meshed/util
    module_docs/meshed/viz

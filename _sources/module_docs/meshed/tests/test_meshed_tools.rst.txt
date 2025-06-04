@@ -1,4 +1,0 @@
-meshed.tests.test_meshed_tools
-==============================
-.. automodule:: meshed.tests.test_meshed_tools
-   :members:
