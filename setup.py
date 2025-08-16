@@ -10,6 +10,7 @@ def text_of_readme_md_file():
 
 
 setup(
+    author="Thor Whalen",
     packages=find_packages(),
     long_description=text_of_readme_md_file(),
     long_description_content_type="text/markdown",
