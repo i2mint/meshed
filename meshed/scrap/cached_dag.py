@@ -1,4 +1,4 @@
-from typing import Mapping
+from collections.abc import Mapping
 from functools import partial
 from collections import ChainMap
 from meshed.itools import edge_reversed_graph, descendants

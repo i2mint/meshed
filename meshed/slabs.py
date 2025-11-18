@@ -51,14 +51,11 @@ https://github.com/i2mint/meshed/discussions/49.
 """
 
 from typing import (
-    Callable,
-    Mapping,
-    Iterable,
     Union,
     Any,
-    MutableMapping,
     Protocol,
 )
+from collections.abc import Callable, Mapping, Iterable, MutableMapping
 from i2 import Sig, ContextFanout
 from meshed.base import FuncNode, ensure_func_nodes
 from meshed.dag import DAG

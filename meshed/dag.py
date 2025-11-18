@@ -138,17 +138,14 @@ from dataclasses import dataclass, field
 from itertools import chain
 from operator import attrgetter, eq
 from typing import (
-    Callable,
-    MutableMapping,
     Union,
     Optional,
-    Iterable,
     Any,
-    Mapping,
     Tuple,
     KT,
     VT,
 )
+from collections.abc import Callable, MutableMapping, Iterable, Mapping
 from warnings import warn
 
 from i2 import double_up_as_factory, MultiFunc
@@ -201,7 +198,7 @@ from meshed.itools import (
 
 from meshed.viz import dot_lines_of_objs, add_new_line_if_none
 
-FuncMapping = Union[Mapping[KT, Callable], Iterable[Tuple[KT, Callable]]]
+FuncMapping = Union[Mapping[KT, Callable], Iterable[tuple[KT, Callable]]]
 
 
 def order_subset_from_list(items, sublist):
@@ -490,7 +487,7 @@ class DAG:
 
     """
 
-    func_nodes: Iterable[Union[FuncNode, Callable]] = ()
+    func_nodes: Iterable[FuncNode | Callable] = ()
     cache_last_scope: bool = field(default=True, repr=False)
     parameter_merge: ParameterMerger = field(
         default=conservative_parameter_merge, repr=False
@@ -1163,7 +1160,7 @@ class DAG:
                 d[src_name].append(node.sig.parameters[arg_name])
         return dict(d)
 
-    def src_name_params(self, src_names: Optional[Iterable[str]] = None):
+    def src_name_params(self, src_names: Iterable[str] | None = None):
         """Generate Parameter instances that are needed to compute ``src_names``"""
         # see params_for_src property to see what d is
         d = self.params_for_src
@@ -1613,7 +1610,7 @@ def dag_to_code(dag):
     return func_nodes_to_code(dag.func_nodes, dag.name)
 
 
-def parametrized_dag_factory(dag: DAG, param_var_nodes: Union[str, Iterable[str]]):
+def parametrized_dag_factory(dag: DAG, param_var_nodes: str | Iterable[str]):
     """
     Constructs a factory for sub-DAGs derived from the input DAG, with values of
     specific 'parameter' variable nodes precomputed and fixed. These precomputed nodes,
@@ -1794,7 +1791,7 @@ def ch_funcs(
     func_nodes: DagAble = None,
     *,
     func_mapping: FuncMapping = (),
-    validate_func_mapping: Optional[FuncMappingValidator] = _validate_func_mapping,
+    validate_func_mapping: FuncMappingValidator | None = _validate_func_mapping,
     # TODO: Design. Don't like the fact that ch_func_node_func needs a slot for
     #  func_comparator, which is then given later. Perhaps only ch_func_node_func should
     #  should be given (and it contains the func_comparator)

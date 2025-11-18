@@ -17,7 +17,7 @@ NOTE: This module is only meant to an exploratory "extension". It is not planned
 # ---------- base --------------------------------------------------------------
 
 
-class Data(object):
+class Data:
     """
     This wraps any data that is consumed or produced
     by a Operation. This data should also know how to serialize
@@ -145,7 +145,7 @@ class Operation:
         """
         Display more informative names for the Operation class
         """
-        return "%s(name='%s', needs=%s, provides=%s)" % (
+        return "{}(name='{}', needs={}, provides={})".format(
             self.__class__.__name__,
             self.name,
             self.needs,
@@ -269,7 +269,7 @@ class DeleteInstruction(str):
         return 'DeleteInstruction("%s")' % self
 
 
-class Network(object):
+class Network:
     """
     This is the main network implementation. The class contains all of the
     code necessary to weave together operations into a directed-acyclic-graph (DAG)
@@ -878,7 +878,7 @@ class operation(Operation):
         """
         Display more informative names for the Operation class
         """
-        return "%s(name='%s', needs=%s, provides=%s, fn=%s)" % (
+        return "{}(name='{}', needs={}, provides={}, fn={})".format(
             self.__class__.__name__,
             self.name,
             self.needs,
@@ -887,7 +887,7 @@ class operation(Operation):
         )
 
 
-class compose(object):
+class compose:
     """
     This is a simple class that's used to compose ``operation`` instances into
     a computation graph.

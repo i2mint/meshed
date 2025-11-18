@@ -1,6 +1,6 @@
 """Misc utils"""
 
-from typing import Mapping
+from collections.abc import Mapping
 from meshed.util import ModuleNotFoundIgnore
 from collections import deque, defaultdict
 
@@ -10,7 +10,7 @@ with ModuleNotFoundIgnore():
     topological_sort_2 = nx.dag.topological_sort
 
 
-from typing import Iterable
+from collections.abc import Iterable
 
 
 def mermaid_pack_nodes(
@@ -59,7 +59,8 @@ def mermaid_pack_nodes(
     return "\n".join(gen_lines())
 
 
-from typing import Any, Mapping, Sized, MutableMapping, Iterable
+from typing import Any
+from collections.abc import Mapping, Sized, MutableMapping, Iterable
 from meshed.itools import children, parents
 
 

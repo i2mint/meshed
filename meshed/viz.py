@@ -1,6 +1,7 @@
 """Visualization utilities for the meshed package."""
 
-from typing import Iterable, Any
+from typing import Any
+from collections.abc import Iterable
 from i2.signatures import Sig
 
 

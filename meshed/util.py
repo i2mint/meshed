@@ -5,17 +5,14 @@ from functools import partial, wraps
 from inspect import Parameter, getmodule
 from types import ModuleType
 from typing import (
-    Callable,
     Any,
     Union,
-    Iterator,
     Optional,
-    Iterable,
-    Mapping,
     TypeVar,
     Tuple,
     List,
 )
+from collections.abc import Callable, Iterator, Iterable, Mapping
 from importlib import import_module
 from operator import itemgetter
 
@@ -25,10 +22,10 @@ T = TypeVar("T")
 
 
 def objects_defined_in_module(
-    module: Union[str, ModuleType],
+    module: str | ModuleType,
     *,
-    name_filt: Optional[Callable] = None,
-    obj_filt: Optional[Callable] = None,
+    name_filt: Callable | None = None,
+    obj_filt: Callable | None = None,
 ):
     """
     Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.
@@ -457,7 +454,7 @@ class ConditionalIterize:
         self,
         func: Callable,
         iterize_type: type = Iterator,
-        iterize_condition: Optional[Callable[[Any], bool]] = None,
+        iterize_condition: Callable[[Any], bool] | None = None,
     ):
         """
 
@@ -509,7 +506,7 @@ class ConditionalIterize:
     def wrap(
         cls,
         iterize_type: type = Iterator,
-        iterize_condition: Optional[Callable[[Any], bool]] = None,
+        iterize_condition: Callable[[Any], bool] | None = None,
     ):
         return partial(
             cls, iterize_type=iterize_type, iterize_condition=iterize_condition
@@ -562,11 +559,12 @@ def func_name(func) -> str:
 # ---------------------------------------------------------------------------------------
 # Misc
 
-from typing import Iterable, Callable, Optional
+from typing import Optional
+from collections.abc import Iterable, Callable
 
 
 def args_funcnames(
-    funcs: Iterable[Callable], name_of_func: Optional[FunctionNamer] = func_name
+    funcs: Iterable[Callable], name_of_func: FunctionNamer | None = func_name
 ):
     """Generates (arg_name, func_id) pairs from the iterable of functions"""
     from inspect import signature, Parameter
@@ -785,7 +783,7 @@ def mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=(
 
 
 # TODO: Probably can improve efficiency and reusability using generators?
-def ordered_set_operations(a: Iterable, b: Iterable) -> Tuple[List, List, List]:
+def ordered_set_operations(a: Iterable, b: Iterable) -> tuple[list, list, list]:
     """
     Returns a triple (a-b, a&b, b-a) for two iterables a and b.
     The operations are performed as if a and b were sets, but the order in a is conserved.

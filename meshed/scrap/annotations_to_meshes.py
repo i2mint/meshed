@@ -7,7 +7,8 @@ https://github.com/i2mint/meshed/discussions/55
 """
 
 import typing
-from typing import Dict, Protocol, Callable, TypeVar, Any
+from typing import Dict, Protocol, TypeVar, Any
+from collections.abc import Callable
 from collections.abc import Callable as CallableGenericAlias
 from inspect import signature, Signature, Parameter
 from functools import wraps
@@ -75,7 +76,7 @@ def callable_annots_to_signature(
 
 
 def func_types_to_protocol(
-    func_types: Dict[str, CallableGenericAlias],
+    func_types: dict[str, CallableGenericAlias],
     name: str = None,
     *,
     mk_argname: MkArgname = try_annotation_name,
@@ -102,7 +103,8 @@ def func_types_to_protocol(
 
 
 def test_func_types_to_protocol():
-    from typing import Iterable, Any, NewType, Callable
+    from typing import Any, NewType
+    from collections.abc import Iterable, Callable
 
     Group = NewType("Group", str)
     Item = NewType("Item", Any)
@@ -132,7 +134,7 @@ def test_func_types_to_protocol():
 
 
 def func_types_to_scaffold(
-    func_types: Dict[str, CallableGenericAlias], name: str = None
+    func_types: dict[str, CallableGenericAlias], name: str = None
 ) -> str:
     """Produces a scaffold class containing the said methods, with given annotations"""
 
@@ -181,7 +183,8 @@ class GeneratedClass:
 
 
 def test_func_types_to_scaffold():
-    from typing import Iterable, Any, NewType, Callable
+    from typing import Any, NewType
+    from collections.abc import Iterable, Callable
 
     Group = NewType("Group", str)
     Item = NewType("Item", Any)

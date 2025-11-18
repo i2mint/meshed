@@ -5,13 +5,14 @@ https://github.com/i2mint/meshed/discussions/54
 """
 
 import re
-from typing import Union, Iterable, Optional, Callable
+from typing import Union, Optional
+from collections.abc import Iterable, Callable
 from meshed.dag import DAG
 from meshed.makers import code_to_dag
 
 
 def remove_decorator_code(
-    src: str, decorator_names: Optional[Union[str, Iterable[str]]] = None
+    src: str, decorator_names: str | Iterable[str] | None = None
 ) -> str:
     """
     Remove the code corresponding to decorators from a source code string.
@@ -76,7 +77,7 @@ def remove_decorator_code(
     return ast.unparse(new_tree)
 
 
-def get_src_string(src: Union[str, DAG]) -> str:
+def get_src_string(src: str | DAG) -> str:
     if isinstance(src, str):
         return src
     elif hasattr(src, "_code_to_dag_src"):
@@ -94,11 +95,11 @@ def get_src_string(src: Union[str, DAG]) -> str:
 
 # TODO: Generalize to src that is any DAG
 def collapse_function_calls(
-    src: Union[str, DAG],
+    src: str | DAG,
     call_func_name="call",
     *,
     rm_decorator="code_to_dag",
-    include: Optional[Union[Iterable[str], Callable[[str], bool]]] = None,
+    include: Iterable[str] | Callable[[str], bool] | None = None,
 ):
     """
     Contract function calls in a source code string.
@@ -139,7 +140,7 @@ def expand_function_calls(
     src: Union[str, "DAG"],
     call_func_name="call",
     *,
-    include: Optional[Union[Iterable[str], Callable[[str], bool]]] = None,
+    include: Iterable[str] | Callable[[str], bool] | None = None,
 ) -> str:
     """
     Inverse of collapse_function_calls.

@@ -210,7 +210,7 @@ def test_topological_sort_helper(example_graph):
     g = example_graph
     v = "a"
     stack = ["b", "c"]
-    visited = set(["e"])
+    visited = {"e"}
     ms.itools._topological_sort_helper(g, v, visited, stack)
     assert visited == {"a", "b", "c", "d", "e"}
     assert sorted(stack) == ["a", "b", "b", "c", "c", "d"]
@@ -249,7 +249,7 @@ def test_edge_reversed_graph(simple_graph):
         "d": {"b", "c"},
         "a": {"c"},
         "b": {"c"},
-        "e": set([]),
+        "e": set(),
     }
     assert ms.itools.edge_reversed_graph(dict(e="", a="e")) == {
         "e": ["a"],

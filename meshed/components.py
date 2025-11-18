@@ -3,7 +3,8 @@ Specialized components for meshed.
 """
 
 from i2 import Sig
-from typing import Callable, Any
+from typing import Any
+from collections.abc import Callable
 from operator import itemgetter, attrgetter
 from dataclasses import dataclass
 from functools import partial

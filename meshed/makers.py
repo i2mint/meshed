@@ -149,14 +149,11 @@ from operator import itemgetter, attrgetter
 from typing import (
     Tuple,
     Optional,
-    Iterator,
-    Iterable,
     TypeVar,
-    Callable,
     Dict,
-    Mapping,
     Union,
 )
+from collections.abc import Iterator, Iterable, Callable, Mapping
 from functools import partial
 
 
@@ -249,7 +246,7 @@ def parse_body(body, *, body_index=None):
 
 
 # Note: generalize? glom?
-def parse_assignment(body: ast.Assign, info=None) -> Tuple:
+def parse_assignment(body: ast.Assign, info=None) -> tuple:
     # TODO: Make this validation better (at least more help in raised error)
     # TODO: extract validating code out as validation functions?
     info = _ast_info_str(body)
@@ -430,7 +427,7 @@ FactoryToFunc = Callable[[FuncNodeFactory], Callable]
 
 def src_to_func_node_factory(
     src, exclude_names=None
-) -> Iterator[Union[FuncNode, FuncNodeFactory]]:
+) -> Iterator[FuncNode | FuncNodeFactory]:
     """
     :param src: Callable or string of callable.
     :param exclude_names: Names to exclude when making func_nodes
@@ -454,7 +451,7 @@ dlft_factory_to_func: FactoryToFunc
 #  to make itself. Do we gain much over simply saying "factory, make yourself"?
 def dlft_factory_to_func(
     factory: partial,
-    name_to_func_map: Optional[Dict[str, Callable]] = None,
+    name_to_func_map: dict[str, Callable] | None = None,
     use_place_holder_fallback=True,
 ):
     """Get a function for the given factory, using"""
@@ -545,7 +542,7 @@ def code_to_fnodes(
     *,
     func_src: FuncSource = dlft_factory_to_func,
     use_place_holder_fallback=False,
-) -> Tuple[FuncNode]:
+) -> tuple[FuncNode]:
     """Get func_nodes from src code"""
     func_src = _ensure_func_src(func_src, use_place_holder_fallback)
     # Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG
@@ -593,10 +590,10 @@ simple_code_to_digraph = code_to_digraph  # back-compatability alias
 # from typing import Tuple, Iterable, Iterator
 # from meshed import FuncNode, code_to_dag, code_to_fnodes, DAG
 
-extract_tokens = re.compile("\w+").findall
+extract_tokens = re.compile(r"\w+").findall
 
 
-def triples_to_fnodes(triples: Iterable[Tuple[str, str, str]]) -> Iterable[FuncNode]:
+def triples_to_fnodes(triples: Iterable[tuple[str, str, str]]) -> Iterable[FuncNode]:
     """Converts an iterable of func call triples to an iterable of ``FuncNode``s.
     (Which in turn can be converted to a ``DAG``.)
 
@@ -624,9 +621,9 @@ def triples_to_fnodes(triples: Iterable[Tuple[str, str, str]]) -> Iterable[FuncN
 
 
 def _triple_to_func_call_str(
-    outputs: Union[str, Iterable[str]],
+    outputs: str | Iterable[str],
     func_name: str,
-    inputs: Union[str, Iterable[str]],
+    inputs: str | Iterable[str],
 ) -> str:
     """Converts a `(outputs, func_name, inputs)` triple to a function call string.
 
@@ -699,7 +696,7 @@ def lined_dag(funcs):
         return dag
 
 
-from typing import Callable, Mapping, Iterable
+from collections.abc import Callable, Mapping, Iterable
 
 NamedFuncs = Mapping[str, Callable]
 

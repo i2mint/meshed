@@ -5,7 +5,8 @@ Base functionality of meshed
 from collections import Counter
 from dataclasses import dataclass, field, fields
 from functools import partial, cached_property
-from typing import Callable, MutableMapping, Iterable, Union, Sized, Sequence, Literal
+from typing import Union, Literal
+from collections.abc import Callable, MutableMapping, Iterable, Sized, Sequence
 
 from i2 import Sig, call_somewhat_forgivingly
 from i2.signatures import (
@@ -782,7 +783,7 @@ def _mapped_extraction(src: dict, to_extract: dict):
             yield desired_name, src[src_name]
 
 
-def duplicates(elements: Union[Iterable, Sized]):
+def duplicates(elements: Iterable | Sized):
     c = Counter(elements)
     if len(c) != len(elements):
         return [name for name, count in c.items() if count > 1]
@@ -835,17 +836,18 @@ def _complete_dict_with_iterable_of_required_keys(
             to_complete[required_key] = required_key
 
 
-from typing import NewType, Dict, Tuple, Mapping
+from typing import NewType, Dict, Tuple
+from collections.abc import Mapping
 
 # TODO: Make a type where ``isinstance(s, Identifier) == s.isidentifier()``
 Identifier = NewType("Identifier", str)  # + should satisfy str.isidentifier
 Bind = Union[
     str,  # Identifier or ' '.join(Iterable[Identifier])
-    Dict[Identifier, Identifier],
-    Sequence[Union[Identifier, Tuple[Identifier, Identifier]]],
+    dict[Identifier, Identifier],
+    Sequence[Union[Identifier, tuple[Identifier, Identifier]]],
 ]
 
-IdentifierMapping = Dict[Identifier, Identifier]
+IdentifierMapping = dict[Identifier, Identifier]
 
 
 def identifier_mapping(x: Bind) -> IdentifierMapping:

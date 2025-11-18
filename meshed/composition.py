@@ -2,7 +2,8 @@
 
 from dataclasses import fields
 from inspect import signature
-from typing import Callable, Union
+from typing import Union
+from collections.abc import Callable
 from functools import partial
 
 from i2 import Sig, kwargs_trans
@@ -38,7 +39,7 @@ def func_node_kwargs_trans(func: Callable) -> FuncNodeKwargsTrans:
 
 
 def func_node_name_trans(
-    name_trans: Callable[[str], Union[str, None]],
+    name_trans: Callable[[str], str | None],
     *,
     also_apply_to_func_label: bool = False,
 ):
@@ -68,7 +69,7 @@ def func_node_name_trans(
 # TODO: Extract  ingress/egress boilerplate to wrapper
 def suffix_ids(
     func_nodes,
-    renamer: Union[Renamer, str] = numbered_suffix_renamer,
+    renamer: Renamer | str = numbered_suffix_renamer,
     *,
     also_apply_to_func_label: bool = False,
 ):

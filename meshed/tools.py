@@ -6,7 +6,8 @@ from functools import cached_property, partial
 import multiprocessing
 import os
 import time
-from typing import Callable, List
+from typing import List
+from collections.abc import Callable
 from urllib.parse import urljoin
 
 import i2
@@ -38,7 +39,7 @@ def mk_dag_with_ws_funcs(dag: DAG, ws_funcs: dict) -> DAG:
     return dag.ch_funcs(**ws_funcs)
 
 
-def launch_funcs_webservice(funcs: List[Callable]):
+def launch_funcs_webservice(funcs: list[Callable]):
     """Launches a web service application with the specified functions.
 
     :param funcs: functions to be hosted by the web service
@@ -66,7 +67,7 @@ def launch_webservice(funcs_to_cloudify, wait_after_start_seconds=10):
 
 
 class CloudFunctions:
-    def __init__(self, funcs: List[Callable], openapi_url=OPENAPI_URL, logger=print):
+    def __init__(self, funcs: list[Callable], openapi_url=OPENAPI_URL, logger=print):
         """Creates a Python dictionary-like object that maps the web service functions to Python functions.
 
         :param funcs: list of functions hosted by the web service

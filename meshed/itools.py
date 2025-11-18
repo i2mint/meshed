@@ -5,16 +5,12 @@ adjacency Mapping representation.
 
 from typing import (
     Any,
-    Mapping,
-    Sized,
-    MutableMapping,
-    Iterable,
-    Callable,
     List,
     TypeVar,
     Union,
     Optional,
 )
+from collections.abc import Mapping, Sized, MutableMapping, Iterable, Callable
 from itertools import product, chain
 from functools import wraps, reduce, partial
 from collections import defaultdict
@@ -28,7 +24,7 @@ Graph = Mapping[N, Iterable[N]]
 MutableGraph = MutableMapping[N, Iterable[N]]
 
 
-def _import_or_raise(module_name, pip_install_name: Optional[Union[str, bool]] = None):
+def _import_or_raise(module_name, pip_install_name: str | bool | None = None):
     try:
         return __import__(module_name)
     except ImportError as e:
@@ -345,7 +341,7 @@ def root_nodes(g: Graph):
 
 
 # TODO: Can be made much more efficient, by looking at the ancestors code itself
-def root_ancestors(graph: dict, nodes: Union[str, Iterable[str]]):
+def root_ancestors(graph: dict, nodes: str | Iterable[str]):
     """
     Returns the roots of the sub-dag that contribute to compute the given nodes.
     """
@@ -425,7 +421,7 @@ def reverse_edges(g: Graph):
         yield from product(dst_nodes, src)
 
 
-def has_cycle(g: Graph) -> List[N]:
+def has_cycle(g: Graph) -> list[N]:
     """
         Returns a list representing a cycle in the graph if any. An empty list indicates no cycle.
 
@@ -653,7 +649,7 @@ def filter_dict_on_keys(d, condition):
 
 
 def nodes_of_graph(graph):
-    return set([*graph.keys(), *graph.values()])
+    return {*graph.keys(), *graph.values()}
 
 
 def subtract_subgraph(graph, subgraph):

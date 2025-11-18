@@ -26,7 +26,7 @@ class ReactiveFuncNode(FuncNode):
             return super().call_on_scope(scope, write_output_into_scope)
 
 
-from typing import MutableMapping
+from collections.abc import MutableMapping
 
 
 # TODO: Don't seem to need the relations to be acyclic. Try it out, and make it work.

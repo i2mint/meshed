@@ -1,6 +1,7 @@
 from meshed import DAG
 from creek.automatas import BasicAutomata, mapping_to_transition_func
-from typing import Callable, MutableMapping, Any, Mapping, Literal
+from typing import Any, Literal
+from collections.abc import Callable, MutableMapping, Mapping
 from dataclasses import dataclass
 from i2 import ch_names
 
