@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.ext.gk &mdash; meshed 0.1.164 documentation</title>
+  <title>meshed.ext.gk &mdash; meshed 0.1.165 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=20fd7f51"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=8485fb48"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -125,7 +125,7 @@
 
 <div class="viewcode-block" id="Data">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Data">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Data</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Data</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This wraps any data that is consumed or produced</span>
 <span class="sd">    by a Operation. This data should also know how to serialize</span>
@@ -259,7 +259,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display more informative names for the Operation class</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(name=&#39;</span><span class="si">%s</span><span class="s2">&#39;, needs=</span><span class="si">%s</span><span class="s2">, provides=</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(name=&#39;</span><span class="si">{}</span><span class="s2">&#39;, needs=</span><span class="si">{}</span><span class="s2">, provides=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">needs</span><span class="p">,</span>
@@ -401,7 +401,7 @@
 
 <div class="viewcode-block" id="Network">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.Network">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Network</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is the main network implementation. The class contains all of the</span>
 <span class="sd">    code necessary to weave together operations into a directed-acyclic-graph (DAG)</span>
@@ -1040,7 +1040,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display more informative names for the Operation class</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(name=&#39;</span><span class="si">%s</span><span class="s2">&#39;, needs=</span><span class="si">%s</span><span class="s2">, provides=</span><span class="si">%s</span><span class="s2">, fn=</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(name=&#39;</span><span class="si">{}</span><span class="s2">&#39;, needs=</span><span class="si">{}</span><span class="s2">, provides=</span><span class="si">{}</span><span class="s2">, fn=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">needs</span><span class="p">,</span>
@@ -1052,7 +1052,7 @@
 
 <div class="viewcode-block" id="compose">
 <a class="viewcode-back" href="../../../module_docs/meshed/ext/gk.html#meshed.ext.gk.compose">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">compose</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">compose</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a simple class that&#39;s used to compose ``operation`` instances into</span>
 <span class="sd">    a computation graph.</span>
@@ -1135,7 +1135,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

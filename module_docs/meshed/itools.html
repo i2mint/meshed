@@ -6,18 +6,18 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.itools &mdash; meshed 0.1.164 documentation</title>
+  <title>meshed.itools &mdash; meshed 0.1.165 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=20fd7f51"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=8485fb48"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -197,7 +197,7 @@ adjacency Mapping representation.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.itools.edge_reversed_graph">
-<span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">edge_reversed_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">g:</span> <span class="pre">~typing.Mapping[~meshed.itools.N,</span> <span class="pre">~typing.Iterable[~meshed.itools.N]],</span> <span class="pre">dst_nodes_factory:</span> <span class="pre">~typing.Callable[[],</span> <span class="pre">~typing.Iterable[~meshed.itools.N]]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'list'&gt;,</span> <span class="pre">dst_nodes_append:</span> <span class="pre">~typing.Callable[[~typing.Iterable[~meshed.itools.N],</span> <span class="pre">~meshed.itools.N],</span> <span class="pre">None]</span> <span class="pre">=</span> <span class="pre">&lt;method</span> <span class="pre">'append'</span> <span class="pre">of</span> <span class="pre">'list'</span> <span class="pre">objects&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/meshed/itools.html#edge_reversed_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.edge_reversed_graph" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">edge_reversed_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">g:</span> <span class="pre">~collections.abc.Mapping[~meshed.itools.N,</span> <span class="pre">~collections.abc.Iterable[~meshed.itools.N]],</span> <span class="pre">dst_nodes_factory:</span> <span class="pre">~collections.abc.Callable[[],</span> <span class="pre">~collections.abc.Iterable[~meshed.itools.N]]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'list'&gt;,</span> <span class="pre">dst_nodes_append:</span> <span class="pre">~collections.abc.Callable[[~collections.abc.Iterable[~meshed.itools.N],</span> <span class="pre">~meshed.itools.N],</span> <span class="pre">None]</span> <span class="pre">=</span> <span class="pre">&lt;method</span> <span class="pre">'append'</span> <span class="pre">of</span> <span class="pre">'list'</span> <span class="pre">objects&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/meshed/itools.html#edge_reversed_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.edge_reversed_graph" title="Link to this definition"></a></dt>
 <dd><p>Invert the from/to direction of the edges of the graph.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">&#39;cd&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;abd&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">edge_reversed_graph</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span>
@@ -248,7 +248,7 @@ adjacency Mapping representation.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.itools.has_cycle">
-<span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">has_cycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/meshed/itools.html#has_cycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.has_cycle" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">has_cycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">N</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/meshed/itools.html#has_cycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.has_cycle" title="Link to this definition"></a></dt>
 <dd><blockquote>
 <div><p>Returns a list representing a cycle in the graph if any. An empty list indicates no cycle.</p>
 <dl class="field-list simple">
@@ -422,7 +422,7 @@ of a 2-1-2 directed path.</p>
 <dt class="sig sig-object py" id="meshed.itools.random_graph">
 <span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">random_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/itools.html#random_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.random_graph" title="Link to this definition"></a></dt>
 <dd><p>Get a random graph.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">random_graph</span><span class="p">()</span>  
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">random_graph</span><span class="p">()</span>
 <span class="go">{0: [6, 3, 5, 2],</span>
 <span class="go"> 1: [3, 2, 0, 6],</span>
 <span class="go"> 2: [5, 6, 4, 0],</span>
@@ -430,7 +430,7 @@ of a 2-1-2 directed path.</p>
 <span class="go"> 4: [],</span>
 <span class="go"> 5: [1, 5, 3, 6],</span>
 <span class="go"> 6: [4, 3, 1]}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">random_graph</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">random_graph</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">{0: [0], 1: [0], 2: []}</span>
 </pre></div>
 </div>
@@ -540,7 +540,7 @@ indeed as expected.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

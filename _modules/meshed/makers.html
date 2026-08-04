@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.164 documentation</title>
+  <title>meshed.makers &mdash; meshed 0.1.165 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=20fd7f51"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=8485fb48"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -255,14 +255,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Tuple</span><span class="p">,</span>
     <span class="n">Optional</span><span class="p">,</span>
-    <span class="n">Iterator</span><span class="p">,</span>
-    <span class="n">Iterable</span><span class="p">,</span>
     <span class="n">TypeVar</span><span class="p">,</span>
-    <span class="n">Callable</span><span class="p">,</span>
     <span class="n">Dict</span><span class="p">,</span>
-    <span class="n">Mapping</span><span class="p">,</span>
     <span class="n">Union</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
 
@@ -358,7 +355,7 @@
 
 
 <span class="c1"># Note: generalize? glom?</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
     <span class="c1"># TODO: Make this validation better (at least more help in raised error)</span>
     <span class="c1"># TODO: extract validating code out as validation functions?</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">_ast_info_str</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
@@ -547,7 +544,7 @@
 <a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.src_to_func_node_factory">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">src_to_func_node_factory</span><span class="p">(</span>
     <span class="n">src</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">,</span> <span class="n">FuncNodeFactory</span><span class="p">]]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">FuncNode</span> <span class="o">|</span> <span class="n">FuncNodeFactory</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param src: Callable or string of callable.</span>
 <span class="sd">    :param exclude_names: Names to exclude when making func_nodes</span>
@@ -574,7 +571,7 @@
 <a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.dlft_factory_to_func">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dlft_factory_to_func</span><span class="p">(</span>
     <span class="n">factory</span><span class="p">:</span> <span class="n">partial</span><span class="p">,</span>
-    <span class="n">name_to_func_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">name_to_func_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a function for the given factory, using&quot;&quot;&quot;</span>
@@ -672,7 +669,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">func_src</span><span class="p">:</span> <span class="n">FuncSource</span> <span class="o">=</span> <span class="n">dlft_factory_to_func</span><span class="p">,</span>
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get func_nodes from src code&quot;&quot;&quot;</span>
     <span class="n">func_src</span> <span class="o">=</span> <span class="n">_ensure_func_src</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">use_place_holder_fallback</span><span class="p">)</span>
     <span class="c1"># Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG</span>
@@ -720,12 +717,12 @@
 <span class="c1"># from typing import Tuple, Iterable, Iterator</span>
 <span class="c1"># from meshed import FuncNode, code_to_dag, code_to_fnodes, DAG</span>
 
-<span class="n">extract_tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;\w+&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span>
+<span class="n">extract_tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\w+&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span>
 
 
 <div class="viewcode-block" id="triples_to_fnodes">
 <a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.triples_to_fnodes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">triples_to_fnodes</span><span class="p">(</span><span class="n">triples</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">triples_to_fnodes</span><span class="p">(</span><span class="n">triples</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts an iterable of func call triples to an iterable of ``FuncNode``s.</span>
 <span class="sd">    (Which in turn can be converted to a ``DAG``.)</span>
 
@@ -754,9 +751,9 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_triple_to_func_call_str</span><span class="p">(</span>
-    <span class="n">outputs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">outputs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">func_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">inputs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">inputs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a `(outputs, func_name, inputs)` triple to a function call string.</span>
 
@@ -829,7 +826,7 @@
         <span class="k">return</span> <span class="n">dag</span>
 
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span>
 
 <span class="n">NamedFuncs</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
 
@@ -981,7 +978,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

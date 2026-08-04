@@ -6,18 +6,18 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.slabs &mdash; meshed 0.1.164 documentation</title>
+  <title>meshed.slabs &mdash; meshed 0.1.165 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=20fd7f51"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=8485fb48"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -169,7 +169,7 @@ For a discussion about the design of Slabs, see
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.slabs.ExceptionHandler">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">ExceptionHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#ExceptionHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.ExceptionHandler" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">ExceptionHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#ExceptionHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.ExceptionHandler" title="Link to this definition"></a></dt>
 <dd><p>An exception handler is an argument-less callable that is called when a handled
 exception occurs during iteration. Most often, the handler does nothing,
 but could be used whose output will be ignored, unless it is do_not_break,
@@ -178,7 +178,7 @@ which will signal that the iteration should continue.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="meshed.slabs.ExceptionalException">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">ExceptionalException</span></span><a class="reference internal" href="../../_modules/meshed/slabs.html#ExceptionalException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.ExceptionalException" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">ExceptionalException</span></span><a class="reference internal" href="../../_modules/meshed/slabs.html#ExceptionalException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.ExceptionalException" title="Link to this definition"></a></dt>
 <dd><p>Raised when an exception was supposed to be handled, but no matching handler
 was found.</p>
 <p>See the <cite>_handle_exception</cite> function, where it is raised.</p>
@@ -186,7 +186,7 @@ was found.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="meshed.slabs.IteratorExit">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">IteratorExit</span></span><a class="reference internal" href="../../_modules/meshed/slabs.html#IteratorExit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.IteratorExit" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">IteratorExit</span></span><a class="reference internal" href="../../_modules/meshed/slabs.html#IteratorExit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.IteratorExit" title="Link to this definition"></a></dt>
 <dd><p>Raised when an iterator should quit being iterated on, signaling this event
 any process that cares to catch the signal.
 We chose to inherit directly from <cite>BaseException</cite> instead of <cite>Exception</cite>
@@ -197,7 +197,7 @@ an error.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.slabs.Slabs">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">Slabs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle_exceptions:</span> <span class="pre">~typing.Mapping[type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~meshed.slabs.ExceptionHandler]</span> <span class="pre">|</span> <span class="pre">~typing.Iterable[BaseException]</span> <span class="pre">|</span> <span class="pre">BaseException</span> <span class="pre">=</span> <span class="pre">(&lt;class</span> <span class="pre">'StopIteration'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'meshed.slabs.IteratorExit'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'KeyboardInterrupt'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope_factory:</span> <span class="pre">~typing.Callable[[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.MutableMapping]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**components</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#Slabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">Slabs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle_exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping[type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~meshed.slabs.ExceptionHandler]</span> <span class="pre">|</span> <span class="pre">~collections.abc.Iterable[BaseException]</span> <span class="pre">|</span> <span class="pre">BaseException</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(&lt;class</span> <span class="pre">'StopIteration'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'meshed.slabs.IteratorExit'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'KeyboardInterrupt'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope_factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable[[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~collections.abc.MutableMapping]</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**components</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#Slabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs" title="Link to this definition"></a></dt>
 <dd><p>Object to source and manipulate multiple streams.</p>
 <p>A slab is a collection of items of a same interval of time.
 We represent a slab using a <cite>dict</cite> or mapping.
@@ -274,7 +274,7 @@ from our smart home device.</p>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">si</span> <span class="o">=</span> <span class="n">make_a_slabs_iter</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
 <span class="go">{&#39;audio&#39;: [1, 2, 3],</span>
 <span class="go"> &#39;light&#39;: 126,</span>
 <span class="go"> &#39;movement&#39;: None,</span>
@@ -282,7 +282,7 @@ from our smart home device.</p>
 <span class="go"> &#39;human_presence_score&#39;: None,</span>
 <span class="go"> &#39;should_notify&#39;: None,</span>
 <span class="go"> &#39;notify&#39;: None}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
 <span class="go">{&#39;audio&#39;: [-96, 87, -92],</span>
 <span class="go"> &#39;light&#39;: 501,</span>
 <span class="go"> &#39;movement&#39;: None,</span>
@@ -290,7 +290,7 @@ from our smart home device.</p>
 <span class="go"> &#39;human_presence_score&#39;: None,</span>
 <span class="go"> &#39;should_notify&#39;: None,</span>
 <span class="go"> &#39;notify&#39;: None}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
 <span class="go">someone is there</span>
 <span class="go">{&#39;audio&#39;: [320, -96, 99],</span>
 <span class="go"> &#39;light&#39;: 523,</span>
@@ -303,7 +303,7 @@ from our smart home device.</p>
 </div>
 <p>If you ask for the next slab, you’ll get a <cite>StopIteration</cite> (raised by the mocked
 sources since they reached the end of their iterators).</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>  
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">  </span><span class="c">...</span>
 <span class="gr">StopIteration</span>
@@ -320,7 +320,7 @@ exception (it does by default), you’ll reach the end of you iteration graceful
 <span class="go">someone is there</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">slabs</span><span class="p">)</span>
 <span class="go">3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">slabs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slabs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="go">{&#39;audio&#39;: [320, -96, 99],</span>
 <span class="go"> &#39;light&#39;: 523,</span>
 <span class="go"> &#39;movement&#39;: True,</span>
@@ -346,13 +346,13 @@ and <a class="reference external" href="https://pypi.org/project/py2store/">py2s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="meshed.slabs.Slabs.from_dag">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">func_nodes:</span> <span class="pre">~typing.Iterable[~meshed.base.FuncNode],</span> <span class="pre">*,</span> <span class="pre">handle_exceptions:</span> <span class="pre">~typing.Mapping[type,</span> <span class="pre">~meshed.slabs.ExceptionHandler]</span> <span class="pre">|</span> <span class="pre">~typing.Iterable[BaseException]</span> <span class="pre">|</span> <span class="pre">BaseException</span> <span class="pre">=</span> <span class="pre">(&lt;class</span> <span class="pre">'StopIteration'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'meshed.slabs.IteratorExit'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'KeyboardInterrupt'&gt;),</span> <span class="pre">scope_factory:</span> <span class="pre">~typing.Callable[[],</span> <span class="pre">~typing.MutableMapping]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.slabs.Slabs.from_dag" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_dag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">func_nodes:</span> <span class="pre">~collections.abc.Iterable[~meshed.base.FuncNode],</span> <span class="pre">*,</span> <span class="pre">handle_exceptions:</span> <span class="pre">~collections.abc.Mapping[type,</span> <span class="pre">~meshed.slabs.ExceptionHandler]</span> <span class="pre">|</span> <span class="pre">~collections.abc.Iterable[BaseException]</span> <span class="pre">|</span> <span class="pre">BaseException</span> <span class="pre">=</span> <span class="pre">(&lt;class</span> <span class="pre">'StopIteration'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'meshed.slabs.IteratorExit'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'KeyboardInterrupt'&gt;),</span> <span class="pre">scope_factory:</span> <span class="pre">~collections.abc.Callable[[],</span> <span class="pre">~collections.abc.MutableMapping]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.slabs.Slabs.from_dag" title="Link to this definition"></a></dt>
 <dd><p>Make a Slabs object from a list of functions and/or FuncNodes, DAG, …</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="meshed.slabs.Slabs.from_func_nodes">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_func_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">func_nodes:</span> <span class="pre">~typing.Iterable[~meshed.base.FuncNode],</span> <span class="pre">*,</span> <span class="pre">handle_exceptions:</span> <span class="pre">~typing.Mapping[type,</span> <span class="pre">~meshed.slabs.ExceptionHandler]</span> <span class="pre">|</span> <span class="pre">~typing.Iterable[BaseException]</span> <span class="pre">|</span> <span class="pre">BaseException</span> <span class="pre">=</span> <span class="pre">(&lt;class</span> <span class="pre">'StopIteration'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'meshed.slabs.IteratorExit'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'KeyboardInterrupt'&gt;),</span> <span class="pre">scope_factory:</span> <span class="pre">~typing.Callable[[],</span> <span class="pre">~typing.MutableMapping]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#Slabs.from_func_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs.from_func_nodes" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_func_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">func_nodes:</span> <span class="pre">~collections.abc.Iterable[~meshed.base.FuncNode],</span> <span class="pre">*,</span> <span class="pre">handle_exceptions:</span> <span class="pre">~collections.abc.Mapping[type,</span> <span class="pre">~meshed.slabs.ExceptionHandler]</span> <span class="pre">|</span> <span class="pre">~collections.abc.Iterable[BaseException]</span> <span class="pre">|</span> <span class="pre">BaseException</span> <span class="pre">=</span> <span class="pre">(&lt;class</span> <span class="pre">'StopIteration'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'meshed.slabs.IteratorExit'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'KeyboardInterrupt'&gt;),</span> <span class="pre">scope_factory:</span> <span class="pre">~collections.abc.Callable[[],</span> <span class="pre">~collections.abc.MutableMapping]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#Slabs.from_func_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs.from_func_nodes" title="Link to this definition"></a></dt>
 <dd><p>Make a Slabs object from a list of functions and/or FuncNodes, DAG, …</p>
 </dd></dl>
 
@@ -372,7 +372,7 @@ and <a class="reference external" href="https://pypi.org/project/py2store/">py2s
 
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.slabs.conditional_sentinel">
-<span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">conditional_sentinel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#conditional_sentinel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.conditional_sentinel" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">conditional_sentinel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentinel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/meshed/slabs.html#conditional_sentinel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.conditional_sentinel" title="Link to this definition"></a></dt>
 <dd><p>Decorator that returns sentinel based on a user-defined condition.</p>
 <p>The condition function should take the arguments and keyword arguments of the
 decorated function as input and return a boolean value. If the condition is met,
@@ -442,7 +442,7 @@ arguments of the decorated function as input and returns a boolean value.</p></l
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

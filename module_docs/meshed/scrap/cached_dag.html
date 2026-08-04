@@ -6,18 +6,18 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.164 documentation</title>
+  <title>meshed.scrap.cached_dag &mdash; meshed 0.1.165 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=20fd7f51"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=8485fb48"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -120,7 +120,7 @@
 <span id="meshed-scrap-cached-dag"></span><h1>meshed.scrap.cached_dag<a class="headerlink" href="#module-meshed.scrap.cached_dag" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.scrap.cached_dag.CachedDag">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">CachedDag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#CachedDag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.CachedDag" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">CachedDag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#CachedDag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.CachedDag" title="Link to this definition"></a></dt>
 <dd><p>Wraps a DAG, using it to compute any of it’s var nodes from it’s dependents,
 with the capability of caching intermediate var nodes for later reuse.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -136,7 +136,7 @@ with the capability of caching intermediate var nodes for later reuse.</p>
 <span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">mult</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">www</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">z</span> <span class="o">=</span> <span class="n">subtract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph_ascii</span><span class="p">())</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph_ascii</span><span class="p">())</span>
 </pre></div>
 </div>
 <div class="highlight-w notranslate"><div class="highlight"><pre><span></span>            │
@@ -276,7 +276,7 @@ But we need to protect the user from such effects!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.scrap.cached_dag.NoOverwritesDict">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">NoOverwritesDict</span></span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#NoOverwritesDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.NoOverwritesDict" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">NoOverwritesDict</span></span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#NoOverwritesDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.NoOverwritesDict" title="Link to this definition"></a></dt>
 <dd><p>A dict where you’re not allowed to write to a key that already has a value in it.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">NoOverwritesDict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
@@ -295,7 +295,7 @@ In fact, the write doesn’t even happen.</p>
 </pre></div>
 </div>
 <p>But if we try to write a different value…</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">22</span>  
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">22</span>
 <span class="gt">Traceback (most recent call last):</span>
 <span class="w">    </span><span class="o">...</span>
 <span class="gr">cached_dag.OverWritesNotAllowedError</span>: <span class="n">The b key already exists and you&#39;re not allowed to change its value</span>
@@ -305,13 +305,13 @@ In fact, the write doesn’t even happen.</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="meshed.scrap.cached_dag.NotAllowed">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">NotAllowed</span></span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#NotAllowed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.NotAllowed" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">NotAllowed</span></span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#NotAllowed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.NotAllowed" title="Link to this definition"></a></dt>
 <dd><p>To use to indicate that something is not allowed</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="meshed.scrap.cached_dag.OverWritesNotAllowedError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">OverWritesNotAllowedError</span></span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#OverWritesNotAllowedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.OverWritesNotAllowedError" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">OverWritesNotAllowedError</span></span><a class="reference internal" href="../../../_modules/meshed/scrap/cached_dag.html#OverWritesNotAllowedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.OverWritesNotAllowedError" title="Link to this definition"></a></dt>
 <dd><p>Error to raise when a writes to existing keys are not allowed</p>
 </dd></dl>
 
@@ -335,7 +335,7 @@ about “CachedDag.cache should be populated with inputs that it was called on�
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
