@@ -14,7 +14,6 @@ import i2
 
 from meshed.dag import DAG
 
-
 HOST = os.environ.get("HOST", "0.0.0.0")
 PORT = int(os.environ.get("PORT", 3030))
 API_URL = os.environ.get("API_URL", f"http://localhost:{PORT}")

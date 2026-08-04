@@ -5,7 +5,6 @@ from collections.abc import Callable, MutableMapping, Mapping
 from dataclasses import dataclass
 from i2 import ch_names
 
-
 Case = Any
 Cases = Mapping[Case, Callable]
 

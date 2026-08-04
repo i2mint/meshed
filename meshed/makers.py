@@ -165,7 +165,6 @@ from meshed.dag import DAG
 from meshed.base import FuncNode
 from meshed.util import mk_place_holder_func, ordered_set_operations
 
-
 T = TypeVar("T")
 
 # Some restrictions exist and need to be clarified or removed (i.e. more cases handled)
