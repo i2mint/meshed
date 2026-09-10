@@ -102,5 +102,7 @@ jobs:
           # GITHUB_TOKEN is special & automatically provided to your workflow run.
           github-token: ${{ secrets.GITHUB_TOKEN }}
           ignore: "tests/"
+          # WP5 pilot: opt into epythet v2 ahead of the fleet default (i2mint/epythet#16)
+          epythet-spec: "epythet>=0.2,<0.3"
 
 
