@@ -1,0 +1,42 @@
+# meshed
+
+> Link functions up into callable objects
+
+
+## Pages
+
+- [meshed](index.html.md): Object composition.
+- [API reference](api.html.md): | [`meshed`](_autosummary/meshed.html.md#module-meshed)   | `meshed` contains a set of tools that al...
+- [meshed](_autosummary/meshed.html.md): `meshed` contains a set of tools that allow the developer to provide a collection
+- [meshed.base](_autosummary/meshed.base.html.md): Base functionality of meshed
+- [meshed.caching](_autosummary/meshed.caching.html.md): Caching meshes
+- [meshed.components](_autosummary/meshed.components.html.md): Specialized components for meshed.
+- [meshed.composition](_autosummary/meshed.composition.html.md): Specific use of FuncNode and DAG
+- [meshed.dag](_autosummary/meshed.dag.html.md): Making DAGs
+- [meshed.examples](_autosummary/meshed.examples.html.md): Examples of using meshed.
+- [meshed.examples.online_marketing](_autosummary/meshed.examples.online_marketing.html.md): Online marketing funnel: impressions and clicks to sales and profit.
+- [meshed.examples.price_elasticity](_autosummary/meshed.examples.price_elasticity.html.md): price elasticity relates price to revenue, expense, and profit
+- [meshed.examples.vaccine_vs_no_vaccine](_autosummary/meshed.examples.vaccine_vs_no_vaccine.html.md): Simple model relating vaccination to death toll, involving exposure and infection rate
+- [meshed.ext](_autosummary/meshed.ext.html.md): | [`gk`](meshed.ext.gk.html.md#module-meshed.ext.gk)   | This module is meant to explore a different...
+- [meshed.ext.gk](_autosummary/meshed.ext.gk.html.md): This module is meant to explore a different representation of a computation graph
+- [meshed.itools](_autosummary/meshed.itools.html.md): Functions that provide iterators of g elements where g is any
+- [meshed.makers](_autosummary/meshed.makers.html.md): This module contains tools to make meshed objects in different ways.
+- [meshed.scrap](_autosummary/meshed.scrap.html.md): For scrap only
+- [meshed.scrap.annotations_to_meshes](_autosummary/meshed.scrap.annotations_to_meshes.html.md): Code related to work on the “From annotated functions to meshes” discussion:
+- [meshed.scrap.cached_dag](_autosummary/meshed.scrap.cached_dag.html.md): | `add`(a[, b])                                                      |                              ...
+- [meshed.scrap.collapse_and_expand](_autosummary/meshed.scrap.collapse_and_expand.html.md): Ideas on collapsing and expanding nodes
+- [meshed.scrap.conversion](_autosummary/meshed.scrap.conversion.html.md): Utils to convert graphs from one specification to another
+- [meshed.scrap.dask_graph_language](_autosummary/meshed.scrap.dask_graph_language.html.md): How to make dags from the dask specification
+- [meshed.scrap.gk_with_networkx](_autosummary/meshed.scrap.gk_with_networkx.html.md): seriously modified version of yahoo/graphkit
+- [meshed.scrap.gui_interaction](_autosummary/meshed.scrap.gui_interaction.html.md): This module contains some ideas around making a two-way interaction between meshed
+- [meshed.scrap.misc_utils](_autosummary/meshed.scrap.misc_utils.html.md): | `coparents_sets`(g, source)                                                                     | ...
+- [meshed.scrap.reactive_scope](_autosummary/meshed.scrap.reactive_scope.html.md): Ideas towards a reactive-programming interpretation of meshes.
+- [meshed.scrap.wrapping_dags](_autosummary/meshed.scrap.wrapping_dags.html.md): Wrapping dags
+- [meshed.slabs](_autosummary/meshed.slabs.html.md): Tools to generate slabs.
+- [meshed.tools](_autosummary/meshed.tools.html.md): Tools to work with meshed
+- [meshed.util](_autosummary/meshed.util.html.md): util functions
+- [meshed.viz](_autosummary/meshed.viz.html.md): Visualization utilities for the meshed package.
+
+---
+
+For more comprehensive documentation, see [meshed.md](meshed.md)

@@ -1,0 +1,6 @@
+meshed.scrap.gui\_interaction
+=============================
+
+.. automodule:: meshed.scrap.gui_interaction
+
+   

@@ -1,110 +1,703 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.slabs &mdash; meshed 0.1.165 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="alternate" type="text/markdown" href="slabs.html.md">
+<link rel="describedby" href="../../llms.txt" type="text/markdown">
+    <title>meshed.slabs &#8212; meshed</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/epythet.css?v=20ed5096" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fd10adb8"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/meshed/slabs';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.166" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
 
   
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8485fb48"></script>
-      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            meshed
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed.html">meshed</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/base.html">meshed.base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/components.html">meshed.components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/composition.html">meshed.composition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/dag.html">meshed.dag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples.html">meshed.examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext.html">meshed.ext</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/itools.html">meshed.itools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/makers.html">meshed.makers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/flow_control_script.html">meshed.scrap.flow_control_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gui_interaction.html">meshed.scrap.gui_interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tools.html">meshed.tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/util.html">meshed.util</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/viz.html">meshed.viz</a></li>
-</ul>
 
-        </div>
-      </div>
-    </nav>
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">meshed</a>
-      </nav>
+  
+    
+  
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">meshed.slabs</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">meshed</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API reference
+  </a>
+</li>
+
   </ul>
-  <hr/>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">meshed.slabs</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <h1>Source code for meshed.slabs</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Tools to generate slabs.</span>
+<span></span><span class="sd">"""Tools to generate slabs.</span>
 
 <span class="sd">A slab is a dict that holds data generated by a stream for a given interval of time.</span>
 
@@ -132,19 +725,19 @@
 
 <span class="sd">&gt;&gt;&gt; class Slabs:</span>
 <span class="sd">...     def _call_on_scope(self, scope):</span>
-<span class="sd">...         &#39;&#39;&#39;</span>
+<span class="sd">...         '''</span>
 <span class="sd">...         Calls the components 1 by 1, sourcing inputs and writing outputs in scope</span>
-<span class="sd">...         &#39;&#39;&#39;</span>
+<span class="sd">...         '''</span>
 <span class="sd">...</span>
 <span class="sd">...     def __next__(self):</span>
-<span class="sd">...         &#39;&#39;&#39;Get the next slab by calling _call_on_scope on an new empty scope.</span>
+<span class="sd">...         '''Get the next slab by calling _call_on_scope on an new empty scope.</span>
 <span class="sd">...         At least one of the components will have to be argument-less and provide</span>
 <span class="sd">...         some data for other components to get their inputs from, if any are needed.</span>
-<span class="sd">...         &#39;&#39;&#39;</span>
+<span class="sd">...         '''</span>
 <span class="sd">...         return self._call_on_scope(scope={})</span>
 <span class="sd">...</span>
 <span class="sd">...     def __iter__(self):</span>
-<span class="sd">...         &#39;&#39;&#39;Iterates over slabs until a handle exception is raised.&#39;&#39;&#39;</span>
+<span class="sd">...         '''Iterates over slabs until a handle exception is raised.'''</span>
 <span class="sd">...         # Simplified code:</span>
 <span class="sd">...         with self:  # enter all the contexts that need to be entered</span>
 <span class="sd">...             while True:  # loop until you encounter a handled exception</span>
@@ -154,7 +747,7 @@
 <span class="sd">...                     # use specific exceptions to signal that iteration should stop</span>
 <span class="sd">...                     break</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Union</span><span class="p">,</span>
@@ -168,38 +761,38 @@
 
 
 <div class="viewcode-block" id="ExceptionalException">
-<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.ExceptionalException">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.ExceptionalException">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExceptionalException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an exception was supposed to be handled, but no matching handler</span>
+<span class="w">    </span><span class="sd">"""Raised when an exception was supposed to be handled, but no matching handler</span>
 <span class="sd">    was found.</span>
 
 <span class="sd">    See the `_handle_exception` function, where it is raised.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">    """</span></div>
 
 
 
 <div class="viewcode-block" id="IteratorExit">
-<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.IteratorExit">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.IteratorExit">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">IteratorExit</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when an iterator should quit being iterated on, signaling this event</span>
+<span class="w">    </span><span class="sd">"""Raised when an iterator should quit being iterated on, signaling this event</span>
 <span class="sd">    any process that cares to catch the signal.</span>
 <span class="sd">    We chose to inherit directly from `BaseException` instead of `Exception`</span>
-<span class="sd">    for the same reason that `GeneratorExit` does: Because it&#39;s not technically</span>
+<span class="sd">    for the same reason that `GeneratorExit` does: Because it's not technically</span>
 <span class="sd">    an error.</span>
 
 <span class="sd">    See: https://docs.python.org/3/library/exceptions.html#GeneratorExit</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">    """</span></div>
 
 
 
 <span class="n">DFLT_INTERRUPT_EXCEPTIONS</span> <span class="o">=</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="n">IteratorExit</span><span class="p">,</span> <span class="ne">KeyboardInterrupt</span><span class="p">)</span>
 
-<span class="n">DoNotBreak</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;DoNotBreak&quot;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{})</span>
+<span class="n">DoNotBreak</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s2">"DoNotBreak"</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{})</span>
 <span class="n">do_not_break</span> <span class="o">=</span> <span class="n">DoNotBreak</span><span class="p">()</span>
 <span class="n">do_not_break</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;Sentinel that should be used to signal Slabs iteration not to break. &quot;</span>
-    <span class="s2">&quot;This sentinel should be returned by exception handlers if they want to tell &quot;</span>
-    <span class="s2">&quot;the iteration not to stop (in all other cases, the iteration will stop)&quot;</span>
+    <span class="s2">"Sentinel that should be used to signal Slabs iteration not to break. "</span>
+    <span class="s2">"This sentinel should be returned by exception handlers if they want to tell "</span>
+    <span class="s2">"the iteration not to stop (in all other cases, the iteration will stop)"</span>
 <span class="p">)</span>
 
 <span class="n">IgnoredOutput</span> <span class="o">=</span> <span class="n">Any</span>
@@ -207,12 +800,12 @@
 
 
 <div class="viewcode-block" id="ExceptionHandler">
-<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.ExceptionHandler">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.ExceptionHandler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExceptionHandler</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;An exception handler is an argument-less callable that is called when a handled</span>
+<span class="w">    </span><span class="sd">"""An exception handler is an argument-less callable that is called when a handled</span>
 <span class="sd">    exception occurs during iteration. Most often, the handler does nothing,</span>
 <span class="sd">    but could be used whose output will be ignored, unless it is do_not_break,</span>
-<span class="sd">    which will signal that the iteration should continue.&quot;&quot;&quot;</span>
+<span class="sd">    which will signal that the iteration should continue."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExceptionHandlerOutput</span><span class="p">:</span>
         <span class="k">pass</span></div>
@@ -247,7 +840,7 @@
     <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMapSpec</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HandledExceptionsMap</span><span class="p">:</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handle_exceptions</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">):</span>
-        <span class="c1"># Only one? Ensure there&#39;s a tuple of exceptions:</span>
+        <span class="c1"># Only one? Ensure there's a tuple of exceptions:</span>
         <span class="n">handle_exceptions</span> <span class="o">=</span> <span class="p">(</span><span class="n">handle_exceptions</span><span class="p">,)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handle_exceptions</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
         <span class="n">handle_exceptions</span> <span class="o">=</span> <span class="p">{</span><span class="n">exc_type</span><span class="p">:</span> <span class="n">do_nothing</span> <span class="k">for</span> <span class="n">exc_type</span> <span class="ow">in</span> <span class="n">handle_exceptions</span><span class="p">}</span>
@@ -257,9 +850,9 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_handle_exception</span><span class="p">(</span>
     <span class="n">instance</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">:</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMap</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExceptionHandlerOutput</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Looks for an exception type matching exc_val and calls the corresponding</span>
+<span class="w">    </span><span class="sd">"""Looks for an exception type matching exc_val and calls the corresponding</span>
 <span class="sd">    handler with</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">inputs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">exc_val</span><span class="o">=</span><span class="n">exc_val</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc_val</span><span class="p">)</span> <span class="ow">in</span> <span class="n">handle_exceptions</span><span class="p">:</span>  <span class="c1"># try precise matching first</span>
         <span class="n">exception_handler</span> <span class="o">=</span> <span class="n">handle_exceptions</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">exc_val</span><span class="p">)]</span>
@@ -271,14 +864,14 @@
                 <span class="k">return</span> <span class="n">_call_from_dict</span><span class="p">(</span>
                     <span class="n">inputs</span><span class="p">,</span> <span class="n">exception_handler</span><span class="p">,</span> <span class="n">Sig</span><span class="p">(</span><span class="n">exception_handler</span><span class="p">)</span>
                 <span class="p">)</span>
-    <span class="c1"># You never should get this far, but if you do, there&#39;s a problem, let&#39;s scream it:</span>
+    <span class="c1"># You never should get this far, but if you do, there's a problem, let's scream it:</span>
     <span class="k">raise</span> <span class="n">ExceptionalException</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;I couldn&#39;t find that exception in my handlers: </span><span class="si">{</span><span class="n">exc_val</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"I couldn't find that exception in my handlers: </span><span class="si">{</span><span class="n">exc_val</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_call_from_dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="n">Sig</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A i2.call_forgivingly optimized for our purpose</span>
+<span class="w">    </span><span class="sd">"""A i2.call_forgivingly optimized for our purpose</span>
 
 <span class="sd">    The sig argument needs to be the Sig(func) to work correctly.</span>
 
@@ -287,16 +880,16 @@
 <span class="sd">    - using a scope dict as both the source of `Slabs` components, and as a place</span>
 <span class="sd">    to temporarily store the outputs of these components.</span>
 
-<span class="sd">    - exception handlers: We&#39;d like the exception handlers to be easy to express.</span>
+<span class="sd">    - exception handlers: We'd like the exception handlers to be easy to express.</span>
 <span class="sd">    Maybe you need the object raising the exception to handle it,</span>
 <span class="sd">    maybe you just want to log the event.</span>
 <span class="sd">    In the first case, you the handler needs the said object to be passed to it,</span>
-<span class="sd">    in the second, we don&#39;t need any arguments at all.</span>
-<span class="sd">    With _call_from_dict, we don&#39;t have to choose, we just have to impose that</span>
+<span class="sd">    in the second, we don't need any arguments at all.</span>
+<span class="sd">    With _call_from_dict, we don't have to choose, we just have to impose that</span>
 <span class="sd">    the handler use specific keywords (namely `exc_val` and/or `instance`)</span>
 <span class="sd">    when there are inputs.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">mk_args_and_kwargs</span><span class="p">(</span>
         <span class="n">kwargs</span><span class="p">,</span>
         <span class="n">allow_excess</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -308,7 +901,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_conditional_pluralization</span><span class="p">(</span><span class="n">n_items</span><span class="p">,</span> <span class="n">singular_msg</span><span class="p">,</span> <span class="n">plural_msg</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;To route to the right message (or template) according to ``n_items``&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""To route to the right message (or template) according to ``n_items``"""</span>
     <span class="k">if</span> <span class="n">n_items</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">singular_msg</span>
     <span class="k">else</span><span class="p">:</span>
@@ -318,25 +911,25 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_validate_components</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="n">components</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
         <span class="n">not_callable</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
-        <span class="n">not_callable_keys</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span>
+        <span class="n">not_callable_keys</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span>
         <span class="c1"># TODO: Analyze values of components further and enhance error message with</span>
-        <span class="c1">#  further suggestions. For example, if there&#39;s an iterator component c,</span>
+        <span class="c1">#  further suggestions. For example, if there's an iterator component c,</span>
         <span class="c1">#  suggest that perhaps ``c.__next__`` was intended?</span>
         <span class="c1">#  These component-based suggestions should be placed as a default of an</span>
         <span class="c1">#  argument of _validate_components so that it can be parametrized.</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">_conditional_pluralization</span><span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">not_callable</span><span class="p">),</span>
-            <span class="sa">f</span><span class="s2">&quot;This component is not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s2">&quot;These components are not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">"This component is not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">"These components are not callable: </span><span class="si">{</span><span class="n">not_callable_keys</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
 
 <span class="c1"># TODO: Postelize (or add tooling for) the components specification and add validation.</span>
 <div class="viewcode-block" id="Slabs">
-<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.Slabs">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Slabs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object to source and manipulate multiple streams.</span>
+<span class="w">    </span><span class="sd">"""Object to source and manipulate multiple streams.</span>
 
 <span class="sd">    A slab is a collection of items of a same interval of time.</span>
 <span class="sd">    We represent a slab using a `dict` or mapping.</span>
@@ -346,12 +939,12 @@
 <span class="sd">    For example, say and edge device had a microphone, light, and movement sensor.</span>
 <span class="sd">    An aggregate reading of these sensors could give you something like:</span>
 
-<span class="sd">    &gt;&gt;&gt; slab = {&#39;audio&#39;: [1, 2, 4], &#39;light&#39;: 126, &#39;movement&#39;: None}</span>
+<span class="sd">    &gt;&gt;&gt; slab = {'audio': [1, 2, 4], 'light': 126, 'movement': None}</span>
 
-<span class="sd">    `movement` is `None` because the sensor is off. If it were on, we&#39;d have True or</span>
+<span class="sd">    `movement` is `None` because the sensor is off. If it were on, we'd have True or</span>
 <span class="sd">    False as values.</span>
 
-<span class="sd">    From this information, you&#39;d like to compute a `turn_mov_on` value based on the</span>
+<span class="sd">    From this information, you'd like to compute a `turn_mov_on` value based on the</span>
 <span class="sd">    formula.</span>
 
 <span class="sd">    &gt;&gt;&gt; from statistics import stdev</span>
@@ -361,23 +954,23 @@
 <span class="sd">    The produce of the volume and the lumens gives you 192, so you now have...</span>
 
 <span class="sd">    &gt;&gt;&gt; slab = {</span>
-<span class="sd">    ...     &#39;audio&#39;: [1, 2, 4],</span>
-<span class="sd">    ...     &#39;light&#39;: 126,</span>
-<span class="sd">    ...     &#39;should_turn_movement_sensor_on&#39;: False,</span>
-<span class="sd">    ...     &#39;movement&#39;: None</span>
+<span class="sd">    ...     'audio': [1, 2, 4],</span>
+<span class="sd">    ...     'light': 126,</span>
+<span class="sd">    ...     'should_turn_movement_sensor_on': False,</span>
+<span class="sd">    ...     'movement': None</span>
 <span class="sd">    ... }</span>
 
 <span class="sd">    The next slab that comes in is</span>
 
-<span class="sd">    &gt;&gt;&gt; slab = {&#39;audio&#39;: [-96, 89, -92], &#39;light&#39;: 501, &#39;movement&#39;: None}</span>
+<span class="sd">    &gt;&gt;&gt; slab = {'audio': [-96, 89, -92], 'light': 501, 'movement': None}</span>
 
 <span class="sd">    which puts us over the threshold so</span>
 
 <span class="sd">    &gt;&gt;&gt; slab = {</span>
-<span class="sd">    ...     &#39;audio&#39;: [-96, 89, -92],</span>
-<span class="sd">    ...     &#39;light&#39;: 501,</span>
-<span class="sd">    ...     &#39;should_turn_movement_sensor_on&#39;: True,</span>
-<span class="sd">    ...     &#39;movement&#39;: None</span>
+<span class="sd">    ...     'audio': [-96, 89, -92],</span>
+<span class="sd">    ...     'light': 501,</span>
+<span class="sd">    ...     'should_turn_movement_sensor_on': True,</span>
+<span class="sd">    ...     'movement': None</span>
 <span class="sd">    ... }</span>
 
 <span class="sd">    and the movement sensor is turned on, the movement is detected, a `human_presence`</span>
@@ -414,38 +1007,38 @@
 <span class="sd">    ...         should_turn_movement_sensor_on = lambda audio, light: vol(audio) * light &gt; 50000,</span>
 <span class="sd">    ...         human_presence_score = lambda audio, light, movement: movement and sum([vol(audio), light]),</span>
 <span class="sd">    ...         should_notify = lambda human_presence_score: human_presence_score and human_presence_score &gt; 700,</span>
-<span class="sd">    ...         notify = lambda should_notify: print(&#39;someone is there&#39;) if should_notify else None</span>
+<span class="sd">    ...         notify = lambda should_notify: print('someone is there') if should_notify else None</span>
 <span class="sd">    ...     )</span>
 <span class="sd">    ...</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; si = make_a_slabs_iter()</span>
 <span class="sd">    &gt;&gt;&gt; next(si)  # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    {&#39;audio&#39;: [1, 2, 3],</span>
-<span class="sd">     &#39;light&#39;: 126,</span>
-<span class="sd">     &#39;movement&#39;: None,</span>
-<span class="sd">     &#39;should_turn_movement_sensor_on&#39;: False,</span>
-<span class="sd">     &#39;human_presence_score&#39;: None,</span>
-<span class="sd">     &#39;should_notify&#39;: None,</span>
-<span class="sd">     &#39;notify&#39;: None}</span>
+<span class="sd">    {'audio': [1, 2, 3],</span>
+<span class="sd">     'light': 126,</span>
+<span class="sd">     'movement': None,</span>
+<span class="sd">     'should_turn_movement_sensor_on': False,</span>
+<span class="sd">     'human_presence_score': None,</span>
+<span class="sd">     'should_notify': None,</span>
+<span class="sd">     'notify': None}</span>
 <span class="sd">    &gt;&gt;&gt; next(si)  # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    {&#39;audio&#39;: [-96, 87, -92],</span>
-<span class="sd">     &#39;light&#39;: 501,</span>
-<span class="sd">     &#39;movement&#39;: None,</span>
-<span class="sd">     &#39;should_turn_movement_sensor_on&#39;: True,</span>
-<span class="sd">     &#39;human_presence_score&#39;: None,</span>
-<span class="sd">     &#39;should_notify&#39;: None,</span>
-<span class="sd">     &#39;notify&#39;: None}</span>
+<span class="sd">    {'audio': [-96, 87, -92],</span>
+<span class="sd">     'light': 501,</span>
+<span class="sd">     'movement': None,</span>
+<span class="sd">     'should_turn_movement_sensor_on': True,</span>
+<span class="sd">     'human_presence_score': None,</span>
+<span class="sd">     'should_notify': None,</span>
+<span class="sd">     'notify': None}</span>
 <span class="sd">    &gt;&gt;&gt; next(si)  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">    someone is there</span>
-<span class="sd">    {&#39;audio&#39;: [320, -96, 99],</span>
-<span class="sd">     &#39;light&#39;: 523,</span>
-<span class="sd">     &#39;movement&#39;: True,</span>
-<span class="sd">     &#39;should_turn_movement_sensor_on&#39;: True,</span>
-<span class="sd">     &#39;human_presence_score&#39;: 731.1353726143957,</span>
-<span class="sd">     &#39;should_notify&#39;: True,</span>
-<span class="sd">     &#39;notify&#39;: None}</span>
+<span class="sd">    {'audio': [320, -96, 99],</span>
+<span class="sd">     'light': 523,</span>
+<span class="sd">     'movement': True,</span>
+<span class="sd">     'should_turn_movement_sensor_on': True,</span>
+<span class="sd">     'human_presence_score': 731.1353726143957,</span>
+<span class="sd">     'should_notify': True,</span>
+<span class="sd">     'notify': None}</span>
 
-<span class="sd">    If you ask for the next slab, you&#39;ll get a `StopIteration` (raised by the mocked</span>
+<span class="sd">    If you ask for the next slab, you'll get a `StopIteration` (raised by the mocked</span>
 <span class="sd">    sources since they reached the end of their iterators).</span>
 
 <span class="sd">    &gt;&gt;&gt; next(si)  # doctest: +NORMALIZE_WHITESPACE</span>
@@ -454,7 +1047,7 @@
 <span class="sd">    StopIteration</span>
 
 <span class="sd">    That said, if you iterate through a `SlabsIter` that handles the `StopIteration`</span>
-<span class="sd">    exception (it does by default), you&#39;ll reach the end of you iteration gracefully.</span>
+<span class="sd">    exception (it does by default), you'll reach the end of you iteration gracefully.</span>
 
 <span class="sd">    &gt;&gt;&gt; si = make_a_slabs_iter()</span>
 <span class="sd">    &gt;&gt;&gt; for slab in si:</span>
@@ -466,15 +1059,15 @@
 <span class="sd">    &gt;&gt;&gt; len(slabs)</span>
 <span class="sd">    3</span>
 <span class="sd">    &gt;&gt;&gt; slabs[-1]  # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    {&#39;audio&#39;: [320, -96, 99],</span>
-<span class="sd">     &#39;light&#39;: 523,</span>
-<span class="sd">     &#39;movement&#39;: True,</span>
-<span class="sd">     &#39;should_turn_movement_sensor_on&#39;: True,</span>
-<span class="sd">     &#39;human_presence_score&#39;: 731.1353726143957,</span>
-<span class="sd">     &#39;should_notify&#39;: True,</span>
-<span class="sd">     &#39;notify&#39;: None}</span>
+<span class="sd">    {'audio': [320, -96, 99],</span>
+<span class="sd">     'light': 523,</span>
+<span class="sd">     'movement': True,</span>
+<span class="sd">     'should_turn_movement_sensor_on': True,</span>
+<span class="sd">     'human_presence_score': 731.1353726143957,</span>
+<span class="sd">     'should_notify': True,</span>
+<span class="sd">     'notify': None}</span>
 
-<span class="sd">    Note that ``Slabs`` uses a &quot;scope&quot; to store the intermediate results of the</span>
+<span class="sd">    Note that ``Slabs`` uses a "scope" to store the intermediate results of the</span>
 <span class="sd">    computation. This scope is a `dict` by default, but you can pass any</span>
 <span class="sd">    ``MutableMapping`` to the ``scope_factory`` argument. This means that you can use</span>
 <span class="sd">    other means to store intermediate results simply by wrapping them in a</span>
@@ -484,7 +1077,7 @@
 <span class="sd">    To help you with this, check out the `dol &lt;https://pypi.org/project/dol/&gt;`_</span>
 <span class="sd">    and `py2store &lt;https://pypi.org/project/py2store/&gt;`_ libraries.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">_output_of_context_enter</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -505,25 +1098,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">ContextFanout</span><span class="p">(</span><span class="o">**</span><span class="n">components</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the components 1 by 1, sourcing inputs and writing outputs in scope&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Calls the components 1 by 1, sourcing inputs and writing outputs in scope"""</span>
         <span class="c1"># for each component</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="c1"># call the component using scope to source any arguments it needs</span>
-            <span class="c1"># and write the result in scope, under the component&#39;s name.</span>
+            <span class="c1"># and write the result in scope, under the component's name.</span>
             <span class="n">scope</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_call_from_dict</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigs</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">scope</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the next slab by calling _call_on_scope on an new empty scope.</span>
+<span class="w">        </span><span class="sd">"""Get the next slab by calling _call_on_scope on an new empty scope.</span>
 <span class="sd">        At least one of the components will have to be argument-less and provide</span>
 <span class="sd">        some data for other components to get their inputs from, if any are needed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scope_factory</span><span class="p">())</span>
 
     <span class="c1"># TODO: Extend the flow control capabilities of execption handling</span>
     <span class="c1">#   (see https://github.com/i2mint/meshed/discussions/49)</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterates over slabs until a handle exception is raised.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Iterates over slabs until a handle exception is raised."""</span>
         <span class="k">with</span> <span class="bp">self</span><span class="p">:</span>  <span class="c1"># enter all the contexts that need to be entered</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>  <span class="c1"># loop until you encounter a handled exception</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -553,7 +1146,7 @@
     <span class="fm">__call__</span> <span class="o">=</span> <span class="n">run</span>
 
 <div class="viewcode-block" id="Slabs.from_func_nodes">
-<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs.from_func_nodes">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.Slabs.from_func_nodes">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_func_nodes</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
@@ -562,17 +1155,17 @@
         <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">HandledExceptionsMapSpec</span> <span class="o">=</span> <span class="n">DFLT_INTERRUPT_EXCEPTIONS</span><span class="p">,</span>
         <span class="n">scope_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">MutableMapping</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a Slabs object from a list of functions and/or FuncNodes, DAG, ...&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="s2">&quot;func_nodes&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Make a Slabs object from a list of functions and/or FuncNodes, DAG, ..."""</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="s2">"func_nodes"</span><span class="p">):</span>
             <span class="n">func_nodes</span> <span class="o">=</span> <span class="n">func_nodes</span><span class="o">.</span><span class="n">func_nodes</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ensure_func_nodes</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">))</span>
         <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
             <span class="nb">list</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">func_nodes</span>
         <span class="p">),</span> <span class="p">(</span>
-            <span class="s2">&quot;You can&#39;t use `from_func_nodes` (yet) your binds are not trivial. &quot;</span>
-            <span class="s2">&quot;That is, if any of your functions&#39; arguments have different names than &quot;</span>
-            <span class="s2">&quot;the var nodes they&#39;re bound to&quot;</span>
+            <span class="s2">"You can't use `from_func_nodes` (yet) your binds are not trivial. "</span>
+            <span class="s2">"That is, if any of your functions' arguments have different names than "</span>
+            <span class="s2">"the var nodes they're bound to"</span>
         <span class="p">)</span>
         <span class="c1"># TODO: Make it work for non-trivial binds by using i2.wrapper</span>
         <span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">n</span><span class="o">.</span><span class="n">func</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">}</span>
@@ -594,11 +1187,11 @@
 
     <span class="c1"># TODO: Add @wraps(dot_digraph_body) to have DAG.dot_digraph signature</span>
 <div class="viewcode-block" id="Slabs.dot_digraph">
-<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.Slabs.dot_digraph">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.Slabs.dot_digraph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Returns a dot_digraph of the DAG of the SlabsIter (see ``DAG.dot_digraph``)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">dag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dag</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span></div>
 </div>
@@ -615,15 +1208,15 @@
 
 
 <div class="viewcode-block" id="conditional_sentinel">
-<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.conditional_sentinel">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.conditional_sentinel">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">conditional_sentinel</span><span class="p">(</span>
-    <span class="n">condition_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span> <span class="n">sentinel</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">condition_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span> <span class="nb">sentinel</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator that returns sentinel based on a user-defined condition.</span>
+<span class="w">    </span><span class="sd">"""Decorator that returns sentinel based on a user-defined condition.</span>
 
 <span class="sd">    The condition function should take the arguments and keyword arguments of the</span>
 <span class="sd">    decorated function as input and return a boolean value. If the condition is met,</span>
-<span class="sd">    the sentinel value is returned instead of the decorated function&#39;s return value.</span>
+<span class="sd">    the sentinel value is returned instead of the decorated function's return value.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        condition_func (Callable): A function that takes the arguments and keyword</span>
@@ -632,7 +1225,7 @@
 
 <span class="sd">    &gt;&gt;&gt; division_by_zero = lambda args, kwargs: (</span>
 <span class="sd">    ...     (len(args) &gt;= 2 and args[1] == 0) or</span>
-<span class="sd">    ...     kwargs.get(&#39;y&#39;) == 0</span>
+<span class="sd">    ...     kwargs.get('y') == 0</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; @conditional_sentinel(division_by_zero, sentinel=0)</span>
@@ -655,16 +1248,16 @@
 <span class="sd">    3</span>
 <span class="sd">    &gt;&gt;&gt; assert foo(None, None) is None</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inner decorator that takes the function and returns a wrapper.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Inner decorator that takes the function and returns a wrapper."""</span>
 
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Wrapper function that checks the condition before calling func.&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">"""Wrapper function that checks the condition before calling func."""</span>
             <span class="k">if</span> <span class="n">condition_func</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">sentinel</span>
+                <span class="k">return</span> <span class="nb">sentinel</span>
             <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">wrapper</span>
@@ -674,9 +1267,9 @@
 
 
 <div class="viewcode-block" id="all_arguments_are_none">
-<a class="viewcode-back" href="../../module_docs/meshed/slabs.html#meshed.slabs.all_arguments_are_none">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.all_arguments_are_none">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">all_arguments_are_none</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if all arguments are None.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return True if all arguments are None."""</span>
     <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span>
         <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
     <span class="p">)</span></div>
@@ -684,10 +1277,10 @@
 
 
 <span class="n">output_none_if_none_arguments</span> <span class="o">=</span> <span class="n">conditional_sentinel</span><span class="p">(</span>
-    <span class="n">all_arguments_are_none</span><span class="p">,</span> <span class="n">sentinel</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">all_arguments_are_none</span><span class="p">,</span> <span class="nb">sentinel</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">)</span>
 
-<span class="n">output_none_if_none_arguments</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">output_none_if_none_arguments</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">Decorator that returns None if all arguments are None.</span>
 
 <span class="s2">&gt;&gt;&gt; @output_none_if_none_arguments</span>
@@ -697,34 +1290,56 @@
 <span class="s2">&gt;&gt;&gt; foo(1, 2)</span>
 <span class="s2">3</span>
 <span class="s2">&gt;&gt;&gt; assert foo(None, None) is None</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 </pre></div>
 
-           </div>
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p></p>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
   </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
 
-</footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+  </footer>
+  </body>
 </html>

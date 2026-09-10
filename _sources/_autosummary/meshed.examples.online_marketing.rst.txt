@@ -1,0 +1,16 @@
+meshed.examples.online\_marketing
+=================================
+
+.. automodule:: meshed.examples.online_marketing
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      clicks
+      cost
+      profit
+      revenue
+      sales
+   

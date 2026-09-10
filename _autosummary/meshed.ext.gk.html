@@ -1,0 +1,901 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="meshed.ext.gk.html.md">
+<link rel="describedby" href="../llms.txt" type="text/markdown">
+    <title>meshed.ext.gk &#8212; meshed</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/epythet.css?v=20ed5096" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fd10adb8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/meshed.ext.gk';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="meshed.itools" href="meshed.itools.html" />
+    <link rel="prev" title="meshed.ext" href="meshed.ext.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.166" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">meshed</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="meshed.html">meshed</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="meshed.base.html">meshed.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.caching.html">meshed.caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.components.html">meshed.components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.composition.html">meshed.composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.dag.html">meshed.dag</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="meshed.examples.html">meshed.examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="meshed.examples.online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.examples.price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.examples.vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="meshed.ext.html">meshed.ext</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">meshed.ext.gk</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.itools.html">meshed.itools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.makers.html">meshed.makers</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="meshed.scrap.html">meshed.scrap</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.conversion.html">meshed.scrap.conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.gui_interaction.html">meshed.scrap.gui_interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.misc_utils.html">meshed.scrap.misc_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.reactive_scope.html">meshed.scrap.reactive_scope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.slabs.html">meshed.slabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.tools.html">meshed.tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.util.html">meshed.util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.viz.html">meshed.viz</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="meshed.html" class="nav-link">meshed</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="meshed.ext.html" class="nav-link">meshed.ext</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">meshed.ext.gk</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-meshed.ext.gk">
+<span id="meshed-ext-gk"></span><h1>meshed.ext.gk<a class="headerlink" href="#module-meshed.ext.gk" title="Link to this heading">#</a></h1>
+<p>This module is meant to explore a different representation of a computation graph
+and a different way of executing it.
+It is based on Yahoo’s graphkit library. The library hasn’t been maintained since 2018,
+so vendored and modified here).
+One of the main differences is that we got rid of the networkx dependency,
+which was used to represent the computation graph.
+Instead, this module uses meshed’s itools library to represent the computation graph.</p>
+<p class="rubric">Yahoo’s graphkit library is under Apache License 2.0:</p>
+<p class="rubric">Copyright 2016, Yahoo Inc.</p>
+<p class="rubric">Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This module is only meant to an exploratory “extension”. It is not planned to be maintained.</p>
+</div>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.ext.gk.get_data_node" title="meshed.ext.gk.get_data_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_data_node</span></code></a>(name, graph)</p></td>
+<td><p>Gets a data node from a graph using its name</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.ext.gk.ready_to_delete_data_node" title="meshed.ext.gk.ready_to_delete_data_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ready_to_delete_data_node</span></code></a>(name, ...)</p></td>
+<td><p>Determines if a DataPlaceholderNode is ready to be deleted from the cache.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.ext.gk.ready_to_schedule_operation" title="meshed.ext.gk.ready_to_schedule_operation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ready_to_schedule_operation</span></code></a>(op, ...)</p></td>
+<td><p>Determines if a Operation is ready to be scheduled for execution based on what has already been executed.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Classes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.ext.gk.Data" title="meshed.ext.gk.Data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Data</span></code></a>(**kwargs)</p></td>
+<td><p>This wraps any data that is consumed or produced by a Operation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.ext.gk.DataPlaceholderNode" title="meshed.ext.gk.DataPlaceholderNode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataPlaceholderNode</span></code></a></p></td>
+<td><p>A node for the Network graph that describes the name of a Data instance produced or required by a layer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.ext.gk.DeleteInstruction" title="meshed.ext.gk.DeleteInstruction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeleteInstruction</span></code></a></p></td>
+<td><p>An instruction for the compiled list of evaluation steps to free or delete a Data instance from the Network's cache after it is no longer needed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.ext.gk.FunctionalOperation" title="meshed.ext.gk.FunctionalOperation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FunctionalOperation</span></code></a>(**kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.ext.gk.Network" title="meshed.ext.gk.Network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Network</span></code></a>(**kwargs)</p></td>
+<td><p>This is the main network implementation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.ext.gk.NetworkOperation" title="meshed.ext.gk.NetworkOperation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetworkOperation</span></code></a>(**kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.ext.gk.Operation" title="meshed.ext.gk.Operation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Operation</span></code></a>([name, needs, provides, params])</p></td>
+<td><p>This is an abstract class representing a data transformation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.ext.gk.compose" title="meshed.ext.gk.compose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compose</span></code></a>([name, merge])</p></td>
+<td><p>This is a simple class that's used to compose <code class="docutils literal notranslate"><span class="pre">operation</span></code> instances into a computation graph.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.ext.gk.operation" title="meshed.ext.gk.operation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">operation</span></code></a>([fn])</p></td>
+<td><p>This object represents an operation in a computation graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.ext.gk.optional" title="meshed.ext.gk.optional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optional</span></code></a></p></td>
+<td><p>Input values in <code class="docutils literal notranslate"><span class="pre">needs</span></code> may be designated as optional using this modifier.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.Data">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Data" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This wraps any data that is consumed or produced
+by a Operation. This data should also know how to serialize
+itself appropriately.
+This class an “abstract” class that should be extended by
+any class working with data in the HiC framework.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.DataPlaceholderNode">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">DataPlaceholderNode</span></span><a class="reference internal" href="../_modules/meshed/ext/gk.html#DataPlaceholderNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.DataPlaceholderNode" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<p>A node for the Network graph that describes the name of a Data instance
+produced or required by a layer.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.DeleteInstruction">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">DeleteInstruction</span></span><a class="reference internal" href="../_modules/meshed/ext/gk.html#DeleteInstruction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.DeleteInstruction" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<p>An instruction for the compiled list of evaluation steps to free or delete
+a Data instance from the Network’s cache after it is no longer needed.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.FunctionalOperation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">FunctionalOperation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#FunctionalOperation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.FunctionalOperation" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#meshed.ext.gk.Operation" title="meshed.ext.gk.Operation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.Network">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This is the main network implementation. The class contains all of the
+code necessary to weave together operations into a directed-acyclic-graph (DAG)
+and pass data through.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk.Network.add_op">
+<span class="sig-name descname"><span class="pre">add_op</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Network.add_op"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.add_op" title="Link to this definition">#</a></dt>
+<dd><p>Adds the given operation and its data requirements to the network graph
+based on the name of the operation, the names of the operation’s needs, and
+the names of the data it provides.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>operation</strong> (<a class="reference internal" href="#meshed.ext.gk.Operation" title="meshed.ext.gk.Operation"><em>Operation</em></a>) – Operation object to add.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk.Network.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Network.compile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.compile" title="Link to this definition">#</a></dt>
+<dd><p>Create a set of steps for evaluating layers
+and freeing memory as necessary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk.Network.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Network.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.compute" title="Link to this definition">#</a></dt>
+<dd><p>Run the graph. Any inputs to the network must be passed in by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – The names of the data node you’d like to have returned
+once all necessary computations are complete.
+If you set this variable to <code class="docutils literal notranslate"><span class="pre">None</span></code>, all
+data nodes will be kept and returned at runtime.</p></li>
+<li><p><strong>named_inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dict of key/value pairs where the keys
+represent the data nodes you want to populate,
+and the values are the concrete values you
+want to set for the data node.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary of output data objects, keyed by name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk.Network.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Network.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.plot" title="Link to this definition">#</a></dt>
+<dd><p>Plot the graph.</p>
+<p>params:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Write the output to a png, pdf, or graphviz dot file. The extension
+controls the output format.</p></li>
+<li><p><strong>show</strong> (<em>boolean</em>) – If this is set to True, use matplotlib to show the graph diagram
+(Default: False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the pydot graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk.Network.show_layers">
+<span class="sig-name descname"><span class="pre">show_layers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Network.show_layers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network.show_layers" title="Link to this definition">#</a></dt>
+<dd><p>Shows info (name, needs, and provides) about all layers in this network.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.NetworkOperation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">NetworkOperation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#NetworkOperation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.NetworkOperation" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#meshed.ext.gk.Operation" title="meshed.ext.gk.Operation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk.NetworkOperation.set_execution_method">
+<span class="sig-name descname"><span class="pre">set_execution_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#NetworkOperation.set_execution_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.NetworkOperation.set_execution_method" title="Link to this definition">#</a></dt>
+<dd><p>Determine how the network will be executed.
+:type method: 
+:param method: str</p>
+<blockquote>
+<div><p>If “parallel”, execute graph operations concurrently
+using a threadpool.</p>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.Operation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provides</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Operation" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This is an abstract class representing a data transformation. To use this,
+please inherit from this class and customize the <code class="docutils literal notranslate"><span class="pre">.compute</span></code> method to your
+specific application.</p>
+<p>Names may be given to this layer and its inputs and outputs. This is
+important when connecting layers and data in a Network object, as the
+names are used to construct the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The name the operation (e.g. conv1, conv2, etc..)</p></li>
+<li><p><strong>needs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span>) – Names of input data objects this layer requires.</p></li>
+<li><p><strong>provides</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span>) – Names of output data objects this provides.</p></li>
+<li><p><strong>params</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – <p>A dict of key/value pairs representing parameters
+associated with your operation. These values will be
+accessible using the <code class="docutils literal notranslate"><span class="pre">.params</span></code> attribute of your object.</p>
+<dl class="simple">
+<dt>NOTE:</dt><dd><p>It’s important that any values stored in this
+argument must be pickelable.</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.ext.gk.Operation.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Operation.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Operation.compute" title="Link to this definition">#</a></dt>
+<dd><p>This method must be implemented to perform this layer’s feed-forward
+computation on a given set of inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of <a class="reference internal" href="#meshed.ext.gk.Data" title="meshed.ext.gk.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code></a> objects on which to run the layer’s
+feed-forward computation.</p>
+</dd>
+<dt class="field-even">Returns list<span class="colon">:</span></dt>
+<dd class="field-even"><p>Should return a list of <a class="reference internal" href="#meshed.ext.gk.Data" title="meshed.ext.gk.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code></a> objects representing
+the results of running the feed-forward computation on
+<code class="docutils literal notranslate"><span class="pre">inputs</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.compose">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#compose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.compose" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This is a simple class that’s used to compose <code class="docutils literal notranslate"><span class="pre">operation</span></code> instances into
+a computation graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A name for the graph being composed by this object.</p></li>
+<li><p><strong>merge</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, this compose object will attempt to merge together
+<code class="docutils literal notranslate"><span class="pre">operation</span></code> instances that represent entire computation graphs.
+Specifically, if one of the <code class="docutils literal notranslate"><span class="pre">operation</span></code> instances passed to this
+<code class="docutils literal notranslate"><span class="pre">compose</span></code> object is itself a graph operation created by an
+earlier use of <code class="docutils literal notranslate"><span class="pre">compose</span></code> the sub-operations in that graph are
+compared against other operations passed to this <code class="docutils literal notranslate"><span class="pre">compose</span></code>
+instance (as well as the sub-operations of other graphs passed to
+this <code class="docutils literal notranslate"><span class="pre">compose</span></code> instance).  If any two operations are the same
+(based on name), then that operation is computed only once, instead
+of multiple times (one for each time the operation appears).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.ext.gk.get_data_node">
+<span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">get_data_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#get_data_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.get_data_node" title="Link to this definition">#</a></dt>
+<dd><p>Gets a data node from a graph using its name</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.operation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.operation" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#meshed.ext.gk.Operation" title="meshed.ext.gk.Operation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code></a></p>
+<p>This object represents an operation in a computation graph.  Its
+relationship to other operations in the graph is specified via its
+<code class="docutils literal notranslate"><span class="pre">needs</span></code> and <code class="docutils literal notranslate"><span class="pre">provides</span></code> arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fn</strong> (<em>function</em>) – The function used by this operation.  This does not need to be
+specified when the operation object is instantiated and can instead
+be set via <code class="docutils literal notranslate"><span class="pre">__call__</span></code> later.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The name of the operation in the computation graph.</p></li>
+<li><p><strong>needs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Names of input data objects this operation requires.  These should
+correspond to the <code class="docutils literal notranslate"><span class="pre">args</span></code> of <code class="docutils literal notranslate"><span class="pre">fn</span></code>.</p></li>
+<li><p><strong>provides</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Names of output data objects this operation provides.</p></li>
+<li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dict of key/value pairs representing constant parameters
+associated with your operation.  These can correspond to either
+<code class="docutils literal notranslate"><span class="pre">args</span></code> or <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> of <a href="#id1"><span class="problematic" id="id2">``</span></a>fn`.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.ext.gk.optional">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">optional</span></span><a class="reference internal" href="../_modules/meshed/ext/gk.html#optional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.optional" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<p>Input values in <code class="docutils literal notranslate"><span class="pre">needs</span></code> may be designated as optional using this modifier.
+If this modifier is applied to an input value, that value will be input to
+the <code class="docutils literal notranslate"><span class="pre">operation</span></code> if it is available.  The function underlying the
+<code class="docutils literal notranslate"><span class="pre">operation</span></code> should have a parameter with the same name as the input value
+in <code class="docutils literal notranslate"><span class="pre">needs</span></code>, and the input value will be passed as a keyword argument if
+it is available.</p>
+<p>Here is an example of an operation that uses an optional argument:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">graphkit</span><span class="w"> </span><span class="kn">import</span> <span class="n">operation</span><span class="p">,</span> <span class="n">compose</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">graphkit.modifiers</span><span class="w"> </span><span class="kn">import</span> <span class="n">optional</span>
+
+<span class="c1"># Function that adds either two or three numbers.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">myadd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+
+<span class="c1"># Designate c as an optional argument.</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">compose</span><span class="p">(</span><span class="s1">'mygraph'</span><span class="p">)(</span>
+    <span class="n">operator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'myadd'</span><span class="p">,</span> <span class="n">needs</span><span class="o">=</span><span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="n">optional</span><span class="p">(</span><span class="s1">'c'</span><span class="p">)],</span> <span class="n">provides</span><span class="o">=</span><span class="s1">'sum'</span><span class="p">)(</span><span class="n">myadd</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># The graph works with and without 'c' provided as input.</span>
+<span class="k">assert</span> <span class="n">graph</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="mi">4</span><span class="p">})[</span><span class="s1">'sum'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">11</span>
+<span class="k">assert</span> <span class="n">graph</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">})[</span><span class="s1">'sum'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">7</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.ext.gk.ready_to_delete_data_node">
+<span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">ready_to_delete_data_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_executed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#ready_to_delete_data_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.ready_to_delete_data_node" title="Link to this definition">#</a></dt>
+<dd><p>Determines if a DataPlaceholderNode is ready to be deleted from the
+cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name::</strong> – The name of the data node to check</p></li>
+<li><p><strong>has_executed</strong> – set
+A set containing all operations that have been executed so far</p></li>
+<li><p><strong>graph::</strong> – The networkx graph containing the operations and data nodes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A boolean indicating whether the data node can be deleted or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.ext.gk.ready_to_schedule_operation">
+<span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">ready_to_schedule_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_executed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#ready_to_schedule_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.ready_to_schedule_operation" title="Link to this definition">#</a></dt>
+<dd><p>Determines if a Operation is ready to be scheduled for execution based on
+what has already been executed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>op::</strong> – The Operation object to check</p></li>
+<li><p><strong>has_executed</strong> – set
+A set containing all operations that have been executed so far</p></li>
+<li><p><strong>graph::</strong> – The networkx graph containing the operations and data nodes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A boolean indicating whether the operation may be scheduled for
+execution based on what has already been executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="meshed.ext.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">meshed.ext</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="meshed.itools.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">meshed.itools</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.DataPlaceholderNode"><code class="docutils literal notranslate"><span class="pre">DataPlaceholderNode</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.DeleteInstruction"><code class="docutils literal notranslate"><span class="pre">DeleteInstruction</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.FunctionalOperation"><code class="docutils literal notranslate"><span class="pre">FunctionalOperation</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.Network.add_op"><code class="docutils literal notranslate"><span class="pre">Network.add_op()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.Network.compile"><code class="docutils literal notranslate"><span class="pre">Network.compile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.Network.compute"><code class="docutils literal notranslate"><span class="pre">Network.compute()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.Network.plot"><code class="docutils literal notranslate"><span class="pre">Network.plot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.Network.show_layers"><code class="docutils literal notranslate"><span class="pre">Network.show_layers()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.NetworkOperation"><code class="docutils literal notranslate"><span class="pre">NetworkOperation</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.NetworkOperation.set_execution_method"><code class="docutils literal notranslate"><span class="pre">NetworkOperation.set_execution_method()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.Operation"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.Operation.compute"><code class="docutils literal notranslate"><span class="pre">Operation.compute()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.compose"><code class="docutils literal notranslate"><span class="pre">compose</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.get_data_node"><code class="docutils literal notranslate"><span class="pre">get_data_node()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.operation"><code class="docutils literal notranslate"><span class="pre">operation</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.optional"><code class="docutils literal notranslate"><span class="pre">optional</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.ready_to_delete_data_node"><code class="docutils literal notranslate"><span class="pre">ready_to_delete_data_node()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.ext.gk.ready_to_schedule_operation"><code class="docutils literal notranslate"><span class="pre">ready_to_schedule_operation()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/_autosummary/meshed.ext.gk.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

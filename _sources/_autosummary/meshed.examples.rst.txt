@@ -1,0 +1,15 @@
+meshed.examples
+===============
+
+.. automodule:: meshed.examples
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   online_marketing
+   price_elasticity
+   vaccine_vs_no_vaccine

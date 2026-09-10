@@ -1,0 +1,12 @@
+meshed.components
+=================
+
+.. automodule:: meshed.components
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Extractor
+   

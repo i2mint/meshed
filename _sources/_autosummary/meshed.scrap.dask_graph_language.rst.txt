@@ -1,0 +1,14 @@
+meshed.scrap.dask\_graph\_language
+==================================
+
+.. automodule:: meshed.scrap.dask_graph_language
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      add
+      inc
+      node_funcs_from_dask_graph_dict
+   

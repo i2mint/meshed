@@ -1,0 +1,17 @@
+# meshed.scrap
+
+For scrap only
+
+### Modules
+
+| [`annotations_to_meshes`](meshed.scrap.annotations_to_meshes.html.md#module-meshed.scrap.annotations_to_meshes)   | Code related to work on the "From annotated functions to meshes" discussion:                                                                                                                   |
+|--------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`cached_dag`](meshed.scrap.cached_dag.html.md#module-meshed.scrap.cached_dag)                         |                                                                                                                                                                                                |
+| [`collapse_and_expand`](meshed.scrap.collapse_and_expand.html.md#module-meshed.scrap.collapse_and_expand)       | Ideas on collapsing and expanding nodes See "Collapse and expand nodes" discussion: [https://github.com/i2mint/meshed/discussions/54](https://github.com/i2mint/meshed/discussions/54)         |
+| [`conversion`](meshed.scrap.conversion.html.md#module-meshed.scrap.conversion)                         | Utils to convert graphs from one specification to another                                                                                                                                      |
+| [`dask_graph_language`](meshed.scrap.dask_graph_language.html.md#module-meshed.scrap.dask_graph_language)       | How to make dags from the dask specification                                                                                                                                                   |
+| [`gk_with_networkx`](meshed.scrap.gk_with_networkx.html.md#module-meshed.scrap.gk_with_networkx)             | seriously modified version of yahoo/graphkit                                                                                                                                                   |
+| [`gui_interaction`](meshed.scrap.gui_interaction.html.md#module-meshed.scrap.gui_interaction)               | This module contains some ideas around making a two-way interaction between meshed and a GUI that will enable the construction of meshes as well as rendering them, and possibly running them. |
+| [`misc_utils`](meshed.scrap.misc_utils.html.md#module-meshed.scrap.misc_utils)                         | Misc utils                                                                                                                                                                                     |
+| [`reactive_scope`](meshed.scrap.reactive_scope.html.md#module-meshed.scrap.reactive_scope)                 | Ideas towards a reactive-programming interpretation of meshes.                                                                                                                                 |
+| [`wrapping_dags`](meshed.scrap.wrapping_dags.html.md#module-meshed.scrap.wrapping_dags)                   | Wrapping dags                                                                                                                                                                                  |

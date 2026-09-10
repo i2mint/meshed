@@ -1,4 +1,0 @@
-meshed.scrap.gui_interaction
-============================
-.. automodule:: meshed.scrap.gui_interaction
-   :members:

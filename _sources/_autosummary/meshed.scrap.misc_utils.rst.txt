@@ -1,0 +1,19 @@
+meshed.scrap.misc\_utils
+========================
+
+.. automodule:: meshed.scrap.misc_utils
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      coparents_sets
+      dag_from_funcnodes
+      extended_family
+      funcnode_only
+      kids_of_united_family
+      known_parents
+      list_coparents
+      mermaid_pack_nodes
+   

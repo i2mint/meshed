@@ -1,380 +1,712 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to meshed’s documentation! &mdash; meshed 0.1.165 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
 
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="index.html.md">
+<link rel="describedby" href="llms.txt" type="text/markdown">
+    <title>meshed &#8212; meshed</title>
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8485fb48"></script>
-      <script src="_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/js/theme.js"></script>
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/epythet.css?v=20ed5096" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="_static/documentation_options.js?v=b37d7122"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=fd10adb8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="meshed" href="module_docs/meshed.html" /> 
-</head>
+    <link rel="next" title="API reference" href="api.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.166" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
 
-          
-          
-          <a href="#" class="icon icon-home">
-            meshed
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed.html">meshed</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/base.html">meshed.base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/caching.html">meshed.caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/components.html">meshed.components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/composition.html">meshed.composition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/dag.html">meshed.dag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/examples.html">meshed.examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/ext.html">meshed.ext</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/itools.html">meshed.itools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/makers.html">meshed.makers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap.html">meshed.scrap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/flow_control_script.html">meshed.scrap.flow_control_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/gui_interaction.html">meshed.scrap.gui_interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/slabs.html">meshed.slabs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tools.html">meshed.tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/util.html">meshed.util</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/viz.html">meshed.viz</a></li>
-</ul>
 
-        </div>
-      </div>
-    </nav>
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">meshed</a>
-      </nav>
+  
+    
+  
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to meshed’s documentation!</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
-      </li>
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">meshed</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API reference
+  </a>
+</li>
+
   </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="welcome-to-meshed-s-documentation">
-<h1>Welcome to meshed’s documentation!<a class="headerlink" href="#welcome-to-meshed-s-documentation" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed.html">meshed</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed.html#extras">Extras</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/base.html">meshed.base</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.FuncNode"><code class="docutils literal notranslate"><span class="pre">FuncNode</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.Mesh"><code class="docutils literal notranslate"><span class="pre">Mesh</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.basic_node_validator"><code class="docutils literal notranslate"><span class="pre">basic_node_validator()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.ch_func_node_attrs"><code class="docutils literal notranslate"><span class="pre">ch_func_node_attrs()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.ensure_func_nodes"><code class="docutils literal notranslate"><span class="pre">ensure_func_nodes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.func_node_transformer"><code class="docutils literal notranslate"><span class="pre">func_node_transformer()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.func_nodes_to_code"><code class="docutils literal notranslate"><span class="pre">func_nodes_to_code()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.get_init_params_of_instance"><code class="docutils literal notranslate"><span class="pre">get_init_params_of_instance()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.identifier_mapping"><code class="docutils literal notranslate"><span class="pre">identifier_mapping()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.is_func_node"><code class="docutils literal notranslate"><span class="pre">is_func_node()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.is_not_func_node"><code class="docutils literal notranslate"><span class="pre">is_not_func_node()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.rebind_to_func"><code class="docutils literal notranslate"><span class="pre">rebind_to_func()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.underscore_func_node_names_maker"><code class="docutils literal notranslate"><span class="pre">underscore_func_node_names_maker()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/base.html#meshed.base.validate_that_func_node_names_are_sane"><code class="docutils literal notranslate"><span class="pre">validate_that_func_node_names_are_sane()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/caching.html">meshed.caching</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/caching.html#meshed.caching.LazyProps"><code class="docutils literal notranslate"><span class="pre">LazyProps</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/caching.html#meshed.caching.add_cached_property"><code class="docutils literal notranslate"><span class="pre">add_cached_property()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/caching.html#meshed.caching.add_cached_property_from_func"><code class="docutils literal notranslate"><span class="pre">add_cached_property_from_func()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/caching.html#meshed.caching.set_cached_property_attr"><code class="docutils literal notranslate"><span class="pre">set_cached_property_attr()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/caching.html#meshed.caching.with_cached_properties"><code class="docutils literal notranslate"><span class="pre">with_cached_properties()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/components.html">meshed.components</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/components.html#meshed.components.Extractor"><code class="docutils literal notranslate"><span class="pre">Extractor</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/composition.html">meshed.composition</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/composition.html#meshed.composition.func_node_name_trans"><code class="docutils literal notranslate"><span class="pre">func_node_name_trans()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/composition.html#meshed.composition.get_param"><code class="docutils literal notranslate"><span class="pre">get_param()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/composition.html#meshed.composition.is_func_node_kwargs_trans"><code class="docutils literal notranslate"><span class="pre">is_func_node_kwargs_trans()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/composition.html#meshed.composition.line_with_dag"><code class="docutils literal notranslate"><span class="pre">line_with_dag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/dag.html">meshed.dag</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/dag.html#faq-and-troubleshooting">FAQ and Troubleshooting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/dag.html#meshed.dag.DAG"><code class="docutils literal notranslate"><span class="pre">DAG</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/dag.html#meshed.dag.attribute_vals"><code class="docutils literal notranslate"><span class="pre">attribute_vals()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/dag.html#meshed.dag.dag_to_code"><code class="docutils literal notranslate"><span class="pre">dag_to_code()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/dag.html#meshed.dag.hook_up"><code class="docutils literal notranslate"><span class="pre">hook_up()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/dag.html#meshed.dag.named_partial"><code class="docutils literal notranslate"><span class="pre">named_partial()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/dag.html#meshed.dag.names_and_outs"><code class="docutils literal notranslate"><span class="pre">names_and_outs()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/dag.html#meshed.dag.parametrized_dag_factory"><code class="docutils literal notranslate"><span class="pre">parametrized_dag_factory()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/examples.html">meshed.examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/ext.html">meshed.ext</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/ext/gk.html">meshed.ext.gk</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.DataPlaceholderNode"><code class="docutils literal notranslate"><span class="pre">DataPlaceholderNode</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.DeleteInstruction"><code class="docutils literal notranslate"><span class="pre">DeleteInstruction</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.FunctionalOperation"><code class="docutils literal notranslate"><span class="pre">FunctionalOperation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.NetworkOperation"><code class="docutils literal notranslate"><span class="pre">NetworkOperation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.Operation"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.compose"><code class="docutils literal notranslate"><span class="pre">compose</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.get_data_node"><code class="docutils literal notranslate"><span class="pre">get_data_node()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.operation"><code class="docutils literal notranslate"><span class="pre">operation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.optional"><code class="docutils literal notranslate"><span class="pre">optional</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.ready_to_delete_data_node"><code class="docutils literal notranslate"><span class="pre">ready_to_delete_data_node()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/ext/gk.html#meshed.ext.gk.ready_to_schedule_operation"><code class="docutils literal notranslate"><span class="pre">ready_to_schedule_operation()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/itools.html">meshed.itools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.add_edge"><code class="docutils literal notranslate"><span class="pre">add_edge()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.ancestors"><code class="docutils literal notranslate"><span class="pre">ancestors()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.children"><code class="docutils literal notranslate"><span class="pre">children()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.descendants"><code class="docutils literal notranslate"><span class="pre">descendants()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.edge_reversed_graph"><code class="docutils literal notranslate"><span class="pre">edge_reversed_graph()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.edges"><code class="docutils literal notranslate"><span class="pre">edges()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.find_path"><code class="docutils literal notranslate"><span class="pre">find_path()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.graphviz_digraph"><code class="docutils literal notranslate"><span class="pre">graphviz_digraph()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.has_cycle"><code class="docutils literal notranslate"><span class="pre">has_cycle()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.has_node"><code class="docutils literal notranslate"><span class="pre">has_node()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.in_degrees"><code class="docutils literal notranslate"><span class="pre">in_degrees()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.isolated_nodes"><code class="docutils literal notranslate"><span class="pre">isolated_nodes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.leaf_nodes"><code class="docutils literal notranslate"><span class="pre">leaf_nodes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.nodes"><code class="docutils literal notranslate"><span class="pre">nodes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.out_degrees"><code class="docutils literal notranslate"><span class="pre">out_degrees()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.parents"><code class="docutils literal notranslate"><span class="pre">parents()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.predecessors"><code class="docutils literal notranslate"><span class="pre">predecessors()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.random_graph"><code class="docutils literal notranslate"><span class="pre">random_graph()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.reverse_edges"><code class="docutils literal notranslate"><span class="pre">reverse_edges()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.root_ancestors"><code class="docutils literal notranslate"><span class="pre">root_ancestors()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.root_nodes"><code class="docutils literal notranslate"><span class="pre">root_nodes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.successors"><code class="docutils literal notranslate"><span class="pre">successors()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/itools.html#meshed.itools.topological_sort"><code class="docutils literal notranslate"><span class="pre">topological_sort()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/makers.html">meshed.makers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.dag_to_jdict"><code class="docutils literal notranslate"><span class="pre">dag_to_jdict()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.dlft_factory_to_func"><code class="docutils literal notranslate"><span class="pre">dlft_factory_to_func()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.dlft_factory_to_func_mapping"><code class="docutils literal notranslate"><span class="pre">dlft_factory_to_func_mapping</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.extract_tokens"><code class="docutils literal notranslate"><span class="pre">extract_tokens()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.func_nodes_to_named_funcs"><code class="docutils literal notranslate"><span class="pre">func_nodes_to_named_funcs()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.jdict_to_dag"><code class="docutils literal notranslate"><span class="pre">jdict_to_dag()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.mk_fnodes_from_fn_factories"><code class="docutils literal notranslate"><span class="pre">mk_fnodes_from_fn_factories()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.named_funcs_to_func_nodes"><code class="docutils literal notranslate"><span class="pre">named_funcs_to_func_nodes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.parse_assignment_steps"><code class="docutils literal notranslate"><span class="pre">parse_assignment_steps()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.parse_steps"><code class="docutils literal notranslate"><span class="pre">parse_steps()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.parsed_to_node_kwargs"><code class="docutils literal notranslate"><span class="pre">parsed_to_node_kwargs()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.signed_itemgetter"><code class="docutils literal notranslate"><span class="pre">signed_itemgetter()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.src_to_func_node_factory"><code class="docutils literal notranslate"><span class="pre">src_to_func_node_factory()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/makers.html#meshed.makers.triples_to_fnodes"><code class="docutils literal notranslate"><span class="pre">triples_to_fnodes()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap.html">meshed.scrap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/annotations_to_meshes.html#meshed.scrap.annotations_to_meshes.callable_annots_to_signature"><code class="docutils literal notranslate"><span class="pre">callable_annots_to_signature()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/annotations_to_meshes.html#meshed.scrap.annotations_to_meshes.func_types_to_protocol"><code class="docutils literal notranslate"><span class="pre">func_types_to_protocol()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/annotations_to_meshes.html#meshed.scrap.annotations_to_meshes.func_types_to_scaffold"><code class="docutils literal notranslate"><span class="pre">func_types_to_scaffold()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/cached_dag.html#meshed.scrap.cached_dag.CachedDag"><code class="docutils literal notranslate"><span class="pre">CachedDag</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/cached_dag.html#meshed.scrap.cached_dag.NoOverwritesDict"><code class="docutils literal notranslate"><span class="pre">NoOverwritesDict</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/cached_dag.html#meshed.scrap.cached_dag.NotAllowed"><code class="docutils literal notranslate"><span class="pre">NotAllowed</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/cached_dag.html#meshed.scrap.cached_dag.OverWritesNotAllowedError"><code class="docutils literal notranslate"><span class="pre">OverWritesNotAllowedError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/cached_dag.html#meshed.scrap.cached_dag.cached_dag_test"><code class="docutils literal notranslate"><span class="pre">cached_dag_test()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/collapse_and_expand.html">meshed.scrap.collapse_and_expand</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/collapse_and_expand.html#meshed.scrap.collapse_and_expand.CollapsedDAG"><code class="docutils literal notranslate"><span class="pre">CollapsedDAG</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/collapse_and_expand.html#meshed.scrap.collapse_and_expand.collapse_function_calls"><code class="docutils literal notranslate"><span class="pre">collapse_function_calls()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/collapse_and_expand.html#meshed.scrap.collapse_and_expand.expand_function_calls"><code class="docutils literal notranslate"><span class="pre">expand_function_calls()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/collapse_and_expand.html#meshed.scrap.collapse_and_expand.remove_decorator_code"><code class="docutils literal notranslate"><span class="pre">remove_decorator_code()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/flow_control_script.html">meshed.scrap.flow_control_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.NetworkOperation"><code class="docutils literal notranslate"><span class="pre">NetworkOperation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.Operation"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/gk_with_networkx.html#meshed.scrap.gk_with_networkx.optional"><code class="docutils literal notranslate"><span class="pre">optional</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/gui_interaction.html">meshed.scrap.gui_interaction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/gui_interaction.html#meshed.scrap.gui_interaction.extract_tokens"><code class="docutils literal notranslate"><span class="pre">extract_tokens()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/misc_utils.html#meshed.scrap.misc_utils.mermaid_pack_nodes"><code class="docutils literal notranslate"><span class="pre">mermaid_pack_nodes()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/reactive_scope.html#meshed.scrap.reactive_scope.ReactiveFuncNode"><code class="docutils literal notranslate"><span class="pre">ReactiveFuncNode</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/reactive_scope.html#meshed.scrap.reactive_scope.ReactiveScope"><code class="docutils literal notranslate"><span class="pre">ReactiveScope</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/scrap/wrapping_dags.html#meshed.scrap.wrapping_dags.DDag"><code class="docutils literal notranslate"><span class="pre">DDag</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/slabs.html">meshed.slabs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/slabs.html#meshed.slabs.ExceptionHandler"><code class="docutils literal notranslate"><span class="pre">ExceptionHandler</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/slabs.html#meshed.slabs.ExceptionalException"><code class="docutils literal notranslate"><span class="pre">ExceptionalException</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/slabs.html#meshed.slabs.IteratorExit"><code class="docutils literal notranslate"><span class="pre">IteratorExit</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/slabs.html#meshed.slabs.Slabs"><code class="docutils literal notranslate"><span class="pre">Slabs</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/slabs.html#meshed.slabs.SlabsIter"><code class="docutils literal notranslate"><span class="pre">SlabsIter</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/slabs.html#meshed.slabs.all_arguments_are_none"><code class="docutils literal notranslate"><span class="pre">all_arguments_are_none()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/slabs.html#meshed.slabs.conditional_sentinel"><code class="docutils literal notranslate"><span class="pre">conditional_sentinel()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/slabs.html#meshed.slabs.output_none_if_none_arguments"><code class="docutils literal notranslate"><span class="pre">output_none_if_none_arguments()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/tools.html">meshed.tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tools.html#meshed.tools.launch_funcs_webservice"><code class="docutils literal notranslate"><span class="pre">launch_funcs_webservice()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tools.html#meshed.tools.launch_webservice"><code class="docutils literal notranslate"><span class="pre">launch_webservice()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tools.html#meshed.tools.mk_dag_with_ws_funcs"><code class="docutils literal notranslate"><span class="pre">mk_dag_with_ws_funcs()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/tools.html#meshed.tools.mk_hybrid_dag"><code class="docutils literal notranslate"><span class="pre">mk_hybrid_dag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/util.html">meshed.util</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.ConditionalIterize"><code class="docutils literal notranslate"><span class="pre">ConditionalIterize</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.InvalidFunctionParameters"><code class="docutils literal notranslate"><span class="pre">InvalidFunctionParameters</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.NameValidationError"><code class="docutils literal notranslate"><span class="pre">NameValidationError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.NotFound"><code class="docutils literal notranslate"><span class="pre">NotFound</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.NotUniqueError"><code class="docutils literal notranslate"><span class="pre">NotUniqueError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.ValidationError"><code class="docutils literal notranslate"><span class="pre">ValidationError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.args_funcnames"><code class="docutils literal notranslate"><span class="pre">args_funcnames()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.conditional_trans"><code class="docutils literal notranslate"><span class="pre">conditional_trans()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.conservative_parameter_merge"><code class="docutils literal notranslate"><span class="pre">conservative_parameter_merge()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.dot_to_ascii"><code class="docutils literal notranslate"><span class="pre">dot_to_ascii()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.extract_dict"><code class="docutils literal notranslate"><span class="pre">extract_dict()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.extract_items"><code class="docutils literal notranslate"><span class="pre">extract_items()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.extract_values"><code class="docutils literal notranslate"><span class="pre">extract_values()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.filepath_to_module"><code class="docutils literal notranslate"><span class="pre">filepath_to_module()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.func_name"><code class="docutils literal notranslate"><span class="pre">func_name()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.funcs_conjunction"><code class="docutils literal notranslate"><span class="pre">funcs_conjunction()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.funcs_disjunction"><code class="docutils literal notranslate"><span class="pre">funcs_disjunction()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.if_then_else"><code class="docutils literal notranslate"><span class="pre">if_then_else()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.incremental_str_maker"><code class="docutils literal notranslate"><span class="pre">incremental_str_maker()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.instance_checker"><code class="docutils literal notranslate"><span class="pre">instance_checker()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.iterize"><code class="docutils literal notranslate"><span class="pre">iterize()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.mk_func_name"><code class="docutils literal notranslate"><span class="pre">mk_func_name()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.mk_place_holder_func"><code class="docutils literal notranslate"><span class="pre">mk_place_holder_func()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.my_isinstance"><code class="docutils literal notranslate"><span class="pre">my_isinstance()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.named_partial"><code class="docutils literal notranslate"><span class="pre">named_partial()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.numbered_suffix_renamer"><code class="docutils literal notranslate"><span class="pre">numbered_suffix_renamer()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.objects_defined_in_module"><code class="docutils literal notranslate"><span class="pre">objects_defined_in_module()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.ordered_set_operations"><code class="docutils literal notranslate"><span class="pre">ordered_set_operations()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.parameter_merger"><code class="docutils literal notranslate"><span class="pre">parameter_merger()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.provides"><code class="docutils literal notranslate"><span class="pre">provides()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/util.html#meshed.util.replace_item_in_iterable"><code class="docutils literal notranslate"><span class="pre">replace_item_in_iterable()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/meshed/viz.html">meshed.viz</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/viz.html#meshed.viz.add_new_line_if_none"><code class="docutils literal notranslate"><span class="pre">add_new_line_if_none()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/viz.html#meshed.viz.dot_lines_of_func_nodes"><code class="docutils literal notranslate"><span class="pre">dot_lines_of_func_nodes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/meshed/viz.html#meshed.viz.dot_lines_of_objs"><code class="docutils literal notranslate"><span class="pre">dot_lines_of_objs()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
-<p>Release: 0.1.165</p>
-<p>Last change: Aug 04, 2026</p>
-</section>
-
-
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="module_docs/meshed.html" class="btn btn-neutral float-right" title="meshed" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+</nav></div>
+      
     </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p></p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
         </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      
+      
+        <div class="navbar-item">
 
-</body>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!-- generated by epythet -->
+<section id="meshed">
+<h1>meshed<a class="headerlink" href="#meshed" title="Link to this heading">#</a></h1>
+<p>Object composition.
+In particular: Link functions up into callable objects (e.g. pipelines, DAGs, etc.)</p>
+<p>To install: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">meshed</span></code></p>
+<p><a class="reference external" href="https://i2mint.github.io/meshed/">Documentation</a></p>
+<p>Note: The initial focuus of <code class="docutils literal notranslate"><span class="pre">meshed</span></code> was on DAGs, a versatile and probably most known kind of composition of functions,
+but <code class="docutils literal notranslate"><span class="pre">meshed</span></code> aims at capturing much more than that.</p>
+</section>
+<section id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">this</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">that</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">b</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">combine</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">)</span>
+
+<span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">this</span><span class="p">,</span> <span class="n">that</span><span class="p">,</span> <span class="n">combine</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>x,b -&gt; that_ -&gt; that
+a,b -&gt; this_ -&gt; this
+this,that -&gt; combine_ -&gt; combine
+</pre></div>
+</div>
+<p>But what does it do?</p>
+<p>It’s a callable, with a signature:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature</span>
+<span class="n">signature</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Signature (x, a, b=1)&gt;
+</pre></div>
+</div>
+<p>And when you call it, it executes the dag from the root values you give it and
+returns the leaf output values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># (a+b,x*b) == (2+3,1*3) == (5, 3)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(5, 3)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># (a+b,x*b) == (2+1,1*1) == (3, 1)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(3, 1)
+</pre></div>
+</div>
+<p>You can see (and save image, or ascii art) the dag:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/127779463-ae75604b-0d69-4ac4-b206-80c2c5ae582b.png"><img alt="https://user-images.githubusercontent.com/1906276/127779463-ae75604b-0d69-4ac4-b206-80c2c5ae582b.png" src="https://user-images.githubusercontent.com/1906276/127779463-ae75604b-0d69-4ac4-b206-80c2c5ae582b.png" width="200" />
+</a>
+<p>You can extend a dag</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag2</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span><span class="o">*</span><span class="n">dag</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">this</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">this</span> <span class="o">+</span> <span class="n">a</span><span class="p">])</span>
+<span class="n">dag2</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/127779748-70b47907-e51f-4e64-bc18-9545ee07e632.png"><img alt="https://user-images.githubusercontent.com/1906276/127779748-70b47907-e51f-4e64-bc18-9545ee07e632.png" src="https://user-images.githubusercontent.com/1906276/127779748-70b47907-e51f-4e64-bc18-9545ee07e632.png" width="200" />
+</a>
+<p>You can get a sub-dag by specifying desired input(s) and outputs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag2</span><span class="p">[[</span><span class="s1">'that'</span><span class="p">,</span> <span class="s1">'this'</span><span class="p">],</span> <span class="s1">'combine'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png"><img alt="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png" src="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png" width="150" />
+</a>
+<section id="note-on-flexibility">
+<h2>Note on flexibility<a class="headerlink" href="#note-on-flexibility" title="Link to this heading">#</a></h2>
+<p>The above DAG was created straight from the functions, using only the names of the
+functions and their parameters to define how to hook the network up.</p>
+<p>But if you didn’t write those functions specifically for that purpose, or you want
+to use someone else’s functions, one would need to specify the relation between parameters, inputs and outputs.</p>
+<p>For that purpose, functions can be adapted using the class FuncNode. The class allows you to essentially rename each of the parameters and also specify which output should be used as an argument for any other functions.</p>
+<p>Let us consider the example below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="n">a_plus_b</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a_plus_b</span> <span class="o">*</span> <span class="n">d</span>
+</pre></div>
+</div>
+<p>Say we want the output of f to become the value of the parameter a_plus_b. We can do that by assigning the string ‘a_plus_b’ to the out parameter of a FuncNode representing the function f:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s2">"a_plus_b"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can now create a dag using our f_node instead of f:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">f_node</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Our dag behaves as wanted:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="mi">9</span>
+</pre></div>
+</div>
+<p>Now say we would also like for the value given to b to be also given to d. We can achieve that by binding d to b in the bind parameter of a FuncNode representing g:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">g_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">g</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s2">"d"</span><span class="p">:</span> <span class="s2">"b"</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>The dag created with f_node and g_node has only two parameters, namely a and b:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">((</span><span class="n">f_node</span><span class="p">,</span> <span class="n">g_node</span><span class="p">))</span>
+<span class="n">dag</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="mi">6</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="sub-dags">
+<h1>Sub-DAGs<a class="headerlink" href="#sub-dags" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">dag[input_nodes:output_nodes]</span></code> is the sub-dag made of intersection of all
+descendants of <code class="docutils literal notranslate"><span class="pre">input_nodes</span></code>
+(inclusive) and ancestors of <code class="docutils literal notranslate"><span class="pre">output_nodes</span></code> (inclusive), where additionally,
+when a func node is contained, it takes with it the input and output nodes
+it needs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">):</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="n">f</span><span class="p">):</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">h</span><span class="p">(</span><span class="n">g</span><span class="p">):</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">i</span><span class="p">(</span><span class="n">h</span><span class="p">):</span> <span class="o">...</span>
+<span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+
+<span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154749811-f9892ee6-617c-4fa6-9de9-1ebc509c04ae.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154749811-f9892ee6-617c-4fa6-9de9-1ebc509c04ae.png" width="110" />
+</a>
+<p>Get a subdag from <code class="docutils literal notranslate"><span class="pre">g_</span></code> (indicates the function here) to the end of <code class="docutils literal notranslate"><span class="pre">dag</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subdag</span> <span class="o">=</span> <span class="n">dag</span><span class="p">[</span><span class="s1">'g_'</span><span class="p">,:]</span>
+<span class="n">subdag</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154749842-c2320d1c-368d-4be8-ac57-9a77f1bb081d.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154749842-c2320d1c-368d-4be8-ac57-9a77f1bb081d.png" width="100" />
+</a>
+<p>From the beginning to <code class="docutils literal notranslate"><span class="pre">h_</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[:,</span> <span class="s1">'h_'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154750524-ece7f4b6-a3f3-46c6-a66d-7dc9b8ef254a.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154750524-ece7f4b6-a3f3-46c6-a66d-7dc9b8ef254a.png" width="110" />
+</a>
+<p>From <code class="docutils literal notranslate"><span class="pre">g_</span></code> to <code class="docutils literal notranslate"><span class="pre">h_</span></code> (both inclusive)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'g_'</span><span class="p">,</span> <span class="s1">'h_'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png" width="109" />
+</a>
+<p>Above we used function (node names) to specify what we wanted, but we can also
+use names of input/output var-nodes. Do note the difference though.
+The nodes you specify to get a sub-dag are INCLUSIVE, but when you
+specify function nodes, you also get the input and output nodes of these
+functions.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">dag['g_',</span> <span class="pre">'h_']</span></code> give us a sub-dag starting at <code class="docutils literal notranslate"><span class="pre">f</span></code> (the input node),
+but when we ask <code class="docutils literal notranslate"><span class="pre">dag['g',</span> <span class="pre">'h_']</span></code> instead, <code class="docutils literal notranslate"><span class="pre">g</span></code> being the output node of
+function node <code class="docutils literal notranslate"><span class="pre">g_</span></code>, we only get <code class="docutils literal notranslate"><span class="pre">g</span> <span class="pre">-&gt;</span> <span class="pre">h_</span> <span class="pre">-&gt;</span> <span class="pre">h</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'g'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154750753-737e2705-0ea3-4595-a93a-1567862a6edd.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154750753-737e2705-0ea3-4595-a93a-1567862a6edd.png" width="88" />
+</a>
+<p>If we wanted to include <code class="docutils literal notranslate"><span class="pre">f</span></code> we’d have to specify it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'f'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png" width="109" />
+</a>
+<p>Those were for simple pipelines, but let’s now look at a more complex dag.</p>
+<p>Note the definition: <code class="docutils literal notranslate"><span class="pre">dag[input_nodes:output_nodes]</span></code> is the sub-dag made of intersection of all
+descendants of <code class="docutils literal notranslate"><span class="pre">input_nodes</span></code>
+(inclusive) and ancestors of <code class="docutils literal notranslate"><span class="pre">output_nodes</span></code> (inclusive), where additionally,
+when a func node is contained, it takes with it the input and output nodes
+it needs.</p>
+<p>We’ll let the following examples self-comment:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="n">f</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">h</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">i</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">j</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">k</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">l</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">])</span>
+
+<span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748574-a7026125-659f-465b-9bc3-14a1864d14b2.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748574-a7026125-659f-465b-9bc3-14a1864d14b2.png" width="248" />
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">],</span> <span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748685-24e706ce-b68f-429a-b7b8-7bda62ccdf36.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748685-24e706ce-b68f-429a-b7b8-7bda62ccdf36.png" width="190" />
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748865-6e729094-976a-4af3-87f0-b6dd3900fb8c.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748865-6e729094-976a-4af3-87f0-b6dd3900fb8c.png" width="183" />
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'h'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748905-4eaeccbe-6cca-4492-a7a2-48f7c9937b95.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748905-4eaeccbe-6cca-4492-a7a2-48f7c9937b95.png" width="199" />
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">],</span> <span class="s1">'k'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748937-7a278b25-6f0f-467c-a977-89a175e15abb.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748937-7a278b25-6f0f-467c-a977-89a175e15abb.png" width="133" />
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'l'</span><span class="p">,</span> <span class="s1">'k'</span><span class="p">]]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748958-135792a6-ce16-4561-9cbe-4662113a1022.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748958-135792a6-ce16-4561-9cbe-4662113a1022.png" width="216" />
+</a>
+</section>
+<section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h1>
+<section id="a-train-test-ml-pipeline">
+<h2>A train/test ML pipeline<a class="headerlink" href="#a-train-test-ml-pipeline" title="Link to this heading">#</a></h2>
+<p>Consider a simple train/test ML pipeline that looks like this.</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/1906276/135151068-179d958e-9e96-48aa-9188-52ae22919c6e.png" /></p>
+<p>With this, we might decide we want to give the user control over how to do
+<code class="docutils literal notranslate"><span class="pre">train_test_split</span></code> and <code class="docutils literal notranslate"><span class="pre">learner</span></code>, so we offer this interface to the user:</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/1906276/135151094-661850c0-f10c-49d8-ace2-46b3d994de80.png" /></p>
+<p>With that, the user can just bring its own <code class="docutils literal notranslate"><span class="pre">train_test_split</span></code> and <code class="docutils literal notranslate"><span class="pre">learner</span></code>
+functions, and as long as it satisfied the
+expected (and even better; declared and validatable) protocol, things will work.</p>
+<p>In some situations we’d like to fix some of how <code class="docutils literal notranslate"><span class="pre">train_test_split</span></code> and
+<code class="docutils literal notranslate"><span class="pre">learner</span></code> work, allowing the user to control only some aspects of them.
+This function would look like this:</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/1906276/135151137-3d9a290f-d5e7-4f24-a418-82f1edb8a46a.png" /></p>
+<p>And inside, it does:</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/1906276/135151114-926b52b8-0536-4565-bd56-95099f21e4ff.png" /></p>
+<p><code class="docutils literal notranslate"><span class="pre">meshed</span></code> allows us to easily manipulate such functional structures to
+adapt them to our needs.</p>
+</section>
+</section>
+<section id="itools-module">
+<h1>itools module<a class="headerlink" href="#itools-module" title="Link to this heading">#</a></h1>
+<p>Tools that enable operations on graphs where graphs are represented by an adjacency Mapping.</p>
+<p>Again.</p>
+<p>Graphs: You know them. Networks.
+Nodes and edges, and the ecosystem descriptive or transformative functions surrounding these.
+Few languages have builtin support for the graph data structure, but all have their libraries to compensate.</p>
+<p>The one you’re looking at focuses on the representation of a graph as <code class="docutils literal notranslate"><span class="pre">Mapping</span></code> encoding
+its <a class="reference external" href="https://en.wikipedia.org/wiki/Adjacency_list">adjacency list</a>.
+That is, a dictionary-like interface that specifies the graph by specifying for each node
+what nodes it’s adjacent to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">graph</span><span class="p">[</span><span class="n">source_node</span><span class="p">]</span> <span class="o">==</span> <span class="n">set_of_nodes_that_source_node_has_edges_to</span>
+</pre></div>
+</div>
+<p>We emphasize that there is no specific graph instance that you need to squeeze your graph into to
+be able to use the functions of <code class="docutils literal notranslate"><span class="pre">meshed</span></code>. Suffices that your graph’s structure is expressed by
+that dict-like interface
+– which grown-ups call <code class="docutils literal notranslate"><span class="pre">Mapping</span></code> (see the <code class="docutils literal notranslate"><span class="pre">collections.abc</span></code> or <code class="docutils literal notranslate"><span class="pre">typing</span></code> standard libs for more information).</p>
+<p>You’ll find a lot of <code class="docutils literal notranslate"><span class="pre">Mapping</span></code>s around pythons.
+And if the object you want to work with doesn’t have that interface,
+you can easily create one using one of the many tools of <code class="docutils literal notranslate"><span class="pre">py2store</span></code> meant exactly for that purpose.</p>
+</section>
+<section id="id1">
+<h1>Examples<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<div class="highlight-pydocstring notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from meshed.itools import edges, nodes, isolated_nodes
+&gt;&gt;&gt; graph = dict(a='c', b='ce', c='abde', d='c', e=['c', 'b'], f={})
+&gt;&gt;&gt; sorted(edges(graph))
+[('a', 'c'), ('b', 'c'), ('b', 'e'), ('c', 'a'), ('c', 'b'), ('c', 'd'), ('c', 'e'), ('d', 'c'), ('e', 'b'), ('e', 'c')]
+&gt;&gt;&gt; sorted(nodes(graph))
+['a', 'b', 'c', 'd', 'e', 'f']
+&gt;&gt;&gt; set(isolated_nodes(graph))
+{'f'}
+&gt;&gt;&gt;
+&gt;&gt;&gt; from meshed.makers import edge_reversed_graph
+&gt;&gt;&gt; g = dict(a='c', b='cd', c='abd', e='')
+&gt;&gt;&gt; assert edge_reversed_graph(g) == {'c': ['a', 'b'], 'd': ['b', 'c'], 'a': ['c'], 'b': ['c'], 'e': []}
+&gt;&gt;&gt; reverse_g_with_sets = edge_reversed_graph(g, set, set.add)
+&gt;&gt;&gt; assert reverse_g_with_sets == {'c': {'a', 'b'}, 'd': {'b', 'c'}, 'a': {'c'}, 'b': {'c'}, 'e': set([])}
+</pre></div>
+</div>
+<p class="epythet-aggregates">This documentation as a single file: <a href="meshed.md">meshed.md</a> (Markdown, for agents).</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="api.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">meshed</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#note-on-flexibility">Note on flexibility</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sub-dags">Sub-DAGs</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-train-test-ml-pipeline">A train/test ML pipeline</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#itools-module">itools module</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Examples</a></li>
+</ul>
+
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/index.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
 </html>

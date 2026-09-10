@@ -1,114 +1,707 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.makers &mdash; meshed 0.1.165 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="alternate" type="text/markdown" href="makers.html.md">
+<link rel="describedby" href="../../llms.txt" type="text/markdown">
+    <title>meshed.makers &#8212; meshed</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/epythet.css?v=20ed5096" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fd10adb8"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/meshed/makers';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.166" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
 
   
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8485fb48"></script>
-      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            meshed
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed.html">meshed</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/base.html">meshed.base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/components.html">meshed.components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/composition.html">meshed.composition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/dag.html">meshed.dag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples.html">meshed.examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext.html">meshed.ext</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/itools.html">meshed.itools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/makers.html">meshed.makers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/flow_control_script.html">meshed.scrap.flow_control_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gui_interaction.html">meshed.scrap.gui_interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tools.html">meshed.tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/util.html">meshed.util</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/viz.html">meshed.viz</a></li>
-</ul>
 
-        </div>
-      </div>
-    </nav>
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">meshed</a>
-      </nav>
+  
+    
+  
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">meshed.makers</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">meshed</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API reference
+  </a>
+</li>
+
   </ul>
-  <hr/>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">meshed.makers</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <h1>Source code for meshed.makers</h1><div class="highlight"><pre>
-<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Makers</span>
+<span></span><span class="sa">r</span><span class="sd">"""Makers</span>
 
 <span class="sd">This module contains tools to make meshed objects in different ways.</span>
 
-<span class="sd">Let&#39;s start with an example where we have some code representing a user story:</span>
+<span class="sd">Let's start with an example where we have some code representing a user story:</span>
 
 <span class="sd">&gt;&gt;&gt; def user_story():</span>
 <span class="sd">...     wfs = call(src_to_wf, data_src)</span>
@@ -135,31 +728,31 @@
 <span class="sd">See that the ``FuncNode`` factories are all set up with</span>
 <span class="sd">``name`` (id),</span>
 <span class="sd">``out`` (output variable name),</span>
-<span class="sd">``bind`` (names of the variables where the function will source it&#39;s arguments), and</span>
+<span class="sd">``bind`` (names of the variables where the function will source it's arguments), and</span>
 <span class="sd">``func_label`` (which can be used when displaying the DAG, or as a key to the function</span>
 <span class="sd">to use).</span>
 
 <span class="sd">&gt;&gt;&gt; assert [x.keywords for x in fnodes_factories] == [</span>
-<span class="sd">...  {&#39;name&#39;: &#39;call&#39;,</span>
-<span class="sd">...   &#39;out&#39;: &#39;wfs&#39;,</span>
-<span class="sd">...   &#39;bind&#39;: {0: &#39;src_to_wf&#39;, 1: &#39;data_src&#39;},</span>
-<span class="sd">...   &#39;func_label&#39;: &#39;call&#39;},</span>
-<span class="sd">...  {&#39;name&#39;: &#39;map&#39;,</span>
-<span class="sd">...   &#39;out&#39;: &#39;chks_iter&#39;,</span>
-<span class="sd">...   &#39;bind&#39;: {0: &#39;chunker&#39;, 1: &#39;wfs&#39;},</span>
-<span class="sd">...   &#39;func_label&#39;: &#39;map&#39;},</span>
-<span class="sd">...  {&#39;name&#39;: &#39;chain&#39;,</span>
-<span class="sd">...   &#39;out&#39;: &#39;chks&#39;,</span>
-<span class="sd">...   &#39;bind&#39;: {0: &#39;chks_iter&#39;},</span>
-<span class="sd">...   &#39;func_label&#39;: &#39;chain&#39;},</span>
-<span class="sd">...  {&#39;name&#39;: &#39;map_04&#39;,</span>
-<span class="sd">...   &#39;out&#39;: &#39;fvs&#39;,</span>
-<span class="sd">...   &#39;bind&#39;: {0: &#39;featurizer&#39;, 1: &#39;chks&#39;},</span>
-<span class="sd">...   &#39;func_label&#39;: &#39;map&#39;},</span>
-<span class="sd">...  {&#39;name&#39;: &#39;map_05&#39;,</span>
-<span class="sd">...   &#39;out&#39;: &#39;model_outputs&#39;,</span>
-<span class="sd">...   &#39;bind&#39;: {0: &#39;model&#39;, 1: &#39;fvs&#39;},</span>
-<span class="sd">...   &#39;func_label&#39;: &#39;map&#39;}</span>
+<span class="sd">...  {'name': 'call',</span>
+<span class="sd">...   'out': 'wfs',</span>
+<span class="sd">...   'bind': {0: 'src_to_wf', 1: 'data_src'},</span>
+<span class="sd">...   'func_label': 'call'},</span>
+<span class="sd">...  {'name': 'map',</span>
+<span class="sd">...   'out': 'chks_iter',</span>
+<span class="sd">...   'bind': {0: 'chunker', 1: 'wfs'},</span>
+<span class="sd">...   'func_label': 'map'},</span>
+<span class="sd">...  {'name': 'chain',</span>
+<span class="sd">...   'out': 'chks',</span>
+<span class="sd">...   'bind': {0: 'chks_iter'},</span>
+<span class="sd">...   'func_label': 'chain'},</span>
+<span class="sd">...  {'name': 'map_04',</span>
+<span class="sd">...   'out': 'fvs',</span>
+<span class="sd">...   'bind': {0: 'featurizer', 1: 'chks'},</span>
+<span class="sd">...   'func_label': 'map'},</span>
+<span class="sd">...  {'name': 'map_05',</span>
+<span class="sd">...   'out': 'model_outputs',</span>
+<span class="sd">...   'bind': {0: 'model', 1: 'fvs'},</span>
+<span class="sd">...   'func_label': 'map'}</span>
 <span class="sd">... ]</span>
 
 <span class="sd">What can we do with that?</span>
@@ -179,7 +772,7 @@
 <span class="sd">featurizer,chks -&gt; map_04 -&gt; fvs</span>
 <span class="sd">model,fvs -&gt; map_05 -&gt; model_outputs</span>
 
-<span class="sd">Wait! But we didn&#39;t actually provide the functions we wanted to use!</span>
+<span class="sd">Wait! But we didn't actually provide the functions we wanted to use!</span>
 <span class="sd">What happened?!?</span>
 <span class="sd">What happened is that ``mk_fnodes_from_fn_factories`` just made some for us.</span>
 <span class="sd">It used the convenient ``meshed.util.mk_place_holder_func`` which makes a function</span>
@@ -187,14 +780,14 @@
 
 <span class="sd">&gt;&gt;&gt; from inspect import signature</span>
 <span class="sd">&gt;&gt;&gt; str(signature(dag))</span>
-<span class="sd">&#39;(src_to_wf, data_src, chunker, featurizer, model)&#39;</span>
+<span class="sd">'(src_to_wf, data_src, chunker, featurizer, model)'</span>
 
 <span class="sd">We can actually call the ``dag`` and get something meaningful:</span>
 
 <span class="sd">&gt;&gt;&gt; dag(1, 2, 3, 4, 5)</span>
-<span class="sd">&#39;map(model=5, fvs=map(featurizer=4, chks=chain(chks_iter=map(chunker=3, wfs=call(src_to_wf=1, data_src=2)))))&#39;</span>
+<span class="sd">'map(model=5, fvs=map(featurizer=4, chks=chain(chks_iter=map(chunker=3, wfs=call(src_to_wf=1, data_src=2)))))'</span>
 
-<span class="sd">If you don&#39;t want ``mk_fnodes_from_fn_factories`` to do that (because you are in</span>
+<span class="sd">If you don't want ``mk_fnodes_from_fn_factories`` to do that (because you are in</span>
 <span class="sd">prod and need to make sure as much as possible is explicitly as expected, you can</span>
 <span class="sd">simply use a different ``factory_to_func`` argument. The default one is:</span>
 
@@ -203,10 +796,10 @@
 <span class="sd">which you can also reuse to make your own.</span>
 <span class="sd">See below how we provide a ``name_to_func_map`` to specify how ``func_label``s should</span>
 <span class="sd">map to actual functions, and set ``use_place_holder_fallback=False`` to make</span>
-<span class="sd">sure that we don&#39;t ever fallback on a placeholder function as we did above.</span>
+<span class="sd">sure that we don't ever fallback on a placeholder function as we did above.</span>
 
 <span class="sd">&gt;&gt;&gt; def _call(x, y):</span>
-<span class="sd">...     # would use operator.methodcaller(&#39;__call__&#39;) but doesn&#39;t have a __name__</span>
+<span class="sd">...     # would use operator.methodcaller('__call__') but doesn't have a __name__</span>
 <span class="sd">...     return x + y</span>
 <span class="sd">&gt;&gt;&gt; def _map(x, y):</span>
 <span class="sd">...     return [x, y]</span>
@@ -215,7 +808,7 @@
 <span class="sd">&gt;&gt;&gt;</span>
 <span class="sd">&gt;&gt;&gt; factory_to_func = partial(</span>
 <span class="sd">...     dlft_factory_to_func,</span>
-<span class="sd">...     name_to_func_map={&#39;map&#39;: _map, &#39;chain&#39;: _chain, &#39;call&#39;: _call},</span>
+<span class="sd">...     name_to_func_map={'map': _map, 'chain': _chain, 'call': _call},</span>
 <span class="sd">...     use_place_holder_fallback=False</span>
 <span class="sd">... )</span>
 <span class="sd">&gt;&gt;&gt;</span>
@@ -232,7 +825,7 @@
 <span class="sd">featurizer,chks -&gt; map_04 -&gt; fvs</span>
 <span class="sd">model,fvs -&gt; map_05 -&gt; model_outputs</span>
 <span class="sd">&gt;&gt;&gt; str(signature(dag))</span>
-<span class="sd">&#39;(src_to_wf, data_src, chunker, featurizer, model)&#39;</span>
+<span class="sd">'(src_to_wf, data_src, chunker, featurizer, model)'</span>
 
 <span class="sd">But see below that the dag is now using the functions we specified:</span>
 
@@ -246,7 +839,7 @@
 <span class="sd">&gt;&gt;&gt; dag(1, 2, 3, 4, 5)</span>
 <span class="sd">[5, [4, 6]]</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -271,32 +864,31 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">meshed.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">FuncNode</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">mk_place_holder_func</span><span class="p">,</span> <span class="n">ordered_set_operations</span>
 
-
-<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"T"</span><span class="p">)</span>
 
 <span class="c1"># Some restrictions exist and need to be clarified or removed (i.e. more cases handled)</span>
 <span class="c1"># For example,</span>
-<span class="c1"># * can&#39;t reuse a variable (would lead to same node)</span>
+<span class="c1"># * can't reuse a variable (would lead to same node)</span>
 <span class="c1"># * x = y (or x, y = tup) not handled (but could easily by binding)</span>
-<span class="c1"># We don&#39;t need these cases to be handled, only x = func(...) forms lead to Turing (I</span>
+<span class="c1"># We don't need these cases to be handled, only x = func(...) forms lead to Turing (I</span>
 <span class="c1"># think...):</span>
-<span class="c1"># Further other cases are not handled, but we don&#39;t want to handle ALL of python</span>
+<span class="c1"># Further other cases are not handled, but we don't want to handle ALL of python</span>
 <span class="c1"># -- just a sufficiently expressive subset.</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">attr_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">is_from_ast_module</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="s2">&quot;__module__&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_ast&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="s2">"__module__"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_ast"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ast_info_str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;lineno&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;lineno=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">"lineno"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"lineno=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s2">"</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;lineno=unknown&quot;</span>
+        <span class="k">return</span> <span class="s2">"lineno=unknown"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_itemgetter</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">()):</span>
@@ -307,9 +899,9 @@
 
 
 <div class="viewcode-block" id="signed_itemgetter">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.signed_itemgetter">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.signed_itemgetter">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">signed_itemgetter</span><span class="p">(</span><span class="o">*</span><span class="n">keys</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Like ``operator.itemgetter``, except has a signature, which we needed&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Like ``operator.itemgetter``, except has a signature, which we needed"""</span>
     <span class="k">return</span> <span class="n">partialx</span><span class="p">(</span><span class="n">_itemgetter</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">keys</span><span class="p">,</span> <span class="n">_rm_partialize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
@@ -320,21 +912,21 @@
 
         <span class="k">return</span> <span class="n">astunparse</span><span class="o">.</span><span class="n">unparse</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ModuleNotFoundError</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;to see the code, pip install astunparse&gt;&quot;</span>
+        <span class="k">return</span> <span class="s2">"&lt;to see the code, pip install astunparse&gt;"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_error_handler</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">_ast_info_str</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">If</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;At </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">: You cannot have if statements. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Replace them with functional equivalents. (</span><span class="si">{</span><span class="n">body</span><span class="si">=}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_ast_unparse</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"At </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">: You cannot have if statements. "</span>
+            <span class="sa">f</span><span class="s2">"Replace them with functional equivalents. (</span><span class="si">{</span><span class="n">body</span><span class="si">=}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">_ast_unparse</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Couldn&#39;t find a handler for parsing body with </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">body</span><span class="si">=}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_ast_unparse</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Couldn't find a handler for parsing body with </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">body</span><span class="si">=}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">_ast_unparse</span><span class="p">(</span><span class="n">body</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
 
@@ -343,7 +935,7 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">)):</span>
         <span class="k">return</span> <span class="n">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Expr</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">):</span>
-        <span class="n">dummy_var</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">body_index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())</span>
+        <span class="n">dummy_var</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">"_</span><span class="si">{</span><span class="n">body_index</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())</span>
         <span class="n">new_assign</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">dummy_var</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parse_assignment</span><span class="p">(</span><span class="n">new_assign</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Return</span><span class="p">):</span>
@@ -360,23 +952,23 @@
     <span class="c1"># TODO: extract validating code out as validation functions?</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">_ast_info_str</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All commands should be assignments, this one wasn&#39;t: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"All commands should be assignments, this one wasn't: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">):</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">targets</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">):</span>
         <span class="n">target</span> <span class="o">=</span> <span class="p">[</span><span class="n">body</span><span class="o">.</span><span class="n">target</span><span class="p">]</span>  <span class="c1"># ast.AnnAssign has a single target, not a list</span>
 
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Only one target allowed: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Only one target allowed: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
         <span class="n">target</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">)</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Should be a ast.Name or ast.Tuple: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">"Should be a ast.Name or ast.Tuple: </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="n">value</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">value</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">),</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Only assigned function calls are allowed:&quot;</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"Only assigned function calls are allowed:"</span> <span class="sa">f</span><span class="s2">" </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">target</span><span class="p">,</span> <span class="n">value</span>
@@ -391,9 +983,9 @@
 
 
 <div class="viewcode-block" id="parsed_to_node_kwargs">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.parsed_to_node_kwargs">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.parsed_to_node_kwargs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parsed_to_node_kwargs</span><span class="p">(</span><span class="n">target_value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract FuncNode kwargs (name, out, and bind) from ast (target,value) pairs</span>
+<span class="w">    </span><span class="sd">"""Extract FuncNode kwargs (name, out, and bind) from ast (target,value) pairs</span>
 
 <span class="sd">    :param target_value: A (target, value) pair</span>
 <span class="sd">    :return: A ``{name:..., out:..., bind:...}`` dict (meant to be used to curry FuncNode</span>
@@ -407,11 +999,11 @@
 <span class="sd">    &gt;&gt;&gt; for target_value in parse_assignment_steps(foo):</span>
 <span class="sd">    ...     for d in parsed_to_node_kwargs(target_value):</span>
 <span class="sd">    ...         print(d)</span>
-<span class="sd">    {&#39;name&#39;: &#39;func1&#39;, &#39;out&#39;: &#39;x&#39;, &#39;bind&#39;: {0: &#39;a&#39;, &#39;b&#39;: 2}}</span>
-<span class="sd">    {&#39;name&#39;: &#39;func2&#39;, &#39;out&#39;: &#39;y&#39;, &#39;bind&#39;: {0: &#39;x&#39;, 1: &#39;func1&#39;, &#39;c&#39;: 3, &#39;d&#39;: &#39;x&#39;}}</span>
+<span class="sd">    {'name': 'func1', 'out': 'x', 'bind': {0: 'a', 'b': 2}}</span>
+<span class="sd">    {'name': 'func2', 'out': 'y', 'bind': {0: 'x', 1: 'func1', 'c': 3, 'd': 'x'}}</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Note: ast.Tuple has names in &#39;elts&#39; attribute,</span>
+<span class="sd">    """</span>
+    <span class="c1"># Note: ast.Tuple has names in 'elts' attribute,</span>
     <span class="c1"># and could be handled, but would need to lead to multiple nodes</span>
     <span class="n">target</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">target_value</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">args</span>
@@ -422,10 +1014,10 @@
             <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">bind_from_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Tuple</span><span class="p">):</span>
-        <span class="n">assign_to_names</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span> <span class="n">target</span><span class="o">.</span><span class="n">elts</span><span class="p">))</span>
+        <span class="n">assign_to_names</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">"id"</span><span class="p">),</span> <span class="n">target</span><span class="o">.</span><span class="n">elts</span><span class="p">))</span>
         <span class="c1"># yield the function call information, assigning to a single variable</span>
         <span class="c1"># TODO: Long. Better way? (careful: need global uniqueness!)</span>
-        <span class="n">func_output_name</span> <span class="o">=</span> <span class="s2">&quot;__&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">assign_to_names</span><span class="p">)</span>
+        <span class="n">func_output_name</span> <span class="o">=</span> <span class="s2">"__"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">assign_to_names</span><span class="p">)</span>
         <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">value</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">out</span><span class="o">=</span><span class="n">func_output_name</span><span class="p">,</span>
@@ -435,14 +1027,14 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">assign_to_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">assign_to_names</span><span class="p">):</span>
             <span class="k">yield</span> <span class="nb">dict</span><span class="p">(</span>
                 <span class="n">func</span><span class="o">=</span><span class="n">signed_itemgetter</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
-                <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assign_to_name</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">assign_to_name</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                 <span class="n">out</span><span class="o">=</span><span class="n">assign_to_name</span><span class="p">,</span>
                 <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">func_output_name</span><span class="p">},</span>
-                <span class="n">func_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+                <span class="n">func_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]"</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="c1"># raise ValueError(f&quot;You&#39;re here: {target=}&quot;)</span>
+        <span class="c1"># raise ValueError(f"You're here: {target=}")</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Should be a ast.Name or ast.Tuple. Was: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Should be a ast.Name or ast.Tuple. Was: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
@@ -460,19 +1052,19 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_remove_indentation</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s+"</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">indent</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">indent_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">src</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">src</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">indent</span><span class="p">):</span>
                     <span class="k">yield</span> <span class="n">line</span><span class="p">[</span><span class="n">indent_length</span><span class="p">:]</span>
 
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;I found no indent!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"I found no indent!"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
@@ -483,13 +1075,13 @@
 
 
 <div class="viewcode-block" id="parse_steps">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.parse_steps">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.parse_steps">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_steps</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parse source code and generate tuples of information about it.</span>
 
 <span class="sd">    :param src: The source string or a python object whose code string can be extracted.</span>
-<span class="sd">    :return: And generator of &quot;target_values&quot;</span>
+<span class="sd">    :return: And generator of "target_values"</span>
 
 <span class="sd">    &gt;&gt;&gt; from meshed.makers import parse_steps</span>
 <span class="sd">    &gt;&gt;&gt; def foo():</span>
@@ -497,27 +1089,27 @@
 <span class="sd">    ...     y = func2(x, c=3)</span>
 <span class="sd">    &gt;&gt;&gt; target_values = list(parse_steps(foo))</span>
 
-<span class="sd">    Let&#39;s look at the first target_value to see what it contains:</span>
+<span class="sd">    Let's look at the first target_value to see what it contains:</span>
 
 <span class="sd">    &gt;&gt;&gt; name, call = target_values[0]  # a 2-tuple</span>
 <span class="sd">    &gt;&gt;&gt; assert isinstance(name, ast.Name)  # the first element is a ast Name object</span>
 <span class="sd">    &gt;&gt;&gt; sorted(vars(name))</span>
-<span class="sd">    [&#39;col_offset&#39;, &#39;ctx&#39;, &#39;end_col_offset&#39;, &#39;end_lineno&#39;, &#39;id&#39;, &#39;lineno&#39;]</span>
+<span class="sd">    ['col_offset', 'ctx', 'end_col_offset', 'end_lineno', 'id', 'lineno']</span>
 <span class="sd">    &gt;&gt;&gt; name.id</span>
-<span class="sd">    &#39;x&#39;</span>
+<span class="sd">    'x'</span>
 <span class="sd">    &gt;&gt;&gt; assert isinstance(call, ast.Call)  # the first element is a ast Call object</span>
 <span class="sd">    &gt;&gt;&gt; sorted(vars(call))</span>
-<span class="sd">    [&#39;args&#39;, &#39;col_offset&#39;, &#39;end_col_offset&#39;, &#39;end_lineno&#39;, &#39;func&#39;, &#39;keywords&#39;, &#39;lineno&#39;]</span>
+<span class="sd">    ['args', 'col_offset', 'end_col_offset', 'end_lineno', 'func', 'keywords', 'lineno']</span>
 <span class="sd">    &gt;&gt;&gt; call.args[0].id</span>
-<span class="sd">    &#39;a&#39;</span>
+<span class="sd">    'a'</span>
 <span class="sd">    &gt;&gt;&gt; call.keywords[0].arg</span>
-<span class="sd">    &#39;b&#39;</span>
+<span class="sd">    'b'</span>
 <span class="sd">    &gt;&gt;&gt; call.keywords[0].value.value</span>
 <span class="sd">    2</span>
 
 <span class="sd">    Basically, these ast objects contain all we need to know about the (parsed) source.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">src</span> <span class="o">=</span> <span class="n">_ensure_src_string</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
@@ -541,23 +1133,23 @@
 
 
 <div class="viewcode-block" id="src_to_func_node_factory">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.src_to_func_node_factory">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.src_to_func_node_factory">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">src_to_func_node_factory</span><span class="p">(</span>
     <span class="n">src</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">FuncNode</span> <span class="o">|</span> <span class="n">FuncNodeFactory</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    :param src: Callable or string of callable.</span>
 <span class="sd">    :param exclude_names: Names to exclude when making func_nodes</span>
 <span class="sd">    :return:</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">exclude_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">exclude_names</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">())</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">target_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parse_assignment_steps</span><span class="p">(</span><span class="n">src</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">node_kwargs</span> <span class="ow">in</span> <span class="n">parsed_to_node_kwargs</span><span class="p">(</span><span class="n">target_value</span><span class="p">):</span>
-            <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;func_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
+            <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">"func_label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
                 <span class="c1"># need to keep names uniques, so add a prefix to (hope) to get uniqueness</span>
-                <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">02.0f</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">exclude_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+                <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">02.0f</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">exclude_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">[</span><span class="s2">"name"</span><span class="p">])</span>
             <span class="k">yield</span> <span class="n">node_kwargs_to_func_node_factory</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">)</span></div>
 
 
@@ -566,41 +1158,41 @@
 
 
 <span class="c1"># TODO: A bit strange to ask a factory for information to get a func that it needs</span>
-<span class="c1">#  to make itself. Do we gain much over simply saying &quot;factory, make yourself&quot;?</span>
+<span class="c1">#  to make itself. Do we gain much over simply saying "factory, make yourself"?</span>
 <div class="viewcode-block" id="dlft_factory_to_func">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.dlft_factory_to_func">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.dlft_factory_to_func">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dlft_factory_to_func</span><span class="p">(</span>
     <span class="n">factory</span><span class="p">:</span> <span class="n">partial</span><span class="p">,</span>
     <span class="n">name_to_func_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a function for the given factory, using&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get a function for the given factory, using"""</span>
     <span class="c1"># TODO: Add extra validation (like n_args of return func against bind)</span>
     <span class="n">name_to_func_map</span> <span class="o">=</span> <span class="n">name_to_func_map</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
 
     <span class="n">factory_kwargs</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">keywords</span>
     <span class="n">name</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">&quot;func_label&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">]</span>
+        <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">"func_label"</span><span class="p">]</span> <span class="ow">or</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="ow">or</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">"out"</span><span class="p">]</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">name_to_func_map</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">name_to_func_map</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
     <span class="k">elif</span> <span class="n">use_place_holder_fallback</span><span class="p">:</span>
         <span class="n">arg_names</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">k</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">&quot;bind&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="n">k</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">factory_kwargs</span><span class="p">[</span><span class="s2">"bind"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">mk_place_holder_func</span><span class="p">(</span><span class="n">arg_names</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;name not found in name_to_func_map: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"name not found in name_to_func_map: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="mk_fnodes_from_fn_factories">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.mk_fnodes_from_fn_factories">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.mk_fnodes_from_fn_factories">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">mk_fnodes_from_fn_factories</span><span class="p">(</span>
     <span class="n">fnodes_factories</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNodeFactory</span><span class="p">],</span>
     <span class="n">factory_to_func</span><span class="p">:</span> <span class="n">FactoryToFunc</span> <span class="o">=</span> <span class="n">dlft_factory_to_func</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make func nodes from func node factories and a specification of how to make the</span>
+<span class="w">    </span><span class="sd">"""Make func nodes from func node factories and a specification of how to make the</span>
 <span class="sd">    nodes from these.</span>
 
 <span class="sd">    :param fnodes_factories: An iterable of FuncNodeFactory</span>
@@ -608,11 +1200,11 @@
 <span class="sd">        FuncNodeFactory input (where it will draw the information it needs to know</span>
 <span class="sd">        what kind of function to make).</span>
 <span class="sd">    :return:</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># TODO: Might be a cleaner design for this...</span>
     <span class="k">for</span> <span class="n">fnode_factory</span> <span class="ow">in</span> <span class="n">fnodes_factories</span><span class="p">:</span>
         <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">fnode_factory</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">n_required</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;func&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">n_required</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">sig</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"func"</span><span class="p">:</span>
             <span class="c1"># first making sure the fnode_factory is exactly as expected for this case,</span>
             <span class="c1"># get a function for this fnode_factory, then use it to make the fnode</span>
             <span class="n">func</span> <span class="o">=</span> <span class="n">factory_to_func</span><span class="p">(</span><span class="n">fnode_factory</span><span class="p">)</span>
@@ -621,18 +1213,18 @@
             <span class="c1"># if fnode_factory has no (required) arguments, just call the factory:</span>
             <span class="k">yield</span> <span class="n">fnode_factory</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># if couldn&#39;t figure it out from the last two cases, freak out!</span>
+            <span class="c1"># if couldn't figure it out from the last two cases, freak out!</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The fnode_factory didn&#39;t have the expected format, so I&#39;m freaking &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;out. It&#39;s supposed to be a no-arguments-required-callable or a &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;functools.partial that needs only a func to make the func node. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;This is the offending fnode_factory: </span><span class="si">{</span><span class="n">fnode_factory</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"The fnode_factory didn't have the expected format, so I'm freaking "</span>
+                <span class="sa">f</span><span class="s2">"out. It's supposed to be a no-arguments-required-callable or a "</span>
+                <span class="sa">f</span><span class="s2">"functools.partial that needs only a func to make the func node. "</span>
+                <span class="sa">f</span><span class="s2">"This is the offending fnode_factory: </span><span class="si">{</span><span class="n">fnode_factory</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="dlft_factory_to_func_mapping">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.dlft_factory_to_func_mapping">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.dlft_factory_to_func_mapping">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">dlft_factory_to_func_mapping</span><span class="p">(</span><span class="n">Mapping</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">dlft_factory_to_func</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
@@ -640,19 +1232,19 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_code_to_fnodes</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="o">=</span><span class="n">dlft_factory_to_func</span><span class="p">):</span>
-    <span class="c1"># Make all the funodes, but partial ones that don&#39;t have the func defined yet</span>
+    <span class="c1"># Make all the funodes, but partial ones that don't have the func defined yet</span>
     <span class="n">fnodes_factories</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">src_to_func_node_factory</span><span class="p">(</span><span class="n">src</span><span class="p">))</span>
-    <span class="c1"># &quot;Inject&quot; the actual functions</span>
+    <span class="c1"># "Inject" the actual functions</span>
     <span class="k">return</span> <span class="n">mk_fnodes_from_fn_factories</span><span class="p">(</span><span class="n">fnodes_factories</span><span class="p">,</span> <span class="n">func_src</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_extract_name_from_single_func_def</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">body</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">body</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="s2">"body"</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">first_element</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">body</span><span class="p">))</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_element</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">FunctionDef</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="p">(</span><span class="n">name</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">first_element</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">name</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">first_element</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="p">):</span>
             <span class="k">return</span> <span class="n">name</span>
     <span class="k">return</span> <span class="n">default</span>
@@ -670,7 +1262,7 @@
     <span class="n">func_src</span><span class="p">:</span> <span class="n">FuncSource</span> <span class="o">=</span> <span class="n">dlft_factory_to_func</span><span class="p">,</span>
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get func_nodes from src code&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get func_nodes from src code"""</span>
     <span class="n">func_src</span> <span class="o">=</span> <span class="n">_ensure_func_src</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">use_place_holder_fallback</span><span class="p">)</span>
     <span class="c1"># Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_code_to_fnodes</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="p">))</span>
@@ -691,14 +1283,14 @@
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a ``meshed.DAG`` from src code</span>
+<span class="w">    </span><span class="sd">"""Get a ``meshed.DAG`` from src code</span>
 
 <span class="sd">    This function parses Python code and creates a DAG that represents the</span>
 <span class="sd">    computational flow. The inverse operation is available through ``dag_to_code``</span>
 <span class="sd">    which can convert a DAG back to executable Python code.</span>
 
 <span class="sd">    See also: ``dag_to_code`` for the inverse operation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">fnodes</span> <span class="o">=</span> <span class="n">code_to_fnodes</span><span class="p">(</span>
         <span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="o">=</span><span class="n">func_src</span><span class="p">,</span> <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="n">use_place_holder_fallback</span>
     <span class="p">)</span>
@@ -717,25 +1309,25 @@
 <span class="c1"># from typing import Tuple, Iterable, Iterator</span>
 <span class="c1"># from meshed import FuncNode, code_to_dag, code_to_fnodes, DAG</span>
 
-<span class="n">extract_tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\w+&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span>
+<span class="n">extract_tokens</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\w+"</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span>
 
 
 <div class="viewcode-block" id="triples_to_fnodes">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.triples_to_fnodes">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.triples_to_fnodes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">triples_to_fnodes</span><span class="p">(</span><span class="n">triples</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts an iterable of func call triples to an iterable of ``FuncNode``s.</span>
+<span class="w">    </span><span class="sd">"""Converts an iterable of func call triples to an iterable of ``FuncNode``s.</span>
 <span class="sd">    (Which in turn can be converted to a ``DAG``.)</span>
 
-<span class="sd">    Note how the python identifiers are extracted (on the basis of &quot;an unbroken</span>
-<span class="sd">    sequence of alphanumerical (and underscore) characters&quot;, ignoring all other</span>
+<span class="sd">    Note how the python identifiers are extracted (on the basis of "an unbroken</span>
+<span class="sd">    sequence of alphanumerical (and underscore) characters", ignoring all other</span>
 <span class="sd">    characters).</span>
 
 <span class="sd">    &gt;&gt;&gt; from meshed import DAG</span>
 <span class="sd">    &gt;&gt;&gt; dag = DAG(</span>
 <span class="sd">    ...     triples_to_fnodes(</span>
 <span class="sd">    ...     [</span>
-<span class="sd">    ...         (&#39;alpha bravo&#39;, &#39;charlie&#39;, &#39;delta echo&#39;),</span>
-<span class="sd">    ...         (&#39; foxtrot  &amp;^$#&#39;, &#39;golf&#39;, &#39;  alpha,  echo&#39;),</span>
+<span class="sd">    ...         ('alpha bravo', 'charlie', 'delta echo'),</span>
+<span class="sd">    ...         (' foxtrot  &amp;^$#', 'golf', '  alpha,  echo'),</span>
 <span class="sd">    ...     ])</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; print(dag.synopsis_string())</span>
@@ -743,9 +1335,9 @@
 <span class="sd">    alpha__bravo -&gt; alpha__0 -&gt; alpha</span>
 <span class="sd">    alpha__bravo -&gt; bravo__1 -&gt; bravo</span>
 <span class="sd">    alpha,echo -&gt; golf -&gt; foxtrot</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">code</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_triple_to_func_call_str</span><span class="p">(</span><span class="o">*</span><span class="n">triple</span><span class="p">)</span> <span class="k">for</span> <span class="n">triple</span> <span class="ow">in</span> <span class="n">triples</span><span class="p">)</span>
-    <span class="n">code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;def main():</span><span class="se">\n\t</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n\t</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_triple_to_func_call_str</span><span class="p">(</span><span class="o">*</span><span class="n">triple</span><span class="p">)</span> <span class="k">for</span> <span class="n">triple</span> <span class="ow">in</span> <span class="n">triples</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"def main():</span><span class="se">\n\t</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2">"</span>
     <span class="k">return</span> <span class="n">code_to_fnodes</span><span class="p">(</span><span class="n">code</span><span class="p">)</span></div>
 
 
@@ -755,14 +1347,14 @@
     <span class="n">func_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">inputs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a `(outputs, func_name, inputs)` triple to a function call string.</span>
+<span class="w">    </span><span class="sd">"""Converts a `(outputs, func_name, inputs)` triple to a function call string.</span>
 
-<span class="sd">    &gt;&gt;&gt; _triple_to_func_call_str((&#39;a&#39;, &#39;b&#39;), &#39;func&#39;, (&#39;c&#39;, &#39;d&#39;))</span>
-<span class="sd">    &#39;a, b = func(c, d)&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; _triple_to_func_call_str(('a', 'b'), 'func', ('c', 'd'))</span>
+<span class="sd">    'a, b = func(c, d)'</span>
+<span class="sd">    """</span>
     <span class="n">outputs</span> <span class="o">=</span> <span class="n">_ensure_tokens_iterable</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
     <span class="n">inputs</span> <span class="o">=</span> <span class="n">_ensure_tokens_iterable</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_tokens_iterable</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
@@ -782,14 +1374,14 @@
             <span class="n">name_to_func_map</span><span class="o">=</span><span class="n">name_to_func_map</span><span class="p">,</span>
             <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="n">use_place_holder_fallback</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">Callable</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;func_src should be callable, or a mapping&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">Callable</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"func_src should be callable, or a mapping"</span>
     <span class="k">return</span> <span class="n">func_src</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">src</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">_extract_name_from_single_func_def</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s2">&quot;dag_made_from_code_parsing&quot;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">_extract_name_from_single_func_def</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s2">"dag_made_from_code_parsing"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">name</span>
@@ -832,9 +1424,9 @@
 
 
 <div class="viewcode-block" id="named_funcs_to_func_nodes">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.named_funcs_to_func_nodes">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.named_funcs_to_func_nodes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">named_funcs_to_func_nodes</span><span class="p">(</span><span class="n">named_funcs</span><span class="p">:</span> <span class="n">NamedFuncs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make ``FuncNode``s from keyword arguments, using the key as the ``.out`` of the</span>
+<span class="w">    </span><span class="sd">"""Make ``FuncNode``s from keyword arguments, using the key as the ``.out`` of the</span>
 <span class="sd">    ``FuncNode`` and the value as the ``.func`` of the ``FuncNode``.</span>
 
 <span class="sd">    Example use: To get from ``Slabs`` to ``DAG``.</span>
@@ -855,26 +1447,26 @@
 <span class="sd">    &gt;&gt;&gt; dag2 = DAG(named_funcs_to_func_nodes(named_funcs))</span>
 <span class="sd">    &gt;&gt;&gt; assert dag2(x=3) == dag(x=3) == 24</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">(</span>
-        <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span> <span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">named_funcs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">_"</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span> <span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">named_funcs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="func_nodes_to_named_funcs">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.func_nodes_to_named_funcs">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.func_nodes_to_named_funcs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">func_nodes_to_named_funcs</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NamedFuncs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make some components (kwargs) based on the ``.out`` and ``.func`` of the</span>
+<span class="w">    </span><span class="sd">"""Make some components (kwargs) based on the ``.out`` and ``.func`` of the</span>
 <span class="sd">    ``FuncNode``s.</span>
 
 <span class="sd">    Example use: To get from ``DAG`` to ``Slabs``.</span>
 
 <span class="sd">    &gt;&gt;&gt; from meshed import DAG, FuncNode</span>
 <span class="sd">    &gt;&gt;&gt; dag = DAG([</span>
-<span class="sd">    ...     FuncNode(lambda x: x + 1, out=&#39;a&#39;),</span>
-<span class="sd">    ...     FuncNode(lambda a: a + 2, out=&#39;b&#39;,),</span>
-<span class="sd">    ...     FuncNode(lambda a, b: a * b, out=&#39;c&#39;),</span>
+<span class="sd">    ...     FuncNode(lambda x: x + 1, out='a'),</span>
+<span class="sd">    ...     FuncNode(lambda a: a + 2, out='b',),</span>
+<span class="sd">    ...     FuncNode(lambda a, b: a * b, out='c'),</span>
 <span class="sd">    ... ])</span>
 <span class="sd">    &gt;&gt;&gt; dag(x=10)</span>
 <span class="sd">    143</span>
@@ -882,10 +1474,10 @@
 <span class="sd">    &gt;&gt;&gt; isinstance(named_funcs, dict)</span>
 <span class="sd">    True</span>
 <span class="sd">    &gt;&gt;&gt; list(named_funcs)</span>
-<span class="sd">    [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
-<span class="sd">    &gt;&gt;&gt; callable(named_funcs[&#39;a&#39;])</span>
+<span class="sd">    ['a', 'b', 'c']</span>
+<span class="sd">    &gt;&gt;&gt; callable(named_funcs['a'])</span>
 <span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; assert dag.find_func_node(&#39;a&#39;).func(3) == named_funcs[&#39;a&#39;](3) ==4</span>
+<span class="sd">    &gt;&gt;&gt; assert dag.find_func_node('a').func(3) == named_funcs['a'](3) ==4</span>
 
 <span class="sd">    The inverse of this function is ``named_funcs_to_func_nodes``.</span>
 
@@ -894,17 +1486,17 @@
 <span class="sd">    &gt;&gt;&gt; assert dag2(x=3) == dag(x=3) == 24</span>
 
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">node</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">func</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">}</span></div>
 
 
 
 <span class="c1"># --------------------------------------------------------------------------------------</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">This section contains some ideas around making a two-way interaction between meshed </span>
 <span class="sd">and a GUI that will enable the construction of meshes as well as rendering them, </span>
 <span class="sd">and possibly running them.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="c1"># from typing import Callable</span>
 <span class="c1"># from meshed.dag import DAG, FuncNode</span>
@@ -920,82 +1512,104 @@
     <span class="n">fnode</span><span class="p">:</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_to_jdict</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Jdict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
     <span class="n">jdict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="s2">&quot;func_label&quot;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">func_label</span><span class="p">,</span>
-        <span class="s2">&quot;bind&quot;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span>
-        <span class="s2">&quot;out&quot;</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s2">"func_label"</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">func_label</span><span class="p">,</span>
+        <span class="s2">"bind"</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span>
+        <span class="s2">"out"</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">func_to_jdict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;func&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_to_jdict</span><span class="p">(</span><span class="n">fnode</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
+        <span class="n">jdict</span><span class="p">[</span><span class="s2">"func"</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_to_jdict</span><span class="p">(</span><span class="n">fnode</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">jdict</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">jdict_to_fnode</span><span class="p">(</span><span class="n">jdict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">jdict_to_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Jdict</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">jdict_to_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span>
-            <span class="n">func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">(</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;func&quot;</span><span class="p">]),</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
-            <span class="n">func_label</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;func_label&quot;</span><span class="p">],</span>
-            <span class="n">bind</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;bind&quot;</span><span class="p">],</span>
-            <span class="n">out</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">],</span>
+            <span class="n">func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">(</span><span class="n">jdict</span><span class="p">[</span><span class="s2">"func"</span><span class="p">]),</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+            <span class="n">func_label</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">"func_label"</span><span class="p">],</span>
+            <span class="n">bind</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">"bind"</span><span class="p">],</span>
+            <span class="n">out</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">"out"</span><span class="p">],</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Need a function&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Need a function"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="dag_to_jdict">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.dag_to_jdict">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.dag_to_jdict">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dag_to_jdict</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_to_jdict</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Will produce a json-serializable dictionary from a dag.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">fnode_to_jdict_</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">fnode_to_jdict</span><span class="p">,</span> <span class="n">func_to_jdict</span><span class="o">=</span><span class="n">func_to_jdict</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">dag</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="s2">&quot;func_nodes&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">fnode_to_jdict_</span><span class="p">,</span> <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)),</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="n">dag</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s2">"func_nodes"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">fnode_to_jdict_</span><span class="p">,</span> <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)),</span>
     <span class="p">}</span></div>
 
 
 
 <div class="viewcode-block" id="jdict_to_dag">
-<a class="viewcode-back" href="../../module_docs/meshed/makers.html#meshed.makers.jdict_to_dag">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.jdict_to_dag">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">jdict_to_dag</span><span class="p">(</span><span class="n">jdict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">jdict_to_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Will produce a dag from a json-serializable dictionary.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">jdict_to_fnode_</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">jdict_to_fnode</span><span class="p">,</span> <span class="n">jdict_to_func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
-        <span class="n">func_nodes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">jdict_to_fnode_</span><span class="p">,</span> <span class="n">jdict</span><span class="p">[</span><span class="s2">&quot;func_nodes&quot;</span><span class="p">])),</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+        <span class="n">func_nodes</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">jdict_to_fnode_</span><span class="p">,</span> <span class="n">jdict</span><span class="p">[</span><span class="s2">"func_nodes"</span><span class="p">])),</span>
     <span class="p">)</span></div>
 
 </pre></div>
 
-           </div>
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p></p>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
   </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
 
-</footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+  </footer>
+  </body>
 </html>

@@ -1,0 +1,64 @@
+meshed.util
+===========
+
+.. automodule:: meshed.util
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      arg_names
+      args_funcnames
+      conditional_trans
+      curry
+      dot_to_ascii
+      extra_wraps
+      extract_dict
+      extract_items
+      extract_values
+      filepath_to_module
+      find_first_free_name
+      func_name
+      funcs_conjunction
+      funcs_disjunction
+      funcs_to_digraph
+      if_then_else
+      incremental_str_maker
+      instance_checker
+      inverse_dict_asserting_losslessness
+      iterize
+      lambda_name
+      mk_func_name
+      mk_place_holder_func
+      my_isinstance
+      mywraps
+      named_partial
+      numbered_suffix_renamer
+      objects_defined_in_module
+      ordered_set_operations
+      pairs
+      parameter_merger
+      print_ascii_graph
+      provides
+      replace_item_in_iterable
+      uncurry
+      unnameable_func_name
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ConditionalIterize
+      ModuleNotFoundIgnore
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      InvalidFunctionParameters
+      NameValidationError
+      NotFound
+      NotUniqueError
+      ValidationError
+   

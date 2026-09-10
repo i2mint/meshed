@@ -1,0 +1,15 @@
+meshed.examples.vaccine\_vs\_no\_vaccine
+========================================
+
+.. automodule:: meshed.examples.vaccine_vs_no_vaccine
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      death_toll
+      die
+      infected
+      r
+   

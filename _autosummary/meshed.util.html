@@ -1,0 +1,1393 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="meshed.util.html.md">
+<link rel="describedby" href="../llms.txt" type="text/markdown">
+    <title>meshed.util &#8212; meshed</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/epythet.css?v=20ed5096" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fd10adb8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/meshed.util';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="meshed.viz" href="meshed.viz.html" />
+    <link rel="prev" title="meshed.tools" href="meshed.tools.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.166" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">meshed</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="meshed.html">meshed</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="meshed.base.html">meshed.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.caching.html">meshed.caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.components.html">meshed.components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.composition.html">meshed.composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.dag.html">meshed.dag</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="meshed.examples.html">meshed.examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="meshed.examples.online_marketing.html">meshed.examples.online_marketing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.examples.price_elasticity.html">meshed.examples.price_elasticity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.examples.vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="meshed.ext.html">meshed.ext</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="meshed.ext.gk.html">meshed.ext.gk</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.itools.html">meshed.itools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.makers.html">meshed.makers</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="meshed.scrap.html">meshed.scrap</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.cached_dag.html">meshed.scrap.cached_dag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.conversion.html">meshed.scrap.conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.gui_interaction.html">meshed.scrap.gui_interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.misc_utils.html">meshed.scrap.misc_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.reactive_scope.html">meshed.scrap.reactive_scope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="meshed.scrap.wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.slabs.html">meshed.slabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.tools.html">meshed.tools</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">meshed.util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.viz.html">meshed.viz</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="meshed.html" class="nav-link">meshed</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">meshed.util</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-meshed.util">
+<span id="meshed-util"></span><h1>meshed.util<a class="headerlink" href="#module-meshed.util" title="Link to this heading">#</a></h1>
+<p>util functions</p>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">arg_names</span></code>(func, func_name[, exclude_names])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.args_funcnames" title="meshed.util.args_funcnames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">args_funcnames</span></code></a>(funcs[, name_of_func])</p></td>
+<td><p>Generates (arg_name, func_id) pairs from the iterable of functions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.conditional_trans" title="meshed.util.conditional_trans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conditional_trans</span></code></a>(obj, condition, trans)</p></td>
+<td><p>Conditionally transform an object unless it is marked as a literal.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">curry</span></code>(func)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.dot_to_ascii" title="meshed.util.dot_to_ascii"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot_to_ascii</span></code></a>(dot[, fancy])</p></td>
+<td><p>Convert a dot string to an ascii rendering of the diagram.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extra_wraps</span></code>(func[, name, doc_prefix])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.extract_dict" title="meshed.util.extract_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_dict</span></code></a>(d, keys)</p></td>
+<td><p>Extract items from dict <code class="docutils literal notranslate"><span class="pre">d</span></code>, returning them as a dict.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.extract_items" title="meshed.util.extract_items"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_items</span></code></a>(d, keys)</p></td>
+<td><p>generator of (k, v) pairs extracted from d for keys</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.extract_values" title="meshed.util.extract_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_values</span></code></a>(d, keys)</p></td>
+<td><p>Extract values from dict <code class="docutils literal notranslate"><span class="pre">d</span></code>, returning them:</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.filepath_to_module" title="meshed.util.filepath_to_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filepath_to_module</span></code></a>(file_path)</p></td>
+<td><p>A context manager to import a Python file as a module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_first_free_name</span></code>(prefix[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.func_name" title="meshed.util.func_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">func_name</span></code></a>(func)</p></td>
+<td><p>The func.__name__ of a callable func, or makes and returns one if that fails.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.funcs_conjunction" title="meshed.util.funcs_conjunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcs_conjunction</span></code></a>(*funcs)</p></td>
+<td><p>Makes a conjunction of functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.funcs_disjunction" title="meshed.util.funcs_disjunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcs_disjunction</span></code></a>(*funcs)</p></td>
+<td><p>Makes a disjunction of functions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcs_to_digraph</span></code>(funcs[, graph])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.if_then_else" title="meshed.util.if_then_else"><code class="xref py py-obj docutils literal notranslate"><span class="pre">if_then_else</span></code></a>(if_func, then_func, else_func, ...)</p></td>
+<td><p>Tool to &quot;functionalize&quot; the if-then-else logic.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.incremental_str_maker" title="meshed.util.incremental_str_maker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">incremental_str_maker</span></code></a>([str_format])</p></td>
+<td><p>Make a function that will produce a (incrementally) new string at every call.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.instance_checker" title="meshed.util.instance_checker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_checker</span></code></a>(class_or_tuple)</p></td>
+<td><p>Makes a boolean function that checks the instance of an object</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_dict_asserting_losslessness</span></code>(d)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.iterize" title="meshed.util.iterize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iterize</span></code></a>(func[, name])</p></td>
+<td><p>From an Input-&gt;Ouput function, makes a Iterator[Input]-&gt;Itertor[Output] Some call this &quot;vectorization&quot;, but it's not really a vector, but an iterable, thus the name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_name</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.mk_func_name" title="meshed.util.mk_func_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_func_name</span></code></a>(func[, exclude_names])</p></td>
+<td><p>Makes a function name that doesn't clash with the exclude_names iterable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.mk_place_holder_func" title="meshed.util.mk_place_holder_func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_place_holder_func</span></code></a>(arg_names_or_sig[, ...])</p></td>
+<td><p>Make (working and picklable) function with a specific signature.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.my_isinstance" title="meshed.util.my_isinstance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">my_isinstance</span></code></a>(obj, class_or_tuple)</p></td>
+<td><p>Same as builtin instance, but without position only constraint.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mywraps</span></code>(func[, name, doc_prefix])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.named_partial" title="meshed.util.named_partial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_partial</span></code></a>(func, *args[, __name__])</p></td>
+<td><p>functools.partial, but with a __name__</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.numbered_suffix_renamer" title="meshed.util.numbered_suffix_renamer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numbered_suffix_renamer</span></code></a>(name[, sep])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.objects_defined_in_module" title="meshed.util.objects_defined_in_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objects_defined_in_module</span></code></a>(module, *[, ...])</p></td>
+<td><p>Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.ordered_set_operations" title="meshed.util.ordered_set_operations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ordered_set_operations</span></code></a>(a, b)</p></td>
+<td><p>Returns a triple (a-b, a&amp;b, b-a) for two iterables a and b.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs</span></code>(xs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.parameter_merger" title="meshed.util.parameter_merger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_merger</span></code></a>(*params[, same_name, ...])</p></td>
+<td><p>Validates that all the params are exactly the same, returning the first if so.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_ascii_graph</span></code>(funcs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.provides" title="meshed.util.provides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">provides</span></code></a>(*var_names)</p></td>
+<td><p>Decorator to assign <code class="docutils literal notranslate"><span class="pre">var_names</span></code> to a <code class="docutils literal notranslate"><span class="pre">_provides</span></code> attribute of function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.replace_item_in_iterable" title="meshed.util.replace_item_in_iterable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_item_in_iterable</span></code></a>(iterable, ...[, egress])</p></td>
+<td><p>Returns a list where all items satisfying <code class="docutils literal notranslate"><span class="pre">condition(item)</span></code> were replaced with <code class="docutils literal notranslate"><span class="pre">replacement(item)</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">uncurry</span></code>(func)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unnameable_func_name</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Classes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.ConditionalIterize" title="meshed.util.ConditionalIterize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditionalIterize</span></code></a>(func[, iterize_type, ...])</p></td>
+<td><p>A decorator that &quot;iterizes&quot; a function call if input satisfies a condition.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModuleNotFoundIgnore</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Exceptions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.InvalidFunctionParameters" title="meshed.util.InvalidFunctionParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InvalidFunctionParameters</span></code></a></p></td>
+<td><p>To be used when a function's parameters are not compliant with some rule about them.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.NameValidationError" title="meshed.util.NameValidationError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NameValidationError</span></code></a></p></td>
+<td><p>Use to indicate that there's a problem with a name or generating a valid name</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.NotFound" title="meshed.util.NotFound"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotFound</span></code></a></p></td>
+<td><p>To be raised when something is expected to exist, but doesn't</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.NotUniqueError" title="meshed.util.NotUniqueError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotUniqueError</span></code></a></p></td>
+<td><p>Error to be raised when unicity is expected, but violated</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.ValidationError" title="meshed.util.ValidationError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValidationError</span></code></a></p></td>
+<td><p>Error that is raised when an object's validation failed</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.util.ConditionalIterize">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">ConditionalIterize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterize_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'collections.abc.Iterator'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterize_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#ConditionalIterize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.ConditionalIterize" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A decorator that “iterizes” a function call if input satisfies a condition.
+That is, apply <code class="docutils literal notranslate"><span class="pre">map(func,</span> <span class="pre">input)</span></code> (iterize) or <code class="docutils literal notranslate"><span class="pre">func(input)</span></code> according to some
+conidition on <code class="docutils literal notranslate"><span class="pre">input</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+</pre></div>
+</div>
+<p>The function does this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="s1">'string'</span><span class="p">)</span>
+<span class="go">'stringstring'</span>
+</pre></div>
+</div>
+<p>The iterized version of the function does this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">iterized_foo</span> <span class="o">=</span> <span class="n">iterize</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">iterized_foo</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+<span class="go">[2, 4, 6]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_foo</span> <span class="o">=</span> <span class="n">ConditionalIterize</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_foo</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">new_foo</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+<span class="go">[2, 4, 6]</span>
+</pre></div>
+</div>
+<p>See what happens if we do this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">new_foo</span><span class="p">(</span><span class="s1">'string'</span><span class="p">))</span>
+<span class="go">['ss', 'tt', 'rr', 'ii', 'nn', 'gg']</span>
+</pre></div>
+</div>
+<p>Maybe you expected <code class="code docutils literal notranslate"><span class="pre">'stringstring'</span></code> because you are thinking of <code class="code docutils literal notranslate"><span class="pre">string</span></code> as a valid,
+single input. But the condition of iterization is to be an Iterable, which a
+string is, thus the (perhaps) unexpected result.</p>
+<p>In fact, this problem is a general one:
+If your base function doesn’t process iterables, the <code class="docutils literal notranslate"><span class="pre">isinstance(x,</span> <span class="pre">Iterable)</span></code>
+is good enough – but if it is supposed to process an iterable in the first place,
+how can you distinguish whether to use the iterized version or not?
+The solution depends on the situation and the iterface you want. You choose.</p>
+<p>Since the situation where you’ll want to iterize functions in the first place is when
+you’re building streaming pipelines, a good fallback choice is to iterize if and
+only if the input is an iterator. This is condition will trigger the iterization
+when the input has a <code class="docutils literal notranslate"><span class="pre">__next__</span></code> – so things like generators, but not lists,
+tuples, sets, etc.</p>
+<p>See in the following that <code class="docutils literal notranslate"><span class="pre">ConditionalIterize</span></code> also has a <code class="docutils literal notranslate"><span class="pre">wrap</span></code> class method
+that can be used to wrap a function at definition time.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@ConditionalIterize</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">Iterator</span><span class="p">)</span>  <span class="c1"># Iterator is the default, so no need here</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="s1">'string'</span><span class="p">)</span>
+<span class="go">'stringstring'</span>
+</pre></div>
+</div>
+<p>If you want to process a “stream” of numbers 1, 2, 3, don’t do it this way:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">[1, 2, 3, 1, 2, 3]</span>
+</pre></div>
+</div>
+<p>Instead, you should explicitly wrap that iterable in an iterator, to trigger the
+iterization:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">foo</span><span class="p">(</span><span class="nb">iter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])))</span>
+<span class="go">[2, 4, 6]</span>
+</pre></div>
+</div>
+<p>So far, the only way we controlled the iterize condition is through a type.
+Really, the condition that is used behind the scenes is
+<code class="docutils literal notranslate"><span class="pre">isinstance(obj,</span> <span class="pre">self.iterize_type)</span></code>.
+If you need more complex conditions though, you can specify it through the
+<code class="docutils literal notranslate"><span class="pre">iterize_condition</span></code> argument. The <code class="docutils literal notranslate"><span class="pre">iterize_type</span></code> is also used to
+annotate the resulting wrapped function if it’s first argument is annotated.
+As a consequence, <code class="docutils literal notranslate"><span class="pre">iterize_type</span></code> needs to be a “generic” type.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@ConditionalIterize</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)))</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">foo</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+<span class="go">[2, 4, 6]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature</span>
+</pre></div>
+</div>
+<p>We annotated <code class="docutils literal notranslate"><span class="pre">x</span></code> as <code class="docutils literal notranslate"><span class="pre">int</span></code>, so see now the annotation of the wrapped function:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">foo</span><span class="p">))</span>
+<span class="go">'(x: Union[int, Iterable[int]], y=2)'</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="meshed.util.InvalidFunctionParameters">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">InvalidFunctionParameters</span></span><a class="reference internal" href="../_modules/meshed/util.html#InvalidFunctionParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.InvalidFunctionParameters" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<p>To be used when a function’s parameters are not compliant with some rule about
+them.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="meshed.util.NameValidationError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">NameValidationError</span></span><a class="reference internal" href="../_modules/meshed/util.html#NameValidationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.NameValidationError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<p>Use to indicate that there’s a problem with a name or generating a valid name</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="meshed.util.NotFound">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">NotFound</span></span><a class="reference internal" href="../_modules/meshed/util.html#NotFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.NotFound" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#meshed.util.ValidationError" title="meshed.util.ValidationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValidationError</span></code></a></p>
+<p>To be raised when something is expected to exist, but doesn’t</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="meshed.util.NotUniqueError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">NotUniqueError</span></span><a class="reference internal" href="../_modules/meshed/util.html#NotUniqueError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.NotUniqueError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#meshed.util.ValidationError" title="meshed.util.ValidationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValidationError</span></code></a></p>
+<p>Error to be raised when unicity is expected, but violated</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="meshed.util.ValidationError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">ValidationError</span></span><a class="reference internal" href="../_modules/meshed/util.html#ValidationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.ValidationError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<p>Error that is raised when an object’s validation failed</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.args_funcnames">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">args_funcnames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_of_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">func_name&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#args_funcnames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.args_funcnames" title="Link to this definition">#</a></dt>
+<dd><p>Generates (arg_name, func_id) pairs from the iterable of functions</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.conditional_trans">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">conditional_trans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#conditional_trans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.conditional_trans" title="Link to this definition">#</a></dt>
+<dd><p>Conditionally transform an object unless it is marked as a literal.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">trans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">conditional_trans</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="nb">str</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">,</span> <span class="n">trans</span><span class="o">=</span><span class="nb">float</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">trans</span><span class="p">(</span><span class="s1">'not a number'</span><span class="p">)</span>
+<span class="go">'not a number'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">trans</span><span class="p">(</span><span class="s1">'10'</span><span class="p">)</span>
+<span class="go">10.0</span>
+</pre></div>
+</div>
+<p>To use this function but tell it to not transform some a specific input no matter
+what, wrap the input with <code class="docutils literal notranslate"><span class="pre">Literal</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># from meshed import Literal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conditional_trans</span><span class="p">(</span><span class="n">LiteralVal</span><span class="p">(</span><span class="s1">'10'</span><span class="p">),</span> <span class="nb">str</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="go">'10'</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.conservative_parameter_merge">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">conservative_parameter_merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.util.conservative_parameter_merge" title="Link to this definition">#</a></dt>
+<dd><p>Validates that all the params are exactly the same, returning the first if so.</p>
+<p>This is used when hooking up functions that use the same parameters (i.e. arg
+names). When the name of an argument is used more than once, which kind, default,
+and annotation should be used in the interface of the DAG?</p>
+<p>If they’re all the same, there’s no problem.</p>
+<p>But if they’re not the same, we need to provide control on which to ignore.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span> <span class="k">as</span> <span class="n">P</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PK</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">KO</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">))</span>
+<span class="go">&lt;Parameter "a"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'different_name'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">same_name</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">KO</span><span class="p">),</span> <span class="n">same_kind</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">,</span>  <span class="n">default</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span> <span class="n">same_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">same_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a=42"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">same_annotation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a: int"&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.dot_to_ascii">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">dot_to_ascii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fancy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#dot_to_ascii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.dot_to_ascii" title="Link to this definition">#</a></dt>
+<dd><p>Convert a dot string to an ascii rendering of the diagram.</p>
+<p>Needs a connection to the internet to work.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graph_dot</span> <span class="o">=</span> <span class="s1">'''</span>
+<span class="gp">... </span><span class="s1">    graph {</span>
+<span class="gp">... </span><span class="s1">        rankdir=LR</span>
+<span class="gp">... </span><span class="s1">        0 -- {1 2}</span>
+<span class="gp">... </span><span class="s1">        1 -- </span><span class="si">{2}</span>
+<span class="gp">... </span><span class="s1">        2 -&gt; {0 1 3}</span>
+<span class="gp">... </span><span class="s1">        3</span>
+<span class="gp">... </span><span class="s1">    }</span>
+<span class="gp">... </span><span class="s1">'''</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph_ascii</span> <span class="o">=</span> <span class="n">dot_to_ascii</span><span class="p">(</span><span class="n">graph_dot</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">graph_ascii</span><span class="p">)</span>
+
+<span class="go">                 ┌─────────┐</span>
+<span class="go">                 ▼         │</span>
+<span class="go">     ┌───┐     ┌───┐     ┌───┐     ┌───┐</span>
+<span class="go">  ┌▶ │ 0 │ ─── │ 1 │ ─── │   │ ──▶ │ 3 │</span>
+<span class="go">  │  └───┘     └───┘     │   │     └───┘</span>
+<span class="go">  │    │                 │   │</span>
+<span class="go">  │    └──────────────── │ 2 │</span>
+<span class="go">  │                      │   │</span>
+<span class="go">  │                      │   │</span>
+<span class="go">  └───────────────────── │   │</span>
+<span class="go">                         └───┘</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.extract_dict">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">extract_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#extract_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.extract_dict" title="Link to this definition">#</a></dt>
+<dd><p>Extract items from dict <code class="docutils literal notranslate"><span class="pre">d</span></code>, returning them as a dict.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_dict</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">])</span>
+<span class="go">{'a': 1, 'c': 3}</span>
+</pre></div>
+</div>
+<p>Order matters!</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_dict</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">])</span>
+<span class="go">{'c': 3, 'a': 1}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.extract_items">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">extract_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#extract_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.extract_items" title="Link to this definition">#</a></dt>
+<dd><p>generator of (k, v) pairs extracted from d for keys</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">extract_items</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">]))</span>
+<span class="go">[('a', 1), ('c', 3)]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.extract_values">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">extract_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#extract_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.extract_values" title="Link to this definition">#</a></dt>
+<dd><p>Extract values from dict <code class="docutils literal notranslate"><span class="pre">d</span></code>, returning them:</p>
+<ul class="simple">
+<li><p>as a tuple if len(keys) &gt; 1</p></li>
+<li><p>a single value if len(keys) == 1</p></li>
+<li><p>None if not</p></li>
+</ul>
+<p>This is used as the default extractor in DAG</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_values</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">])</span>
+<span class="go">(1, 3)</span>
+</pre></div>
+</div>
+<p>Order matters!</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extract_values</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">])</span>
+<span class="go">(3, 1)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.filepath_to_module">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">filepath_to_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#filepath_to_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.filepath_to_module" title="Link to this definition">#</a></dt>
+<dd><p>A context manager to import a Python file as a module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The file path of the Python file to import.</p>
+</dd>
+<dt class="field-even">Yield<span class="colon">:</span></dt>
+<dd class="field-even"><p>The module object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.func_name">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">func_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#func_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.func_name" title="Link to this definition">#</a></dt>
+<dd><p>The func.__name__ of a callable func, or makes and returns one if that fails.
+To make one, it calls unamed_func_name which produces incremental names to reduce the chances of clashing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.funcs_conjunction">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">funcs_conjunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">funcs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#funcs_conjunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.funcs_conjunction" title="Link to this definition">#</a></dt>
+<dd><p>Makes a conjunction of functions. That is, <code class="docutils literal notranslate"><span class="pre">func1(x)</span> <span class="pre">and</span> <span class="pre">func2(x)</span> <span class="pre">and</span> <span class="pre">...</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">funcs_conjunction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s1">'app'</span><span class="p">)</span>  <span class="c1"># because length is less than 5...</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s1">'apple'</span><span class="p">)</span>  <span class="c1"># length at least 5 so...</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Note that in:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>it is <code class="docutils literal notranslate"><span class="pre">False</span></code> because it is not a string.
+This shows that the second function is not applied to the input at all, since it
+doesn’t need to, and if it were, we’d get an error (length of a number?!).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.funcs_disjunction">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">funcs_disjunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">funcs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#funcs_disjunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.funcs_disjunction" title="Link to this definition">#</a></dt>
+<dd><p>Makes a disjunction of functions. That is, <code class="docutils literal notranslate"><span class="pre">func1(x)</span> <span class="pre">or</span> <span class="pre">func2(x)</span> <span class="pre">or</span> <span class="pre">...</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">funcs_disjunction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.if_then_else">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">if_then_else</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">if_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">then_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">else_func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#if_then_else"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.if_then_else" title="Link to this definition">#</a></dt>
+<dd><p>Tool to “functionalize” the if-then-else logic.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">if_then_else</span><span class="p">,</span> <span class="nb">str</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s1">'a string'</span><span class="p">)</span>
+<span class="go">'a string'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="s1">'42'</span><span class="p">)</span>
+<span class="go">42</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.incremental_str_maker">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">incremental_str_maker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'{:03.f}'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#incremental_str_maker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.incremental_str_maker" title="Link to this definition">#</a></dt>
+<dd><p>Make a function that will produce a (incrementally) new string at every call.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.instance_checker">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">instance_checker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_or_tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#instance_checker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.instance_checker" title="Link to this definition">#</a></dt>
+<dd><p>Makes a boolean function that checks the instance of an object</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">isinstance_of_str</span> <span class="o">=</span> <span class="n">instance_checker</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">isinstance_of_str</span><span class="p">(</span><span class="s1">'asdf'</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">isinstance_of_str</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.iterize">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">iterize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#iterize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.iterize" title="Link to this definition">#</a></dt>
+<dd><p>From an Input-&gt;Ouput function, makes a Iterator[Input]-&gt;Itertor[Output]
+Some call this “vectorization”, but it’s not really a vector, but an
+iterable, thus the name.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">iterize</span></code> is a partial of <code class="code docutils literal notranslate"><span class="pre">map</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">20</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iterized_f</span> <span class="o">=</span> <span class="n">iterize</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">iterized_f</span><span class="p">(</span><span class="nb">iter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])))</span>
+<span class="go">[10, 20, 30]</span>
+</pre></div>
+</div>
+<p>Consider the following pipeline:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipe</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"hello </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">'hello 2'</span>
+</pre></div>
+</div>
+<p>But what if you wanted to use the pipeline on a “stream” of data. The
+following wouldn’t work:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">pipe</span><span class="p">(</span><span class="nb">iter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">...</span>
+<span class="go">TypeError: unsupported operand type(s) for *: 'list_iterator' and 'int'</span>
+</pre></div>
+</div>
+<p>Remember that error: You’ll surely encounter it at some point.</p>
+<p>The solution to it is (often): <code class="docutils literal notranslate"><span class="pre">iterize</span></code>,
+which transforms a function that is meant to be applied to a single object,
+into a function that is meant to be applied to an array, or any iterable
+of such objects.
+(You might be familiar (if you use <code class="code docutils literal notranslate"><span class="pre">numpy</span></code> for example) with the related
+concept of “vectorization”,
+or <a class="reference external" href="https://en.wikipedia.org/wiki/Array_programming">array programming</a>.)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipe</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">iterize</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">iterize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">iterize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"hello </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iterable</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># see that the result is an iterable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>  <span class="c1"># consume the iterable and gather it's items</span>
+<span class="go">['hello 2', 'hello 4', 'hello 6']</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.mk_func_name">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">mk_func_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#mk_func_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.mk_func_name" title="Link to this definition">#</a></dt>
+<dd><p>Makes a function name that doesn’t clash with the exclude_names iterable.
+Tries it’s best to not be lazy, but instead extract a name from the function
+itself.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.mk_place_holder_func">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">mk_place_holder_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg_names_or_sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#mk_place_holder_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.mk_place_holder_func" title="Link to this definition">#</a></dt>
+<dd><p>Make (working and picklable) function with a specific signature.</p>
+<p>This is useful for testing as well as injecting compliant functions in DAG templates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arg_names_or_sig</strong> – Anything that i2.Sig can accept as it’s first input.
+(Such as a string of argument(s), function, signature, etc.)</p></li>
+<li><p><strong>name</strong> – The <code class="docutils literal notranslate"><span class="pre">__name__</span></code> to give the function.</p></li>
+<li><p><strong>defaults</strong> – If you want to add/change defaults</p></li>
+<li><p><strong>annotations</strong> – If you want to add/change annotations</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A (working and picklable) function with a specific signature</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">mk_place_holder_func</span><span class="p">(</span><span class="s1">'a b'</span><span class="p">,</span> <span class="s1">'my_func'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">'my_func(a=1, b=2)'</span>
+</pre></div>
+</div>
+<p>The first argument can be any expression of a signature that <code class="docutils literal notranslate"><span class="pre">i2.Sig</span></code> can
+understand. For instance, it could be a function itself.
+See how the function takes on <code class="docutils literal notranslate"><span class="pre">mk_place_holder_func</span></code>’s signature and name in the
+following example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">mk_place_holder_func</span><span class="p">(</span><span class="n">mk_place_holder_func</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>  <span class="c1"># should give the same signature as mk_place_holder_func</span>
+<span class="go">'(arg_names_or_sig, name=None, defaults=(), annotations=())'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">defaults</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">'mk_place_holder_func(arg_names_or_sig=1, name=2, defaults=3, annotations=4)'</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.my_isinstance">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">my_isinstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_or_tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#my_isinstance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.my_isinstance" title="Link to this definition">#</a></dt>
+<dd><p>Same as builtin instance, but without position only constraint.
+Therefore, we can partialize class_or_tuple:</p>
+<p>Otherwise, couldn’t do:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">isinstance_of_str</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">my_isinstance</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">isinstance_of_str</span><span class="p">(</span><span class="s1">'asdf'</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">isinstance_of_str</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.named_partial">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">named_partial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">__name__</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keywords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#named_partial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.named_partial" title="Link to this definition">#</a></dt>
+<dd><p>functools.partial, but with a __name__</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">named_partial</span><span class="p">(</span><span class="nb">print</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
+<span class="go">'print'</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">named_partial</span><span class="p">(</span><span class="nb">print</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="s1">'now_partial_has_a_name'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span>
+<span class="go">'now_partial_has_a_name'</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.numbered_suffix_renamer">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">numbered_suffix_renamer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#numbered_suffix_renamer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.numbered_suffix_renamer" title="Link to this definition">#</a></dt>
+<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">numbered_suffix_renamer</span><span class="p">(</span><span class="s1">'item'</span><span class="p">)</span>
+<span class="go">'item_1'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numbered_suffix_renamer</span><span class="p">(</span><span class="s1">'item_1'</span><span class="p">)</span>
+<span class="go">'item_2'</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.objects_defined_in_module">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">objects_defined_in_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_filt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_filt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#objects_defined_in_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.objects_defined_in_module" title="Link to this definition">#</a></dt>
+<dd><p>Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/types.html#types.ModuleType" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleType</span></code></a></span>) – <p>The module to look up. Can either be</p>
+<ul>
+<li><p>the module object itself,</p></li>
+<li><p>a string specifying the module’s fully qualified name (e.g., ‘os.path’), or</p></li>
+<li><p>a .py filepath to the module</p></li>
+</ul>
+</p></li>
+<li><p><strong>name_filt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – An optional function used to filter the names of objects in the module.
+This function should take a single argument (the object name as a string)
+and return a boolean. Only objects whose names pass the filter (i.e.,
+for which the function returns True) are included.
+If None, no name filtering is applied.</p></li>
+<li><p><strong>obj_filt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – An optional function used to filter the objects in the module. This function should take a
+single argument (the object itself) and return a boolean. Only objects that pass the filter
+(i.e., for which the function returns True) are included.
+If None, no object filtering is applied.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where keys are names of objects defined in the module (filtered by name_filt and obj_filt)
+and values are the corresponding objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">all_os_objects</span> <span class="o">=</span> <span class="n">objects_defined_in_module</span><span class="p">(</span><span class="n">os</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">'removedirs'</span> <span class="ow">in</span> <span class="n">all_os_objects</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">all_os_objects</span><span class="p">[</span><span class="s1">'removedirs'</span><span class="p">]</span> <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">removedirs</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>See that you can specify the module via a string too, and filter to get only
+callables that don’t start with an underscore:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">this_modules_funcs</span> <span class="o">=</span> <span class="n">objects_defined_in_module</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s1">'meshed.util'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">name_filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'_'</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">obj_filt</span><span class="o">=</span><span class="nb">callable</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">callable</span><span class="p">(</span><span class="n">this_modules_funcs</span><span class="p">[</span><span class="s1">'objects_defined_in_module'</span><span class="p">])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.ordered_set_operations">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">ordered_set_operations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#ordered_set_operations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.ordered_set_operations" title="Link to this definition">#</a></dt>
+<dd><p>Returns a triple (a-b, a&amp;b, b-a) for two iterables a and b.
+The operations are performed as if a and b were sets, but the order in a is conserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>]</span></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ordered_set_operations</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="go">([1, 2], [3, 4], [5, 6])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ordered_set_operations</span><span class="p">(</span><span class="s2">"abcde"</span><span class="p">,</span> <span class="s2">"cdefg"</span><span class="p">)</span>
+<span class="go">(['a', 'b'], ['c', 'd', 'e'], ['f', 'g'])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ordered_set_operations</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="go">([1], [2, 3], [4])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.parameter_merger">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">parameter_merger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#parameter_merger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.parameter_merger" title="Link to this definition">#</a></dt>
+<dd><p>Validates that all the params are exactly the same, returning the first if so.</p>
+<p>This is used when hooking up functions that use the same parameters (i.e. arg
+names). When the name of an argument is used more than once, which kind, default,
+and annotation should be used in the interface of the DAG?</p>
+<p>If they’re all the same, there’s no problem.</p>
+<p>But if they’re not the same, we need to provide control on which to ignore.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span> <span class="k">as</span> <span class="n">P</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PK</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">KO</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">))</span>
+<span class="go">&lt;Parameter "a"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'different_name'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">same_name</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">KO</span><span class="p">),</span> <span class="n">same_kind</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">,</span>  <span class="n">default</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span> <span class="n">same_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">same_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a=42"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameter_merger</span><span class="p">(</span><span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span> <span class="n">P</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">PK</span><span class="p">),</span> <span class="n">same_annotation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;Parameter "a: int"&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.provides">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">provides</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">var_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#provides"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.provides" title="Link to this definition">#</a></dt>
+<dd><p>Decorator to assign <code class="docutils literal notranslate"><span class="pre">var_names</span></code> to a <code class="docutils literal notranslate"><span class="pre">_provides</span></code> attribute of function.</p>
+<p>This is meant to be used to indicate to a mesh what var nodes a function can source
+values for.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>]</span></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@provides</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">_provides</span>
+<span class="go">('a', 'b')</span>
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">var_names</span></code> are given, then the function name is used as the var name:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@provides</span><span class="p">()</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">_provides</span>
+<span class="go">('g',)</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">var_names</span></code> contains <code class="docutils literal notranslate"><span class="pre">'_'</span></code>, then the function name is used as the var name
+for that position:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@provides</span><span class="p">(</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'_'</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">h</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">h</span><span class="o">.</span><span class="n">_provides</span>
+<span class="go">('b', 'h')</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.replace_item_in_iterable">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">replace_item_in_iterable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">egress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#replace_item_in_iterable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.replace_item_in_iterable" title="Link to this definition">#</a></dt>
+<dd><p>Returns a list where all items satisfying <code class="docutils literal notranslate"><span class="pre">condition(item)</span></code> were replaced
+with <code class="docutils literal notranslate"><span class="pre">replacement(item)</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">condition</span></code> is not a callable, it will be considered as a value to check
+against using <code class="docutils literal notranslate"><span class="pre">==</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">replacement</span></code> is not a callable, it will be considered as the actual
+value to replace by.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterable</strong> – Input iterable of items</p></li>
+<li><p><strong>condition</strong> – Condition to apply to item to see if it should be replaced</p></li>
+<li><p><strong>replacement</strong> – (Conditional) replacement value or function</p></li>
+<li><p><strong>egress</strong> – The function to apply to transformed iterable</p></li>
+</ul>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replace_item_in_iterable</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="n">condition</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">replacement</span> <span class="o">=</span> <span class="s1">'two'</span><span class="p">)</span>
+<span class="go">[1, 'two', 3, 4, 5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_even</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replace_item_in_iterable</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="n">condition</span><span class="o">=</span><span class="n">is_even</span><span class="p">,</span> <span class="n">replacement</span> <span class="o">=</span> <span class="s1">'even'</span><span class="p">)</span>
+<span class="go">[1, 'even', 3, 'even', 5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replace_item_in_iterable</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="n">is_even</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">[1, 20, 3, 40, 5]</span>
+</pre></div>
+</div>
+<p>Note that if the input iterable is not a <code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, or <code class="docutils literal notranslate"><span class="pre">set</span></code>,
+your output will be an iterator that you’ll have to iterate through to gather
+transformed items.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">replace_item_in_iterable</span><span class="p">(</span><span class="nb">iter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]),</span> <span class="n">condition</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">replacement</span> <span class="o">=</span> <span class="s1">'two'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Unless you specify an egress of your choice:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replace_item_in_iterable</span><span class="p">(</span>
+<span class="gp">... </span><span class="nb">iter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]),</span> <span class="n">is_even</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="n">egress</span><span class="o">=</span><span class="nb">sorted</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">[1, 3, 5, 20, 40]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="meshed.tools.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">meshed.tools</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="meshed.viz.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">meshed.viz</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ConditionalIterize"><code class="docutils literal notranslate"><span class="pre">ConditionalIterize</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.InvalidFunctionParameters"><code class="docutils literal notranslate"><span class="pre">InvalidFunctionParameters</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.NameValidationError"><code class="docutils literal notranslate"><span class="pre">NameValidationError</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.NotFound"><code class="docutils literal notranslate"><span class="pre">NotFound</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.NotUniqueError"><code class="docutils literal notranslate"><span class="pre">NotUniqueError</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ValidationError"><code class="docutils literal notranslate"><span class="pre">ValidationError</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.args_funcnames"><code class="docutils literal notranslate"><span class="pre">args_funcnames()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.conditional_trans"><code class="docutils literal notranslate"><span class="pre">conditional_trans()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.conservative_parameter_merge"><code class="docutils literal notranslate"><span class="pre">conservative_parameter_merge()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.dot_to_ascii"><code class="docutils literal notranslate"><span class="pre">dot_to_ascii()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.extract_dict"><code class="docutils literal notranslate"><span class="pre">extract_dict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.extract_items"><code class="docutils literal notranslate"><span class="pre">extract_items()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.extract_values"><code class="docutils literal notranslate"><span class="pre">extract_values()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.filepath_to_module"><code class="docutils literal notranslate"><span class="pre">filepath_to_module()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.func_name"><code class="docutils literal notranslate"><span class="pre">func_name()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.funcs_conjunction"><code class="docutils literal notranslate"><span class="pre">funcs_conjunction()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.funcs_disjunction"><code class="docutils literal notranslate"><span class="pre">funcs_disjunction()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.if_then_else"><code class="docutils literal notranslate"><span class="pre">if_then_else()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.incremental_str_maker"><code class="docutils literal notranslate"><span class="pre">incremental_str_maker()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.instance_checker"><code class="docutils literal notranslate"><span class="pre">instance_checker()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.iterize"><code class="docutils literal notranslate"><span class="pre">iterize()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.mk_func_name"><code class="docutils literal notranslate"><span class="pre">mk_func_name()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.mk_place_holder_func"><code class="docutils literal notranslate"><span class="pre">mk_place_holder_func()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.my_isinstance"><code class="docutils literal notranslate"><span class="pre">my_isinstance()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.named_partial"><code class="docutils literal notranslate"><span class="pre">named_partial()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.numbered_suffix_renamer"><code class="docutils literal notranslate"><span class="pre">numbered_suffix_renamer()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.objects_defined_in_module"><code class="docutils literal notranslate"><span class="pre">objects_defined_in_module()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ordered_set_operations"><code class="docutils literal notranslate"><span class="pre">ordered_set_operations()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.parameter_merger"><code class="docutils literal notranslate"><span class="pre">parameter_merger()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.provides"><code class="docutils literal notranslate"><span class="pre">provides()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.replace_item_in_iterable"><code class="docutils literal notranslate"><span class="pre">replace_item_in_iterable()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/_autosummary/meshed.util.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

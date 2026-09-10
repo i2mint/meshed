@@ -1,4 +1,0 @@
-meshed.viz
-==========
-.. automodule:: meshed.viz
-   :members:

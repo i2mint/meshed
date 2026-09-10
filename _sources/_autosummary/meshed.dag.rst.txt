@@ -1,0 +1,41 @@
+meshed.dag
+==========
+
+.. automodule:: meshed.dag
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      arg_names
+      attribute_vals
+      call_func
+      ch_funcs
+      ch_names
+      change_funcs
+      change_value_on_cond
+      dag_to_code
+      dflt_debugger_feedback
+      find_first_free_name
+      funcnodes_from_pairs
+      hook_up
+      mk_func_name
+      mk_list_names_unique
+      mk_mock_funcnode
+      mk_nodes_names_unique
+      modified_func_node
+      named_partial
+      order_subset_from_list
+      parametrized_dag_factory
+      partialized_funcnodes
+      print_dag_string
+      rename_nodes
+      reorder_on_constraints
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DAG
+   

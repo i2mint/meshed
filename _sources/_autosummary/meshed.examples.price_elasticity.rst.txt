@@ -1,0 +1,15 @@
+meshed.examples.price\_elasticity
+=================================
+
+.. automodule:: meshed.examples.price_elasticity
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      expense
+      profit
+      revenue
+      sold
+   

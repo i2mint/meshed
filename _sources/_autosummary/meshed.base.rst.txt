@@ -1,0 +1,37 @@
+meshed.base
+===========
+
+.. automodule:: meshed.base
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      basic_node_validator
+      ch_func_node_attrs
+      ch_func_node_func
+      dot_lines_of_func_parameters
+      duplicates
+      ensure_func_nodes
+      func_node_transformer
+      func_nodes_to_code
+      get_init_params_of_instance
+      handle_variadics
+      identifier_mapping
+      insert_func_if_compatible
+      is_func_node
+      is_not_func_node
+      param_to_dot_definition
+      raise_signature_mismatch_error
+      rebind_to_func
+      underscore_func_node_names_maker
+      validate_that_func_node_names_are_sane
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FuncNode
+      Mesh
+   

@@ -1,4 +1,0 @@
-meshed.scrap.collapse_and_expand
-================================
-.. automodule:: meshed.scrap.collapse_and_expand
-   :members:

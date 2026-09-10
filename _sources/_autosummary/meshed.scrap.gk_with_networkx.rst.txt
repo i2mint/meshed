@@ -1,0 +1,15 @@
+meshed.scrap.gk\_with\_networkx
+===============================
+
+.. automodule:: meshed.scrap.gk_with_networkx
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Data
+      NetworkOperation
+      Operation
+      optional
+   

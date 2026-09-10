@@ -1,0 +1,32 @@
+meshed.slabs
+============
+
+.. automodule:: meshed.slabs
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      all_arguments_are_none
+      conditional_sentinel
+      do_nothing
+      log_and_return
+      output_none_if_none_arguments
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DoNotBreak
+      ExceptionHandler
+      Slabs
+      SlabsIter
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      ExceptionalException
+      IteratorExit
+   

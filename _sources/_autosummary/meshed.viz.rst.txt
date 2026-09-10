@@ -1,0 +1,16 @@
+meshed.viz
+==========
+
+.. automodule:: meshed.viz
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      add_new_line_if_none
+      dot_lines_of_func_nodes
+      dot_lines_of_objs
+      visualize_graph
+      visualize_graph_interactive
+   

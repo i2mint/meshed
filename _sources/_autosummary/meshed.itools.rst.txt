@@ -1,0 +1,39 @@
+meshed.itools
+=============
+
+.. automodule:: meshed.itools
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      add_edge
+      ancestors
+      children
+      copy_of_g_with_some_keys_removed
+      descendants
+      edge_reversed_graph
+      edges
+      filter_dict_on_keys
+      filter_dict_with_list_values
+      find_path
+      graphviz_digraph
+      has_cycle
+      has_node
+      in_degrees
+      isolated_nodes
+      leaf_nodes
+      nodes
+      nodes_of_graph
+      out_degrees
+      parents
+      predecessors
+      random_graph
+      reverse_edges
+      root_ancestors
+      root_nodes
+      subtract_subgraph
+      successors
+      topological_sort
+   

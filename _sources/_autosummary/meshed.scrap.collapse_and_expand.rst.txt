@@ -1,0 +1,22 @@
+meshed.scrap.collapse\_and\_expand
+==================================
+
+.. automodule:: meshed.scrap.collapse_and_expand
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      collapse_function_calls
+      expand_function_calls
+      expand_nodes
+      get_src_string
+      remove_decorator_code
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CollapsedDAG
+   

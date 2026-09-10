@@ -1,0 +1,17 @@
+meshed.scrap.annotations\_to\_meshes
+====================================
+
+.. automodule:: meshed.scrap.annotations_to_meshes
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      callable_annots_to_signature
+      func_types_to_protocol
+      func_types_to_scaffold
+      test_func_types_to_protocol
+      test_func_types_to_scaffold
+      try_annotation_name
+   

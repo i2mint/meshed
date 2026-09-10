@@ -1,0 +1,29 @@
+meshed.ext.gk
+=============
+
+.. automodule:: meshed.ext.gk
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_data_node
+      ready_to_delete_data_node
+      ready_to_schedule_operation
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Data
+      DataPlaceholderNode
+      DeleteInstruction
+      FunctionalOperation
+      Network
+      NetworkOperation
+      Operation
+      compose
+      operation
+      optional
+   

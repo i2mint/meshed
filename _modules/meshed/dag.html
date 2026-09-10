@@ -1,113 +1,706 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>meshed.dag &mdash; meshed 0.1.165 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="alternate" type="text/markdown" href="dag.html.md">
+<link rel="describedby" href="../../llms.txt" type="text/markdown">
+    <title>meshed.dag &#8212; meshed</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/epythet.css?v=20ed5096" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fd10adb8"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/meshed/dag';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.166" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
 
   
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8485fb48"></script>
-      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            meshed
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed.html">meshed</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/base.html">meshed.base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/caching.html">meshed.caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/components.html">meshed.components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/composition.html">meshed.composition</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/dag.html">meshed.dag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples.html">meshed.examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/online_marketing.html">meshed.examples.online_marketing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/price_elasticity.html">meshed.examples.price_elasticity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/examples/vaccine_vs_no_vaccine.html">meshed.examples.vaccine_vs_no_vaccine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext.html">meshed.ext</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk.html">meshed.ext.gk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/ext/gk_tests.html">meshed.ext.gk_tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/itools.html">meshed.itools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/makers.html">meshed.makers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap.html">meshed.scrap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/annotations_to_meshes.html">meshed.scrap.annotations_to_meshes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/cached_dag.html">meshed.scrap.cached_dag</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/collapse_and_expand.html">meshed.scrap.collapse_and_expand</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/conversion.html">meshed.scrap.conversion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/dask_graph_language.html">meshed.scrap.dask_graph_language</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/flow_control_script.html">meshed.scrap.flow_control_script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gk_with_networkx.html">meshed.scrap.gk_with_networkx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/gui_interaction.html">meshed.scrap.gui_interaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/misc_utils.html">meshed.scrap.misc_utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/reactive_scope.html">meshed.scrap.reactive_scope</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/scrap/wrapping_dags.html">meshed.scrap.wrapping_dags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/slabs.html">meshed.slabs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/tools.html">meshed.tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/util.html">meshed.util</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/meshed/viz.html">meshed.viz</a></li>
-</ul>
 
-        </div>
-      </div>
-    </nav>
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">meshed</a>
-      </nav>
+  
+    
+  
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">meshed.dag</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">meshed</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API reference
+  </a>
+</li>
+
   </ul>
-  <hr/>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">meshed.dag</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <h1>Source code for meshed.dag</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Making DAGs</span>
 
-<span class="sd">In it&#39;s simplest form, consider this:</span>
+<span class="sd">In it's simplest form, consider this:</span>
 
 <span class="sd">&gt;&gt;&gt; from meshed import DAG</span>
 <span class="sd">&gt;&gt;&gt;</span>
@@ -127,7 +720,7 @@
 <span class="sd">x,b -&gt; that_ -&gt; that</span>
 <span class="sd">this,that -&gt; combine_ -&gt; combine</span>
 
-<span class="sd">But don&#39;t be fooled: There&#39;s much more to it!</span>
+<span class="sd">But don't be fooled: There's much more to it!</span>
 
 
 <span class="sd">FAQ and Troubleshooting</span>
@@ -147,44 +740,44 @@
 <span class="sd">&gt;&gt;&gt; list(my_chunker(vec))</span>
 <span class="sd">[(0, 1, 2), (3, 4, 5)]</span>
 
-<span class="sd">Oh, that&#39;s just a ``my_chunker -&gt; list`` pipeline!</span>
+<span class="sd">Oh, that's just a ``my_chunker -&gt; list`` pipeline!</span>
 <span class="sd">A pipeline is a subset of DAG, so let me do this:</span>
 
 <span class="sd">&gt;&gt;&gt; dag = DAG([my_chunker, list])</span>
 <span class="sd">&gt;&gt;&gt; dag(vec)</span>
 <span class="sd">Traceback (most recent call last):</span>
 <span class="sd">...</span>
-<span class="sd">TypeError: missing a required argument: &#39;sequence&#39;</span>
+<span class="sd">TypeError: missing a required argument: 'sequence'</span>
 
 <span class="sd">What happened here?</span>
-<span class="sd">You&#39;re assuming that saying ``[my_chunker, list]`` is enough for DAG to know that</span>
-<span class="sd">what you meant is for ``my_chunker`` to feed it&#39;s input to ``list``.</span>
-<span class="sd">Sure, DAG has enough information to do so, but the default connection policy doesn&#39;t</span>
-<span class="sd">assume that it&#39;s a pipeline you want to make.</span>
-<span class="sd">In fact, the order you specify the functions doesn&#39;t have an affect on the connections</span>
+<span class="sd">You're assuming that saying ``[my_chunker, list]`` is enough for DAG to know that</span>
+<span class="sd">what you meant is for ``my_chunker`` to feed it's input to ``list``.</span>
+<span class="sd">Sure, DAG has enough information to do so, but the default connection policy doesn't</span>
+<span class="sd">assume that it's a pipeline you want to make.</span>
+<span class="sd">In fact, the order you specify the functions doesn't have an affect on the connections</span>
 <span class="sd">with the default connection policy.</span>
 
 <span class="sd">See what the signature of ``dag`` is:</span>
 
 <span class="sd">&gt;&gt;&gt; from inspect import signature</span>
 <span class="sd">&gt;&gt;&gt; str(signature(dag))</span>
-<span class="sd">&#39;(iterable=(), /, sequence, *, chk_size: int = 3)&#39;</span>
+<span class="sd">'(iterable=(), /, sequence, *, chk_size: int = 3)'</span>
 
-<span class="sd">So dag actually works just fine. Here&#39;s the proof:</span>
+<span class="sd">So dag actually works just fine. Here's the proof:</span>
 
 <span class="sd">&gt;&gt;&gt; dag([1,2,3], vec)  # doctest: +SKIP</span>
 <span class="sd">([1, 2, 3], &lt;zip object at 0x104d7f080&gt;)</span>
 
-<span class="sd">It&#39;s just not what you might have intended.</span>
+<span class="sd">It's just not what you might have intended.</span>
 
 <span class="sd">Your best bet to get what you intended is to be explicit.</span>
 
 <span class="sd">The way to be explicit is to not specify functions alone, but ``FuncNodes`` that</span>
 <span class="sd">wrap them, along with the specification</span>
 <span class="sd">the ``name`` the function will be referred to by,</span>
-<span class="sd">the names that it&#39;s parameters should ``bind`` to (that is, where the function</span>
-<span class="sd">will get it&#39;s import arguments from), and</span>
-<span class="sd">the ``out`` name of where it should be it&#39;s output.</span>
+<span class="sd">the names that it's parameters should ``bind`` to (that is, where the function</span>
+<span class="sd">will get it's import arguments from), and</span>
+<span class="sd">the ``out`` name of where it should be it's output.</span>
 
 <span class="sd">In the current case a fully specified DAG would look something like this:</span>
 
@@ -193,34 +786,34 @@
 <span class="sd">...     [</span>
 <span class="sd">...         FuncNode(</span>
 <span class="sd">...             func=my_chunker,</span>
-<span class="sd">...             name=&#39;chunker&#39;,</span>
-<span class="sd">...             bind=dict(sequence=&#39;sequence&#39;, chk_size=&#39;chk_size&#39;),</span>
-<span class="sd">...             out=&#39;chks&#39;</span>
+<span class="sd">...             name='chunker',</span>
+<span class="sd">...             bind=dict(sequence='sequence', chk_size='chk_size'),</span>
+<span class="sd">...             out='chks'</span>
 <span class="sd">...         ),</span>
 <span class="sd">...         FuncNode(</span>
 <span class="sd">...             func=list,</span>
-<span class="sd">...             name=&#39;gather_chks_into_list&#39;,</span>
-<span class="sd">...             bind=dict(iterable=&#39;chks&#39;),</span>
-<span class="sd">...             out=&#39;list_of_chks&#39;</span>
+<span class="sd">...             name='gather_chks_into_list',</span>
+<span class="sd">...             bind=dict(iterable='chks'),</span>
+<span class="sd">...             out='list_of_chks'</span>
 <span class="sd">...         ),</span>
 <span class="sd">...     ]</span>
 <span class="sd">... )</span>
 <span class="sd">&gt;&gt;&gt; list(dag(vec))</span>
 <span class="sd">[(0, 1, 2), (3, 4, 5)]</span>
 
-<span class="sd">But really, if you didn&#39;t care about the names of things,</span>
+<span class="sd">But really, if you didn't care about the names of things,</span>
 <span class="sd">all you need in this case was to make sure that the output of ``my_chunker`` was</span>
 <span class="sd">fed to ``list``, and therefore the following was sufficient:</span>
 
 <span class="sd">&gt;&gt;&gt; dag = DAG([</span>
-<span class="sd">...     FuncNode(my_chunker, out=&#39;chks&#39;),  # call the output of chunker &quot;chks&quot;</span>
-<span class="sd">...     FuncNode(list, bind=dict(iterable=&#39;chks&#39;))  # source list input from &quot;chks&quot;</span>
+<span class="sd">...     FuncNode(my_chunker, out='chks'),  # call the output of chunker "chks"</span>
+<span class="sd">...     FuncNode(list, bind=dict(iterable='chks'))  # source list input from "chks"</span>
 <span class="sd">... ])</span>
 <span class="sd">&gt;&gt;&gt; list(dag(vec))</span>
 <span class="sd">[(0, 1, 2), (3, 4, 5)]</span>
 
 <span class="sd">Connection policies are very useful when you want to define ways for DAG to</span>
-<span class="sd">&quot;just figure it out&quot; for you.</span>
+<span class="sd">"just figure it out" for you.</span>
 <span class="sd">That is, you want to tell the machine to adapt to your thoughts, not vice versa.</span>
 <span class="sd">We support such technological expectations!</span>
 <span class="sd">The default connection policy is there to provide one such ways, but</span>
@@ -228,14 +821,14 @@
 
 <span class="sd">Does this mean that connection policies are not for production code?</span>
 <span class="sd">Well, it depends. The Zen of Python (``import this``)</span>
-<span class="sd">states &quot;explicit is better than implicit&quot;, and indeed it&#39;s often</span>
+<span class="sd">states "explicit is better than implicit", and indeed it's often</span>
 <span class="sd">a good fallback rule.</span>
 <span class="sd">But defining components and the way they should be assembled can go a long way</span>
 <span class="sd">in achieving consistency, separation of concerns, adaptability, and flexibility.</span>
 <span class="sd">All quite useful things. Also in production. Especially in production.</span>
 <span class="sd">That said it is your responsiblity to use the right policy for your particular context.</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span><span class="p">,</span> <span class="n">cached_property</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
@@ -308,7 +901,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">order_subset_from_list</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">sublist</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">sublist</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">items</span><span class="p">)),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sublist</span><span class="si">}</span><span class="s2"> is not contained in </span><span class="si">{</span><span class="n">items</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">sublist</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">items</span><span class="p">)),</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">sublist</span><span class="si">}</span><span class="s2"> is not contained in </span><span class="si">{</span><span class="n">items</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">)}</span>
 
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sublist</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
@@ -320,7 +913,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">start_at</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">name</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -331,21 +924,21 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">():</span>
         <span class="k">pass</span>
 
-    <span class="c1"># name = &quot;_mock_&quot; + str(arg) + &quot;_&quot; + str(out)  # f-string</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_mock_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># f-string</span>
+    <span class="c1"># name = "_mock_" + str(arg) + "_" + str(out)  # f-string</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"_mock_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># f-string</span>
 
     <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">&quot;__name__&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&lt;lambda&gt;&quot;</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">"__name__"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"&lt;lambda&gt;"</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">lambda_name</span><span class="p">()</span>  <span class="c1"># make a lambda name that is a unique identifier</span>
-    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NameValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can&#39;t make a name for func: </span><span class="si">{</span><span class="n">func</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NameValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Can't make a name for func: </span><span class="si">{</span><span class="n">func</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">find_first_free_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
 
 
@@ -359,7 +952,7 @@
                 <span class="k">yield</span> <span class="n">name</span>
                 <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">_exclude_names</span> <span class="o">+</span> <span class="p">(</span><span class="n">name</span><span class="p">,)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">found_name</span> <span class="o">=</span> <span class="n">find_first_free_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_exclude_names</span><span class="p">)</span>
+                <span class="n">found_name</span> <span class="o">=</span> <span class="n">find_first_free_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">_exclude_names</span><span class="p">)</span>
                 <span class="k">yield</span> <span class="n">found_name</span>
                 <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">_exclude_names</span> <span class="o">+</span> <span class="p">(</span><span class="n">found_name</span><span class="p">,)</span>
 
@@ -383,7 +976,7 @@
                 <span class="k">yield</span> <span class="n">name</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">found_name</span> <span class="o">=</span> <span class="n">find_first_free_name</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_exclude_names</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">func_name</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">_exclude_names</span>
                 <span class="p">)</span>
                 <span class="k">yield</span> <span class="n">found_name</span>
                 <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">_exclude_names</span> <span class="o">+</span> <span class="p">(</span><span class="n">found_name</span><span class="p">,)</span>
@@ -392,18 +985,18 @@
 
 
 <div class="viewcode-block" id="named_partial">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.named_partial">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.named_partial">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">named_partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="vm">__name__</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;functools.partial, but with a __name__</span>
+<span class="w">    </span><span class="sd">"""functools.partial, but with a __name__</span>
 
-<span class="sd">    &gt;&gt;&gt; f = named_partial(print, sep=&#39;\\n&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; f = named_partial(print, sep='\\n')</span>
 <span class="sd">    &gt;&gt;&gt; f.__name__</span>
-<span class="sd">    &#39;print&#39;</span>
+<span class="sd">    'print'</span>
 
-<span class="sd">    &gt;&gt;&gt; f = named_partial(print, sep=&#39;\\n&#39;, __name__=&#39;now_partial_has_a_name&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; f = named_partial(print, sep='\\n', __name__='now_partial_has_a_name')</span>
 <span class="sd">    &gt;&gt;&gt; f.__name__</span>
-<span class="sd">    &#39;now_partial_has_a_name&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    'now_partial_has_a_name'</span>
+<span class="sd">    """</span>
     <span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">keywords</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="vm">__name__</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="k">return</span> <span class="n">f</span></div>
@@ -414,16 +1007,16 @@
 
 
 <div class="viewcode-block" id="hook_up">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.hook_up">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.hook_up">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">hook_up</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">variables</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Source inputs and write outputs to given variables mapping.</span>
+<span class="w">    </span><span class="sd">"""Source inputs and write outputs to given variables mapping.</span>
 
 <span class="sd">    Returns inputless and outputless function that will, when called,</span>
-<span class="sd">    get relevant inputs from the provided variables mapping and write it&#39;s</span>
+<span class="sd">    get relevant inputs from the provided variables mapping and write it's</span>
 <span class="sd">    output there as well.</span>
 
 <span class="sd">    :param variables: The MutableMapping (like... a dict) where the function</span>
-<span class="sd">    should both read it&#39;s input and write it&#39;s output.</span>
+<span class="sd">    should both read it's input and write it's output.</span>
 <span class="sd">    :param output_name: The key of the variables mapping that should be used</span>
 <span class="sd">    to write the output of the function</span>
 <span class="sd">    :return: A function</span>
@@ -437,19 +1030,19 @@
 <span class="sd">    &gt;&gt;&gt; d.update(w=2, x=3, y=4)  # not d = dict(w=2, x=3, y=4), which would</span>
 <span class="sd">    &gt;&gt;&gt; f()</span>
 
-<span class="sd">    Note that there&#39;s no output. The output is in d</span>
+<span class="sd">    Note that there's no output. The output is in d</span>
 <span class="sd">    &gt;&gt;&gt; d</span>
-<span class="sd">    {&#39;w&#39;: 2, &#39;x&#39;: 3, &#39;y&#39;: 4, &#39;formula1&#39;: 20}</span>
+<span class="sd">    {'w': 2, 'x': 3, 'y': 4, 'formula1': 20}</span>
 
 <span class="sd">    Again...</span>
 
 <span class="sd">    &gt;&gt;&gt; d.clear()</span>
 <span class="sd">    &gt;&gt;&gt; d.update(w=1, x=2, y=3)</span>
 <span class="sd">    &gt;&gt;&gt; f()</span>
-<span class="sd">    &gt;&gt;&gt; d[&#39;formula1&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; d['formula1']</span>
 <span class="sd">    9</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">_func</span> <span class="o">=</span> <span class="n">ch_func_to_all_pk</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>  <span class="c1"># makes a position-keyword copy of func</span>
     <span class="n">output_key</span> <span class="o">=</span> <span class="n">output_name</span>
     <span class="k">if</span> <span class="n">output_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -477,29 +1070,29 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_find_unique_element</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">search_iterable</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find item in search_iterable, using key as the matching function,</span>
-<span class="sd">    raising a NotFound error if no match and a NotUniqueError if more than one.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Find item in search_iterable, using key as the matching function,</span>
+<span class="sd">    raising a NotFound error if no match and a NotUniqueError if more than one."""</span>
     <span class="n">it</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">key</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">search_iterable</span><span class="p">)</span>
     <span class="n">first</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">_not_found</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">first</span> <span class="o">==</span> <span class="n">_not_found</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> wasn&#39;t found&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> wasn't found"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">the_next_match</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">_not_found</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">the_next_match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_not_found</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NotUniqueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> wasn&#39;t unique&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NotUniqueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2"> wasn't unique"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">first</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">modified_func_node</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="o">**</span><span class="n">modifications</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncNode</span><span class="p">:</span>
-    <span class="n">modifiable_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;bind&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">}</span>
+    <span class="n">modifiable_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"func"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="s2">"bind"</span><span class="p">,</span> <span class="s2">"out"</span><span class="p">}</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">modifications</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span>
         <span class="n">modifiable_attrs</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Can only modify these: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">modifiable_attrs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">"Can only modify these: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">modifiable_attrs</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">original_func_node_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;func&quot;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="s2">&quot;bind&quot;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span>
-        <span class="s2">&quot;out&quot;</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
+        <span class="s2">"func"</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s2">"bind"</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span>
+        <span class="s2">"out"</span><span class="p">:</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">original_func_node_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">modifications</span><span class="p">))</span>
 
@@ -534,7 +1127,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_name_attr_or_x</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">change_value_on_cond</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
@@ -545,19 +1138,19 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">dflt_debugger_feedback</span><span class="p">(</span><span class="n">func_node</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2"> --------------------------------------------------------------&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="n">func_node</span><span class="si">=}</span><span class="se">\n\t</span><span class="si">{</span><span class="n">scope</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2"> --------------------------------------------------------------"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\t</span><span class="si">{</span><span class="n">func_node</span><span class="si">=}</span><span class="se">\n\t</span><span class="si">{</span><span class="n">scope</span><span class="si">=}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">output</span>
 
 
-<span class="c1"># TODO: caching last scope isn&#39;t really the DAG&#39;s direct concern -- it&#39;s a debugging</span>
+<span class="c1"># TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging</span>
 <span class="c1">#  concern. Perhaps a more general form would be to define a cache factory defaulting</span>
-<span class="c1">#  to a dict, but that could be a &quot;dict&quot; that logs writes (even to an attribute of self)</span>
+<span class="c1">#  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)</span>
 <div class="viewcode-block" id="DAG">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DAG</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    &gt;&gt;&gt; from meshed.dag import DAG, Sig</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; def this(a, b=1):</span>
@@ -575,7 +1168,7 @@
 
 <span class="sd">    But what does it do?</span>
 
-<span class="sd">    It&#39;s a callable, with a signature:</span>
+<span class="sd">    It's a callable, with a signature:</span>
 
 <span class="sd">    &gt;&gt;&gt; Sig(dag)  # doctest: +SKIP</span>
 <span class="sd">    &lt;Sig (a, x, b=1)&gt;</span>
@@ -591,15 +1184,15 @@
 <span class="sd">    The above DAG was created straight from the functions, using only the names of the</span>
 <span class="sd">    functions and their arguments to define how to hook the network up.</span>
 
-<span class="sd">    But if you didn&#39;t write those functions specifically for that purpose, or you want</span>
-<span class="sd">    to use someone else&#39;s functions, we got you covered.</span>
+<span class="sd">    But if you didn't write those functions specifically for that purpose, or you want</span>
+<span class="sd">    to use someone else's functions, we got you covered.</span>
 
 <span class="sd">    You can define the name of the node (the `name` argument), the name of the output</span>
-<span class="sd">    (the `out` argument) and a mapping from the function&#39;s arguments names to</span>
-<span class="sd">    &quot;network names&quot; (through the `bind` argument).</span>
+<span class="sd">    (the `out` argument) and a mapping from the function's arguments names to</span>
+<span class="sd">    "network names" (through the `bind` argument).</span>
 <span class="sd">    The edges of the DAG are defined by matching `out` TO `bind`.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
     <span class="n">cache_last_scope</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -619,7 +1212,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">topological_sort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
         <span class="c1"># reorder the nodes to fit topological order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span> <span class="o">=</span> <span class="n">_separate_func_nodes_and_var_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-        <span class="c1"># self.sig = Sig(dict(extract_items(sig.parameters, &#39;xz&#39;)))</span>
+        <span class="c1"># self.sig = Sig(dict(extract_items(sig.parameters, 'xz')))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span>  <span class="c1"># make a signature</span>
             <span class="n">sort_params</span><span class="p">(</span>  <span class="c1"># with the sorted params (sorted to satisfy kind/default order)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">src_name_params</span><span class="p">(</span><span class="n">root_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">))</span>
@@ -635,16 +1228,16 @@
         <span class="c1"># But we want leafs in topological order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leafs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">leafs</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_scope</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;DAG&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">"DAG"</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bindings_cleaner</span><span class="p">()</span>
 
     <span class="c1"># TODO: No control of other DAG args (cache_last_scope etc.).</span>
 <div class="viewcode-block" id="DAG.from_funcs">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.from_funcs">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.from_funcs">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_funcs</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">funcs</span><span class="p">,</span> <span class="o">**</span><span class="n">named_funcs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 
 <span class="sd">        :param funcs:</span>
 <span class="sd">        :param named_funcs:</span>
@@ -662,7 +1255,7 @@
 <span class="sd">        &gt;&gt;&gt; dag(3)</span>
 <span class="sd">        16</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">named_funcs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">MultiFunc</span><span class="p">(</span><span class="o">*</span><span class="n">funcs</span><span class="p">,</span> <span class="o">**</span><span class="n">named_funcs</span><span class="p">))</span>
         <span class="n">func_nodes</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">FuncNode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">named_funcs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -682,9 +1275,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get a dict of {argname: argval} pairs from positional and keyword arguments.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span><span class="o">.</span><span class="n">map_arguments</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">apply_defaults</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -701,13 +1294,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_output_from_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">leafs</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_preprocess_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Take care of the stuff that needs to be taking care of before looping</span>
+<span class="w">        </span><span class="sd">"""Take care of the stuff that needs to be taking care of before looping</span>
 <span class="sd">        though the func_nodes and calling them on scope. Namely:</span>
 
 <span class="sd">        - If scope is None, create a new one calling self.new_scope()</span>
 <span class="sd">        - If self.cache_last_scope is True, remember the scope in self.last_scope</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">scope</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_scope</span><span class="p">()</span>  <span class="c1"># fresh new scope</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_last_scope</span><span class="p">:</span>
@@ -715,54 +1308,54 @@
         <span class="k">return</span> <span class="n">scope</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_call_func_nodes_on_scope_gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loop over ``func_nodes`` yielding ``func_node.call_on_scope(scope)``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Loop over ``func_nodes`` yielding ``func_node.call_on_scope(scope)``."""</span>
         <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">func_node</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_call_func_nodes_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Loop over ``func_nodes`` calling func_node.call_on_scope on scope.</span>
-<span class="sd">        (Really, just &quot;consumes&quot; the generator output by _call_func_nodes_on_scope_gen)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        (Really, just "consumes" the generator output by _call_func_nodes_on_scope_gen)</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_func_nodes_on_scope_gen</span><span class="p">(</span><span class="n">scope</span><span class="p">):</span>
             <span class="k">pass</span>
 
 <div class="viewcode-block" id="DAG.call_on_scope">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.call_on_scope">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.call_on_scope">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">call_on_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the func_nodes using scope (a dict or MutableMapping) both to</span>
-<span class="sd">        source it&#39;s arguments and write it&#39;s results.</span>
+<span class="w">        </span><span class="sd">"""Calls the func_nodes using scope (a dict or MutableMapping) both to</span>
+<span class="sd">        source it's arguments and write it's results.</span>
 
 <span class="sd">        Note: This method is only meant to be used as a backend to __call__, not as</span>
 <span class="sd">        an actual interface method. Additional control/constraints on read and writes</span>
 <span class="sd">        can be implemented by providing a custom scope for that. For example, one could</span>
 <span class="sd">        log read and/or writes to specific keys, or disallow overwriting to an existing</span>
 <span class="sd">        key (useful for pipeline sanity), etc.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_call_func_nodes_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DAG.call_on_scope_iteratively">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.call_on_scope_iteratively">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.call_on_scope_iteratively">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">call_on_scope_iteratively</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls the ``func_nodes`` using scope (a dict or MutableMapping) both to</span>
-<span class="sd">        source it&#39;s arguments and write it&#39;s results.</span>
+<span class="w">        </span><span class="sd">"""Calls the ``func_nodes`` using scope (a dict or MutableMapping) both to</span>
+<span class="sd">        source it's arguments and write it's results.</span>
 
 <span class="sd">        Use this function to control each func_node call step iteratively</span>
 <span class="sd">        (through a generator)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preprocess_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_func_nodes_on_scope_gen</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span></div>
 
 
     <span class="c1"># def clone(self, *args, **kwargs):</span>
-    <span class="c1">#     &quot;&quot;&quot;Use args, kwargs to make an instance, using self attributes for</span>
+    <span class="c1">#     """Use args, kwargs to make an instance, using self attributes for</span>
     <span class="c1">#     unspecified arguments.</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a sub-dag from a specification of (var or fun) input and output nodes.</span>
+<span class="w">        </span><span class="sd">"""Get a sub-dag from a specification of (var or fun) input and output nodes.</span>
 
 <span class="sd">        ``dag[input_nodes:output_nodes]`` is the sub-dag made of intersection of all</span>
 <span class="sd">        descendants of ``input_nodes``</span>
@@ -776,7 +1369,7 @@
 <span class="sd">        &gt;&gt;&gt; def i(h): ...</span>
 <span class="sd">        &gt;&gt;&gt; dag = DAG([f, g, h, i])</span>
 
-<span class="sd">        See what this dag looks like (it&#39;s a simple pipeline):</span>
+<span class="sd">        See what this dag looks like (it's a simple pipeline):</span>
 
 <span class="sd">        &gt;&gt;&gt; dag = DAG([f, g, h, i])</span>
 <span class="sd">        &gt;&gt;&gt; print(dag.synopsis_string())</span>
@@ -787,7 +1380,7 @@
 
 <span class="sd">        Get a subdag from ``g_`` (indicates the function here) to the end of ``dag``</span>
 
-<span class="sd">        &gt;&gt;&gt; subdag = dag[&#39;g_&#39;:]</span>
+<span class="sd">        &gt;&gt;&gt; subdag = dag['g_':]</span>
 <span class="sd">        &gt;&gt;&gt; print(subdag.synopsis_string())</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
@@ -795,14 +1388,14 @@
 
 <span class="sd">        From the beginning to ``h_``</span>
 
-<span class="sd">        &gt;&gt;&gt; print(dag[:&#39;h_&#39;].synopsis_string())</span>
+<span class="sd">        &gt;&gt;&gt; print(dag[:'h_'].synopsis_string())</span>
 <span class="sd">        a -&gt; f_ -&gt; f</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
 
 <span class="sd">        From ``g_`` to ``h_`` (both inclusive)</span>
 
-<span class="sd">        &gt;&gt;&gt; print(dag[&#39;g_&#39;:&#39;h_&#39;].synopsis_string())</span>
+<span class="sd">        &gt;&gt;&gt; print(dag['g_':'h_'].synopsis_string())</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
 
@@ -812,22 +1405,22 @@
 <span class="sd">        specify function nodes, you also get the input and output nodes of these</span>
 <span class="sd">        functions.</span>
 
-<span class="sd">        The ``dag[&#39;g_&#39;, &#39;h_&#39;]`` give us a sub-dag starting at ``f`` (the input node),</span>
-<span class="sd">        but when we ask ``dag[&#39;g&#39;, &#39;h_&#39;]`` instead, ``g`` being the output node of</span>
+<span class="sd">        The ``dag['g_', 'h_']`` give us a sub-dag starting at ``f`` (the input node),</span>
+<span class="sd">        but when we ask ``dag['g', 'h_']`` instead, ``g`` being the output node of</span>
 <span class="sd">        function node ``g_``, we only get ``g -&gt; h_ -&gt; h``:</span>
 
-<span class="sd">        &gt;&gt;&gt; print(dag[&#39;g&#39;:&#39;h&#39;].synopsis_string())</span>
+<span class="sd">        &gt;&gt;&gt; print(dag['g':'h'].synopsis_string())</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
 
-<span class="sd">        If we wanted to include ``f`` we&#39;d have to specify it:</span>
+<span class="sd">        If we wanted to include ``f`` we'd have to specify it:</span>
 
-<span class="sd">        &gt;&gt;&gt; print(dag[&#39;f&#39;:&#39;h&#39;].synopsis_string())</span>
+<span class="sd">        &gt;&gt;&gt; print(dag['f':'h'].synopsis_string())</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        g -&gt; h_ -&gt; h</span>
 
-<span class="sd">        Those were for simple pipelines, but let&#39;s now look at a more complex dag.</span>
+<span class="sd">        Those were for simple pipelines, but let's now look at a more complex dag.</span>
 
-<span class="sd">        We&#39;ll let the following examples self-comment:</span>
+<span class="sd">        We'll let the following examples self-comment:</span>
 
 <span class="sd">        &gt;&gt;&gt; def f(u, v): ...</span>
 <span class="sd">        &gt;&gt;&gt; def g(f): ...</span>
@@ -849,23 +1442,23 @@
 <span class="sd">        A little util to get consistent prints:</span>
 
 <span class="sd">        &gt;&gt;&gt; def print_sorted_synopsis(dag):</span>
-<span class="sd">        ...     t = sorted(dag.synopsis_string().split(&#39;\\n&#39;))</span>
-<span class="sd">        ...     print(&#39;\\n&#39;.join(t))</span>
+<span class="sd">        ...     t = sorted(dag.synopsis_string().split('\\n'))</span>
+<span class="sd">        ...     print('\\n'.join(t))</span>
 
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;u&#39;, &#39;f&#39;]:&#39;h&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[['u', 'f']:'h'])</span>
 <span class="sd">        f,w -&gt; h_ -&gt; h</span>
 <span class="sd">        u,v -&gt; f_ -&gt; f</span>
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[&#39;u&#39;:&#39;h&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag['u':'h'])</span>
 <span class="sd">        f,w -&gt; h_ -&gt; h</span>
 <span class="sd">        u,v -&gt; f_ -&gt; f</span>
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;u&#39;, &#39;f&#39;]:[&#39;h&#39;, &#39;g&#39;]])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[['u', 'f']:['h', 'g']])</span>
 <span class="sd">        f -&gt; g_ -&gt; g</span>
 <span class="sd">        f,w -&gt; h_ -&gt; h</span>
 <span class="sd">        u,v -&gt; f_ -&gt; f</span>
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;x&#39;, &#39;g&#39;]:&#39;k&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[['x', 'g']:'k'])</span>
 <span class="sd">        g,h -&gt; i_ -&gt; i</span>
 <span class="sd">        i -&gt; k_ -&gt; k</span>
-<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[[&#39;x&#39;, &#39;g&#39;]:[&#39;l&#39;, &#39;k&#39;]])</span>
+<span class="sd">        &gt;&gt;&gt; print_sorted_synopsis(dag[['x', 'g']:['l', 'k']])</span>
 <span class="sd">        g,h -&gt; i_ -&gt; i</span>
 <span class="sd">        h,x -&gt; j_ -&gt; j</span>
 <span class="sd">        i -&gt; k_ -&gt; k</span>
@@ -873,7 +1466,7 @@
 
 <span class="sd">        &gt;&gt;&gt;</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getitem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getitem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
@@ -905,7 +1498,7 @@
     <span class="c1"># TODO: Think about adding a ``_roll_in_orphaned_nodes=False`` argument:</span>
     <span class="c1">#   See https://github.com/i2mint/meshed/issues/14 for more information.</span>
 <div class="viewcode-block" id="DAG.partial">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.partial">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.partial">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">partial</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">positional_dflts</span><span class="p">,</span>
@@ -913,14 +1506,14 @@
         <span class="n">_consider_defaulted_arguments_as_bound</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">keyword_dflts</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a curried version of the DAG.</span>
+<span class="w">        </span><span class="sd">"""Get a curried version of the DAG.</span>
 
 <span class="sd">        Like ``functools.partial``, but returns a DAG (not just a callable) and allows</span>
 <span class="sd">        you to remove bound arguments as well as roll in orphaned_nodes.</span>
 
 <span class="sd">        :param positional_dflts: Bind arguments positionally</span>
 <span class="sd">        :param keyword_dflts: Bind arguments through their names</span>
-<span class="sd">        :param _remove_bound_arguments: False -- set to True if you don&#39;t want bound</span>
+<span class="sd">        :param _remove_bound_arguments: False -- set to True if you don't want bound</span>
 <span class="sd">            arguments to show up in the signature.</span>
 <span class="sd">        :param _consider_defaulted_arguments_as_bound: False -- set to True if</span>
 <span class="sd">            you want to also consider arguments that already had defaults as bound</span>
@@ -936,30 +1529,30 @@
 <span class="sd">        &gt;&gt;&gt; dag = DAG([f, g, h])</span>
 <span class="sd">        &gt;&gt;&gt; from inspect import signature</span>
 <span class="sd">        &gt;&gt;&gt; str(signature(dag))</span>
-<span class="sd">        &#39;(a, b, c, d=4)&#39;</span>
+<span class="sd">        '(a, b, c, d=4)'</span>
 <span class="sd">        &gt;&gt;&gt; dag(1, 2, 3, 4)  # == (3 * 4) - (1 + 2) == 12 - 3 == 9</span>
 <span class="sd">        9</span>
 <span class="sd">        &gt;&gt;&gt; dag(c=3, a=1, b=2, d=4)  # same as above</span>
 <span class="sd">        9</span>
 
 <span class="sd">        &gt;&gt;&gt; new_dag = dag.partial(c=3)</span>
-<span class="sd">        &gt;&gt;&gt; isinstance(new_dag, DAG)  # it&#39;s a dag (not just a partialized callable!)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(new_dag, DAG)  # it's a dag (not just a partialized callable!)</span>
 <span class="sd">        True</span>
 <span class="sd">        &gt;&gt;&gt; str(signature(new_dag))</span>
-<span class="sd">        &#39;(a, b, c=3, d=4)&#39;</span>
+<span class="sd">        '(a, b, c=3, d=4)'</span>
 <span class="sd">        &gt;&gt;&gt; new_dag(1, 2)  # same as dag(c=3, a=1, b=2, d=4), so:</span>
 <span class="sd">        9</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">keyword_dflts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span><span class="o">.</span><span class="n">map_arguments</span><span class="p">(</span>
             <span class="n">args</span><span class="o">=</span><span class="n">positional_dflts</span><span class="p">,</span>
             <span class="n">kwargs</span><span class="o">=</span><span class="n">keyword_dflts</span><span class="p">,</span>
             <span class="n">apply_defaults</span><span class="o">=</span><span class="n">_consider_defaulted_arguments_as_bound</span><span class="p">,</span>
-            <span class="c1"># positional_dflts and keyword_dflts usually don&#39;t cover all arguments, so:</span>
+            <span class="c1"># positional_dflts and keyword_dflts usually don't cover all arguments, so:</span>
             <span class="n">allow_partial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="c1"># we prefer to let the user know if they&#39;re trying to bind arguments</span>
-            <span class="c1"># that don&#39;t exist, so:</span>
+            <span class="c1"># we prefer to let the user know if they're trying to bind arguments</span>
+            <span class="c1"># that don't exist, so:</span>
             <span class="n">allow_excess</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="c1"># we don&#39;t really care about kind, so:</span>
+            <span class="c1"># we don't really care about kind, so:</span>
             <span class="n">ignore_kind</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># TODO: mk_instance: What about other init args (cache_last_scope, ...)?</span>
@@ -973,7 +1566,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">slice</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;must be a slice, was: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">slice</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"must be a slice, was: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">stop</span>
 
@@ -991,9 +1584,9 @@
                 <span class="c1"># TODO: See if we can use _func_node_for instead</span>
                 <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_node_matching</span><span class="p">,</span> <span class="n">obj</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognized variables specification: </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unrecognized variables specification: </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="c1"># assert len(item) == 2, f&quot;Only items of size 1 or 2 are supported&quot;</span>
+        <span class="c1"># assert len(item) == 2, f"Only items of size 1 or 2 are supported"</span>
         <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">ensure_variable_list</span><span class="p">,</span> <span class="p">[</span><span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">outs</span>
 
@@ -1004,7 +1597,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-        <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No matching node for idx: </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No matching node for idx: </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># TODO: Reflect: Should we include functions as keys here? Makes existence of the</span>
     <span class="c1">#  item depend on unicity of the function in the DAG, therefore dynamic,</span>
@@ -1012,34 +1605,34 @@
     <span class="c1">#  Should this node indexing be controllable by user?</span>
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_func_node_for</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A dictionary mapping identifiers and functions to their FuncNode instances</span>
+<span class="w">        </span><span class="sd">"""A dictionary mapping identifiers and functions to their FuncNode instances</span>
 <span class="sd">        in the DAG. The keys of this dictionary will include:</span>
 
 <span class="sd">        - identifiers (names) of the ``FuncNode`` instances</span>
 <span class="sd">        - ``out`` of ``FuncNode`` instances</span>
-<span class="sd">        - The ``.func`` of the ``FuncNode`` instances if it&#39;s unique.</span>
+<span class="sd">        - The ``.func`` of the ``FuncNode`` instances if it's unique.</span>
 
 <span class="sd">        &gt;&gt;&gt; def foo(x): return x + 1</span>
 <span class="sd">        &gt;&gt;&gt; def bar(x): return x * 2</span>
 <span class="sd">        &gt;&gt;&gt; dag = DAG([</span>
-<span class="sd">        ...     FuncNode(foo, out=&#39;foo_output&#39;),</span>
-<span class="sd">        ...     FuncNode(bar, name=&#39;B&#39;, out=&#39;b&#39;, bind={&#39;x&#39;: &#39;foo_output&#39;}),</span>
+<span class="sd">        ...     FuncNode(foo, out='foo_output'),</span>
+<span class="sd">        ...     FuncNode(bar, name='B', out='b', bind={'x': 'foo_output'}),</span>
 <span class="sd">        ... ])</span>
 
 <span class="sd">        A ``FuncNode`` instance is indexed by both its identifier (``.name``) as well as</span>
-<span class="sd">        the identifier of it&#39;s output (``.out``):</span>
+<span class="sd">        the identifier of it's output (``.out``):</span>
 
-<span class="sd">        &gt;&gt;&gt; dag._func_node_for[&#39;foo_output&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; dag._func_node_for['foo_output']</span>
 <span class="sd">        FuncNode(x -&gt; foo -&gt; foo_output)</span>
-<span class="sd">        &gt;&gt;&gt; dag._func_node_for[&#39;foo&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; dag._func_node_for['foo']</span>
 <span class="sd">        FuncNode(x -&gt; foo -&gt; foo_output)</span>
-<span class="sd">        &gt;&gt;&gt; dag._func_node_for[&#39;b&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; dag._func_node_for['b']</span>
 <span class="sd">        FuncNode(x=foo_output -&gt; B -&gt; b)</span>
-<span class="sd">        &gt;&gt;&gt; dag._func_node_for[&#39;B&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; dag._func_node_for['B']</span>
 <span class="sd">        FuncNode(x=foo_output -&gt; B -&gt; b)</span>
 
 <span class="sd">        If the function is hashable (most are) and unique within the ``DAG``, you</span>
-<span class="sd">        can also find the ``FuncNode`` via the ``.func`` it&#39;s wrapping:</span>
+<span class="sd">        can also find the ``FuncNode`` via the ``.func`` it's wrapping:</span>
 
 <span class="sd">        &gt;&gt;&gt; dag._func_node_for[foo]</span>
 <span class="sd">        FuncNode(x -&gt; foo -&gt; foo_output)</span>
@@ -1050,7 +1643,7 @@
 <span class="sd">        using identifiers is preferable since referencing via the function object</span>
 <span class="sd">        depends on the other functions of the DAG, so could change if we add nodes.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">:</span>
             <span class="n">d</span><span class="p">[</span><span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_node</span>
@@ -1065,7 +1658,7 @@
                     <span class="c1"># (but leaving the key present so that we know about the duplication)</span>
                     <span class="n">d</span><span class="p">[</span><span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                <span class="c1"># ignore (and don&#39;t include func) if not hashable</span>
+                <span class="c1"># ignore (and don't include func) if not hashable</span>
                 <span class="k">pass</span>
 
         <span class="c1"># remove the items marked for removal and return</span>
@@ -1077,8 +1670,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yields the self.func_nodes</span>
-<span class="sd">        Note: The raison d&#39;etre of this ``__iter__`` is simply because if no custom one</span>
+<span class="w">        </span><span class="sd">"""Yields the self.func_nodes</span>
+<span class="sd">        Note: The raison d'etre of this ``__iter__`` is simply because if no custom one</span>
 <span class="sd">        is provided, python defaults to yielding ``__getitem__[i]`` for integers,</span>
 <span class="sd">        which leads to an error being raised.</span>
 
@@ -1095,17 +1688,17 @@
 <span class="sd">        Say you wanted to now take a, b, and the output og g, and feed it to another</span>
 <span class="sd">        function...</span>
 
-<span class="sd">        &gt;&gt;&gt; def h(a, b, g): return f&quot;{a=} {b=} {g=}&quot;</span>
+<span class="sd">        &gt;&gt;&gt; def h(a, b, g): return f"{a=} {b=} {g=}"</span>
 <span class="sd">        &gt;&gt;&gt; extended_dag = DAG([*dag, h])</span>
 <span class="sd">        &gt;&gt;&gt; extended_dag(a=2, b=3)</span>
-<span class="sd">        &#39;a=2 b=3 g=7&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        'a=2 b=3 g=7'</span>
+<span class="sd">        """</span>
         <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span>
 
     <span class="c1"># Note: signature_comparator is position only to not conflict with any of the</span>
     <span class="c1">#  func_mapping keys.</span>
 <div class="viewcode-block" id="DAG.ch_funcs">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.ch_funcs">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.ch_funcs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ch_funcs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="c1"># func_comparator: CallableComparator = compare_signatures,</span>
@@ -1114,8 +1707,8 @@
         <span class="p">]</span> <span class="o">=</span> <span class="n">ch_func_node_func</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
         <span class="o">**</span><span class="n">func_mapping</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DAG&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"DAG"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Change some of the functions in the DAG.</span>
 <span class="sd">        More preciseluy get a copy of the DAG where in some of the functions have</span>
 <span class="sd">        changed.</span>
@@ -1135,8 +1728,8 @@
 <span class="sd">        &gt;&gt;&gt; def g(a_plus_b, x):</span>
 <span class="sd">        ...     return a_plus_b * x</span>
 <span class="sd">        ...</span>
-<span class="sd">        &gt;&gt;&gt; f_node = FuncNode(func=f, out=&#39;a_plus_b&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; g_node = FuncNode(func=g, bind={&#39;x&#39;: &#39;b&#39;})</span>
+<span class="sd">        &gt;&gt;&gt; f_node = FuncNode(func=f, out='a_plus_b')</span>
+<span class="sd">        &gt;&gt;&gt; g_node = FuncNode(func=g, bind={'x': 'b'})</span>
 <span class="sd">        &gt;&gt;&gt; d = DAG((f_node, g_node))</span>
 <span class="sd">        &gt;&gt;&gt; print(d.synopsis_string())</span>
 <span class="sd">        a,b -&gt; f -&gt; a_plus_b</span>
@@ -1153,8 +1746,8 @@
 <span class="sd">        &gt;&gt;&gt; from i2 import Sig</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; dag = DAG([</span>
-<span class="sd">        ...     FuncNode(lambda a, b: a + b, name=&#39;f&#39;),</span>
-<span class="sd">        ...     FuncNode(lambda y=1, z=2: y * z, name=&#39;g&#39;, bind={&#39;z&#39;: &#39;f&#39;})</span>
+<span class="sd">        ...     FuncNode(lambda a, b: a + b, name='f'),</span>
+<span class="sd">        ...     FuncNode(lambda y=1, z=2: y * z, name='g', bind={'z': 'f'})</span>
 <span class="sd">        ... ])</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; Sig(dag)</span>
@@ -1165,7 +1758,7 @@
 
 <span class="sd">        But if you change the signature, even slightly you get an error.</span>
 
-<span class="sd">        Here we didn&#39;t include the defaults:</span>
+<span class="sd">        Here we didn't include the defaults:</span>
 
 <span class="sd">        &gt;&gt;&gt; dag.ch_funcs(g=lambda y, z: y / z)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
 <span class="sd">        Traceback (most recent call last):</span>
@@ -1173,7 +1766,7 @@
 <span class="sd">        ValueError: You can only change the func of a FuncNode with a another func if the signatures match.</span>
 <span class="sd">          ...</span>
 
-<span class="sd">        Here we include defaults, but ``z``&#39;s is different:</span>
+<span class="sd">        Here we include defaults, but ``z``'s is different:</span>
 
 <span class="sd">        &gt;&gt;&gt; dag.ch_funcs(g=lambda y=1, z=200: y / z)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
 <span class="sd">        Traceback (most recent call last):</span>
@@ -1196,10 +1789,10 @@
 <span class="sd">        The is the right choice for a default since it will get you out of trouble</span>
 <span class="sd">        down the line.</span>
 
-<span class="sd">        But it&#39;s also annoying in many situations, and in those cases you should</span>
+<span class="sd">        But it's also annoying in many situations, and in those cases you should</span>
 <span class="sd">        specify the ``func_comparator`` that makes sense for your context.</span>
 
-<span class="sd">        Since most of the time, you&#39;ll want to compare functions solely based on</span>
+<span class="sd">        Since most of the time, you'll want to compare functions solely based on</span>
 <span class="sd">        their signature, we provide a ``compare_signatures`` allows you to control the</span>
 <span class="sd">        signature comparison through a ``signature_comparator`` argument.</span>
 
@@ -1220,7 +1813,7 @@
 
 <span class="sd">        But our ``same_names`` function compared names including their order.</span>
 <span class="sd">        If we want a function with the signature ``(z=2, y=1)`` to be able to be</span>
-<span class="sd">        &quot;injected&quot; we&#39;ll need a different comparator:</span>
+<span class="sd">        "injected" we'll need a different comparator:</span>
 
 <span class="sd">        &gt;&gt;&gt; _names = lambda sig1, sig2: set(sig1.parameters) == set(sig2.parameters)</span>
 <span class="sd">        &gt;&gt;&gt; same_set_of_names = partial(</span>
@@ -1232,7 +1825,7 @@
 <span class="sd">        &gt;&gt;&gt; ch_fnode2 = partial(ch_func_node_func, func_comparator=same_set_of_names)</span>
 <span class="sd">        &gt;&gt;&gt; d = dag.ch_funcs(ch_fnode2, g=lambda z=2, y=1: y / z);</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">ch_funcs</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">func_mapping</span><span class="o">=</span><span class="n">func_mapping</span><span class="p">,</span> <span class="n">ch_func_node_func</span><span class="o">=</span><span class="n">ch_func_node_func</span>
         <span class="p">)</span></div>
@@ -1270,7 +1863,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">params_for_src</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The ``{src_name: list_of_params_using_that_src,...}`` dictionary.</span>
+<span class="w">        </span><span class="sd">"""The ``{src_name: list_of_params_using_that_src,...}`` dictionary.</span>
 <span class="sd">        That is, a ``dict`` having lists of all ``Parameter`` objs that are used by a</span>
 <span class="sd">        ``node.bind`` source (value of ``node.bind``) for each such source in the graph</span>
 
@@ -1282,7 +1875,7 @@
 <span class="sd">        What ``params_for_src`` is, is the corresponding inverse map.</span>
 <span class="sd">        The ``{varnode_src_name: list_of_params}`` gathered by scanning each</span>
 <span class="sd">        ``func_node`` of the DAG.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">arg_name</span><span class="p">,</span> <span class="n">src_name</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1290,9 +1883,9 @@
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DAG.src_name_params">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.src_name_params">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.src_name_params">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">src_name_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate Parameter instances that are needed to compute ``src_names``&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate Parameter instances that are needed to compute ``src_names``"""</span>
         <span class="c1"># see params_for_src property to see what d is</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_for_src</span>
         <span class="k">if</span> <span class="n">src_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># if no src_names given, use the names of all var_nodes</span>
@@ -1306,9 +1899,9 @@
                 <span class="n">p</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">src_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span>
             <span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params_with_name_changed_to_src_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="c1"># if there&#39;s only one param, yield it (there can be no conflict)</span>
+                <span class="c1"># if there's only one param, yield it (there can be no conflict)</span>
                 <span class="k">yield</span> <span class="n">params_with_name_changed_to_src_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>  <span class="c1"># if there&#39;s more than one param, merge them</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># if there's more than one param, merge them</span>
                 <span class="c1"># How to resolve conflicts (different defaults, annotations or kinds)</span>
                 <span class="c1"># is determined by what ``parameter_merge`` specified, which is,</span>
                 <span class="c1"># by default, strict (everything needs to be the same, or</span>
@@ -1319,7 +1912,7 @@
     <span class="c1"># TODO: Find more representative (and possibly shorter) doctest:</span>
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">graph_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The dict representing the ``{from_node: to_nodes}`` graph.</span>
+<span class="w">        </span><span class="sd">"""The dict representing the ``{from_node: to_nodes}`` graph.</span>
 <span class="sd">        Like ``.graph``, but with node ids (names).</span>
 
 <span class="sd">        &gt;&gt;&gt; from meshed.dag import DAG</span>
@@ -1327,17 +1920,17 @@
 <span class="sd">        &gt;&gt;&gt; def mult(x, y=3): return x * y</span>
 <span class="sd">        &gt;&gt;&gt; def exp(mult, a): return mult ** a</span>
 <span class="sd">        &gt;&gt;&gt; assert DAG([add, mult, exp]).graph_ids == {</span>
-<span class="sd">        ...     &#39;a&#39;: [&#39;add_&#39;, &#39;exp_&#39;],</span>
-<span class="sd">        ...     &#39;b&#39;: [&#39;add_&#39;],</span>
-<span class="sd">        ...     &#39;add_&#39;: [&#39;add&#39;],</span>
-<span class="sd">        ...     &#39;x&#39;: [&#39;mult_&#39;],</span>
-<span class="sd">        ...     &#39;y&#39;: [&#39;mult_&#39;],</span>
-<span class="sd">        ...     &#39;mult_&#39;: [&#39;mult&#39;],</span>
-<span class="sd">        ...     &#39;mult&#39;: [&#39;exp_&#39;],</span>
-<span class="sd">        ...     &#39;exp_&#39;: [&#39;exp&#39;]</span>
+<span class="sd">        ...     'a': ['add_', 'exp_'],</span>
+<span class="sd">        ...     'b': ['add_'],</span>
+<span class="sd">        ...     'add_': ['add'],</span>
+<span class="sd">        ...     'x': ['mult_'],</span>
+<span class="sd">        ...     'y': ['mult_'],</span>
+<span class="sd">        ...     'mult_': ['mult'],</span>
+<span class="sd">        ...     'mult': ['exp_'],</span>
+<span class="sd">        ...     'exp_': ['exp']</span>
 <span class="sd">        ... }</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="n">_name_attr_or_x</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_name_attr_or_x</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -1356,16 +1949,16 @@
         <span class="k">return</span> <span class="n">other</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A union of DAGs. See ``__add__`` for more details.</span>
+<span class="w">        </span><span class="sd">"""A union of DAGs. See ``__add__`` for more details.</span>
 
 <span class="sd">        &gt;&gt;&gt; dag = sum([DAG(list), DAG(tuple)])</span>
-<span class="sd">        &gt;&gt;&gt; print(dag.synopsis_string(bind_info=&#39;hybrid&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; print(dag.synopsis_string(bind_info='hybrid'))</span>
 <span class="sd">        iterable -&gt; list_ -&gt; list</span>
 <span class="sd">        iterable -&gt; tuple_ -&gt; tuple</span>
 <span class="sd">        &gt;&gt;&gt; dag([1,2,3])</span>
 <span class="sd">        ([1, 2, 3], (1, 2, 3))</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># We could have just returned self + other to be commutative, but perhaps</span>
         <span class="c1"># we would like to control some orders of things via the order of addition</span>
         <span class="c1"># (thinkg list addition versus set addition for example), so instead we write</span>
@@ -1373,26 +1966,26 @@
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_other_for_addition</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A union of DAGs.</span>
+<span class="w">        </span><span class="sd">"""A union of DAGs.</span>
 
 <span class="sd">        :param other: Another DAG or a valid object to make one with ``DAG(other)``.</span>
 
 <span class="sd">        &gt;&gt;&gt; dag = DAG(list) + DAG(tuple)</span>
-<span class="sd">        &gt;&gt;&gt; print(dag.synopsis_string(bind_info=&#39;hybrid&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; print(dag.synopsis_string(bind_info='hybrid'))</span>
 <span class="sd">        iterable -&gt; list_ -&gt; list</span>
 <span class="sd">        iterable -&gt; tuple_ -&gt; tuple</span>
 <span class="sd">        &gt;&gt;&gt; dag([1,2,3])</span>
 <span class="sd">        ([1, 2, 3], (1, 2, 3))</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_other_for_addition</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">numbered_suffix_renamer</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="n">ch_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">))</span>
 
 <div class="viewcode-block" id="DAG.add_edge">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.add_edge">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.add_edge">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_node</span><span class="p">,</span> <span class="n">to_node</span><span class="p">,</span> <span class="n">to_param</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an e</span>
+<span class="w">        </span><span class="sd">"""Add an e</span>
 
 <span class="sd">        :param from_node:</span>
 <span class="sd">        :param to_node:</span>
@@ -1414,7 +2007,7 @@
 <span class="sd">        a,b -&gt; f_ -&gt; f</span>
 <span class="sd">        c,d -&gt; g_ -&gt; g</span>
 <span class="sd">        x,y -&gt; h_ -&gt; h</span>
-<span class="sd">        &gt;&gt;&gt; hg = three_funcs.add_edge(&#39;h&#39;, &#39;g&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; hg = three_funcs.add_edge('h', 'g')</span>
 <span class="sd">        &gt;&gt;&gt; assert (</span>
 <span class="sd">        ...     hg(a=3, b=4, x=1)</span>
 <span class="sd">        ...     == (7, 1)</span>
@@ -1426,7 +2019,7 @@
 <span class="sd">        x,y -&gt; h_ -&gt; h</span>
 <span class="sd">        h,d -&gt; g_ -&gt; g</span>
 <span class="sd">        &gt;&gt;&gt;</span>
-<span class="sd">        &gt;&gt;&gt; fhg = three_funcs.add_edge(&#39;h&#39;, &#39;g&#39;).add_edge(&#39;f&#39;, &#39;h&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; fhg = three_funcs.add_edge('h', 'g').add_edge('f', 'h')</span>
 <span class="sd">        &gt;&gt;&gt; assert (</span>
 <span class="sd">        ...     fhg(a=3, b=4)</span>
 <span class="sd">        ...     == 7</span>
@@ -1439,9 +2032,9 @@
 <span class="sd">        h,d -&gt; g_ -&gt; g</span>
 
 <span class="sd">        The from and to nodes can be expressed by the ``FuncNode`` ``name`` (identifier)</span>
-<span class="sd">        or ``out``, or even the function itself if it&#39;s used only once in the ``DAG``.</span>
+<span class="sd">        or ``out``, or even the function itself if it's used only once in the ``DAG``.</span>
 
-<span class="sd">        &gt;&gt;&gt; fhg = three_funcs.add_edge(h, &#39;g&#39;).add_edge(&#39;f_&#39;, &#39;h&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; fhg = three_funcs.add_edge(h, 'g').add_edge('f_', 'h')</span>
 <span class="sd">        &gt;&gt;&gt; assert fhg(a=3, b=4) == 7</span>
 
 <span class="sd">        By default, the edge will be added from ``from_node.out`` to the first</span>
@@ -1453,8 +2046,8 @@
 
 <span class="sd">        &gt;&gt;&gt; f_of_g_and_h = (</span>
 <span class="sd">        ...     DAG([f, g, h])</span>
-<span class="sd">        ...     .add_edge(g, f, to_param=&#39;a&#39;)</span>
-<span class="sd">        ...     .add_edge(h, f, &#39;b&#39;)</span>
+<span class="sd">        ...     .add_edge(g, f, to_param='a')</span>
+<span class="sd">        ...     .add_edge(h, f, 'b')</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; assert (</span>
 <span class="sd">        ...     f_of_g_and_h(x=2, c=3, y=2, d=2)</span>
@@ -1470,7 +2063,7 @@
 
 <span class="sd">        See Also ``DAG.add_edges`` to add multiple edges at once</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># resolve from_node and to_node into FuncNodes</span>
         <span class="n">from_node</span><span class="p">,</span> <span class="n">to_node</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find_func_node</span><span class="p">,</span> <span class="p">(</span><span class="n">from_node</span><span class="p">,</span> <span class="n">to_node</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">to_node</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">to_node</span><span class="p">):</span>
@@ -1482,9 +2075,9 @@
         <span class="k">if</span> <span class="n">to_param</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">to_node</span><span class="o">.</span><span class="n">bind</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">InvalidFunctionParameters</span><span class="p">(</span>
-                    <span class="s2">&quot;You can&#39;t add an edge TO a FuncNode whose function has no &quot;</span>
-                    <span class="s2">&quot;parameters. &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;You attempted to add an edge between </span><span class="si">{</span><span class="n">from_node</span><span class="si">=}</span><span class="s2"> and </span><span class="si">{</span><span class="n">to_node</span><span class="si">=}</span><span class="s2">.&quot;</span>
+                    <span class="s2">"You can't add an edge TO a FuncNode whose function has no "</span>
+                    <span class="s2">"parameters. "</span>
+                    <span class="sa">f</span><span class="s2">"You attempted to add an edge between </span><span class="si">{</span><span class="n">from_node</span><span class="si">=}</span><span class="s2"> and </span><span class="si">{</span><span class="n">to_node</span><span class="si">=}</span><span class="s2">."</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># first param of .func (i.e. first key of .bind)</span>
@@ -1493,13 +2086,13 @@
         <span class="n">existing_bind</span> <span class="o">=</span> <span class="n">to_node</span><span class="o">.</span><span class="n">bind</span><span class="p">[</span><span class="n">to_param</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">existing_bind</span> <span class="o">==</span> <span class="n">fn</span><span class="o">.</span><span class="n">out</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">to_node</span><span class="si">}</span><span class="s2"> node is already sourcing &#39;</span><span class="si">{</span><span class="n">to_param</span><span class="si">}</span><span class="s2">&#39; from &#39;&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">existing_bind</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
-                <span class="s2">&quot;Delete that edge to be able before you add a new one&quot;</span>
+                <span class="sa">f</span><span class="s2">"The </span><span class="si">{</span><span class="n">to_node</span><span class="si">}</span><span class="s2"> node is already sourcing '</span><span class="si">{</span><span class="n">to_param</span><span class="si">}</span><span class="s2">' from '"</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">existing_bind</span><span class="si">}</span><span class="s2">'."</span>
+                <span class="s2">"Delete that edge to be able before you add a new one"</span>
             <span class="p">)</span>
 
         <span class="n">new_to_node_dict</span> <span class="o">=</span> <span class="n">to_node</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-        <span class="n">new_bind</span> <span class="o">=</span> <span class="n">new_to_node_dict</span><span class="p">[</span><span class="s2">&quot;bind&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">new_bind</span> <span class="o">=</span> <span class="n">new_to_node_dict</span><span class="p">[</span><span class="s2">"bind"</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">new_bind</span><span class="p">[</span><span class="n">to_param</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_node</span><span class="o">.</span><span class="n">out</span>  <span class="c1"># this is the actual edge creation</span>
         <span class="n">new_to_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">new_to_node_dict</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">new_bind</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
@@ -1513,9 +2106,9 @@
 
     <span class="c1"># TODO: There are optimization and pre-validation opportunities here!</span>
 <div class="viewcode-block" id="DAG.add_edges">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.add_edges">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.add_edges">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds multiple edges by applying ``DAG.add_edge`` multiple times.</span>
+<span class="w">        </span><span class="sd">"""Adds multiple edges by applying ``DAG.add_edge`` multiple times.</span>
 
 <span class="sd">        :param edges: An iterable of ``(from_node, to_node)`` pairs or</span>
 <span class="sd">            ``(from_node, to_node, param)`` triples.</span>
@@ -1524,9 +2117,9 @@
 <span class="sd">        &gt;&gt;&gt; def f(a, b): return a + b</span>
 <span class="sd">        &gt;&gt;&gt; def g(c, d=1): return c * d</span>
 <span class="sd">        &gt;&gt;&gt; def h(x, y=1): return x ** y</span>
-<span class="sd">        &gt;&gt;&gt; fhg = DAG([f, g, h]).add_edges([(h, &#39;g&#39;), (&#39;f_&#39;, &#39;h&#39;)])</span>
+<span class="sd">        &gt;&gt;&gt; fhg = DAG([f, g, h]).add_edges([(h, 'g'), ('f_', 'h')])</span>
 <span class="sd">        &gt;&gt;&gt; assert fhg(a=3, b=4) == 7</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">dag</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
             <span class="n">dag</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
@@ -1534,9 +2127,9 @@
 
 
 <div class="viewcode-block" id="DAG.debugger">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.debugger">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.debugger">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">debugger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">dflt_debugger_feedback</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Utility to debug DAGs by computing each step sequentially, with feedback.</span>
 
 <span class="sd">        :param feedback: A callable that defines what feedback is given, usually used to</span>
@@ -1556,27 +2149,27 @@
 <span class="sd">        &gt;&gt;&gt; def h(f, g):</span>
 <span class="sd">        ...     return g - f</span>
 <span class="sd">        ...</span>
-<span class="sd">        &gt;&gt;&gt; dag2 = DAG([f, g, h], name=&#39;arithmetic&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; dag2 = DAG([f, g, h], name='arithmetic')</span>
 <span class="sd">        &gt;&gt;&gt; dag2</span>
-<span class="sd">        DAG(func_nodes=[FuncNode(a,b -&gt; f_ -&gt; f), FuncNode(c,d -&gt; g_ -&gt; g), FuncNode(f,g -&gt; h_ -&gt; h)], name=&#39;arithmetic&#39;)</span>
+<span class="sd">        DAG(func_nodes=[FuncNode(a,b -&gt; f_ -&gt; f), FuncNode(c,d -&gt; g_ -&gt; g), FuncNode(f,g -&gt; h_ -&gt; h)], name='arithmetic')</span>
 <span class="sd">        &gt;&gt;&gt; str(signature(dag2))</span>
-<span class="sd">        &#39;(a, b, c, d=4)&#39;</span>
+<span class="sd">        '(a, b, c, d=4)'</span>
 <span class="sd">        &gt;&gt;&gt; dag2(1,2,3)</span>
 <span class="sd">        9</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; debugger = dag2.debugger()</span>
 <span class="sd">        &gt;&gt;&gt; str(signature(debugger))</span>
-<span class="sd">        &#39;(a, b, c, d=4)&#39;</span>
+<span class="sd">        '(a, b, c, d=4)'</span>
 <span class="sd">        &gt;&gt;&gt; d = debugger(1,2,3)</span>
 <span class="sd">        &gt;&gt;&gt; next(d)  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">        0 --------------------------------------------------------------</span>
 <span class="sd">            func_node=FuncNode(a,b -&gt; f_ -&gt; f)</span>
-<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3}</span>
+<span class="sd">            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3}</span>
 <span class="sd">        3</span>
 <span class="sd">        &gt;&gt;&gt; next(d)  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">        1 --------------------------------------------------------------</span>
 <span class="sd">            func_node=FuncNode(c,d -&gt; g_ -&gt; g)</span>
-<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3, &#39;g&#39;: 12}</span>
+<span class="sd">            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3, 'g': 12}</span>
 <span class="sd">        12</span>
 
 <span class="sd">        ... and so on. You can also choose to run every step all at once, collecting</span>
@@ -1585,15 +2178,15 @@
 <span class="sd">        &gt;&gt;&gt; feedback_outputs = list(debugger(1,2,3))  # doctest: +NORMALIZE_WHITESPACE</span>
 <span class="sd">        0 --------------------------------------------------------------</span>
 <span class="sd">            func_node=FuncNode(a,b -&gt; f_ -&gt; f)</span>
-<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3}</span>
+<span class="sd">            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3}</span>
 <span class="sd">        1 --------------------------------------------------------------</span>
 <span class="sd">            func_node=FuncNode(c,d -&gt; g_ -&gt; g)</span>
-<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3, &#39;g&#39;: 12}</span>
+<span class="sd">            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3, 'g': 12}</span>
 <span class="sd">        2 --------------------------------------------------------------</span>
 <span class="sd">            func_node=FuncNode(f,g -&gt; h_ -&gt; h)</span>
-<span class="sd">            scope={&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;f&#39;: 3, &#39;g&#39;: 12, &#39;h&#39;: 9}</span>
+<span class="sd">            scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3, 'g': 12, 'h': 9}</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># TODO: Add feedback callable validation</span>
         <span class="nd">@Sig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -1614,36 +2207,36 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">to_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">dag_to_code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s2">&quot;var_nodes&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">synopsis_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s2">"var_nodes"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">func_node</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span>
         <span class="p">)</span>
 
     <span class="c1"># TODO: Give more control (merge with lined)</span>
 <div class="viewcode-block" id="DAG.dot_digraph_body">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.dot_digraph_body">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.dot_digraph_body">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">dot_digraph_body</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">start_lines</span><span class="o">=</span><span class="p">(),</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">end_lines</span><span class="o">=</span><span class="p">(),</span>
-        <span class="n">vnode_shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s2">&quot;vnode_shape&quot;</span><span class="p">],</span>
-        <span class="n">fnode_shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s2">&quot;fnode_shape&quot;</span><span class="p">],</span>
-        <span class="n">func_display</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s2">&quot;func_display&quot;</span><span class="p">],</span>
+        <span class="n">vnode_shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s2">"vnode_shape"</span><span class="p">],</span>
+        <span class="n">fnode_shape</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s2">"fnode_shape"</span><span class="p">],</span>
+        <span class="n">func_display</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">dflt_configs</span><span class="p">[</span><span class="s2">"func_display"</span><span class="p">],</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make lines for dot (graphviz) specification of DAG</span>
+<span class="w">        </span><span class="sd">"""Make lines for dot (graphviz) specification of DAG</span>
 
 <span class="sd">        &gt;&gt;&gt; def add(a, b=1): return a + b</span>
 <span class="sd">        &gt;&gt;&gt; def mult(x, y=3): return x * y</span>
 <span class="sd">        &gt;&gt;&gt; def exp(mult, a): return mult ** a</span>
 <span class="sd">        &gt;&gt;&gt; func_nodes = [</span>
-<span class="sd">        ...     FuncNode(add, out=&#39;x&#39;), FuncNode(mult, name=&#39;the_product&#39;), FuncNode(exp)</span>
+<span class="sd">        ...     FuncNode(add, out='x'), FuncNode(mult, name='the_product'), FuncNode(exp)</span>
 <span class="sd">        ... ]</span>
 
 <span class="sd">        #</span>
 <span class="sd">        # &gt;&gt;&gt; assert list(DAG(func_nodes).dot_digraph_body()) == [</span>
 <span class="sd">        # ]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_lines</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">start_lines</span> <span class="o">=</span> <span class="n">start_lines</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># TODO: really? split on space?</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">end_lines</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -1657,32 +2250,32 @@
 
 
 <div class="viewcode-block" id="DAG.dot_digraph_ascii">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.dot_digraph_ascii">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.dot_digraph_ascii">[docs]</a>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">dot_digraph_body</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dot_digraph_ascii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an ascii art string that represents the pipeline&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get an ascii art string that represents the pipeline"""</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">dot_to_ascii</span>
 
-        <span class="k">return</span> <span class="n">dot_to_ascii</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dot_digraph_body</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span></div>
+        <span class="k">return</span> <span class="n">dot_to_ascii</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dot_digraph_body</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span></div>
 
 
 <div class="viewcode-block" id="DAG.dot_digraph">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.DAG.dot_digraph">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.dot_digraph">[docs]</a>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">dot_digraph_body</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dot_digraph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s2">You may not have graphviz installed. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;See https://pypi.org/project/graphviz/.&quot;</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s2">You may not have graphviz installed. "</span>
+                <span class="sa">f</span><span class="s2">"See https://pypi.org/project/graphviz/."</span>
             <span class="p">)</span>
         <span class="c1"># Note: Since graphviz 0.18, need to have a newline in body lines!</span>
         <span class="n">body</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">add_new_line_if_none</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dot_digraph_body</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">)</span></div>
 
 
-    <span class="c1"># NOTE: &quot;sig = property(__signature__)&quot; is not working. So, doing the following instead.</span>
+    <span class="c1"># NOTE: "sig = property(__signature__)" is not working. So, doing the following instead.</span>
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span>
@@ -1701,7 +2294,7 @@
     <span class="k">return</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">source_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">print_dag_string</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_dag_string</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">bind_info</span><span class="p">:</span> <span class="n">BindInfo</span> <span class="o">=</span> <span class="s2">"hybrid"</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="n">bind_info</span><span class="p">))</span>
 
 
@@ -1715,9 +2308,9 @@
 
 
 <div class="viewcode-block" id="dag_to_code">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.dag_to_code">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.dag_to_code">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dag_to_code</span><span class="p">(</span><span class="n">dag</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert a DAG to code.</span>
 
 <span class="sd">    &gt;&gt;&gt; from meshed import code_to_dag</span>
@@ -1754,22 +2347,22 @@
 <span class="sd">    a,z -&gt; func2 -&gt; b</span>
 <span class="sd">    a,b -&gt; func3 -&gt; c</span>
 <span class="sd">    &lt;BLANKLINE&gt;</span>
-<span class="sd">    &gt;&gt;&gt; # Verify they&#39;re equivalent:</span>
+<span class="sd">    &gt;&gt;&gt; # Verify they're equivalent:</span>
 <span class="sd">    &gt;&gt;&gt; dag.synopsis_string() == dag2.synopsis_string()</span>
 <span class="sd">    True</span>
 
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">func_nodes_to_code</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">dag</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="parametrized_dag_factory">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.parametrized_dag_factory">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.parametrized_dag_factory">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parametrized_dag_factory</span><span class="p">(</span><span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">param_var_nodes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Constructs a factory for sub-DAGs derived from the input DAG, with values of</span>
-<span class="sd">    specific &#39;parameter&#39; variable nodes precomputed and fixed. These precomputed nodes,</span>
+<span class="sd">    specific 'parameter' variable nodes precomputed and fixed. These precomputed nodes,</span>
 <span class="sd">    and their ancestor nodes (unless required elsewhere), are omitted from the sub-DAG.</span>
 
 <span class="sd">    The factory function produced by this operation requires arguments corresponding to</span>
@@ -1790,16 +2383,16 @@
 <span class="sd">    ...     d = sauce(a, b)</span>
 <span class="sd">    ...     e = applesauce(c, d)</span>
 <span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; dag_factory = parametrized_dag_factory(testdag, &#39;a&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; print(f&quot;{i2.Sig(dag_factory)}&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; dag_factory = parametrized_dag_factory(testdag, 'a')</span>
+<span class="sd">    &gt;&gt;&gt; print(f"{i2.Sig(dag_factory)}")</span>
 <span class="sd">    (aa, aaa)</span>
 <span class="sd">    &gt;&gt;&gt; d = dag_factory(aa=1, aaa=2)</span>
-<span class="sd">    &gt;&gt;&gt; print(f&quot;{i2.Sig(d)}&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; print(f"{i2.Sig(d)}")</span>
 <span class="sd">    (b)</span>
-<span class="sd">    &gt;&gt;&gt; d(b=&#39;bananna&#39;)</span>
-<span class="sd">    &#39;applesauce(c=apple(a=criss(aa=1, aaa=2), b=bananna), d=sauce(a=criss(aa=1, aaa=2), b=bananna))&#39;</span>
+<span class="sd">    &gt;&gt;&gt; d(b='bananna')</span>
+<span class="sd">    'applesauce(c=apple(a=criss(aa=1, aaa=2), b=bananna), d=sauce(a=criss(aa=1, aaa=2), b=bananna))'</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param_var_nodes</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">param_var_nodes</span> <span class="o">=</span> <span class="n">param_var_nodes</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
@@ -1814,7 +2407,7 @@
     <span class="nd">@Sig</span><span class="p">(</span><span class="n">param_dag</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dag_factory</span><span class="p">(</span><span class="o">*</span><span class="n">parametrization_args</span><span class="p">,</span> <span class="o">**</span><span class="n">parametrization_kwargs</span><span class="p">):</span>
         <span class="c1"># use the param_dag to compute the values of the parameter var nodes</span>
-        <span class="c1"># (and what ever else happens to be in the leaves, but we&#39;ll remove that later)</span>
+        <span class="c1"># (and what ever else happens to be in the leaves, but we'll remove that later)</span>
         <span class="n">_</span> <span class="o">=</span> <span class="n">param_dag</span><span class="p">(</span><span class="o">*</span><span class="n">parametrization_args</span><span class="p">,</span> <span class="o">**</span><span class="n">parametrization_kwargs</span><span class="p">)</span>
         <span class="c1"># Get the values for all nodes that are common to param_dag and computation_dag</span>
         <span class="c1"># (There may be more than just param_var_nodes!)</span>
@@ -1822,7 +2415,7 @@
         <span class="c1"># By fixing those values, you now have a the computation_dag you want</span>
         <span class="c1"># Note: Also, remove the bound arguments</span>
         <span class="c1"># (i.e. the arguments that were used to compute the values)</span>
-        <span class="c1"># so that the user doesn&#39;t change those and get inconsistencies!</span>
+        <span class="c1"># so that the user doesn't change those and get inconsistencies!</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">computation_dag</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span>
             <span class="o">**</span><span class="n">common_var_node_values</span><span class="p">,</span> <span class="n">_remove_bound_arguments</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
@@ -1852,7 +2445,7 @@
     <span class="n">funcnodes</span> <span class="o">+=</span> <span class="n">extra_nodes</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">_func_nodes_to_graph_dict</span><span class="p">(</span><span class="n">funcnodes</span><span class="p">)</span>
     <span class="n">nodes</span> <span class="o">=</span> <span class="n">topological_sort</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;after ordering:&quot;</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"after ordering:"</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span>
     <span class="n">ordered_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span> <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">extra_nodes</span><span class="p">]</span>
     <span class="n">func_nodes</span><span class="p">,</span> <span class="n">var_nodes</span> <span class="o">=</span> <span class="n">_separate_func_nodes_and_var_nodes</span><span class="p">(</span><span class="n">ordered_nodes</span><span class="p">)</span>
 
@@ -1860,12 +2453,12 @@
 
 
 <div class="viewcode-block" id="attribute_vals">
-<a class="viewcode-back" href="../../module_docs/meshed/dag.html#meshed.dag.attribute_vals">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.attribute_vals">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">attribute_vals</span><span class="p">(</span><span class="n">objs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">attrs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">egress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract attributes from an iterable of objects</span>
-<span class="sd">    &gt;&gt;&gt; list(attribute_vals([print, map], attrs=[&#39;__name__&#39;, &#39;__module__&#39;]))</span>
-<span class="sd">    [(&#39;print&#39;, &#39;builtins&#39;), (&#39;map&#39;, &#39;builtins&#39;)]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Extract attributes from an iterable of objects</span>
+<span class="sd">    &gt;&gt;&gt; list(attribute_vals([print, map], attrs=['__name__', '__module__']))</span>
+<span class="sd">    [('print', 'builtins'), ('map', 'builtins')]</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
     <span class="n">val_tuples</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">attrgetter</span><span class="p">(</span><span class="o">*</span><span class="n">attrs</span><span class="p">),</span> <span class="n">objs</span><span class="p">)</span>
@@ -1876,15 +2469,15 @@
 
 
 
-<span class="n">names_and_outs</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">attribute_vals</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">),</span> <span class="n">egress</span><span class="o">=</span><span class="n">chain</span><span class="p">)</span>
+<span class="n">names_and_outs</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">attribute_vals</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"out"</span><span class="p">),</span> <span class="n">egress</span><span class="o">=</span><span class="n">chain</span><span class="p">)</span>
 
 <span class="n">DagAble</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">DAG</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNodeAble</span><span class="p">]]</span>
 
 
-<span class="c1"># TODO: Extract hardcoded &quot;.name or .out&quot; condition so indexing/condition can be</span>
+<span class="c1"># TODO: Extract hardcoded ".name or .out" condition so indexing/condition can be</span>
 <span class="c1">#  controlled by user.</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_validate_func_mapping</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">:</span> <span class="n">FuncMapping</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates a ``FuncMapping`` against an iterable of ``FuncNodes``.</span>
+<span class="w">    </span><span class="sd">"""Validates a ``FuncMapping`` against an iterable of ``FuncNodes``.</span>
 
 <span class="sd">    That is, it assures that:</span>
 
@@ -1899,7 +2492,7 @@
 <span class="sd">    ...     return a_plus_b * x</span>
 <span class="sd">    ...</span>
 <span class="sd">    &gt;&gt;&gt; func_nodes = [</span>
-<span class="sd">    ...     FuncNode(func=f, out=&#39;a_plus_b&#39;), FuncNode(func=g, bind={&#39;x&#39;: &#39;b&#39;})</span>
+<span class="sd">    ...     FuncNode(func=f, out='a_plus_b'), FuncNode(func=g, bind={'x': 'b'})</span>
 <span class="sd">    ... ]</span>
 <span class="sd">    &gt;&gt;&gt; _validate_func_mapping(</span>
 <span class="sd">    ...     dict(f=lambda a, b: a - b, g=lambda a_plus_b, x: x), func_nodes</span>
@@ -1910,32 +2503,32 @@
 <span class="sd">    &gt;&gt;&gt; _validate_func_mapping(dict(f=lambda a, b: a - b), func_nodes)</span>
 <span class="sd">    &gt;&gt;&gt; _validate_func_mapping(dict(a_plus_b=lambda a, b: a - b), func_nodes)</span>
 
-<span class="sd">    If you mention a key that doesn&#39;t correspond to one of the elements of</span>
-<span class="sd">    ``func_nodes``, you&#39;ll be told off.</span>
+<span class="sd">    If you mention a key that doesn't correspond to one of the elements of</span>
+<span class="sd">    ``func_nodes``, you'll be told off.</span>
 
 <span class="sd">    &gt;&gt;&gt; _validate_func_mapping(dict(not_a_key=lambda a, b: a - b), func_nodes)</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">      ...</span>
-<span class="sd">    KeyError: &quot;These identifiers weren&#39;t found in func_nodes: not_a_key&quot;</span>
+<span class="sd">    KeyError: "These identifiers weren't found in func_nodes: not_a_key"</span>
 
-<span class="sd">    If you mention a value that is not callable, you&#39;ll also be told off:</span>
+<span class="sd">    If you mention a value that is not callable, you'll also be told off:</span>
 
-<span class="sd">    &gt;&gt;&gt; _validate_func_mapping(dict(f=&#39;hello world&#39;), func_nodes)</span>
+<span class="sd">    &gt;&gt;&gt; _validate_func_mapping(dict(f='hello world'), func_nodes)</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">      ...</span>
-<span class="sd">    TypeError: These values of func_src weren&#39;t callable: hello world</span>
+<span class="sd">    TypeError: These values of func_src weren't callable: hello world</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">allowed_identifiers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
         <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">names_and_outs</span><span class="p">(</span><span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">not_allowed</span> <span class="o">:=</span> <span class="p">(</span><span class="n">func_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="n">allowed_identifiers</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;These identifiers weren&#39;t found in func_nodes: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_allowed</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"These identifiers weren't found in func_nodes: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_allowed</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">not_callable</span> <span class="o">:=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">func_mapping</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;These values of func_src weren&#39;t callable: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"These values of func_src weren't callable: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">not_callable</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
 
@@ -1952,7 +2545,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">func_mapping</span><span class="p">:</span> <span class="n">FuncMapping</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="n">validate_func_mapping</span><span class="p">:</span> <span class="n">FuncMappingValidator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">_validate_func_mapping</span><span class="p">,</span>
-    <span class="c1"># TODO: Design. Don&#39;t like the fact that ch_func_node_func needs a slot for</span>
+    <span class="c1"># TODO: Design. Don't like the fact that ch_func_node_func needs a slot for</span>
     <span class="c1">#  func_comparator, which is then given later. Perhaps only ch_func_node_func should</span>
     <span class="c1">#  should be given (and it contains the func_comparator)</span>
     <span class="n">ch_func_node_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
@@ -1960,7 +2553,7 @@
     <span class="p">]</span> <span class="o">=</span> <span class="n">ch_func_node_func</span><span class="p">,</span>
     <span class="c1"># func_comparator: CallableComparator = compare_signatures,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function (and decorator) to change the functions of func_nodes according to</span>
+<span class="w">    </span><span class="sd">"""Function (and decorator) to change the functions of func_nodes according to</span>
 <span class="sd">    the specification of a func_mapping whose keys are ``.name`` or ``.out`` values</span>
 <span class="sd">    of the nodes of ``func_nodes`` and the values are the callable we want to replace</span>
 <span class="sd">    them by.</span>
@@ -1968,7 +2561,7 @@
 <span class="sd">    A constrained version of ``ch_funcs`` is used as a method of ``DAG``.</span>
 <span class="sd">    The present function is given to provide more control.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">func_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">validate_func_mapping</span><span class="p">:</span>
         <span class="n">validate_func_mapping</span><span class="p">(</span><span class="n">func_mapping</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">)</span>
@@ -2029,7 +2622,7 @@
 <span class="c1"># TODO: extract egress functionality to decorator</span>
 <span class="nd">@double_up_as_factory</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">ch_names</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.</span>
+<span class="w">    </span><span class="sd">"""Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.</span>
 
 <span class="sd">    :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``</span>
 <span class="sd">    :param renamer: A function taking an old name and returning the new one, or:</span>
@@ -2077,36 +2670,36 @@
 <span class="sd">    If we specify a string for the ``renamer`` argument, it will be used to suffix all</span>
 <span class="sd">    the nodes.</span>
 
-<span class="sd">    &gt;&gt;&gt; print_dag_string(ch_names(dag, renamer=&#39;_copy&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; print_dag_string(ch_names(dag, renamer='_copy'))</span>
 <span class="sd">    a=a_copy -&gt; f_copy -&gt; b_copy</span>
 <span class="sd">    x=a_copy -&gt; g_copy -&gt; c_copy</span>
 <span class="sd">    b=b_copy,y=c_copy -&gt; h_copy -&gt; d_copy</span>
 
 <span class="sd">    Finally, for full functionality on renaming, you can use a function</span>
 
-<span class="sd">    &gt;&gt;&gt; print_dag_string(ch_names(dag, renamer=lambda x: f&quot;{x.upper()}&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; print_dag_string(ch_names(dag, renamer=lambda x: f"{x.upper()}"))</span>
 <span class="sd">    a=A -&gt; F -&gt; B</span>
 <span class="sd">    x=A -&gt; G -&gt; C</span>
 <span class="sd">    b=B,y=C -&gt; H -&gt; D</span>
 
 <span class="sd">    In all the above our input was a ``DAG`` so we got a ``DAG`` back, but if we enter</span>
-<span class="sd">    an iterable of ``FuncNode`` instances, we&#39;ll get a list of the same back.</span>
+<span class="sd">    an iterable of ``FuncNode`` instances, we'll get a list of the same back.</span>
 <span class="sd">    Also, know that if your function returns ``None`` for a given identifier, it will</span>
 <span class="sd">    have the effect of not changing that identifier.</span>
 
-<span class="sd">    &gt;&gt;&gt; ch_names(dag.func_nodes, renamer=lambda x: x.upper() if x in &#39;abc&#39; else None)</span>
+<span class="sd">    &gt;&gt;&gt; ch_names(dag.func_nodes, renamer=lambda x: x.upper() if x in 'abc' else None)</span>
 <span class="sd">    [FuncNode(a=A -&gt; f -&gt; B), FuncNode(x=A -&gt; g -&gt; C), FuncNode(b=B,y=C -&gt; h -&gt; d)]</span>
 
 <span class="sd">    If you want to rename the nodes with an explicit mapping, you can do so by</span>
 <span class="sd">    specifying this mapping as your renamer</span>
 
-<span class="sd">    &gt;&gt;&gt; substitutions = {&#39;a&#39;: &#39;alpha&#39;, &#39;b&#39;: &#39;bravo&#39;}</span>
+<span class="sd">    &gt;&gt;&gt; substitutions = {'a': 'alpha', 'b': 'bravo'}</span>
 <span class="sd">    &gt;&gt;&gt; print_dag_string(ch_names(dag, renamer=substitutions))</span>
 <span class="sd">    a=alpha -&gt; f -&gt; bravo</span>
 <span class="sd">    x=alpha -&gt; g -&gt; c</span>
 <span class="sd">    b=bravo,y=c -&gt; h -&gt; d</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">DAG</span><span class="p">):</span>
         <span class="n">egress</span> <span class="o">=</span> <span class="n">DAG</span>
     <span class="k">else</span><span class="p">:</span>
@@ -2114,11 +2707,11 @@
     <span class="n">renamer</span> <span class="o">=</span> <span class="n">renamer</span> <span class="ow">or</span> <span class="n">numbered_suffix_renamer</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">renamer</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">suffix</span> <span class="o">=</span> <span class="n">renamer</span>
-        <span class="n">renamer</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">renamer</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">"</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">renamer</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
         <span class="n">old_to_new_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">renamer</span><span class="p">)</span>
         <span class="n">renamer</span> <span class="o">=</span> <span class="n">old_to_new_map</span><span class="o">.</span><span class="n">get</span>
-    <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">renamer</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Could not be resolved into a callable: </span><span class="si">{</span><span class="n">renamer</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">renamer</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"Could not be resolved into a callable: </span><span class="si">{</span><span class="n">renamer</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">ktrans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_rename_node</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
     <span class="n">func_node_trans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">func_node_transformer</span><span class="p">,</span> <span class="n">kwargs_transformers</span><span class="o">=</span><span class="n">ktrans</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">func_node_trans</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">))</span>
@@ -2128,10 +2721,10 @@
     <span class="n">fn_kwargs</span> <span class="o">=</span> <span class="n">fn_kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="c1"># decorate renamer so if the original returns None the decorated will return input</span>
     <span class="n">renamer</span> <span class="o">=</span> <span class="n">_if_none_return_input</span><span class="p">(</span><span class="n">renamer</span><span class="p">)</span>
-    <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamer</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
-    <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamer</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">])</span>
-    <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">&quot;bind&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">param</span><span class="p">:</span> <span class="n">renamer</span><span class="p">(</span><span class="n">var_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">var_id</span> <span class="ow">in</span> <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">&quot;bind&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamer</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"name"</span><span class="p">])</span>
+    <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"out"</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamer</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"out"</span><span class="p">])</span>
+    <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"bind"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">param</span><span class="p">:</span> <span class="n">renamer</span><span class="p">(</span><span class="n">var_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">var_id</span> <span class="ow">in</span> <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"bind"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">fn_kwargs</span>
 
@@ -2139,31 +2732,53 @@
 <span class="n">rename_nodes</span> <span class="o">=</span> <span class="n">ch_names</span>  <span class="c1"># back-compatibility</span>
 </pre></div>
 
-           </div>
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p></p>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
   </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
 
-</footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+  </footer>
+  </body>
 </html>

@@ -1,0 +1,17 @@
+meshed.composition
+==================
+
+.. automodule:: meshed.composition
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      func_node_kwargs_trans
+      func_node_name_trans
+      get_param
+      is_func_node_kwargs_trans
+      line_with_dag
+      suffix_ids
+   

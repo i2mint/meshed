@@ -1,0 +1,21 @@
+meshed.caching
+==============
+
+.. automodule:: meshed.caching
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      add_cached_property
+      add_cached_property_from_func
+      set_cached_property_attr
+      with_cached_properties
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      LazyProps
+   
