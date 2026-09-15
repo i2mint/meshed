@@ -2,6 +2,17 @@
 
 Making DAGs
 
+Main entry points:
+
+- `DAG`: a callable graph of functions; give it functions or `FuncNode` objects,
+  call it with the root variables and get the leaf outputs back.
+- `FuncNode` (`meshed.base`): wraps one function with the node `name`, the
+  variables its parameters `bind` to, and the `out` variable it writes.
+- `ch_funcs`: copy of a DAG with some of its node functions replaced.
+- `ch_names`: copy of a DAG with its variables and function nodes renamed.
+- `code_to_dag` (`meshed.makers`): build a DAG from Python source (a function
+  or a string) whose statements are `out = func(...)` assignments.
+
 In it’s simplest form, consider this:
 
 ```pycon
@@ -37,26 +48,28 @@ But don’t be fooled: There’s much more to it!
 ...     return zip(*[iter(sequence)] * chk_size)
 >>>
 >>> my_chunker = partial(chunker, chk_size=3)
+>>> def to_list(iterable):
+...     return list(iterable)
 >>>
 >>> vec = range(8)  # when appropriate, use easier to read sequences
->>> list(my_chunker(vec))
+>>> to_list(my_chunker(vec))
 [(0, 1, 2), (3, 4, 5)]
 ```
 
-Oh, that’s just a `my_chunker -> list` pipeline!
+Oh, that’s just a `my_chunker -> to_list` pipeline!
 A pipeline is a subset of DAG, so let me do this:
 
 ```pycon
->>> dag = DAG([my_chunker, list])
+>>> dag = DAG([my_chunker, to_list])
 >>> dag(vec)
 Traceback (most recent call last):
 ...
-TypeError: missing a required argument: 'sequence'
+TypeError: missing a required argument: 'iterable'
 ```
 
 What happened here?
-You’re assuming that saying `[my_chunker, list]` is enough for DAG to know that
-what you meant is for `my_chunker` to feed it’s input to `list`.
+You’re assuming that saying `[my_chunker, to_list]` is enough for DAG to know that
+what you meant is for `my_chunker` to feed it’s input to `to_list`.
 Sure, DAG has enough information to do so, but the default connection policy doesn’t
 assume that it’s a pipeline you want to make.
 In fact, the order you specify the functions doesn’t have an affect on the connections
@@ -67,14 +80,15 @@ See what the signature of `dag` is:
 ```pycon
 >>> from inspect import signature
 >>> str(signature(dag))
-'(iterable=(), /, sequence, *, chk_size: int = 3)'
+'(sequence, iterable, *, chk_size: int = 3)'
 ```
 
 So dag actually works just fine. Here’s the proof:
 
 ```pycon
->>> dag([1,2,3], vec)
-([1, 2, 3], <zip object at 0x104d7f080>)
+>>> chunks, as_list = dag(vec, [1, 2, 3])
+>>> list(chunks), as_list
+([(0, 1, 2), (3, 4, 5)], [1, 2, 3])
 ```
 
 It’s just not what you might have intended.
@@ -101,7 +115,7 @@ In the current case a fully specified DAG would look something like this:
 ...             out='chks'
 ...         ),
 ...         FuncNode(
-...             func=list,
+...             func=to_list,
 ...             name='gather_chks_into_list',
 ...             bind=dict(iterable='chks'),
 ...             out='list_of_chks'
@@ -114,12 +128,12 @@ In the current case a fully specified DAG would look something like this:
 
 But really, if you didn’t care about the names of things,
 all you need in this case was to make sure that the output of `my_chunker` was
-fed to `list`, and therefore the following was sufficient:
+fed to `to_list`, and therefore the following was sufficient:
 
 ```pycon
 >>> dag = DAG([
 ...     FuncNode(my_chunker, out='chks'),  # call the output of chunker "chks"
-...     FuncNode(list, bind=dict(iterable='chks'))  # source list input from "chks"
+...     FuncNode(to_list, bind=dict(iterable='chks'))  # source to_list input from "chks"
 ... ])
 >>> list(dag(vec))
 [(0, 1, 2), (3, 4, 5)]
@@ -143,40 +157,42 @@ That said it is your responsiblity to use the right policy for your particular c
 
 ### Functions
 
-| `arg_names`(func, func_name[, exclude_names])                                                   |                                                                                                                                                                                                                                                  |
-|-------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`attribute_vals`](#meshed.dag.attribute_vals)(objs, attrs[, egress])          | Extract attributes from an iterable of objects                                                                                                                                                                                                   |
-| `call_func`(func, kwargs)                                                                       |                                                                                                                                                                                                                                                  |
-| `ch_funcs`([func_nodes, func_mapping, ...])                                                     | Function (and decorator) to change the functions of func_nodes according to the specification of a func_mapping whose keys are `.name` or `.out` values of the nodes of `func_nodes` and the values are the callable we want to replace them by. |
-| `ch_names`([func_nodes, renamer])                                                               | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                           |
-| `change_funcs`([func_nodes, func_mapping, ...])                                                 | Function (and decorator) to change the functions of func_nodes according to the specification of a func_mapping whose keys are `.name` or `.out` values of the nodes of `func_nodes` and the values are the callable we want to replace them by. |
-| `change_value_on_cond`(d, cond, func)                                                           |                                                                                                                                                                                                                                                  |
-| [`dag_to_code`](#meshed.dag.dag_to_code)(dag)                               | Convert a DAG to code.                                                                                                                                                                                                                           |
-| `dflt_debugger_feedback`(func_node, scope, ...)                                                 |                                                                                                                                                                                                                                                  |
-| `find_first_free_name`(prefix[, ...])                                                           |                                                                                                                                                                                                                                                  |
-| `funcnodes_from_pairs`(pairs)                                                                   |                                                                                                                                                                                                                                                  |
-| [`hook_up`](#meshed.dag.hook_up)(func, variables[, output_name])        | Source inputs and write outputs to given variables mapping.                                                                                                                                                                                      |
-| `mk_func_name`(func[, exclude_names])                                                           |                                                                                                                                                                                                                                                  |
-| `mk_list_names_unique`(nodes[, exclude_names])                                                  |                                                                                                                                                                                                                                                  |
-| `mk_mock_funcnode`(arg, out)                                                                    |                                                                                                                                                                                                                                                  |
-| `mk_nodes_names_unique`(nodes)                                                                  |                                                                                                                                                                                                                                                  |
-| `modified_func_node`(func_node, \*\*modifications)                                              |                                                                                                                                                                                                                                                  |
-| [`named_partial`](#meshed.dag.named_partial)(func, \*args[, \_\_name_\_])     | functools.partial, but with a \_\_name_\_                                                                                                                                                                                                        |
-| `order_subset_from_list`(items, sublist)                                                        |                                                                                                                                                                                                                                                  |
-| [`parametrized_dag_factory`](#meshed.dag.parametrized_dag_factory)(dag, param_var_nodes) | Constructs a factory for sub-DAGs derived from the input DAG, with values of specific 'parameter' variable nodes precomputed and fixed.                                                                                                          |
-| `partialized_funcnodes`(func_nodes, ...)                                                        |                                                                                                                                                                                                                                                  |
-| `print_dag_string`(dag[, bind_info])                                                            |                                                                                                                                                                                                                                                  |
-| `rename_nodes`([func_nodes, renamer])                                                           | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                           |
-| `reorder_on_constraints`(funcnodes, outs)                                                       |                                                                                                                                                                                                                                                  |
+| [`arg_names`](#meshed.dag.arg_names)(func, func_name[, exclude_names])      | List the parameter names of `func`, replacing any found in `exclude_names` with a free `<func_name>__<name>` variant.                                                                                          |
+|---------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`attribute_vals`](#meshed.dag.attribute_vals)(objs, attrs[, egress])            | Extract attributes from an iterable of objects                                                                                                                                                                 |
+| [`call_func`](#meshed.dag.call_func)(func, kwargs)                          | Re-key `kwargs` by each key's `__name__` and pass the resulting dict to `Sig(func).source_kwargs`.                                                                                                             |
+| `ch_funcs`([func_nodes, func_mapping, ...])                                                       | Copy a DAG (or iterable of func nodes) with some of its node functions replaced.                                                                                                                               |
+| `ch_names`([func_nodes, renamer])                                                                 | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                         |
+| `change_funcs`([func_nodes, func_mapping, ...])                                                   | Copy a DAG (or iterable of func nodes) with some of its node functions replaced.                                                                                                                               |
+| [`change_value_on_cond`](#meshed.dag.change_value_on_cond)(d, cond, func)              | Replace, in place, each value `v` of `d` where `cond(k, v)` holds with `func(v)`, and return `d`.                                                                                                              |
+| [`dag_to_code`](#meshed.dag.dag_to_code)(dag)                                 | Convert a DAG to code.                                                                                                                                                                                         |
+| [`dflt_debugger_feedback`](#meshed.dag.dflt_debugger_feedback)(func_node, scope, ...)    | Print the step number, func node and scope, then return `output` unchanged (default feedback of `DAG.debugger`).                                                                                               |
+| [`find_first_free_name`](#meshed.dag.find_first_free_name)(prefix[, ...])              | Return `prefix` if not in `exclude_names`, else the first free `prefix__<i>` with `i` counting up from `start_at`.                                                                                             |
+| [`funcnodes_from_pairs`](#meshed.dag.funcnodes_from_pairs)(pairs)                      | Make one mock func node per `(arg, out)` pair (see `mk_mock_funcnode`).                                                                                                                                        |
+| [`hook_up`](#meshed.dag.hook_up)(func, variables[, output_name])          | Source inputs and write outputs to given variables mapping.                                                                                                                                                    |
+| [`mk_func_name`](#meshed.dag.mk_func_name)(func[, exclude_names])              | Derive a name for `func` (its `__name__`, a generated lambda name, or the wrapped function's name for a `partial`) that is not in `exclude_names`.                                                             |
+| [`mk_list_names_unique`](#meshed.dag.mk_list_names_unique)(nodes[, exclude_names])     | List the `.name` of each node, suffixing repeats (and names in `exclude_names`) with `__<i>` so all are distinct.                                                                                              |
+| [`mk_mock_funcnode`](#meshed.dag.mk_mock_funcnode)(arg, out)                       | Make a `FuncNode` whose no-op function takes the single parameter `arg` and writes to `out`, named `_mock_<arg>_<out>`.                                                                                        |
+| [`mk_nodes_names_unique`](#meshed.dag.mk_nodes_names_unique)(nodes)                     | Set each node's `.name` in place to the unique names of `mk_list_names_unique` and return `nodes`.                                                                                                             |
+| [`modified_func_node`](#meshed.dag.modified_func_node)(func_node, \*\*modifications) | Make a new `FuncNode` from `func_node` with some of `func`, `name`, `bind` and `out` replaced by `modifications`.                                                                                              |
+| [`named_partial`](#meshed.dag.named_partial)(func, \*args[, \_\_name_\_])       | functools.partial, but with a \_\_name_\_                                                                                                                                                                      |
+| [`order_subset_from_list`](#meshed.dag.order_subset_from_list)(items, sublist)           | Sort `sublist` by the position its elements have in `items`.                                                                                                                                                   |
+| [`parametrized_dag_factory`](#meshed.dag.parametrized_dag_factory)(dag, param_var_nodes)   | Constructs a factory for sub-DAGs derived from the input DAG, with values of specific 'parameter' variable nodes precomputed and fixed.                                                                        |
+| [`partialized_funcnodes`](#meshed.dag.partialized_funcnodes)(func_nodes, ...)           | Yield the func nodes, replacing the function of any node whose parameters include a `keyword_defaults` name with a partial where those parameters are defaulted and moved last; other nodes are yielded as is. |
+| [`print_dag_string`](#meshed.dag.print_dag_string)(dag[, bind_info])               | Print `dag.synopsis_string(bind_info)`; the default shows an input as `param=var` only where the two names differ.                                                                                             |
+| `rename_nodes`([func_nodes, renamer])                                                             | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                         |
+| [`reorder_on_constraints`](#meshed.dag.reorder_on_constraints)(funcnodes, outs)          | Topologically sort `funcnodes` after appending (in place) mock nodes that chain each `outs` element to the next, print the order, and return `(func_nodes, var_nodes)` without the mock nodes.                 |
 
 ### Classes
 
-| [`DAG`](#meshed.dag.DAG)([func_nodes, cache_last_scope, ...])   |    |
-|---------------------------------------------------------------------------------------------|----|
+| [`DAG`](#meshed.dag.DAG)([func_nodes, cache_last_scope, ...])   | A callable graph of functions: root variables in, leaf variables out.   |
+|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 
 ### *class* meshed.dag.DAG(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>)
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+A callable graph of functions: root variables in, leaf variables out.
 
 ```pycon
 >>> from meshed.dag import DAG, Sig
@@ -330,6 +346,11 @@ Adds multiple edges by applying `DAG.add_edge` multiple times.
 >>> fhg = DAG([f, g, h]).add_edges([(h, 'g'), ('f_', 'h')])
 >>> assert fhg(a=3, b=4) == 7
 ```
+
+#### bindings_cleaner()
+
+Make func node names unique and rewrite bind values that name a func node into
+that node’s `out` (called at the end of `__post_init__`).
 
 #### call_on_scope(scope=None)
 
@@ -489,6 +510,24 @@ If we want a function with the signature `(z=2, y=1)` to be able to be
 >>> d = dag.ch_funcs(ch_fnode2, g=lambda z=2, y=1: y / z);
 ```
 
+#### copy(renamer=<function numbered_suffix_renamer>)
+
+Make a new `DAG` from renamed copies of the func nodes (see `ch_names` for what `renamer` may be).
+
+With the default renamer every variable and function node gets a `_1`
+suffix (or an incremented one):
+
+```pycon
+>>> def f(a, b):
+...     return a + b
+>>> def g(f, c):
+...     return f * c
+>>> dag = DAG([f, g])
+>>> print(dag.copy().synopsis_string())
+a_1,b_1 -> f__1 -> f_1
+f_1,c_1 -> g__1 -> g_1
+```
+
 #### debugger(feedback=<function dflt_debugger_feedback>)
 
 Utility to debug DAGs by computing each step sequentially, with feedback.
@@ -563,11 +602,10 @@ Make lines for dot (graphviz) specification of DAG
 >>> func_nodes = [
 ...     FuncNode(add, out='x'), FuncNode(mult, name='the_product'), FuncNode(exp)
 ... ]
+>>> lines = list(DAG(func_nodes).dot_digraph_body())
+>>> lines[0]
+'x [label="x" shape="none"]'
 ```
-
-#
-# >>> assert list(DAG(func_nodes).dot_digraph_body()) == [
-# ]
 
 #### dot_digraph_ascii(start_lines=(), , end_lines=(), vnode_shape='none', fnode_shape='box', func_display=True)
 
@@ -580,11 +618,10 @@ Make lines for dot (graphviz) specification of DAG
 >>> func_nodes = [
 ...     FuncNode(add, out='x'), FuncNode(mult, name='the_product'), FuncNode(exp)
 ... ]
+>>> lines = list(DAG(func_nodes).dot_digraph_body())
+>>> lines[0]
+'x [label="x" shape="none"]'
 ```
-
-#
-# >>> assert list(DAG(func_nodes).dot_digraph_body()) == [
-# ]
 
 #### dot_digraph_body(start_lines=(), , end_lines=(), vnode_shape='none', fnode_shape='box', func_display=True)
 
@@ -597,11 +634,10 @@ Make lines for dot (graphviz) specification of DAG
 >>> func_nodes = [
 ...     FuncNode(add, out='x'), FuncNode(mult, name='the_product'), FuncNode(exp)
 ... ]
+>>> lines = list(DAG(func_nodes).dot_digraph_body())
+>>> lines[0]
+'x [label="x" shape="none"]'
 ```
-
-#
-# >>> assert list(DAG(func_nodes).dot_digraph_body()) == [
-# ]
 
 #### extract_output_from_scope(keys)
 
@@ -625,6 +661,35 @@ Order matters!
 (3, 1)
 ```
 
+#### find_func_node(node, default=None)
+
+Return the `FuncNode` that `node` refers to, or `default` when nothing matches.
+
+A `FuncNode` is returned as is; anything else is looked up as a node name,
+an `out`, or a function unique in the DAG.
+
+```pycon
+>>> def f(a, b):
+...     return a + b
+>>> dag = DAG([f])
+>>> dag.find_func_node('f')  # by out
+FuncNode(a,b -> f_ -> f)
+>>> dag.find_func_node('f_')  # by name
+FuncNode(a,b -> f_ -> f)
+>>> dag.find_func_node(f)  # by function
+FuncNode(a,b -> f_ -> f)
+>>> dag.find_func_node('nope') is None
+True
+```
+
+#### find_funcs(filt=None)
+
+Yield the `.func` of the func nodes for which `filt` is true (all of them
+when `filt` is `None`).
+
+* **Return type:**
+  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
+
 #### *classmethod* from_funcs(\*funcs, \*\*named_funcs)
 
 * **Parameters:**
@@ -645,6 +710,13 @@ x,_0 -> y_ -> y
 >>> dag(3)
 16
 ```
+
+#### get_node_matching(idx)
+
+Return `idx` itself if it names a var node, else the `FuncNode` that `idx` (a node name, an `out`, or a function unique in the DAG) indexes.
+
+A string matching no node raises `KeyError`; an `idx` that is neither a
+string nor a callable raises `NotFound`.
 
 #### *property* graph_ids
 
@@ -670,7 +742,7 @@ Like `.graph`, but with node ids (names).
 
 #### new_scope
 
-alias of [`dict`](https://docs.python.org/3/library/stdtypes.html#dict)
+alias of [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 #### parameter_merge(, same_name=True, same_kind=True, same_default=True, same_annotation=True)
 
@@ -761,9 +833,39 @@ True
 9
 ```
 
+#### process_item(item)
+
+Resolve a `slice` of node specifications into `(input_nodes, output_nodes)` lists, as used by `__getitem__`.
+
+Each side of the slice may be `None` (all var nodes), a space-separated
+string of names, a callable, or an iterable of names and callables; names are
+resolved with `get_node_matching`. An `item` that is not a `slice` fails
+an assertion, and a side of none of these forms raises `ValidationError`.
+
+#### *property* sig
+
+The DAG’s `__signature__` (an `i2.Sig`); assigning to it replaces
+`__signature__`.
+
 #### src_name_params(src_names=None)
 
 Generate Parameter instances that are needed to compute `src_names`
+
+#### synopsis_string(bind_info='var_nodes')
+
+Join the `synopsis_string` of every func node, one per line in topological
+order; `bind_info` controls how inputs are shown (see
+`FuncNode.synopsis_string`).
+
+#### to_code()
+
+Render the DAG as the source of a function named after the DAG, one `out =
+node_name(args)` line per func node (see `dag_to_code`).
+
+### meshed.dag.arg_names(func, func_name, exclude_names=())
+
+List the parameter names of `func`, replacing any found in `exclude_names` with
+a free `<func_name>__<name>` variant.
 
 ### meshed.dag.attribute_vals(objs, attrs, egress=None)
 
@@ -773,6 +875,16 @@ Extract attributes from an iterable of objects
 >>> list(attribute_vals([print, map], attrs=['__name__', '__module__']))
 [('print', 'builtins'), ('map', 'builtins')]
 ```
+
+### meshed.dag.call_func(func, kwargs)
+
+Re-key `kwargs` by each key’s `__name__` and pass the resulting dict to
+`Sig(func).source_kwargs`.
+
+### meshed.dag.change_value_on_cond(d, cond, func)
+
+Replace, in place, each value `v` of `d` where `cond(k, v)` holds with
+`func(v)`, and return `d`.
 
 ### meshed.dag.dag_to_code(dag)
 
@@ -822,6 +934,20 @@ a,b -> func3 -> c
 True
 ```
 
+### meshed.dag.dflt_debugger_feedback(func_node, scope, output, step)
+
+Print the step number, func node and scope, then return `output` unchanged
+(default feedback of `DAG.debugger`).
+
+### meshed.dag.find_first_free_name(prefix, exclude_names=(), start_at=2)
+
+Return `prefix` if not in `exclude_names`, else the first free `prefix__<i>`
+with `i` counting up from `start_at`.
+
+### meshed.dag.funcnodes_from_pairs(pairs)
+
+Make one mock func node per `(arg, out)` pair (see `mk_mock_funcnode`).
+
 ### meshed.dag.hook_up(func, variables, output_name=None)
 
 Source inputs and write outputs to given variables mapping.
@@ -868,6 +994,35 @@ Again…
 9
 ```
 
+### meshed.dag.mk_func_name(func, exclude_names=())
+
+Derive a name for `func` (its `__name__`, a generated lambda name, or the wrapped function’s name for a `partial`) that is not in `exclude_names`.
+
+A `func` with no `__name__` that is not a `partial` raises `NameValidationError`.
+
+### meshed.dag.mk_list_names_unique(nodes, exclude_names=())
+
+List the `.name` of each node, suffixing repeats (and names in `exclude_names`)
+with `__<i>` so all are distinct.
+
+### meshed.dag.mk_mock_funcnode(arg, out)
+
+Make a `FuncNode` whose no-op function takes the single parameter `arg` and
+writes to `out`, named `_mock_<arg>_<out>`.
+
+### meshed.dag.mk_nodes_names_unique(nodes)
+
+Set each node’s `.name` in place to the unique names of `mk_list_names_unique`
+and return `nodes`.
+
+### meshed.dag.modified_func_node(func_node, \*\*modifications)
+
+Make a new `FuncNode` from `func_node` with some of `func`, `name`, `bind`
+and `out` replaced by `modifications`.
+
+* **Return type:**
+  [`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)
+
 ### meshed.dag.named_partial(func, \*args, \_\_name_\_=None, \*\*keywords)
 
 functools.partial, but with a \_\_name_\_
@@ -892,6 +1047,10 @@ Extract attributes from an iterable of objects
 >>> list(attribute_vals([print, map], attrs=['__name__', '__module__']))
 [('print', 'builtins'), ('map', 'builtins')]
 ```
+
+### meshed.dag.order_subset_from_list(items, sublist)
+
+Sort `sublist` by the position its elements have in `items`.
 
 ### meshed.dag.parametrized_dag_factory(dag, param_var_nodes)
 
@@ -927,3 +1086,20 @@ programming, where initialization arguments are used to set certain fixed values
 >>> d(b='bananna')
 'applesauce(c=apple(a=criss(aa=1, aaa=2), b=bananna), d=sauce(a=criss(aa=1, aaa=2), b=bananna))'
 ```
+
+### meshed.dag.partialized_funcnodes(func_nodes, \*\*keyword_defaults)
+
+Yield the func nodes, replacing the function of any node whose parameters include a
+`keyword_defaults` name with a partial where those parameters are defaulted and
+moved last; other nodes are yielded as is.
+
+### meshed.dag.print_dag_string(dag, bind_info='hybrid')
+
+Print `dag.synopsis_string(bind_info)`; the default shows an input as
+`param=var` only where the two names differ.
+
+### meshed.dag.reorder_on_constraints(funcnodes, outs)
+
+Topologically sort `funcnodes` after appending (in place) mock nodes that chain
+each `outs` element to the next, print the order, and return `(func_nodes,
+var_nodes)` without the mock nodes.

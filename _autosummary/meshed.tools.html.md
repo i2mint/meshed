@@ -21,7 +21,7 @@ Tools to work with meshed
 Launches a web service application with the specified functions.
 
 * **Parameters:**
-  **funcs** ([`list`](https://docs.python.org/3/library/stdtypes.html#list)[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]) – functions to be hosted by the web service
+  **funcs** ([`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]) – functions to be hosted by the web service
 
 ### meshed.tools.launch_webservice(funcs_to_cloudify, wait_after_start_seconds=10)
 
@@ -33,7 +33,7 @@ Creates a new DAG with the web service functions.
 
 * **Parameters:**
   * **dag** ([`DAG`](meshed.dag.html.md#meshed.dag.DAG)) – DAG to be hybridized
-  * **ws_funcs** ([`dict`](https://docs.python.org/3/library/stdtypes.html#dict)) – mapping of web service functions
+  * **ws_funcs** ([`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)) – mapping of web service functions
 * **Returns:**
   new DAG with the web service functions
 * **Return type:**
@@ -45,7 +45,7 @@ Creates a hybrid DAG that uses the web service for the specified functions.
 
 * **Parameters:**
   * **dag** ([`DAG`](meshed.dag.html.md#meshed.dag.DAG)) – dag to be hybridized
-  * **func_ids_to_cloudify** ([`list`](https://docs.python.org/3/library/stdtypes.html#list)) – list of function ids to be cloudified
+  * **func_ids_to_cloudify** ([`list`](https://docs.python.org/3/builtins/stdtypes.html#list)) – list of function ids to be cloudified
 * **Returns:**
   namedtuple with funcs_to_cloudify, ws_dag and ws_funcs
 * **Return type:**

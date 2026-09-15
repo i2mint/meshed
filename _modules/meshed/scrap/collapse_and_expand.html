@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -700,7 +700,6 @@ window.runMermaid = runMermaid;</script>
 <span></span><span class="sd">"""Ideas on collapsing and expanding nodes</span>
 <span class="sd">See "Collapse and expand nodes" discussion:</span>
 <span class="sd">https://github.com/i2mint/meshed/discussions/54</span>
-
 <span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -720,7 +719,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    If decorator_names is None, will remove all decorators.</span>
 <span class="sd">    If decorator_names is an iterable of strings, will remove the decorators with those names.</span>
 
-<span class="sd">    Examples:</span>
+<span class="sd">    .. rubric:: Examples</span>
+
 <span class="sd">    &gt;&gt;&gt; src = '''</span>
 <span class="sd">    ... @decorator</span>
 <span class="sd">    ... def func():</span>
@@ -811,7 +811,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    That is, in source code, or a dag made from code_to_dag, replace calls of the form</span>
 <span class="sd">    `call(func, arg)` with `func(arg)`.</span>
 
-<span class="sd">    Note: Doesn't work with arbitrary DAG src, only those made from code_to_dag.</span>
+<span class="sd">    Note:</span>
+<span class="sd">        Doesn't work with arbitrary DAG src, only those made from code_to_dag.</span>
 <span class="sd">    """</span>
     <span class="n">src_string</span> <span class="o">=</span> <span class="n">get_src_string</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
 
@@ -907,7 +908,6 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    This is useful for when you want to use a DAG as a function,</span>
 <span class="sd">    but you don't want to see all the arguments.</span>
-
 <span class="sd">    """</span>
 
     <span class="n">dag</span><span class="p">:</span> <span class="n">DAG</span>

@@ -12,7 +12,7 @@ seriously modified version of yahoo/graphkit
 
 ### *class* meshed.scrap.gk_with_networkx.Data(\*\*kwargs)
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 This wraps any data that is consumed or produced
 by a Operation. This data should also know how to serialize
@@ -27,15 +27,14 @@ Bases: [`Operation`](#meshed.scrap.gk_with_networkx.Operation)
 #### set_execution_method(method)
 
 Determine how the network will be executed.
-:type method: 
-:param method: str
 
-> If “parallel”, execute graph operations concurrently
-> using a threadpool.
+* **Parameters:**
+  **method** – If “parallel”, execute graph operations concurrently
+  using a threadpool.
 
 ### *class* meshed.scrap.gk_with_networkx.Operation(name='None', needs=None, provides=None, params=<factory>)
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 This is an abstract class representing a data transformation. To use this,
 please inherit from this class and customize the `.compute` method to your
@@ -46,10 +45,10 @@ important when connecting layers and data in a Network object, as the
 names are used to construct the graph.
 
 * **Parameters:**
-  * **name** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)) – The name the operation (e.g. conv1, conv2, etc..)
-  * **needs** ([`list`](https://docs.python.org/3/library/stdtypes.html#list)) – Names of input data objects this layer requires.
-  * **provides** ([`list`](https://docs.python.org/3/library/stdtypes.html#list)) – Names of output data objects this provides.
-  * **params** ([`dict`](https://docs.python.org/3/library/stdtypes.html#dict)) – 
+  * **name** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – The name the operation (e.g. conv1, conv2, etc..)
+  * **needs** ([`list`](https://docs.python.org/3/builtins/stdtypes.html#list)) – Names of input data objects this layer requires.
+  * **provides** ([`list`](https://docs.python.org/3/builtins/stdtypes.html#list)) – Names of output data objects this provides.
+  * **params** ([`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)) – 
 
     A dict of key/value pairs representing parameters
     associated with your operation. These values will be
@@ -65,7 +64,7 @@ This method must be implemented to perform this layer’s feed-forward
 computation on a given set of inputs.
 
 * **Parameters:**
-  **inputs** ([*list*](https://docs.python.org/3/library/stdtypes.html#list)) – A list of [`Data`](#meshed.scrap.gk_with_networkx.Data) objects on which to run the layer’s
+  **inputs** ([*list*](https://docs.python.org/3/builtins/stdtypes.html#list)) – A list of [`Data`](#meshed.scrap.gk_with_networkx.Data) objects on which to run the layer’s
   feed-forward computation.
 * **Returns list:**
   Should return a list of [`Data`](#meshed.scrap.gk_with_networkx.Data) objects representing
@@ -74,7 +73,7 @@ computation on a given set of inputs.
 
 ### *class* meshed.scrap.gk_with_networkx.optional
 
-Bases: [`str`](https://docs.python.org/3/library/stdtypes.html#str)
+Bases: [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 Input values in `needs` may be designated as optional using this modifier.
 If this modifier is applied to an input value, that value will be input to

@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
     <link rel="prev" title="meshed.scrap.wrapping_dags" href="meshed.scrap.wrapping_dags.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -413,6 +413,13 @@ further streams, and even push these streams to further processes, all through a
 simple interface: An (ordered) list of components that are called in sequence to either
 pull data from some sources, compute a new stream based on previous ones, or push some
 of the streams to further processes (such as visualization, or storage systems).</p>
+<p>Main entry points:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Slabs</span></code>: the stream-of-slabs object; iterate it, or <code class="docutils literal notranslate"><span class="pre">run()</span></code> it for side effects.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IteratorExit</span></code>: raise it from a component to stop the iteration cleanly.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conditional_sentinel</span></code>: decorator returning a sentinel instead of calling the function
+when a condition on its arguments holds (<code class="docutils literal notranslate"><span class="pre">output_none_if_none_arguments</span></code> is one).</p></li>
+</ul>
 <p>A slab is a collection of items of a same interval of time.
 We represent a slab using a <code class="code docutils literal notranslate"><span class="pre">dict</span></code> or mapping.
 Typically, a slab will be the aggregation of multiple information streams that
@@ -457,11 +464,11 @@ For a discussion about the design of Slabs, see
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.slabs.conditional_sentinel" title="meshed.slabs.conditional_sentinel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conditional_sentinel</span></code></a>(condition_func[, sentinel])</p></td>
 <td><p>Decorator that returns sentinel based on a user-defined condition.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_nothing</span></code>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.slabs.do_nothing" title="meshed.slabs.do_nothing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_nothing</span></code></a>()</p></td>
+<td><p>Argument-less no-op, the default handler of handled exceptions.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_and_return</span></code>(msg[, logger])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.slabs.log_and_return" title="meshed.slabs.log_and_return"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_and_return</span></code></a>(msg[, logger])</p></td>
+<td><p>Pass <code class="docutils literal notranslate"><span class="pre">msg</span></code> to <code class="docutils literal notranslate"><span class="pre">logger</span></code> (<code class="docutils literal notranslate"><span class="pre">print</span></code> by default) and return it unchanged.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.slabs.output_none_if_none_arguments" title="meshed.slabs.output_none_if_none_arguments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_none_if_none_arguments</span></code></a>(func)</p></td>
 <td><p>Decorator that returns None if all arguments are None.</p></td>
@@ -512,7 +519,7 @@ which will signal that the iteration should continue.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="meshed.slabs.ExceptionalException">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">ExceptionalException</span></span><a class="reference internal" href="../_modules/meshed/slabs.html#ExceptionalException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.ExceptionalException" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Raised when an exception was supposed to be handled, but no matching handler
 was found.</p>
 <p>See the <code class="code docutils literal notranslate"><span class="pre">_handle_exception</span></code> function, where it is raised.</p>
@@ -521,7 +528,7 @@ was found.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="meshed.slabs.IteratorExit">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">IteratorExit</span></span><a class="reference internal" href="../_modules/meshed/slabs.html#IteratorExit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.IteratorExit" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#BaseException" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseException</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#BaseException" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseException</span></code></a></p>
 <p>Raised when an iterator should quit being iterated on, signaling this event
 any process that cares to catch the signal.
 We chose to inherit directly from <code class="code docutils literal notranslate"><span class="pre">BaseException</span></code> instead of <code class="code docutils literal notranslate"><span class="pre">Exception</span></code>
@@ -533,7 +540,7 @@ an error.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.slabs.Slabs">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">Slabs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(&lt;class</span> <span class="pre">'StopIteration'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'meshed.slabs.IteratorExit'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'KeyboardInterrupt'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope_factory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**components</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#Slabs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Object to source and manipulate multiple streams.</p>
 <p>A slab is a collection of items of a same interval of time.
 We represent a slab using a <code class="code docutils literal notranslate"><span class="pre">dict</span></code> or mapping.
@@ -677,6 +684,17 @@ and <a class="reference external" href="https://pypi.org/project/py2store/">py2s
 <dl class="field-list simple">
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="meshed.slabs.Slabs.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_tb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#Slabs.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs.close" title="Link to this definition">#</a></dt>
+<dd><p>Exit the component contexts entered by <code class="docutils literal notranslate"><span class="pre">open</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="meshed.slabs.Slabs.dot_digraph">
 <span class="sig-name descname"><span class="pre">dot_digraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#Slabs.dot_digraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs.dot_digraph" title="Link to this definition">#</a></dt>
 <dd><p>Returns a dot_digraph of the DAG of the SlabsIter (see <code class="docutils literal notranslate"><span class="pre">DAG.dot_digraph</span></code>)</p>
@@ -695,6 +713,41 @@ and <a class="reference external" href="https://pypi.org/project/py2store/">py2s
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_func_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(&lt;class</span> <span class="pre">'StopIteration'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'meshed.slabs.IteratorExit'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'KeyboardInterrupt'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope_factory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#Slabs.from_func_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs.from_func_nodes" title="Link to this definition">#</a></dt>
 <dd><p>Make a Slabs object from a list of functions and/or FuncNodes, DAG, …</p>
 <dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.slabs.Slabs.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#Slabs.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs.open" title="Link to this definition">#</a></dt>
+<dd><p>Enter the context of every component that has one, and return <code class="docutils literal notranslate"><span class="pre">self</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.slabs.Slabs.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#Slabs.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs.run" title="Link to this definition">#</a></dt>
+<dd><p>Iterate through all the slabs, discarding them (for the side effects only).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.slabs.Slabs.to_dag">
+<span class="sig-name descname"><span class="pre">to_dag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#Slabs.to_dag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs.to_dag" title="Link to this definition">#</a></dt>
+<dd><p>Build a <code class="docutils literal notranslate"><span class="pre">DAG</span></code> from the <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> objects of <code class="docutils literal notranslate"><span class="pre">to_func_nodes</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="meshed.dag.html#meshed.dag.DAG" title="meshed.dag.DAG"><code class="xref py py-class docutils literal notranslate"><span class="pre">DAG</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.slabs.Slabs.to_func_nodes">
+<span class="sig-name descname"><span class="pre">to_func_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#Slabs.to_func_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.Slabs.to_func_nodes" title="Link to this definition">#</a></dt>
+<dd><p>Yield a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> per component.</p>
+<p>Each node’s name and output var node are the component’s name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference internal" href="meshed.base.html#meshed.base.FuncNode" title="meshed.base.FuncNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">FuncNode</span></code></a>]</span></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -722,7 +775,7 @@ the sentinel value is returned instead of the decorated function’s return valu
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>condition_func</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>]</span>) – A function that takes the arguments and keyword
+<li><p><strong>condition_func</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>], <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>]</span>) – A function that takes the arguments and keyword
 arguments of the decorated function as input and returns a boolean value.</p></li>
 <li><p><strong>sentinel</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></span>) – The value to return if the condition is met.</p></li>
 </ul>
@@ -754,6 +807,19 @@ arguments of the decorated function as input and returns a boolean value.</p></l
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">foo</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.slabs.do_nothing">
+<span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">do_nothing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#do_nothing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.do_nothing" title="Link to this definition">#</a></dt>
+<dd><p>Argument-less no-op, the default handler of handled exceptions.</p>
+<p>Its <code class="docutils literal notranslate"><span class="pre">None</span></code> output lets the <code class="docutils literal notranslate"><span class="pre">Slabs</span></code> iteration stop.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.slabs.log_and_return">
+<span class="sig-prename descclassname"><span class="pre">meshed.slabs.</span></span><span class="sig-name descname"><span class="pre">log_and_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;built-in</span> <span class="pre">function</span> <span class="pre">print&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/slabs.html#log_and_return"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.slabs.log_and_return" title="Link to this definition">#</a></dt>
+<dd><p>Pass <code class="docutils literal notranslate"><span class="pre">msg</span></code> to <code class="docutils literal notranslate"><span class="pre">logger</span></code> (<code class="docutils literal notranslate"><span class="pre">print</span></code> by default) and return it unchanged.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -824,14 +890,21 @@ arguments of the decorated function as input and returns a boolean value.</p></l
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.ExceptionalException"><code class="docutils literal notranslate"><span class="pre">ExceptionalException</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.IteratorExit"><code class="docutils literal notranslate"><span class="pre">IteratorExit</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.Slabs"><code class="docutils literal notranslate"><span class="pre">Slabs</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.Slabs.close"><code class="docutils literal notranslate"><span class="pre">Slabs.close()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.Slabs.dot_digraph"><code class="docutils literal notranslate"><span class="pre">Slabs.dot_digraph()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.Slabs.from_dag"><code class="docutils literal notranslate"><span class="pre">Slabs.from_dag()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.Slabs.from_func_nodes"><code class="docutils literal notranslate"><span class="pre">Slabs.from_func_nodes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.Slabs.open"><code class="docutils literal notranslate"><span class="pre">Slabs.open()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.Slabs.run"><code class="docutils literal notranslate"><span class="pre">Slabs.run()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.Slabs.to_dag"><code class="docutils literal notranslate"><span class="pre">Slabs.to_dag()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.Slabs.to_func_nodes"><code class="docutils literal notranslate"><span class="pre">Slabs.to_func_nodes()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.SlabsIter"><code class="docutils literal notranslate"><span class="pre">SlabsIter</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.all_arguments_are_none"><code class="docutils literal notranslate"><span class="pre">all_arguments_are_none()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.conditional_sentinel"><code class="docutils literal notranslate"><span class="pre">conditional_sentinel()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.do_nothing"><code class="docutils literal notranslate"><span class="pre">do_nothing()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.log_and_return"><code class="docutils literal notranslate"><span class="pre">log_and_return()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.slabs.output_none_if_none_arguments"><code class="docutils literal notranslate"><span class="pre">output_none_if_none_arguments()</span></code></a></li>
 </ul>
   </nav></div>

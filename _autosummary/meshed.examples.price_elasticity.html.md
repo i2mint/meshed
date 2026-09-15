@@ -1,33 +1,30 @@
 # meshed.examples.price_elasticity
 
-price elasticity relates price to revenue, expense, and profit
-: ┌─────────┐
-  │  base   │
-  └─────────┘
-  <br/>
-  > │
-  > │
-  > ▼
+Price elasticity relates price to revenue, expense, and profit.
 
+```text
+                   ┌─────────┐
+                   │  base   │
+                   └─────────┘
+                     │
+                     │
+                     ▼
 ┌────────────┐     ┌─────────────────────────┐
 │ elasticity │ ──▶ │          sold           │ ─┐
 └────────────┘     └─────────────────────────┘  │
-
-> │               ▲          │
-> │               │          │
-> ▼               │          │
-
+                     │               ▲          │
+                     │               │          │
+                     ▼               │          │
 ┌────────────┐     ┌─────────┐     ┌─────────┐  │
 │    cost    │ ──▶ │ expense │     │  price  │  │
 └────────────┘     └─────────┘     └─────────┘  │
-
-> > │               │          │
-> > │               │          │
-> > ▼               ▼          │
-
-> ┌─────────┐     ┌─────────┐  │
-> │ profit  │ ◀── │ revenue │ ◀┘
-> └─────────┘     └─────────┘
+                     │               │          │
+                     │               │          │
+                     ▼               ▼          │
+                   ┌─────────┐     ┌─────────┐  │
+                   │ profit  │ ◀── │ revenue │ ◀┘
+                   └─────────┘     └─────────┘
+```
 
 ### Functions
 

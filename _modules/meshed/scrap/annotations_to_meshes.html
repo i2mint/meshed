@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -701,8 +701,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">Code related to work on the "From annotated functions to meshes" discussion:</span>
 
 <span class="sd">https://github.com/i2mint/meshed/discussions/55</span>
-
-
 <span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
@@ -761,7 +759,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    ['self', 'mytype', 'arg_01']</span>
 <span class="sd">    &gt;&gt;&gt; sig.parameters['arg_01'].annotation</span>
 <span class="sd">    &lt;class 'str'&gt;</span>
-
 <span class="sd">    """</span>
     <span class="n">origin</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">get_origin</span><span class="p">(</span><span class="n">callable_annots</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_callable_type_annot</span><span class="p">(</span><span class="n">origin</span><span class="p">):</span>

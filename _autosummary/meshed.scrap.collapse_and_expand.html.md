@@ -20,7 +20,7 @@ See “Collapse and expand nodes” discussion:
 
 ### *class* meshed.scrap.collapse_and_expand.CollapsedDAG(dag)
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 To collapse a DAG into a single function
 
@@ -47,7 +47,7 @@ If include is a list of function names, only those functions are expanded.
 If include is a callable, it’s used as a filter function.
 
 * **Return type:**
-  [`str`](https://docs.python.org/3/library/stdtypes.html#str)
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### meshed.scrap.collapse_and_expand.remove_decorator_code(src, decorator_names=None)
 
@@ -56,7 +56,7 @@ If decorator_names is None, will remove all decorators.
 If decorator_names is an iterable of strings, will remove the decorators with those names.
 
 * **Return type:**
-  [`str`](https://docs.python.org/3/library/stdtypes.html#str)
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### Examples
 

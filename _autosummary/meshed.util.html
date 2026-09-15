@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
     <link rel="prev" title="meshed.tools" href="meshed.tools.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -404,12 +404,39 @@
                   
   <section id="module-meshed.util">
 <span id="meshed-util"></span><h1>meshed.util<a class="headerlink" href="#module-meshed.util" title="Link to this heading">#</a></h1>
-<p>util functions</p>
+<p>Function-wrapping, naming, and small data helpers shared across <code class="docutils literal notranslate"><span class="pre">meshed</span></code>.</p>
+<p>Most of what lives here is glue that the DAG machinery leans on: decorators
+that turn a scalar function into one that maps over a stream (<code class="docutils literal notranslate"><span class="pre">iterize</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ConditionalIterize</span></code>), name generation that avoids clashes when several
+functions share argument names (<code class="docutils literal notranslate"><span class="pre">find_first_free_name</span></code>, <code class="docutils literal notranslate"><span class="pre">mk_func_name</span></code>,
+<code class="docutils literal notranslate"><span class="pre">arg_names</span></code>), signature reconciliation (<code class="docutils literal notranslate"><span class="pre">parameter_merger</span></code>), and dict
+and iterable utilities (<code class="docutils literal notranslate"><span class="pre">extract_values</span></code>, <code class="docutils literal notranslate"><span class="pre">replace_item_in_iterable</span></code>).
+A few graph-rendering helpers (<code class="docutils literal notranslate"><span class="pre">funcs_to_digraph</span></code>, <code class="docutils literal notranslate"><span class="pre">dot_to_ascii</span></code>) are
+also kept here.</p>
+<p>Main entry points:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iterize</span></code>: wrap <code class="docutils literal notranslate"><span class="pre">func</span></code> so it maps over an iterable (a partial of <code class="docutils literal notranslate"><span class="pre">map</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ConditionalIterize</span></code>: iterize a call only when the first argument satisfies
+a condition (by default, when it is an <code class="docutils literal notranslate"><span class="pre">Iterator</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">provides</span></code>: decorator that records, on <code class="docutils literal notranslate"><span class="pre">func._provides</span></code>, the var node
+names a function can source.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parameter_merger</span></code>: check that several <code class="docutils literal notranslate"><span class="pre">inspect.Parameter</span></code> objects agree
+(name, kind, default, annotation) and return the first, raising
+<code class="docutils literal notranslate"><span class="pre">ValidationError</span></code> otherwise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">replace_item_in_iterable</span></code>: replace items of an iterable that satisfy a
+condition, keeping the container type for lists, tuples and sets.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">iterize</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">times_ten</span> <span class="o">=</span> <span class="n">iterize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">times_ten</span><span class="p">(</span><span class="nb">iter</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])))</span>
+<span class="go">[10, 20, 30]</span>
+</pre></div>
+</div>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">arg_names</span></code>(func, func_name[, exclude_names])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.arg_names" title="meshed.util.arg_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">arg_names</span></code></a>(func, func_name[, exclude_names])</p></td>
+<td><p>List <code class="docutils literal notranslate"><span class="pre">func</span></code>'s parameter names, renaming those found in <code class="docutils literal notranslate"><span class="pre">exclude_names</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.args_funcnames" title="meshed.util.args_funcnames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">args_funcnames</span></code></a>(funcs[, name_of_func])</p></td>
 <td><p>Generates (arg_name, func_id) pairs from the iterable of functions</p></td>
@@ -417,14 +444,14 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.conditional_trans" title="meshed.util.conditional_trans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conditional_trans</span></code></a>(obj, condition, trans)</p></td>
 <td><p>Conditionally transform an object unless it is marked as a literal.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">curry</span></code>(func)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.curry" title="meshed.util.curry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">curry</span></code></a>(func)</p></td>
+<td><p>Wrap <code class="docutils literal notranslate"><span class="pre">func</span></code> so that positional arguments are passed to it as a single tuple.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.dot_to_ascii" title="meshed.util.dot_to_ascii"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot_to_ascii</span></code></a>(dot[, fancy])</p></td>
 <td><p>Convert a dot string to an ascii rendering of the diagram.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extra_wraps</span></code>(func[, name, doc_prefix])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.extra_wraps" title="meshed.util.extra_wraps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extra_wraps</span></code></a>(func[, name, doc_prefix])</p></td>
+<td><p>Set <code class="docutils literal notranslate"><span class="pre">func.__name__</span></code> and <code class="docutils literal notranslate"><span class="pre">func.__doc__</span></code> in place, returning <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.extract_dict" title="meshed.util.extract_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_dict</span></code></a>(d, keys)</p></td>
 <td><p>Extract items from dict <code class="docutils literal notranslate"><span class="pre">d</span></code>, returning them as a dict.</p></td>
@@ -438,8 +465,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.filepath_to_module" title="meshed.util.filepath_to_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filepath_to_module</span></code></a>(file_path)</p></td>
 <td><p>A context manager to import a Python file as a module.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_first_free_name</span></code>(prefix[, ...])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.find_first_free_name" title="meshed.util.find_first_free_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_first_free_name</span></code></a>(prefix[, ...])</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">prefix</span></code>, or the first <code class="docutils literal notranslate"><span class="pre">f&quot;{prefix}__{i}&quot;</span></code> not in <code class="docutils literal notranslate"><span class="pre">exclude_names</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.func_name" title="meshed.util.func_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">func_name</span></code></a>(func)</p></td>
 <td><p>The func.__name__ of a callable func, or makes and returns one if that fails.</p></td>
@@ -450,8 +477,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.funcs_disjunction" title="meshed.util.funcs_disjunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcs_disjunction</span></code></a>(*funcs)</p></td>
 <td><p>Makes a disjunction of functions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcs_to_digraph</span></code>(funcs[, graph])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.funcs_to_digraph" title="meshed.util.funcs_to_digraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcs_to_digraph</span></code></a>(funcs[, graph])</p></td>
+<td><p>Add <code class="docutils literal notranslate"><span class="pre">(arg_name,</span> <span class="pre">func_name)</span></code> edges of <code class="docutils literal notranslate"><span class="pre">funcs</span></code> to a <code class="docutils literal notranslate"><span class="pre">graphviz.Digraph</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.if_then_else" title="meshed.util.if_then_else"><code class="xref py py-obj docutils literal notranslate"><span class="pre">if_then_else</span></code></a>(if_func, then_func, else_func, ...)</p></td>
 <td><p>Tool to &quot;functionalize&quot; the if-then-else logic.</p></td>
@@ -462,11 +489,11 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.instance_checker" title="meshed.util.instance_checker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance_checker</span></code></a>(class_or_tuple)</p></td>
 <td><p>Makes a boolean function that checks the instance of an object</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_dict_asserting_losslessness</span></code>(d)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.inverse_dict_asserting_losslessness" title="meshed.util.inverse_dict_asserting_losslessness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_dict_asserting_losslessness</span></code></a>(d)</p></td>
+<td><p>Invert <code class="docutils literal notranslate"><span class="pre">d</span></code> (values become keys), asserting that no values are duplicated.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.iterize" title="meshed.util.iterize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iterize</span></code></a>(func[, name])</p></td>
-<td><p>From an Input-&gt;Ouput function, makes a Iterator[Input]-&gt;Itertor[Output] Some call this &quot;vectorization&quot;, but it's not really a vector, but an iterable, thus the name.</p></td>
+<td><p>From an Input-&gt;Output function, makes a Iterator[Input]-&gt;Iterator[Output] Some call this &quot;vectorization&quot;, but it's not really a vector, but an iterable, thus the name.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_name</span></code>()</p></td>
 <td><p></p></td>
@@ -480,14 +507,14 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.my_isinstance" title="meshed.util.my_isinstance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">my_isinstance</span></code></a>(obj, class_or_tuple)</p></td>
 <td><p>Same as builtin instance, but without position only constraint.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mywraps</span></code>(func[, name, doc_prefix])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.mywraps" title="meshed.util.mywraps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mywraps</span></code></a>(func[, name, doc_prefix])</p></td>
+<td><p>Make a decorator applying <code class="docutils literal notranslate"><span class="pre">functools.wraps(func)</span></code> then <code class="docutils literal notranslate"><span class="pre">extra_wraps</span></code> to a callable.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.named_partial" title="meshed.util.named_partial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_partial</span></code></a>(func, *args[, __name__])</p></td>
 <td><p>functools.partial, but with a __name__</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.numbered_suffix_renamer" title="meshed.util.numbered_suffix_renamer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numbered_suffix_renamer</span></code></a>(name[, sep])</p></td>
-<td><p></p></td>
+<td><p>Append <code class="docutils literal notranslate"><span class="pre">sep</span> <span class="pre">+</span> <span class="pre">&quot;1&quot;</span></code> to <code class="docutils literal notranslate"><span class="pre">name</span></code>, or increment its existing numbered suffix.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.objects_defined_in_module" title="meshed.util.objects_defined_in_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objects_defined_in_module</span></code></a>(module, *[, ...])</p></td>
 <td><p>Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.</p></td>
@@ -495,14 +522,14 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.ordered_set_operations" title="meshed.util.ordered_set_operations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ordered_set_operations</span></code></a>(a, b)</p></td>
 <td><p>Returns a triple (a-b, a&amp;b, b-a) for two iterables a and b.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs</span></code>(xs)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.pairs" title="meshed.util.pairs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs</span></code></a>(xs)</p></td>
+<td><p>List the consecutive <code class="docutils literal notranslate"><span class="pre">(xs[i],</span> <span class="pre">xs[i+1])</span></code> pairs of a sequence.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.parameter_merger" title="meshed.util.parameter_merger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_merger</span></code></a>(*params[, same_name, ...])</p></td>
 <td><p>Validates that all the params are exactly the same, returning the first if so.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_ascii_graph</span></code>(funcs)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.print_ascii_graph" title="meshed.util.print_ascii_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_ascii_graph</span></code></a>(funcs)</p></td>
+<td><p>Print an ascii rendering of <code class="docutils literal notranslate"><span class="pre">funcs_to_digraph(funcs)</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.provides" title="meshed.util.provides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">provides</span></code></a>(*var_names)</p></td>
 <td><p>Decorator to assign <code class="docutils literal notranslate"><span class="pre">var_names</span></code> to a <code class="docutils literal notranslate"><span class="pre">_provides</span></code> attribute of function.</p></td>
@@ -510,8 +537,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.replace_item_in_iterable" title="meshed.util.replace_item_in_iterable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_item_in_iterable</span></code></a>(iterable, ...[, egress])</p></td>
 <td><p>Returns a list where all items satisfying <code class="docutils literal notranslate"><span class="pre">condition(item)</span></code> were replaced with <code class="docutils literal notranslate"><span class="pre">replacement(item)</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">uncurry</span></code>(func)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.uncurry" title="meshed.util.uncurry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uncurry</span></code></a>(func)</p></td>
+<td><p>Wrap <code class="docutils literal notranslate"><span class="pre">func</span></code> so that it takes one tuple and unpacks it into positional arguments.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unnameable_func_name</span></code>()</p></td>
 <td><p></p></td>
@@ -525,8 +552,8 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.ConditionalIterize" title="meshed.util.ConditionalIterize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConditionalIterize</span></code></a>(func[, iterize_type, ...])</p></td>
 <td><p>A decorator that &quot;iterizes&quot; a function call if input satisfies a condition.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModuleNotFoundIgnore</span></code>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.ModuleNotFoundIgnore" title="meshed.util.ModuleNotFoundIgnore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModuleNotFoundIgnore</span></code></a>()</p></td>
+<td><p>Context manager that suppresses any exception raised inside its block.</p></td>
 </tr>
 </tbody>
 </table>
@@ -555,7 +582,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.util.ConditionalIterize">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">ConditionalIterize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterize_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'collections.abc.Iterator'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterize_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#ConditionalIterize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.ConditionalIterize" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A decorator that “iterizes” a function call if input satisfies a condition.
 That is, apply <code class="docutils literal notranslate"><span class="pre">map(func,</span> <span class="pre">input)</span></code> (iterize) or <code class="docutils literal notranslate"><span class="pre">func(input)</span></code> according to some
 conidition on <code class="docutils literal notranslate"><span class="pre">input</span></code>.</p>
@@ -648,20 +675,38 @@ As a consequence, <code class="docutils literal notranslate"><span class="pre">i
 </div>
 <dl class="field-list simple">
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.util.ConditionalIterize.wrap">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterize_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'collections.abc.Iterator'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterize_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#ConditionalIterize.wrap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.ConditionalIterize.wrap" title="Link to this definition">#</a></dt>
+<dd><p>Make a decorator building a <code class="docutils literal notranslate"><span class="pre">ConditionalIterize</span></code> with the given type and
+condition.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="meshed.util.InvalidFunctionParameters">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">InvalidFunctionParameters</span></span><a class="reference internal" href="../_modules/meshed/util.html#InvalidFunctionParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.InvalidFunctionParameters" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <p>To be used when a function’s parameters are not compliant with some rule about
 them.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.util.ModuleNotFoundIgnore">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">ModuleNotFoundIgnore</span></span><a class="reference internal" href="../_modules/meshed/util.html#ModuleNotFoundIgnore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.ModuleNotFoundIgnore" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Context manager that suppresses any exception raised inside its block.</p>
+<p>Written to silence <code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError</span></code>, but <code class="docutils literal notranslate"><span class="pre">__exit__</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code>
+unconditionally, so every exception type is swallowed.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="meshed.util.NameValidationError">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">NameValidationError</span></span><a class="reference internal" href="../_modules/meshed/util.html#NameValidationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.NameValidationError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <p>Use to indicate that there’s a problem with a name or generating a valid name</p>
 </dd></dl>
 
@@ -682,8 +727,20 @@ them.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="meshed.util.ValidationError">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">ValidationError</span></span><a class="reference internal" href="../_modules/meshed/util.html#ValidationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.ValidationError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <p>Error that is raised when an object’s validation failed</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.arg_names">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">arg_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#arg_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.arg_names" title="Link to this definition">#</a></dt>
+<dd><p>List <code class="docutils literal notranslate"><span class="pre">func</span></code>’s parameter names, renaming those found in <code class="docutils literal notranslate"><span class="pre">exclude_names</span></code>.</p>
+<p>A clashing name becomes the first free <code class="docutils literal notranslate"><span class="pre">f&quot;{func_name}__{name}&quot;</span></code> variant
+(see <code class="docutils literal notranslate"><span class="pre">find_first_free_name</span></code>).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">arg_names</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'myf'</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,))</span>
+<span class="go">['myf__a', 'b', 'c']</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -748,6 +805,16 @@ and annotation should be used in the interface of the DAG?</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.curry">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">curry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#curry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.curry" title="Link to this definition">#</a></dt>
+<dd><p>Wrap <code class="docutils literal notranslate"><span class="pre">func</span></code> so that positional arguments are passed to it as a single tuple.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">curry</span><span class="p">(</span><span class="nb">sum</span><span class="p">)(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">6</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.util.dot_to_ascii">
 <span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">dot_to_ascii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fancy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#dot_to_ascii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.dot_to_ascii" title="Link to this definition">#</a></dt>
 <dd><p>Convert a dot string to an ascii rendering of the diagram.</p>
@@ -781,6 +848,14 @@ and annotation should be used in the interface of the DAG?</p>
 </div>
 <dl class="field-list simple">
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.extra_wraps">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">extra_wraps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#extra_wraps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.extra_wraps" title="Link to this definition">#</a></dt>
+<dd><p>Set <code class="docutils literal notranslate"><span class="pre">func.__name__</span></code> and <code class="docutils literal notranslate"><span class="pre">func.__doc__</span></code> in place, returning <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p>
+<p>The name is <code class="docutils literal notranslate"><span class="pre">name</span></code> or <code class="docutils literal notranslate"><span class="pre">func_name(func)</span></code>; the doc becomes
+<code class="docutils literal notranslate"><span class="pre">doc_prefix</span> <span class="pre">+</span> <span class="pre">func.__name__</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -841,12 +916,26 @@ and annotation should be used in the interface of the DAG?</p>
 <dd><p>A context manager to import a Python file as a module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The file path of the Python file to import.</p>
+<dd class="field-odd"><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The file path of the Python file to import.</p>
 </dd>
 <dt class="field-even">Yield<span class="colon">:</span></dt>
 <dd class="field-even"><p>The module object.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.find_first_free_name">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">find_first_free_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#find_first_free_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.find_first_free_name" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">prefix</span></code>, or the first <code class="docutils literal notranslate"><span class="pre">f&quot;{prefix}__{i}&quot;</span></code> not in <code class="docutils literal notranslate"><span class="pre">exclude_names</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">prefix</span></code> itself is returned when it is not excluded; otherwise <code class="docutils literal notranslate"><span class="pre">i</span></code> counts
+up from <code class="docutils literal notranslate"><span class="pre">start_at</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">find_first_free_name</span><span class="p">(</span><span class="s1">'ab'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'cd'</span><span class="p">,))</span>
+<span class="go">'ab'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_first_free_name</span><span class="p">(</span><span class="s1">'ab'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'ab'</span><span class="p">,</span> <span class="s1">'ab__2'</span><span class="p">))</span>
+<span class="go">'ab__3'</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -856,7 +945,7 @@ and annotation should be used in the interface of the DAG?</p>
 To make one, it calls unamed_func_name which produces incremental names to reduce the chances of clashing</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -896,6 +985,13 @@ doesn’t need to, and if it were, we’d get an error (length of a number?!).</
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.funcs_to_digraph">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">funcs_to_digraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#funcs_to_digraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.funcs_to_digraph" title="Link to this definition">#</a></dt>
+<dd><p>Add <code class="docutils literal notranslate"><span class="pre">(arg_name,</span> <span class="pre">func_name)</span></code> edges of <code class="docutils literal notranslate"><span class="pre">funcs</span></code> to a <code class="docutils literal notranslate"><span class="pre">graphviz.Digraph</span></code>.</p>
+<p>A new <code class="docutils literal notranslate"><span class="pre">Digraph</span></code> is made if <code class="docutils literal notranslate"><span class="pre">graph</span></code> is None; functions are drawn as boxes.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.util.if_then_else">
 <span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">if_then_else</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">if_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">then_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">else_func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#if_then_else"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.if_then_else" title="Link to this definition">#</a></dt>
 <dd><p>Tool to “functionalize” the if-then-else logic.</p>
@@ -929,9 +1025,23 @@ doesn’t need to, and if it were, we’d get an error (length of a number?!).</
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.inverse_dict_asserting_losslessness">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">inverse_dict_asserting_losslessness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#inverse_dict_asserting_losslessness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.inverse_dict_asserting_losslessness" title="Link to this definition">#</a></dt>
+<dd><p>Invert <code class="docutils literal notranslate"><span class="pre">d</span></code> (values become keys), asserting that no values are duplicated.</p>
+<p>Raises <code class="docutils literal notranslate"><span class="pre">AssertionError</span></code> if two keys share a value, since the inversion would
+lose one of them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inverse_dict_asserting_losslessness</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="go">{1: 'a', 2: 'b'}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.util.iterize">
 <span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">iterize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#iterize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.iterize" title="Link to this definition">#</a></dt>
-<dd><p>From an Input-&gt;Ouput function, makes a Iterator[Input]-&gt;Itertor[Output]
+<dd><p>From an Input-&gt;Output function, makes a Iterator[Input]-&gt;Iterator[Output]
 Some call this “vectorization”, but it’s not really a vector, but an
 iterable, thus the name.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">iterize</span></code> is a partial of <code class="code docutils literal notranslate"><span class="pre">map</span></code>.</p>
@@ -1048,6 +1158,13 @@ Therefore, we can partialize class_or_tuple:</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.mywraps">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">mywraps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#mywraps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.mywraps" title="Link to this definition">#</a></dt>
+<dd><p>Make a decorator applying <code class="docutils literal notranslate"><span class="pre">functools.wraps(func)</span></code> then <code class="docutils literal notranslate"><span class="pre">extra_wraps</span></code> to a
+callable.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.util.named_partial">
 <span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">named_partial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">__name__</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keywords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#named_partial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.named_partial" title="Link to this definition">#</a></dt>
 <dd><p>functools.partial, but with a __name__</p>
@@ -1066,7 +1183,8 @@ Therefore, we can partialize class_or_tuple:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.util.numbered_suffix_renamer">
 <span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">numbered_suffix_renamer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#numbered_suffix_renamer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.numbered_suffix_renamer" title="Link to this definition">#</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">numbered_suffix_renamer</span><span class="p">(</span><span class="s1">'item'</span><span class="p">)</span>
+<dd><p>Append <code class="docutils literal notranslate"><span class="pre">sep</span> <span class="pre">+</span> <span class="pre">&quot;1&quot;</span></code> to <code class="docutils literal notranslate"><span class="pre">name</span></code>, or increment its existing numbered suffix.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">numbered_suffix_renamer</span><span class="p">(</span><span class="s1">'item'</span><span class="p">)</span>
 <span class="go">'item_1'</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">numbered_suffix_renamer</span><span class="p">(</span><span class="s1">'item_1'</span><span class="p">)</span>
 <span class="go">'item_2'</span>
@@ -1081,19 +1199,19 @@ Therefore, we can partialize class_or_tuple:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/types.html#types.ModuleType" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleType</span></code></a></span>) – <p>The module to look up. Can either be</p>
+<li><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/types.html#types.ModuleType" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModuleType</span></code></a></span>) – <p>The module to look up. Can either be</p>
 <ul>
 <li><p>the module object itself,</p></li>
 <li><p>a string specifying the module’s fully qualified name (e.g., ‘os.path’), or</p></li>
 <li><p>a .py filepath to the module</p></li>
 </ul>
 </p></li>
-<li><p><strong>name_filt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – An optional function used to filter the names of objects in the module.
+<li><p><strong>name_filt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – An optional function used to filter the names of objects in the module.
 This function should take a single argument (the object name as a string)
 and return a boolean. Only objects whose names pass the filter (i.e.,
 for which the function returns True) are included.
 If None, no name filtering is applied.</p></li>
-<li><p><strong>obj_filt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – An optional function used to filter the objects in the module. This function should take a
+<li><p><strong>obj_filt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a> | <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – An optional function used to filter the objects in the module. This function should take a
 single argument (the object itself) and return a boolean. Only objects that pass the filter
 (i.e., for which the function returns True) are included.
 If None, no object filtering is applied.</p></li>
@@ -1104,7 +1222,7 @@ If None, no object filtering is applied.</p></li>
 and values are the corresponding objects.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1136,7 +1254,7 @@ callables that don’t start with an underscore:</p>
 The operations are performed as if a and b were sets, but the order in a is conserved.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>]</span></p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ordered_set_operations</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
@@ -1149,6 +1267,17 @@ The operations are performed as if a and b were sets, but the order in a is cons
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ordered_set_operations</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 <span class="go">([1], [2, 3], [4])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.pairs">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.pairs" title="Link to this definition">#</a></dt>
+<dd><p>List the consecutive <code class="docutils literal notranslate"><span class="pre">(xs[i],</span> <span class="pre">xs[i+1])</span></code> pairs of a sequence.</p>
+<p>A sequence of length 0 or 1 is returned as is.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pairs</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">[(1, 2), (2, 3)]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1179,6 +1308,13 @@ and annotation should be used in the interface of the DAG?</p>
 <span class="go">&lt;Parameter "a: int"&gt;</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.print_ascii_graph">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">print_ascii_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#print_ascii_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.print_ascii_graph" title="Link to this definition">#</a></dt>
+<dd><p>Print an ascii rendering of <code class="docutils literal notranslate"><span class="pre">funcs_to_digraph(funcs)</span></code>.</p>
+<p>Uses <code class="docutils literal notranslate"><span class="pre">dot_to_ascii</span></code>, so needs an internet connection.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1263,6 +1399,16 @@ transformed items.</p>
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.uncurry">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">uncurry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#uncurry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.uncurry" title="Link to this definition">#</a></dt>
+<dd><p>Wrap <code class="docutils literal notranslate"><span class="pre">func</span></code> so that it takes one tuple and unpacks it into positional arguments.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uncurry</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 
 
@@ -1312,37 +1458,51 @@ transformed items.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ConditionalIterize"><code class="docutils literal notranslate"><span class="pre">ConditionalIterize</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ConditionalIterize"><code class="docutils literal notranslate"><span class="pre">ConditionalIterize</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ConditionalIterize.wrap"><code class="docutils literal notranslate"><span class="pre">ConditionalIterize.wrap()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.InvalidFunctionParameters"><code class="docutils literal notranslate"><span class="pre">InvalidFunctionParameters</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ModuleNotFoundIgnore"><code class="docutils literal notranslate"><span class="pre">ModuleNotFoundIgnore</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.NameValidationError"><code class="docutils literal notranslate"><span class="pre">NameValidationError</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.NotFound"><code class="docutils literal notranslate"><span class="pre">NotFound</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.NotUniqueError"><code class="docutils literal notranslate"><span class="pre">NotUniqueError</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ValidationError"><code class="docutils literal notranslate"><span class="pre">ValidationError</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.arg_names"><code class="docutils literal notranslate"><span class="pre">arg_names()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.args_funcnames"><code class="docutils literal notranslate"><span class="pre">args_funcnames()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.conditional_trans"><code class="docutils literal notranslate"><span class="pre">conditional_trans()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.conservative_parameter_merge"><code class="docutils literal notranslate"><span class="pre">conservative_parameter_merge()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.curry"><code class="docutils literal notranslate"><span class="pre">curry()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.dot_to_ascii"><code class="docutils literal notranslate"><span class="pre">dot_to_ascii()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.extra_wraps"><code class="docutils literal notranslate"><span class="pre">extra_wraps()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.extract_dict"><code class="docutils literal notranslate"><span class="pre">extract_dict()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.extract_items"><code class="docutils literal notranslate"><span class="pre">extract_items()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.extract_values"><code class="docutils literal notranslate"><span class="pre">extract_values()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.filepath_to_module"><code class="docutils literal notranslate"><span class="pre">filepath_to_module()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.find_first_free_name"><code class="docutils literal notranslate"><span class="pre">find_first_free_name()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.func_name"><code class="docutils literal notranslate"><span class="pre">func_name()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.funcs_conjunction"><code class="docutils literal notranslate"><span class="pre">funcs_conjunction()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.funcs_disjunction"><code class="docutils literal notranslate"><span class="pre">funcs_disjunction()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.funcs_to_digraph"><code class="docutils literal notranslate"><span class="pre">funcs_to_digraph()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.if_then_else"><code class="docutils literal notranslate"><span class="pre">if_then_else()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.incremental_str_maker"><code class="docutils literal notranslate"><span class="pre">incremental_str_maker()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.instance_checker"><code class="docutils literal notranslate"><span class="pre">instance_checker()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.inverse_dict_asserting_losslessness"><code class="docutils literal notranslate"><span class="pre">inverse_dict_asserting_losslessness()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.iterize"><code class="docutils literal notranslate"><span class="pre">iterize()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.mk_func_name"><code class="docutils literal notranslate"><span class="pre">mk_func_name()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.mk_place_holder_func"><code class="docutils literal notranslate"><span class="pre">mk_place_holder_func()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.my_isinstance"><code class="docutils literal notranslate"><span class="pre">my_isinstance()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.mywraps"><code class="docutils literal notranslate"><span class="pre">mywraps()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.named_partial"><code class="docutils literal notranslate"><span class="pre">named_partial()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.numbered_suffix_renamer"><code class="docutils literal notranslate"><span class="pre">numbered_suffix_renamer()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.objects_defined_in_module"><code class="docutils literal notranslate"><span class="pre">objects_defined_in_module()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ordered_set_operations"><code class="docutils literal notranslate"><span class="pre">ordered_set_operations()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.pairs"><code class="docutils literal notranslate"><span class="pre">pairs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.parameter_merger"><code class="docutils literal notranslate"><span class="pre">parameter_merger()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.print_ascii_graph"><code class="docutils literal notranslate"><span class="pre">print_ascii_graph()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.provides"><code class="docutils literal notranslate"><span class="pre">provides()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.replace_item_in_iterable"><code class="docutils literal notranslate"><span class="pre">replace_item_in_iterable()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.uncurry"><code class="docutils literal notranslate"><span class="pre">uncurry()</span></code></a></li>
 </ul>
   </nav></div>
 

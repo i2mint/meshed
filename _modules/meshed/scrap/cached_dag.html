@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -761,7 +761,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">        ...</span>
 <span class="sd">    cached_dag.OverWritesNotAllowedError: The b key already exists and you're not allowed to change its value</span>
-
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -804,7 +803,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    ...     z = subtract(x, y)</span>
 <span class="sd">    &gt;&gt;&gt; print(dag.dot_digraph_ascii())  # doctest: +SKIP</span>
 
-<span class="sd">    .. code-block::</span>
+<span class="sd">    .. code-block:: text</span>
+
 <span class="sd">                        w</span>
 
 <span class="sd">                     │</span>
@@ -855,12 +855,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    with the ability to use the wrapped function's signature to determine the</span>
 <span class="sd">    signature of the output dag. Need to fix this.)</span>
 
-<span class="sd">    &gt;&gt;&gt; g('ww')</span>
+<span class="sd">    &gt;&gt;&gt; g('ww')  # doctest: +SKIP</span>
 <span class="sd">    2</span>
 
 <span class="sd">    But we can't get ``y`` because we don't have what it depends on:</span>
 
-<span class="sd">    &gt;&gt;&gt; g('y')</span>
+<span class="sd">    &gt;&gt;&gt; g('y')  # doctest: +SKIP</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">        ...</span>
 <span class="sd">    TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'</span>
@@ -868,36 +868,36 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    It needs a ``w?``! No, it needs an ``x``! But to get an ``x`` you need a ``w``,</span>
 <span class="sd">    and...</span>
 
-<span class="sd">    &gt;&gt;&gt; g('x')</span>
+<span class="sd">    &gt;&gt;&gt; g('x')  # doctest: +SKIP</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">        ...</span>
 <span class="sd">    TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'</span>
 
 <span class="sd">    So let's give it a w!</span>
 
-<span class="sd">    &gt;&gt;&gt; g('x', w=3)  # == 3 * 2 ==</span>
+<span class="sd">    &gt;&gt;&gt; g('x', w=3)  # == 3 * 2 ==  # doctest: +SKIP</span>
 <span class="sd">    6</span>
 
 <span class="sd">    And now this works:</span>
 
-<span class="sd">    &gt;&gt;&gt; g('x')</span>
+<span class="sd">    &gt;&gt;&gt; g('x')  # doctest: +SKIP</span>
 <span class="sd">    6</span>
 
 <span class="sd">    because</span>
 
-<span class="sd">    &gt;&gt;&gt; g.cache</span>
+<span class="sd">    &gt;&gt;&gt; g.cache  # doctest: +SKIP</span>
 <span class="sd">    {'x': 6}</span>
 
 <span class="sd">    and this will work too:</span>
 
-<span class="sd">    &gt;&gt;&gt; g('y')</span>
+<span class="sd">    &gt;&gt;&gt; g('y')  # doctest: +SKIP</span>
 <span class="sd">    7</span>
-<span class="sd">    &gt;&gt;&gt; g.cache</span>
+<span class="sd">    &gt;&gt;&gt; g.cache  # doctest: +SKIP</span>
 <span class="sd">    {'x': 6, 'y': 7}</span>
 
 <span class="sd">    But this is something we need to handle better!</span>
 
-<span class="sd">    &gt;&gt;&gt; g('x', w=10)</span>
+<span class="sd">    &gt;&gt;&gt; g('x', w=10)  # doctest: +SKIP</span>
 <span class="sd">    6</span>
 
 <span class="sd">    This is happending because there's already a x in the cache, and it takes precedence.</span>
@@ -907,12 +907,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    First, we probably should cache inputs too.</span>
 
-<span class="sd">    The we can:</span>
-<span class="sd">    - Make  computation take precedence over cache, overwriting the existing cache</span>
-<span class="sd">        with the new resulting values</span>
+<span class="sd">    Then we can:</span>
+
+<span class="sd">    - Make computation take precedence over cache, overwriting the existing cache</span>
+<span class="sd">      with the new resulting values</span>
 
 <span class="sd">    - Allow the user to declare the entire cache, or just some variables in it,</span>
-<span class="sd">    as write-once, to avoid creating bugs with the above proposal.</span>
+<span class="sd">      as write-once, to avoid creating bugs with the above proposal.</span>
 
 <span class="sd">    - Cache multiple paths (lru_cache style) for different input combinations</span>
 

@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
     <link rel="prev" title="meshed.ext.gk" href="meshed.ext.gk.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -404,8 +404,31 @@
                   
   <section id="module-meshed.itools">
 <span id="meshed-itools"></span><h1>meshed.itools<a class="headerlink" href="#module-meshed.itools" title="Link to this heading">#</a></h1>
-<p>Functions that provide iterators of g elements where g is any
-adjacency Mapping representation.</p>
+<p>Graph operations over adjacency mappings.</p>
+<p>Here a graph <code class="docutils literal notranslate"><span class="pre">g</span></code> is any <code class="docutils literal notranslate"><span class="pre">Mapping</span></code> whose keys are nodes and whose values
+are iterables of the nodes they point to (<code class="docutils literal notranslate"><span class="pre">g[src]</span></code> lists the <code class="docutils literal notranslate"><span class="pre">dst</span></code> nodes of
+the edges <code class="docutils literal notranslate"><span class="pre">src</span> <span class="pre">-&gt;</span> <span class="pre">dst</span></code>). A plain <code class="docutils literal notranslate"><span class="pre">dict</span></code> of lists is the usual form, but any
+Mapping with iterable values works, including strings, where each character is
+a node. Nodes that only appear as destinations need not be keys. The functions
+here mostly iterate or compute sets over such a mapping without building any
+other graph structure; <code class="docutils literal notranslate"><span class="pre">meshed.dag</span></code> uses them to order and query its
+<code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> graph.</p>
+<p>Main entry points:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">topological_sort</span></code>: order the nodes so that every node comes after its parents.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">edges</span></code> and <code class="docutils literal notranslate"><span class="pre">nodes</span></code>: iterate the edges or the (deduplicated) nodes of <code class="docutils literal notranslate"><span class="pre">g</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">root_nodes</span></code> and <code class="docutils literal notranslate"><span class="pre">leaf_nodes</span></code>: nodes with no parents, or no children.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ancestors</span></code> and <code class="docutils literal notranslate"><span class="pre">descendants</span></code>: everything reachable to, or from, some nodes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">edge_reversed_graph</span></code>: the same graph with every edge flipped.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.itools</span><span class="w"> </span><span class="kn">import</span> <span class="n">topological_sort</span><span class="p">,</span> <span class="n">root_nodes</span><span class="p">,</span> <span class="n">leaf_nodes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">topological_sort</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="go">[0, 1, 2, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">),</span> <span class="n">leaf_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="go">({0}, {3})</span>
+</pre></div>
+</div>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
@@ -418,8 +441,8 @@ adjacency Mapping representation.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.itools.children" title="meshed.itools.children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></a>(g, source)</p></td>
 <td><p>Set of all nodes (not in source) adjacent FROM 'source' in 'g'</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_of_g_with_some_keys_removed</span></code>(g, keys)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.itools.copy_of_g_with_some_keys_removed" title="meshed.itools.copy_of_g_with_some_keys_removed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_of_g_with_some_keys_removed</span></code></a>(g, keys)</p></td>
+<td><p>Shallow copy of <code class="docutils literal notranslate"><span class="pre">g</span></code> without the given keys.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.itools.descendants" title="meshed.itools.descendants"><code class="xref py py-obj docutils literal notranslate"><span class="pre">descendants</span></code></a>(g, source[, _exclude_nodes])</p></td>
 <td><p>Returns the set of all nodes reachable FROM <code class="code docutils literal notranslate"><span class="pre">source</span></code> in <code class="code docutils literal notranslate"><span class="pre">g</span></code>.</p></td>
@@ -430,11 +453,11 @@ adjacency Mapping representation.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.itools.edges" title="meshed.itools.edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges</span></code></a>(g)</p></td>
 <td><p>Generates edges of graph, i.e. <code class="docutils literal notranslate"><span class="pre">(from_node,</span> <span class="pre">to_node)</span></code> tuples.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_dict_on_keys</span></code>(d, condition)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.itools.filter_dict_on_keys" title="meshed.itools.filter_dict_on_keys"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_dict_on_keys</span></code></a>(d, condition)</p></td>
+<td><p>Keep the <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">v)</span></code> items of <code class="docutils literal notranslate"><span class="pre">d</span></code> for which <code class="docutils literal notranslate"><span class="pre">condition(k,</span> <span class="pre">v)</span></code> is true.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_dict_with_list_values</span></code>(d, condition)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.itools.filter_dict_with_list_values" title="meshed.itools.filter_dict_with_list_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_dict_with_list_values</span></code></a>(d, condition)</p></td>
+<td><p>Keep, in each value of <code class="docutils literal notranslate"><span class="pre">d</span></code>, only the elements satisfying <code class="docutils literal notranslate"><span class="pre">condition</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.itools.find_path" title="meshed.itools.find_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_path</span></code></a>(g, src, dst[, path])</p></td>
 <td><p>find a path from src to dst nodes in graph</p></td>
@@ -449,22 +472,22 @@ adjacency Mapping representation.</p>
 <td><p>Returns True if the graph has given node</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.itools.in_degrees" title="meshed.itools.in_degrees"><code class="xref py py-obj docutils literal notranslate"><span class="pre">in_degrees</span></code></a>(g)</p></td>
-<td><p></p></td>
+<td><p>Yield <code class="docutils literal notranslate"><span class="pre">(node,</span> <span class="pre">number_of_parents)</span></code> for every node of <code class="docutils literal notranslate"><span class="pre">g</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.itools.isolated_nodes" title="meshed.itools.isolated_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isolated_nodes</span></code></a>(g)</p></td>
-<td><p>Nodes that</p></td>
+<td><p>Nodes of <code class="docutils literal notranslate"><span class="pre">g</span></code> whose adjacency is empty (no outgoing edges).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.itools.leaf_nodes" title="meshed.itools.leaf_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaf_nodes</span></code></a>(g)</p></td>
-<td><p></p></td>
+<td><p>Nodes of <code class="docutils literal notranslate"><span class="pre">g</span></code> that point to no other node (isolated nodes included).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.itools.nodes" title="meshed.itools.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a>(g)</p></td>
-<td><p></p></td>
+<td><p>Yield every node of <code class="docutils literal notranslate"><span class="pre">g</span></code> once: each key, then each node it points to.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_of_graph</span></code>(graph)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.itools.nodes_of_graph" title="meshed.itools.nodes_of_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_of_graph</span></code></a>(graph)</p></td>
+<td><p>Set of the keys of <code class="docutils literal notranslate"><span class="pre">graph</span></code> together with its values taken whole.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.itools.out_degrees" title="meshed.itools.out_degrees"><code class="xref py py-obj docutils literal notranslate"><span class="pre">out_degrees</span></code></a>(g)</p></td>
-<td><p></p></td>
+<td><p>Yield <code class="docutils literal notranslate"><span class="pre">(node,</span> <span class="pre">number_of_children)</span></code> for every key of <code class="docutils literal notranslate"><span class="pre">g</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.itools.parents" title="meshed.itools.parents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parents</span></code></a>(g, source)</p></td>
 <td><p>Set of all nodes (not in source) adjacent TO 'source' in 'g'</p></td>
@@ -482,10 +505,10 @@ adjacency Mapping representation.</p>
 <td><p>Returns the roots of the sub-dag that contribute to compute the given nodes.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.itools.root_nodes" title="meshed.itools.root_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root_nodes</span></code></a>(g)</p></td>
-<td><p></p></td>
+<td><p>Nodes of <code class="docutils literal notranslate"><span class="pre">g</span></code> that no other node points to (isolated nodes included).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">subtract_subgraph</span></code>(graph, subgraph)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.itools.subtract_subgraph" title="meshed.itools.subtract_subgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subtract_subgraph</span></code></a>(graph, subgraph)</p></td>
+<td><p>Copy of <code class="docutils literal notranslate"><span class="pre">graph</span></code> with the nodes of <code class="docutils literal notranslate"><span class="pre">subgraph</span></code> removed.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.itools.successors" title="meshed.itools.successors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">successors</span></code></a>(g, node[, _exclude_nodes])</p></td>
 <td><p>Iterator of nodes that have directed paths FROM node</p></td>
@@ -540,6 +563,16 @@ adjacency Mapping representation.</p>
 <span class="go">set()</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.itools.copy_of_g_with_some_keys_removed">
+<span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">copy_of_g_with_some_keys_removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#copy_of_g_with_some_keys_removed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.copy_of_g_with_some_keys_removed" title="Link to this definition">#</a></dt>
+<dd><p>Shallow copy of <code class="docutils literal notranslate"><span class="pre">g</span></code> without the given keys.</p>
+<p>A whitespace-separated string of keys is accepted. References to the removed
+keys inside other adjacencies are kept.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -603,6 +636,19 @@ adjacency Mapping representation.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.itools.filter_dict_on_keys">
+<span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">filter_dict_on_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#filter_dict_on_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.filter_dict_on_keys" title="Link to this definition">#</a></dt>
+<dd><p>Keep the <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">v)</span></code> items of <code class="docutils literal notranslate"><span class="pre">d</span></code> for which <code class="docutils literal notranslate"><span class="pre">condition(k,</span> <span class="pre">v)</span></code> is true.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.itools.filter_dict_with_list_values">
+<span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">filter_dict_with_list_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#filter_dict_with_list_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.filter_dict_with_list_values" title="Link to this definition">#</a></dt>
+<dd><p>Keep, in each value of <code class="docutils literal notranslate"><span class="pre">d</span></code>, only the elements satisfying <code class="docutils literal notranslate"><span class="pre">condition</span></code>.</p>
+<p>The filtered values are lists, whatever the originals were.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.itools.find_path">
 <span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">find_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#find_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.find_path" title="Link to this definition">#</a></dt>
 <dd><p>find a path from src to dst nodes in graph</p>
@@ -654,7 +700,7 @@ adjacency Mapping representation.</p>
 </p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeVar" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code></a>(<code class="docutils literal notranslate"><span class="pre">N</span></code>)]</span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeVar" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code></a>(<code class="docutils literal notranslate"><span class="pre">N</span></code>)]</span></p>
 </dd>
 </dl>
 <p>Design notes:</p>
@@ -723,7 +769,8 @@ the values of the <code class="docutils literal notranslate"><span class="pre">g
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.itools.in_degrees">
 <span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">in_degrees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#in_degrees"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.in_degrees" title="Link to this definition">#</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
+<dd><p>Yield <code class="docutils literal notranslate"><span class="pre">(node,</span> <span class="pre">number_of_parents)</span></code> for every node of <code class="docutils literal notranslate"><span class="pre">g</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">dict</span><span class="p">(</span><span class="n">in_degrees</span><span class="p">(</span><span class="n">g</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
 <span class="gp">... </span><span class="p">{</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>  <span class="s1">'d'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
@@ -736,7 +783,7 @@ the values of the <code class="docutils literal notranslate"><span class="pre">g
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.itools.isolated_nodes">
 <span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">isolated_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#isolated_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.isolated_nodes" title="Link to this definition">#</a></dt>
-<dd><p>Nodes that</p>
+<dd><p>Nodes of <code class="docutils literal notranslate"><span class="pre">g</span></code> whose adjacency is empty (no outgoing edges).</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="s1">'abde'</span><span class="p">),</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">set</span><span class="p">(</span><span class="n">isolated_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
 <span class="go">{'f'}</span>
@@ -749,7 +796,8 @@ the values of the <code class="docutils literal notranslate"><span class="pre">g
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.itools.leaf_nodes">
 <span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">leaf_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#leaf_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.leaf_nodes" title="Link to this definition">#</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
+<dd><p>Nodes of <code class="docutils literal notranslate"><span class="pre">g</span></code> that point to no other node (isolated nodes included).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">leaf_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
 <span class="go">['f', 'z']</span>
 </pre></div>
@@ -763,7 +811,8 @@ root and leaf nodes both.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.itools.nodes">
 <span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.nodes" title="Link to this definition">#</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
+<dd><p>Yield every node of <code class="docutils literal notranslate"><span class="pre">g</span></code> once: each key, then each node it points to.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">nodes</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
 <span class="go">['a', 'b', 'c', 'd', 'e', 'f', 'z']</span>
 </pre></div>
@@ -773,9 +822,17 @@ root and leaf nodes both.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.itools.nodes_of_graph">
+<span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">nodes_of_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#nodes_of_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.nodes_of_graph" title="Link to this definition">#</a></dt>
+<dd><p>Set of the keys of <code class="docutils literal notranslate"><span class="pre">graph</span></code> together with its values taken whole.</p>
+<p>The values go in as they are, so they must be hashable.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.itools.out_degrees">
 <span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">out_degrees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#out_degrees"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.out_degrees" title="Link to this definition">#</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
+<dd><p>Yield <code class="docutils literal notranslate"><span class="pre">(node,</span> <span class="pre">number_of_children)</span></code> for every key of <code class="docutils literal notranslate"><span class="pre">g</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">dict</span><span class="p">(</span><span class="n">out_degrees</span><span class="p">(</span><span class="n">g</span><span class="p">))</span> <span class="o">==</span> <span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
@@ -878,7 +935,8 @@ of edges.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.itools.root_nodes">
 <span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">root_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#root_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.root_nodes" title="Link to this definition">#</a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
+<dd><p>Nodes of <code class="docutils literal notranslate"><span class="pre">g</span></code> that no other node points to (isolated nodes included).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="s1">'ce'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abde'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">],</span> <span class="n">f</span><span class="o">=</span><span class="p">{})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">root_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
 <span class="go">['f']</span>
 </pre></div>
@@ -887,6 +945,14 @@ of edges.</p>
 root and leaf nodes both.</p>
 <dl class="field-list simple">
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.itools.subtract_subgraph">
+<span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">subtract_subgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subgraph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#subtract_subgraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.subtract_subgraph" title="Link to this definition">#</a></dt>
+<dd><p>Copy of <code class="docutils literal notranslate"><span class="pre">graph</span></code> with the nodes of <code class="docutils literal notranslate"><span class="pre">subgraph</span></code> removed.</p>
+<p>The nodes are those of <code class="docutils literal notranslate"><span class="pre">nodes_of_graph(subgraph)</span></code>; they are removed from keys
+and adjacencies, and keys left with no adjacencies are dropped.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -912,10 +978,8 @@ root and leaf nodes both.</p>
 <dt class="sig sig-object py" id="meshed.itools.topological_sort">
 <span class="sig-prename descclassname"><span class="pre">meshed.itools.</span></span><span class="sig-name descname"><span class="pre">topological_sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/itools.html#topological_sort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.itools.topological_sort" title="Link to this definition">#</a></dt>
 <dd><p>Return the list of nodes in topological sort order.</p>
-<dl class="simple">
-<dt>This order is such that a node parents will all occur before;</dt><dd><p>If order[i] is parent of order[j] then i &lt; j</p>
-</dd>
-</dl>
+<p>This order is such that a node’s parents will all occur before it:
+if <code class="docutils literal notranslate"><span class="pre">order[i]</span></code> is a parent of <code class="docutils literal notranslate"><span class="pre">order[j]</span></code> then <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">j</span></code>.</p>
 <p>This is often used to compute the order of computation in a DAG.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="p">{</span>
 <span class="gp">... </span>    <span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
@@ -930,24 +994,19 @@ root and leaf nodes both.</p>
 </div>
 <p>Here’s an ascii art of the graph, to verify that the topological sort is
 indeed as expected.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌───┐     ┌───┐     ┌───┐     ┌───┐
+│ 0 │ ──▶ │ 2 │ ──▶ │ 3 │ ──▶ │ 1 │
+└───┘     └───┘     └───┘     └───┘
+  │                   ▲         ▲
+  │                   │         │
+  ▼                   │         │
+┌───┐                 │         │
+│ 4 │ ────────────────┼─────────┘
+└───┘                 │
+  │                   │
+  └───────────────────┘
 </pre></div>
 </div>
-<p>┌───┐     ┌───┐     ┌───┐     ┌───┐
-│ 0 │ ──▶ │ 2 │ ──▶ │ 3 │ ──▶ │ 1 │
-└───┘     └───┘     └───┘     └───┘</p>
-<blockquote>
-<div><p>│                   ▲         ▲
-│                   │         │
-▼                   │         │</p>
-</div></blockquote>
-<p>┌───┐                 │         │
-│ 4 │ ────────────────┼─────────┘
-└───┘                 │</p>
-<blockquote>
-<div><p>│                   │
-└───────────────────┘</p>
-</div></blockquote>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -1004,9 +1063,12 @@ indeed as expected.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.add_edge"><code class="docutils literal notranslate"><span class="pre">add_edge()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.ancestors"><code class="docutils literal notranslate"><span class="pre">ancestors()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.children"><code class="docutils literal notranslate"><span class="pre">children()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.copy_of_g_with_some_keys_removed"><code class="docutils literal notranslate"><span class="pre">copy_of_g_with_some_keys_removed()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.descendants"><code class="docutils literal notranslate"><span class="pre">descendants()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.edge_reversed_graph"><code class="docutils literal notranslate"><span class="pre">edge_reversed_graph()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.edges"><code class="docutils literal notranslate"><span class="pre">edges()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.filter_dict_on_keys"><code class="docutils literal notranslate"><span class="pre">filter_dict_on_keys()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.filter_dict_with_list_values"><code class="docutils literal notranslate"><span class="pre">filter_dict_with_list_values()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.find_path"><code class="docutils literal notranslate"><span class="pre">find_path()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.graphviz_digraph"><code class="docutils literal notranslate"><span class="pre">graphviz_digraph()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.has_cycle"><code class="docutils literal notranslate"><span class="pre">has_cycle()</span></code></a></li>
@@ -1015,6 +1077,7 @@ indeed as expected.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.isolated_nodes"><code class="docutils literal notranslate"><span class="pre">isolated_nodes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.leaf_nodes"><code class="docutils literal notranslate"><span class="pre">leaf_nodes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.nodes"><code class="docutils literal notranslate"><span class="pre">nodes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.nodes_of_graph"><code class="docutils literal notranslate"><span class="pre">nodes_of_graph()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.out_degrees"><code class="docutils literal notranslate"><span class="pre">out_degrees()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.parents"><code class="docutils literal notranslate"><span class="pre">parents()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.predecessors"><code class="docutils literal notranslate"><span class="pre">predecessors()</span></code></a></li>
@@ -1022,6 +1085,7 @@ indeed as expected.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.reverse_edges"><code class="docutils literal notranslate"><span class="pre">reverse_edges()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.root_ancestors"><code class="docutils literal notranslate"><span class="pre">root_ancestors()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.root_nodes"><code class="docutils literal notranslate"><span class="pre">root_nodes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.subtract_subgraph"><code class="docutils literal notranslate"><span class="pre">subtract_subgraph()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.successors"><code class="docutils literal notranslate"><span class="pre">successors()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.itools.topological_sort"><code class="docutils literal notranslate"><span class="pre">topological_sort()</span></code></a></li>
 </ul>

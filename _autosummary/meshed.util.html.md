@@ -1,52 +1,81 @@
 # meshed.util
 
-util functions
+Function-wrapping, naming, and small data helpers shared across `meshed`.
+
+Most of what lives here is glue that the DAG machinery leans on: decorators
+that turn a scalar function into one that maps over a stream (`iterize`,
+`ConditionalIterize`), name generation that avoids clashes when several
+functions share argument names (`find_first_free_name`, `mk_func_name`,
+`arg_names`), signature reconciliation (`parameter_merger`), and dict
+and iterable utilities (`extract_values`, `replace_item_in_iterable`).
+A few graph-rendering helpers (`funcs_to_digraph`, `dot_to_ascii`) are
+also kept here.
+
+Main entry points:
+
+- `iterize`: wrap `func` so it maps over an iterable (a partial of `map`).
+- `ConditionalIterize`: iterize a call only when the first argument satisfies
+  a condition (by default, when it is an `Iterator`).
+- `provides`: decorator that records, on `func._provides`, the var node
+  names a function can source.
+- `parameter_merger`: check that several `inspect.Parameter` objects agree
+  (name, kind, default, annotation) and return the first, raising
+  `ValidationError` otherwise.
+- `replace_item_in_iterable`: replace items of an iterable that satisfy a
+  condition, keeping the container type for lists, tuples and sets.
+
+```pycon
+>>> from meshed.util import iterize
+>>> times_ten = iterize(lambda x: x * 10)
+>>> list(times_ten(iter([1, 2, 3])))
+[10, 20, 30]
+```
 
 ### Functions
 
-| `arg_names`(func, func_name[, exclude_names])                                                      |                                                                                                                                                                       |
-|----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`args_funcnames`](#meshed.util.args_funcnames)(funcs[, name_of_func])             | Generates (arg_name, func_id) pairs from the iterable of functions                                                                                                    |
-| [`conditional_trans`](#meshed.util.conditional_trans)(obj, condition, trans)          | Conditionally transform an object unless it is marked as a literal.                                                                                                   |
-| `curry`(func)                                                                                      |                                                                                                                                                                       |
-| [`dot_to_ascii`](#meshed.util.dot_to_ascii)(dot[, fancy])                        | Convert a dot string to an ascii rendering of the diagram.                                                                                                            |
-| `extra_wraps`(func[, name, doc_prefix])                                                            |                                                                                                                                                                       |
-| [`extract_dict`](#meshed.util.extract_dict)(d, keys)                             | Extract items from dict `d`, returning them as a dict.                                                                                                                |
-| [`extract_items`](#meshed.util.extract_items)(d, keys)                            | generator of (k, v) pairs extracted from d for keys                                                                                                                   |
-| [`extract_values`](#meshed.util.extract_values)(d, keys)                           | Extract values from dict `d`, returning them:                                                                                                                         |
-| [`filepath_to_module`](#meshed.util.filepath_to_module)(file_path)                     | A context manager to import a Python file as a module.                                                                                                                |
-| `find_first_free_name`(prefix[, ...])                                                              |                                                                                                                                                                       |
-| [`func_name`](#meshed.util.func_name)(func)                                   | The func._\_name_\_ of a callable func, or makes and returns one if that fails.                                                                                       |
-| [`funcs_conjunction`](#meshed.util.funcs_conjunction)(\*funcs)                        | Makes a conjunction of functions.                                                                                                                                     |
-| [`funcs_disjunction`](#meshed.util.funcs_disjunction)(\*funcs)                        | Makes a disjunction of functions.                                                                                                                                     |
-| `funcs_to_digraph`(funcs[, graph])                                                                 |                                                                                                                                                                       |
-| [`if_then_else`](#meshed.util.if_then_else)(if_func, then_func, else_func, ...)  | Tool to "functionalize" the if-then-else logic.                                                                                                                       |
-| [`incremental_str_maker`](#meshed.util.incremental_str_maker)([str_format])               | Make a function that will produce a (incrementally) new string at every call.                                                                                         |
-| [`instance_checker`](#meshed.util.instance_checker)(class_or_tuple)                  | Makes a boolean function that checks the instance of an object                                                                                                        |
-| `inverse_dict_asserting_losslessness`(d)                                                           |                                                                                                                                                                       |
-| [`iterize`](#meshed.util.iterize)(func[, name])                             | From an Input->Ouput function, makes a Iterator[Input]->Itertor[Output] Some call this "vectorization", but it's not really a vector, but an iterable, thus the name. |
-| `lambda_name`()                                                                                    |                                                                                                                                                                       |
-| [`mk_func_name`](#meshed.util.mk_func_name)(func[, exclude_names])               | Makes a function name that doesn't clash with the exclude_names iterable.                                                                                             |
-| [`mk_place_holder_func`](#meshed.util.mk_place_holder_func)(arg_names_or_sig[, ...])     | Make (working and picklable) function with a specific signature.                                                                                                      |
-| [`my_isinstance`](#meshed.util.my_isinstance)(obj, class_or_tuple)                | Same as builtin instance, but without position only constraint.                                                                                                       |
-| `mywraps`(func[, name, doc_prefix])                                                                |                                                                                                                                                                       |
-| [`named_partial`](#meshed.util.named_partial)(func, \*args[, \_\_name_\_])        | functools.partial, but with a \_\_name_\_                                                                                                                             |
-| [`numbered_suffix_renamer`](#meshed.util.numbered_suffix_renamer)(name[, sep])              |                                                                                                                                                                       |
-| [`objects_defined_in_module`](#meshed.util.objects_defined_in_module)(module, \*[, ...])      | Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.                                                                |
-| [`ordered_set_operations`](#meshed.util.ordered_set_operations)(a, b)                      | Returns a triple (a-b, a&b, b-a) for two iterables a and b.                                                                                                           |
-| `pairs`(xs)                                                                                        |                                                                                                                                                                       |
-| [`parameter_merger`](#meshed.util.parameter_merger)(\*params[, same_name, ...])      | Validates that all the params are exactly the same, returning the first if so.                                                                                        |
-| `print_ascii_graph`(funcs)                                                                         |                                                                                                                                                                       |
-| [`provides`](#meshed.util.provides)(\*var_names)                             | Decorator to assign `var_names` to a `_provides` attribute of function.                                                                                               |
-| [`replace_item_in_iterable`](#meshed.util.replace_item_in_iterable)(iterable, ...[, egress]) | Returns a list where all items satisfying `condition(item)` were replaced with `replacement(item)`.                                                                   |
-| `uncurry`(func)                                                                                    |                                                                                                                                                                       |
-| `unnameable_func_name`()                                                                           |                                                                                                                                                                       |
+| [`arg_names`](#meshed.util.arg_names)(func, func_name[, exclude_names])       | List `func`'s parameter names, renaming those found in `exclude_names`.                                                                                                 |
+|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`args_funcnames`](#meshed.util.args_funcnames)(funcs[, name_of_func])             | Generates (arg_name, func_id) pairs from the iterable of functions                                                                                                      |
+| [`conditional_trans`](#meshed.util.conditional_trans)(obj, condition, trans)          | Conditionally transform an object unless it is marked as a literal.                                                                                                     |
+| [`curry`](#meshed.util.curry)(func)                                       | Wrap `func` so that positional arguments are passed to it as a single tuple.                                                                                            |
+| [`dot_to_ascii`](#meshed.util.dot_to_ascii)(dot[, fancy])                        | Convert a dot string to an ascii rendering of the diagram.                                                                                                              |
+| [`extra_wraps`](#meshed.util.extra_wraps)(func[, name, doc_prefix])             | Set `func.__name__` and `func.__doc__` in place, returning `func`.                                                                                                      |
+| [`extract_dict`](#meshed.util.extract_dict)(d, keys)                             | Extract items from dict `d`, returning them as a dict.                                                                                                                  |
+| [`extract_items`](#meshed.util.extract_items)(d, keys)                            | generator of (k, v) pairs extracted from d for keys                                                                                                                     |
+| [`extract_values`](#meshed.util.extract_values)(d, keys)                           | Extract values from dict `d`, returning them:                                                                                                                           |
+| [`filepath_to_module`](#meshed.util.filepath_to_module)(file_path)                     | A context manager to import a Python file as a module.                                                                                                                  |
+| [`find_first_free_name`](#meshed.util.find_first_free_name)(prefix[, ...])               | Return `prefix`, or the first `f"{prefix}__{i}"` not in `exclude_names`.                                                                                                |
+| [`func_name`](#meshed.util.func_name)(func)                                   | The func._\_name_\_ of a callable func, or makes and returns one if that fails.                                                                                         |
+| [`funcs_conjunction`](#meshed.util.funcs_conjunction)(\*funcs)                        | Makes a conjunction of functions.                                                                                                                                       |
+| [`funcs_disjunction`](#meshed.util.funcs_disjunction)(\*funcs)                        | Makes a disjunction of functions.                                                                                                                                       |
+| [`funcs_to_digraph`](#meshed.util.funcs_to_digraph)(funcs[, graph])                  | Add `(arg_name, func_name)` edges of `funcs` to a `graphviz.Digraph`.                                                                                                   |
+| [`if_then_else`](#meshed.util.if_then_else)(if_func, then_func, else_func, ...)  | Tool to "functionalize" the if-then-else logic.                                                                                                                         |
+| [`incremental_str_maker`](#meshed.util.incremental_str_maker)([str_format])               | Make a function that will produce a (incrementally) new string at every call.                                                                                           |
+| [`instance_checker`](#meshed.util.instance_checker)(class_or_tuple)                  | Makes a boolean function that checks the instance of an object                                                                                                          |
+| [`inverse_dict_asserting_losslessness`](#meshed.util.inverse_dict_asserting_losslessness)(d)            | Invert `d` (values become keys), asserting that no values are duplicated.                                                                                               |
+| [`iterize`](#meshed.util.iterize)(func[, name])                             | From an Input->Output function, makes a Iterator[Input]->Iterator[Output] Some call this "vectorization", but it's not really a vector, but an iterable, thus the name. |
+| `lambda_name`()                                                                                    |                                                                                                                                                                         |
+| [`mk_func_name`](#meshed.util.mk_func_name)(func[, exclude_names])               | Makes a function name that doesn't clash with the exclude_names iterable.                                                                                               |
+| [`mk_place_holder_func`](#meshed.util.mk_place_holder_func)(arg_names_or_sig[, ...])     | Make (working and picklable) function with a specific signature.                                                                                                        |
+| [`my_isinstance`](#meshed.util.my_isinstance)(obj, class_or_tuple)                | Same as builtin instance, but without position only constraint.                                                                                                         |
+| [`mywraps`](#meshed.util.mywraps)(func[, name, doc_prefix])                 | Make a decorator applying `functools.wraps(func)` then `extra_wraps` to a callable.                                                                                     |
+| [`named_partial`](#meshed.util.named_partial)(func, \*args[, \_\_name_\_])        | functools.partial, but with a \_\_name_\_                                                                                                                               |
+| [`numbered_suffix_renamer`](#meshed.util.numbered_suffix_renamer)(name[, sep])              | Append `sep + "1"` to `name`, or increment its existing numbered suffix.                                                                                                |
+| [`objects_defined_in_module`](#meshed.util.objects_defined_in_module)(module, \*[, ...])      | Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.                                                                  |
+| [`ordered_set_operations`](#meshed.util.ordered_set_operations)(a, b)                      | Returns a triple (a-b, a&b, b-a) for two iterables a and b.                                                                                                             |
+| [`pairs`](#meshed.util.pairs)(xs)                                         | List the consecutive `(xs[i], xs[i+1])` pairs of a sequence.                                                                                                            |
+| [`parameter_merger`](#meshed.util.parameter_merger)(\*params[, same_name, ...])      | Validates that all the params are exactly the same, returning the first if so.                                                                                          |
+| [`print_ascii_graph`](#meshed.util.print_ascii_graph)(funcs)                          | Print an ascii rendering of `funcs_to_digraph(funcs)`.                                                                                                                  |
+| [`provides`](#meshed.util.provides)(\*var_names)                             | Decorator to assign `var_names` to a `_provides` attribute of function.                                                                                                 |
+| [`replace_item_in_iterable`](#meshed.util.replace_item_in_iterable)(iterable, ...[, egress]) | Returns a list where all items satisfying `condition(item)` were replaced with `replacement(item)`.                                                                     |
+| [`uncurry`](#meshed.util.uncurry)(func)                                     | Wrap `func` so that it takes one tuple and unpacks it into positional arguments.                                                                                        |
+| `unnameable_func_name`()                                                                           |                                                                                                                                                                         |
 
 ### Classes
 
 | [`ConditionalIterize`](#meshed.util.ConditionalIterize)(func[, iterize_type, ...])   | A decorator that "iterizes" a function call if input satisfies a condition.   |
 |--------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| `ModuleNotFoundIgnore`()                                                                         |                                                                               |
+| [`ModuleNotFoundIgnore`](#meshed.util.ModuleNotFoundIgnore)()                          | Context manager that suppresses any exception raised inside its block.        |
 
 ### Exceptions
 
@@ -59,7 +88,7 @@ util functions
 
 ### *class* meshed.util.ConditionalIterize(func, iterize_type=<class 'collections.abc.Iterator'>, iterize_condition=None)
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A decorator that “iterizes” a function call if input satisfies a condition.
 That is, apply `map(func, input)` (iterize) or `func(input)` according to some
@@ -173,16 +202,30 @@ We annotated `x` as `int`, so see now the annotation of the wrapped function:
 '(x: Union[int, Iterable[int]], y=2)'
 ```
 
+#### *classmethod* wrap(iterize_type=<class 'collections.abc.Iterator'>, iterize_condition=None)
+
+Make a decorator building a `ConditionalIterize` with the given type and
+condition.
+
 ### *exception* meshed.util.InvalidFunctionParameters
 
-Bases: [`ValueError`](https://docs.python.org/3/library/exceptions.html#ValueError)
+Bases: [`ValueError`](https://docs.python.org/3/builtins/exceptions.html#ValueError)
 
 To be used when a function’s parameters are not compliant with some rule about
 them.
 
+### *class* meshed.util.ModuleNotFoundIgnore
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Context manager that suppresses any exception raised inside its block.
+
+Written to silence `ModuleNotFoundError`, but `__exit__` returns `True`
+unconditionally, so every exception type is swallowed.
+
 ### *exception* meshed.util.NameValidationError
 
-Bases: [`ValueError`](https://docs.python.org/3/library/exceptions.html#ValueError)
+Bases: [`ValueError`](https://docs.python.org/3/builtins/exceptions.html#ValueError)
 
 Use to indicate that there’s a problem with a name or generating a valid name
 
@@ -200,9 +243,21 @@ Error to be raised when unicity is expected, but violated
 
 ### *exception* meshed.util.ValidationError
 
-Bases: [`ValueError`](https://docs.python.org/3/library/exceptions.html#ValueError)
+Bases: [`ValueError`](https://docs.python.org/3/builtins/exceptions.html#ValueError)
 
 Error that is raised when an object’s validation failed
+
+### meshed.util.arg_names(func, func_name, exclude_names=())
+
+List `func`’s parameter names, renaming those found in `exclude_names`.
+
+A clashing name becomes the first free `f"{func_name}__{name}"` variant
+(see `find_first_free_name`).
+
+```pycon
+>>> arg_names(lambda a, b, c: None, 'myf', exclude_names=('a',))
+['myf__a', 'b', 'c']
+```
 
 ### meshed.util.args_funcnames(funcs, name_of_func=<function func_name>)
 
@@ -262,6 +317,15 @@ But if they’re not the same, we need to provide control on which to ignore.
 <Parameter "a: int">
 ```
 
+### meshed.util.curry(func)
+
+Wrap `func` so that positional arguments are passed to it as a single tuple.
+
+```pycon
+>>> curry(sum)(1, 2, 3)
+6
+```
+
 ### meshed.util.dot_to_ascii(dot, fancy=True)
 
 Convert a dot string to an ascii rendering of the diagram.
@@ -295,6 +359,13 @@ Needs a connection to the internet to work.
   └───────────────────── │   │
                          └───┘
 ```
+
+### meshed.util.extra_wraps(func, name=None, doc_prefix='')
+
+Set `func.__name__` and `func.__doc__` in place, returning `func`.
+
+The name is `name` or `func_name(func)`; the doc becomes
+`doc_prefix + func.__name__`.
 
 ### meshed.util.extract_dict(d, keys)
 
@@ -348,9 +419,23 @@ Order matters!
 A context manager to import a Python file as a module.
 
 * **Parameters:**
-  **file_path** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)) – The file path of the Python file to import.
+  **file_path** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – The file path of the Python file to import.
 * **Yield:**
   The module object.
+
+### meshed.util.find_first_free_name(prefix, exclude_names=(), start_at=2)
+
+Return `prefix`, or the first `f"{prefix}__{i}"` not in `exclude_names`.
+
+`prefix` itself is returned when it is not excluded; otherwise `i` counts
+up from `start_at`.
+
+```pycon
+>>> find_first_free_name('ab', ('cd',))
+'ab'
+>>> find_first_free_name('ab', ('ab', 'ab__2'))
+'ab__3'
+```
 
 ### meshed.util.func_name(func)
 
@@ -358,7 +443,7 @@ The func._\_name_\_ of a callable func, or makes and returns one if that fails.
 To make one, it calls unamed_func_name which produces incremental names to reduce the chances of clashing
 
 * **Return type:**
-  [`str`](https://docs.python.org/3/library/stdtypes.html#str)
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### meshed.util.funcs_conjunction(\*funcs)
 
@@ -395,6 +480,12 @@ False
 True
 ```
 
+### meshed.util.funcs_to_digraph(funcs, graph=None)
+
+Add `(arg_name, func_name)` edges of `funcs` to a `graphviz.Digraph`.
+
+A new `Digraph` is made if `graph` is None; functions are drawn as boxes.
+
 ### meshed.util.if_then_else(if_func, then_func, else_func, \*args, \*\*kwargs)
 
 Tool to “functionalize” the if-then-else logic.
@@ -424,9 +515,21 @@ True
 False
 ```
 
+### meshed.util.inverse_dict_asserting_losslessness(d)
+
+Invert `d` (values become keys), asserting that no values are duplicated.
+
+Raises `AssertionError` if two keys share a value, since the inversion would
+lose one of them.
+
+```pycon
+>>> inverse_dict_asserting_losslessness({'a': 1, 'b': 2})
+{1: 'a', 2: 'b'}
+```
+
 ### meshed.util.iterize(func, name=None)
 
-From an Input->Ouput function, makes a Iterator[Input]->Itertor[Output]
+From an Input->Output function, makes a Iterator[Input]->Iterator[Output]
 Some call this “vectorization”, but it’s not really a vector, but an
 iterable, thus the name.
 
@@ -545,6 +648,11 @@ True
 False
 ```
 
+### meshed.util.mywraps(func, name=None, doc_prefix='')
+
+Make a decorator applying `functools.wraps(func)` then `extra_wraps` to a
+callable.
+
 ### meshed.util.named_partial(func, \*args, \_\_name_\_=None, \*\*keywords)
 
 functools.partial, but with a \_\_name_\_
@@ -563,6 +671,8 @@ functools.partial, but with a \_\_name_\_
 
 ### meshed.util.numbered_suffix_renamer(name, sep='_')
 
+Append `sep + "1"` to `name`, or increment its existing numbered suffix.
+
 ```pycon
 >>> numbered_suffix_renamer('item')
 'item_1'
@@ -575,18 +685,18 @@ functools.partial, but with a \_\_name_\_
 Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.
 
 * **Parameters:**
-  * **module** ([`str`](https://docs.python.org/3/library/stdtypes.html#str) | [`ModuleType`](https://docs.python.org/3/library/types.html#types.ModuleType)) – 
+  * **module** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str) | [`ModuleType`](https://docs.python.org/3/library/types.html#types.ModuleType)) – 
 
     The module to look up. Can either be
     - the module object itself,
     - a string specifying the module’s fully qualified name (e.g., ‘os.path’), or
     - a .py filepath to the module
-  * **name_filt** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable) | [`None`](https://docs.python.org/3/library/constants.html#None)) – An optional function used to filter the names of objects in the module.
+  * **name_filt** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable) | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – An optional function used to filter the names of objects in the module.
     This function should take a single argument (the object name as a string)
     and return a boolean. Only objects whose names pass the filter (i.e.,
     for which the function returns True) are included.
     If None, no name filtering is applied.
-  * **obj_filt** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable) | [`None`](https://docs.python.org/3/library/constants.html#None)) – An optional function used to filter the objects in the module. This function should take a
+  * **obj_filt** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable) | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – An optional function used to filter the objects in the module. This function should take a
     single argument (the object itself) and return a boolean. Only objects that pass the filter
     (i.e., for which the function returns True) are included.
     If None, no object filtering is applied.
@@ -594,7 +704,7 @@ Get a dictionary of objects defined in a Python module, optionally filtered by t
   A dictionary where keys are names of objects defined in the module (filtered by name_filt and obj_filt)
   and values are the corresponding objects.
 * **Return type:**
-  [*dict*](https://docs.python.org/3/library/stdtypes.html#dict)
+  [*dict*](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### Examples
 
@@ -626,7 +736,7 @@ Returns a triple (a-b, a&b, b-a) for two iterables a and b.
 The operations are performed as if a and b were sets, but the order in a is conserved.
 
 * **Return type:**
-  [`tuple`](https://docs.python.org/3/library/stdtypes.html#tuple)[[`list`](https://docs.python.org/3/library/stdtypes.html#list), [`list`](https://docs.python.org/3/library/stdtypes.html#list), [`list`](https://docs.python.org/3/library/stdtypes.html#list)]
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)]
 
 ```pycon
 >>> ordered_set_operations([1, 2, 3, 4], [3, 4, 5, 6])
@@ -641,6 +751,17 @@ The operations are performed as if a and b were sets, but the order in a is cons
 ```pycon
 >>> ordered_set_operations([1, 2, 2, 3], [2, 3, 3, 4])
 ([1], [2, 3], [4])
+```
+
+### meshed.util.pairs(xs)
+
+List the consecutive `(xs[i], xs[i+1])` pairs of a sequence.
+
+A sequence of length 0 or 1 is returned as is.
+
+```pycon
+>>> pairs([1, 2, 3])
+[(1, 2), (2, 3)]
 ```
 
 ### meshed.util.parameter_merger(\*params, same_name=True, same_kind=True, same_default=True, same_annotation=True)
@@ -672,6 +793,12 @@ But if they’re not the same, we need to provide control on which to ignore.
 >>> parameter_merger(P('a', PK, annotation=int), P('a', PK), same_annotation=False)
 <Parameter "a: int">
 ```
+
+### meshed.util.print_ascii_graph(funcs)
+
+Print an ascii rendering of `funcs_to_digraph(funcs)`.
+
+Uses `dot_to_ascii`, so needs an internet connection.
 
 ### meshed.util.provides(\*var_names)
 
@@ -756,4 +883,13 @@ Unless you specify an egress of your choice:
 ... iter([1,2,3,4,5]), is_even, lambda x: x * 10, egress=sorted
 ... )
 [1, 3, 5, 20, 40]
+```
+
+### meshed.util.uncurry(func)
+
+Wrap `func` so that it takes one tuple and unpacks it into positional arguments.
+
+```pycon
+>>> uncurry(lambda a, b: a + b)((1, 2))
+3
 ```

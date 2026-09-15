@@ -19,7 +19,7 @@ Misc utils
 Output mermaid code with nodes packed into a single node.
 
 * **Return type:**
-  [`str`](https://docs.python.org/3/library/stdtypes.html#str)
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ```pycon
 >>> mermaid_code = '''

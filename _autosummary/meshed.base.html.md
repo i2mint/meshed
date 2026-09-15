@@ -1,50 +1,75 @@
 # meshed.base
 
-Base functionality of meshed
+Define `FuncNode`, the unit of computation that `meshed` assembles into DAGs.
+
+A `FuncNode` wraps a function together with a `name` (its identity in the network),
+a `bind` (which scope variables feed which parameters) and an `out` (the scope
+variable its result is written to). Calling the node on a scope, a mutable mapping,
+reads its inputs from there and writes its output back. This module also holds the
+helpers that validate, convert, rewrite and render such nodes; `meshed.dag` builds
+on them to wire many nodes into a `DAG`.
+
+Main entry points:
+
+- `FuncNode`: wrap a function with its name, bind and out.
+- `ensure_func_nodes`: turn a mix of callables and nodes into `FuncNode` objects.
+- `ch_func_node_func`: swap a node’s function, guarded by a signature comparison.
+- `func_nodes_to_code`: render nodes back as Python source.
+
+```pycon
+>>> fn = FuncNode(lambda x, y: x + y, name='add', out='total')
+>>> fn
+FuncNode(x,y -> add -> total)
+>>> scope = {'x': 1, 'y': 2}
+>>> fn.call_on_scope(scope)
+3
+>>> scope
+{'x': 1, 'y': 2, 'total': 3}
+```
 
 ### Functions
 
-| [`basic_node_validator`](#meshed.base.basic_node_validator)(func_node)                  | Validates a func node.                                                                     |
-|---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
-| [`ch_func_node_attrs`](#meshed.base.ch_func_node_attrs)(fn, \*\*new_attrs_values)     | Returns a copy of the func node with some of its attributes changed                        |
-| `ch_func_node_func`(fn, func, \*[, ...])                                                          |                                                                                            |
-| `dot_lines_of_func_parameters`(parameters, ...)                                                   |                                                                                            |
-| `duplicates`(elements)                                                                            |                                                                                            |
-| [`ensure_func_nodes`](#meshed.base.ensure_func_nodes)(func_nodes)                    | Converts a list of objects to a list of FuncNodes.                                         |
-| [`func_node_transformer`](#meshed.base.func_node_transformer)(fn[, kwargs_transformers]) | Get a modified `FuncNode` from an iterable of `kwargs_trans` modifiers.                    |
-| [`func_nodes_to_code`](#meshed.base.func_nodes_to_code)(func_nodes[, func_name, ...]) | Convert an iterable of FuncNodes back to executable Python code.                           |
-| [`get_init_params_of_instance`](#meshed.base.get_init_params_of_instance)(obj)                 | Get names of instance object `obj` that are also parameters of the `__init__` of its class |
-| `handle_variadics`(func)                                                                          |                                                                                            |
-| [`identifier_mapping`](#meshed.base.identifier_mapping)(x)                            | Get an `IdentifierMapping` dict from a more loosely defined `Bind`.                        |
-| `insert_func_if_compatible`([func_comparator])                                                    |                                                                                            |
-| [`is_func_node`](#meshed.base.is_func_node)(obj)                                |                                                                                            |
-| [`is_not_func_node`](#meshed.base.is_not_func_node)(obj)                            |                                                                                            |
-| `param_to_dot_definition`(p[, shape])                                                             |                                                                                            |
-| `raise_signature_mismatch_error`(fn, func)                                                        |                                                                                            |
-| [`rebind_to_func`](#meshed.base.rebind_to_func)(fnode, new_func)                  | Replaces `fnode.func` with `new_func`, changing the `.bind` accordingly.                   |
-| [`underscore_func_node_names_maker`](#meshed.base.underscore_func_node_names_maker)(func[, ...])    | This name maker will resolve names in the following fashion:                               |
-| [`validate_that_func_node_names_are_sane`](#meshed.base.validate_that_func_node_names_are_sane)(...)      | Assert that the names of func_nodes are sane.                                              |
+| [`basic_node_validator`](#meshed.base.basic_node_validator)(func_node)                  | Validates a func node.                                                                                                                                         |
+|---------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`ch_func_node_attrs`](#meshed.base.ch_func_node_attrs)(fn, \*\*new_attrs_values)     | Returns a copy of the func node with some of its attributes changed                                                                                            |
+| [`ch_func_node_func`](#meshed.base.ch_func_node_func)(fn, func, \*[, ...])           | Return a copy of `fn` whose function is `func`, if `func_comparator` accepts the replacement; otherwise hand `(fn, func)` to `alternative`.                    |
+| [`dot_lines_of_func_parameters`](#meshed.base.dot_lines_of_func_parameters)(parameters, ...)    | Yield graphviz dot lines drawing `parameters` as variable nodes that feed a function node `func_id`, which in turn feeds the variable node `out`.              |
+| [`duplicates`](#meshed.base.duplicates)(elements)                             | List the elements that occur more than once, in order of first occurrence.                                                                                     |
+| [`ensure_func_nodes`](#meshed.base.ensure_func_nodes)(func_nodes)                    | Converts a list of objects to a list of FuncNodes.                                                                                                             |
+| [`func_node_transformer`](#meshed.base.func_node_transformer)(fn[, kwargs_transformers]) | Get a modified `FuncNode` from an iterable of `kwargs_trans` modifiers.                                                                                        |
+| [`func_nodes_to_code`](#meshed.base.func_nodes_to_code)(func_nodes[, func_name, ...]) | Convert an iterable of FuncNodes back to executable Python code.                                                                                               |
+| [`get_init_params_of_instance`](#meshed.base.get_init_params_of_instance)(obj)                 | Get names of instance object `obj` that are also parameters of the `__init__` of its class                                                                     |
+| [`handle_variadics`](#meshed.base.handle_variadics)(func)                           | Replace the variadic parameters of `func` (`*args`, `**kwargs`) with a tuple and a dict parameter of the same names, returning `func` itself when it has none. |
+| [`identifier_mapping`](#meshed.base.identifier_mapping)(x)                            | Get an `IdentifierMapping` dict from a more loosely defined `Bind`.                                                                                            |
+| [`insert_func_if_compatible`](#meshed.base.insert_func_if_compatible)([func_comparator])     | Make a `ch_func_node_func` variant with `func_comparator` fixed.                                                                                               |
+| [`is_func_node`](#meshed.base.is_func_node)(obj)                                | Whether `obj` is a `FuncNode` (checked by class name, so it survives reloads).                                                                                 |
+| [`is_not_func_node`](#meshed.base.is_not_func_node)(obj)                            | Whether `obj` is not a `FuncNode`.                                                                                                                             |
+| [`param_to_dot_definition`](#meshed.base.param_to_dot_definition)(p[, shape])              | Yield the dot line declaring parameter `p` as a node, labelled `name=` when it has a default and `*name` or `**name` when it is variadic.                      |
+| [`raise_signature_mismatch_error`](#meshed.base.raise_signature_mismatch_error)(fn, func)         | Raise a `ValueError` saying `func` cannot replace `fn.func` because their signatures differ; the default `alternative` of `ch_func_node_func`.                 |
+| [`rebind_to_func`](#meshed.base.rebind_to_func)(fnode, new_func)                  | Replaces `fnode.func` with `new_func`, changing the `.bind` accordingly.                                                                                       |
+| [`underscore_func_node_names_maker`](#meshed.base.underscore_func_node_names_maker)(func[, ...])    | This name maker will resolve names in the following fashion:                                                                                                   |
+| [`validate_that_func_node_names_are_sane`](#meshed.base.validate_that_func_node_names_are_sane)(...)      | Assert that the names of func_nodes are sane.                                                                                                                  |
 
 ### Classes
 
-| [`FuncNode`](#meshed.base.FuncNode)(func[, name, bind, out, ...])   | A function wrapper that makes the function amenable to operating in a network.   |
-|-------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| [`Mesh`](#meshed.base.Mesh)(func_nodes)                         |                                                                                  |
+| [`FuncNode`](#meshed.base.FuncNode)(func[, name, bind, out, ...])   | A function wrapper that makes the function amenable to operating in a network.                               |
+|-------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| [`Mesh`](#meshed.base.Mesh)(func_nodes)                         | Hold a collection of `FuncNode` objects, with no wiring or execution logic (for that, use `meshed.dag.DAG`). |
 
 ### *class* meshed.base.FuncNode(func, name=None, bind=<factory>, out=None, func_label=None, names_maker=<function underscore_func_node_names_maker>, node_validator=<function basic_node_validator>)
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A function wrapper that makes the function amenable to operating in a network.
 
 * **Parameters:**
   * **func** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)) – Function to wrap
-  * **name** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)) – The name to associate to the function
-  * **bind** ([`dict`](https://docs.python.org/3/library/stdtypes.html#dict)) – The {func_argname: external_name,…} mapping that defines where
+  * **name** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – The name to associate to the function
+  * **bind** ([`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)) – The {func_argname: external_name,…} mapping that defines where
     the node will source the data to call the function.
     This only has to be used if the external names are different from the names
     of the arguments of the function.
-  * **out** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)) – The variable name the function should write it’s result to
+  * **out** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – The variable name the function should write it’s result to
 
 Like we stated: `FuncNode` is meant to operate in computational networks.
 But knowing what it does will help you make the networks you want, so we commend
@@ -226,17 +251,19 @@ Validates a func node. Raises ValidationError if something wrong. Returns None.
 
 Validates:
 
-* that the `func_node` params are valid, that is, if not `None`
-  : * `func` should be a callable
-    * `name` and `out` should be `str`
-    * `bind` should be a `Dict[str, str]`
-* that the names (`.name`, `.out` and all `.bind.values()`)
-  : * are valid python identifiers (alphanumeric or underscore not starting with
-      digit)
-    * are not repeated (no duplicates)
+* that the `func_node` params are valid, that is, if not `None`:
+  * `func` should be a callable
+  * `name` and `out` should be `str`
+  * `bind` should be a `Dict[str, str]`
+* that the names (`.name`, `.out` and all `.bind.values()`):
+  * are valid python identifiers (alphanumeric or underscore not starting with
+    digit)
+  * are not repeated (no duplicates)
 * that `.bind.keys()` are indeed present as params of `.func`
 
 #### synopsis_string(bind_info='values')
+
+Return the one-line `bind -> name -> out` synopsis of the node.
 
 * **Parameters:**
   **bind_info** ([`Literal`](https://docs.python.org/3/library/typing.html#typing.Literal)[`'var_nodes'`, `'params'`, `'hybrid'`]) – 
@@ -245,8 +272,7 @@ Validates:
   - ’values’, `var_nodes` or `varnodes`: the values of the bind (default).
   - ’keys’ or ‘params’: the keys of the bind
   - ’hybrid’: the keys of the bind, but with the values that are the same as
-    : the keys omitted.
-* **Returns:**
+    the keys omitted.
 
 ```pycon
 >>> fn = FuncNode(
@@ -266,7 +292,14 @@ The inverse of from_dict: FuncNode.from_dict(fn.to_dict()) == fn
 
 ### *class* meshed.base.Mesh(func_nodes)
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Hold a collection of `FuncNode` objects, with no wiring or execution logic
+(for that, use `meshed.dag.DAG`).
+
+#### synopsis_string(bind_info='values')
+
+Join the synopsis strings of the nodes, one per line.
 
 ### meshed.base.basic_node_validator(func_node)
 
@@ -274,14 +307,14 @@ Validates a func node. Raises ValidationError if something wrong. Returns None.
 
 Validates:
 
-* that the `func_node` params are valid, that is, if not `None`
-  : * `func` should be a callable
-    * `name` and `out` should be `str`
-    * `bind` should be a `Dict[str, str]`
-* that the names (`.name`, `.out` and all `.bind.values()`)
-  : * are valid python identifiers (alphanumeric or underscore not starting with
-      digit)
-    * are not repeated (no duplicates)
+* that the `func_node` params are valid, that is, if not `None`:
+  * `func` should be a callable
+  * `name` and `out` should be `str`
+  * `bind` should be a `Dict[str, str]`
+* that the names (`.name`, `.out` and all `.bind.values()`):
+  * are valid python identifiers (alphanumeric or underscore not starting with
+    digit)
+  * are not repeated (no duplicates)
 * that `.bind.keys()` are indeed present as params of `.func`
 
 ### meshed.base.ch_func_node_attrs(fn, \*\*new_attrs_values)
@@ -312,6 +345,70 @@ True
 True
 ```
 
+### meshed.base.ch_func_node_func(fn, func, \*, func_comparator=<function compare_signatures>, ch_func_node=<function \_ch_func_node_func>, alternative=<function raise_signature_mismatch_error>)
+
+Return a copy of `fn` whose function is `func`, if `func_comparator`
+accepts the replacement; otherwise hand `(fn, func)` to `alternative`.
+
+This is what `DAG.ch_funcs` applies to each node it changes. The default
+comparator requires the two signatures to match exactly; the default
+`alternative` raises a `ValueError`.
+
+* **Parameters:**
+  * **func_comparator** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], [`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`Comparison`)]) – Called as `func_comparator(fn.func, func)`; a truthy result
+    allows the swap.
+  * **ch_func_node** – How to build the new node once the swap is allowed; called as
+    `ch_func_node(fn, func=func)`.
+  * **alternative** – Called as `alternative(fn, func)` when the swap is refused; its
+    return value is returned as is.
+
+```pycon
+>>> fn = FuncNode(lambda a, b: a + b, name='f')
+>>> new_fn = ch_func_node_func(fn, lambda a, b: a * b)
+>>> new_fn.call_on_scope({'a': 2, 'b': 3})
+6
+```
+
+A function with a different signature is refused:
+
+```pycon
+>>> ch_func_node_func(fn, lambda a, b, c=0: a * b)
+Traceback (most recent call last):
+  ...
+ValueError: You can only change the func of a FuncNode with a another func if the signatures match.
+...
+```
+
+unless `alternative` says otherwise, here by keeping the original node:
+
+```pycon
+>>> kept = ch_func_node_func(
+...     fn, lambda a, b, c=0: a * b, alternative=lambda fn, func: fn
+... )
+>>> kept is fn
+True
+```
+
+### meshed.base.dot_lines_of_func_parameters(parameters, out, func_id, , func_label=None, vnode_shape='none', fnode_shape='box', func_display=True)
+
+Yield graphviz dot lines drawing `parameters` as variable nodes that feed a
+function node `func_id`, which in turn feeds the variable node `out`.
+
+* **Parameters:**
+  **func_display** ([`bool`](https://docs.python.org/3/builtins/functions.html#bool)) – When false, no function node is drawn and the parameter nodes
+  point straight at `out`.
+* **Return type:**
+  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
+### meshed.base.duplicates(elements)
+
+List the elements that occur more than once, in order of first occurrence.
+
+```pycon
+>>> duplicates("abbaaeccf")
+['a', 'b', 'c']
+```
+
 ### meshed.base.ensure_func_nodes(func_nodes)
 
 Converts a list of objects to a list of FuncNodes.
@@ -332,10 +429,10 @@ is moved to the positional arguments list:
 > func(a=a, b=b, c=z, d=d)  ->  func(a, b, c=z, d=d)
 * **Parameters:**
   * **func_nodes** ([`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](#meshed.base.FuncNode)]) – Iterable of FuncNode instances to convert to code
-  * **func_name** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)) – Name for the generated function
-  * **favor_positional** ([`bool`](https://docs.python.org/3/library/functions.html#bool)) – When True, transforms kwargs of the form key=key into positional args.
+  * **func_name** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – Name for the generated function
+  * **favor_positional** ([`bool`](https://docs.python.org/3/builtins/functions.html#bool)) – When True, transforms kwargs of the form key=key into positional args.
 * **Return type:**
-  [`str`](https://docs.python.org/3/library/stdtypes.html#str)
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 * **Returns:**
   String containing Python code
 
@@ -343,6 +440,12 @@ is moved to the positional arguments list:
 
 Get names of instance object `obj` that are also parameters of the
 `__init__` of its class
+
+### meshed.base.handle_variadics(func)
+
+Replace the variadic parameters of `func` (`*args`, `**kwargs`) with a
+tuple and a dict parameter of the same names, returning `func` itself when it
+has none.
 
 ### meshed.base.identifier_mapping(x)
 
@@ -354,7 +457,7 @@ from…
 … a single space-separated string
 
 * **Return type:**
-  [`dict`](https://docs.python.org/3/library/stdtypes.html#dict)[`Identifier` ([`str`](https://docs.python.org/3/library/stdtypes.html#str)), `Identifier` ([`str`](https://docs.python.org/3/library/stdtypes.html#str))]
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[`Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)), `Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str))]
 
 ```pycon
 >>> identifier_mapping('x a_b yz')  #
@@ -375,10 +478,16 @@ from…
 {'x': 'y', 'a': 'b'}
 ```
 
+### meshed.base.insert_func_if_compatible(func_comparator=<function compare_signatures>)
+
+Make a `ch_func_node_func` variant with `func_comparator` fixed.
+
 ### meshed.base.is_func_node(obj)
 
+Whether `obj` is a `FuncNode` (checked by class name, so it survives reloads).
+
 * **Return type:**
-  [`bool`](https://docs.python.org/3/library/functions.html#bool)
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
 ```pycon
 >>> is_func_node(FuncNode(lambda x: x))
@@ -389,8 +498,10 @@ False
 
 ### meshed.base.is_not_func_node(obj)
 
+Whether `obj` is not a `FuncNode`.
+
 * **Return type:**
-  [`bool`](https://docs.python.org/3/library/functions.html#bool)
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
 ```pycon
 >>> is_not_func_node(FuncNode(lambda x: x))
@@ -398,6 +509,16 @@ False
 >>> is_not_func_node("I am not a FuncNode: I'm a string")
 True
 ```
+
+### meshed.base.param_to_dot_definition(p, shape='none')
+
+Yield the dot line declaring parameter `p` as a node, labelled `name=` when
+it has a default and `*name` or `**name` when it is variadic.
+
+### meshed.base.raise_signature_mismatch_error(fn, func)
+
+Raise a `ValueError` saying `func` cannot replace `fn.func` because their
+signatures differ; the default `alternative` of `ch_func_node_func`.
 
 ### meshed.base.rebind_to_func(fnode, new_func)
 

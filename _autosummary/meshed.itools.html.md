@@ -1,7 +1,32 @@
 # meshed.itools
 
-Functions that provide iterators of g elements where g is any
-adjacency Mapping representation.
+Graph operations over adjacency mappings.
+
+Here a graph `g` is any `Mapping` whose keys are nodes and whose values
+are iterables of the nodes they point to (`g[src]` lists the `dst` nodes of
+the edges `src -> dst`). A plain `dict` of lists is the usual form, but any
+Mapping with iterable values works, including strings, where each character is
+a node. Nodes that only appear as destinations need not be keys. The functions
+here mostly iterate or compute sets over such a mapping without building any
+other graph structure; `meshed.dag` uses them to order and query its
+`FuncNode` graph.
+
+Main entry points:
+
+- `topological_sort`: order the nodes so that every node comes after its parents.
+- `edges` and `nodes`: iterate the edges or the (deduplicated) nodes of `g`.
+- `root_nodes` and `leaf_nodes`: nodes with no parents, or no children.
+- `ancestors` and `descendants`: everything reachable to, or from, some nodes.
+- `edge_reversed_graph`: the same graph with every edge flipped.
+
+```pycon
+>>> from meshed.itools import topological_sort, root_nodes, leaf_nodes
+>>> g = {0: [1, 2], 1: [3], 2: [3]}
+>>> topological_sort(g)
+[0, 1, 2, 3]
+>>> root_nodes(g), leaf_nodes(g)
+({0}, {3})
+```
 
 ### Functions
 
@@ -9,29 +34,29 @@ adjacency Mapping representation.
 |---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
 | [`ancestors`](#meshed.itools.ancestors)(g, source[, \_exclude_nodes])          | Set of all nodes (not in source) reachable TO `source` in `g`.                             |
 | [`children`](#meshed.itools.children)(g, source)                              | Set of all nodes (not in source) adjacent FROM 'source' in 'g'                             |
-| `copy_of_g_with_some_keys_removed`(g, keys)                                                       |                                                                                            |
+| [`copy_of_g_with_some_keys_removed`](#meshed.itools.copy_of_g_with_some_keys_removed)(g, keys)        | Shallow copy of `g` without the given keys.                                                |
 | [`descendants`](#meshed.itools.descendants)(g, source[, \_exclude_nodes])        | Returns the set of all nodes reachable FROM `source` in `g`.                               |
 | [`edge_reversed_graph`](#meshed.itools.edge_reversed_graph)(g[, dst_nodes_factory, ...]) | Invert the from/to direction of the edges of the graph.                                    |
 | [`edges`](#meshed.itools.edges)(g)                                         | Generates edges of graph, i.e. `(from_node, to_node)` tuples.                              |
-| `filter_dict_on_keys`(d, condition)                                                               |                                                                                            |
-| `filter_dict_with_list_values`(d, condition)                                                      |                                                                                            |
+| [`filter_dict_on_keys`](#meshed.itools.filter_dict_on_keys)(d, condition)                | Keep the `(k, v)` items of `d` for which `condition(k, v)` is true.                        |
+| [`filter_dict_with_list_values`](#meshed.itools.filter_dict_with_list_values)(d, condition)       | Keep, in each value of `d`, only the elements satisfying `condition`.                      |
 | [`find_path`](#meshed.itools.find_path)(g, src, dst[, path])                   | find a path from src to dst nodes in graph                                                 |
 | [`graphviz_digraph`](#meshed.itools.graphviz_digraph)(d)                              | Makes a graphviz graph using the links specified by dict d                                 |
 | [`has_cycle`](#meshed.itools.has_cycle)(g)                                     | Returns a list representing a cycle in the graph if any. An empty list indicates no cycle. |
 | [`has_node`](#meshed.itools.has_node)(g, node[, check_adjacencies])           | Returns True if the graph has given node                                                   |
-| [`in_degrees`](#meshed.itools.in_degrees)(g)                                    |                                                                                            |
-| [`isolated_nodes`](#meshed.itools.isolated_nodes)(g)                                | Nodes that                                                                                 |
-| [`leaf_nodes`](#meshed.itools.leaf_nodes)(g)                                    |                                                                                            |
-| [`nodes`](#meshed.itools.nodes)(g)                                         |                                                                                            |
-| `nodes_of_graph`(graph)                                                                           |                                                                                            |
-| [`out_degrees`](#meshed.itools.out_degrees)(g)                                   |                                                                                            |
+| [`in_degrees`](#meshed.itools.in_degrees)(g)                                    | Yield `(node, number_of_parents)` for every node of `g`.                                   |
+| [`isolated_nodes`](#meshed.itools.isolated_nodes)(g)                                | Nodes of `g` whose adjacency is empty (no outgoing edges).                                 |
+| [`leaf_nodes`](#meshed.itools.leaf_nodes)(g)                                    | Nodes of `g` that point to no other node (isolated nodes included).                        |
+| [`nodes`](#meshed.itools.nodes)(g)                                         | Yield every node of `g` once: each key, then each node it points to.                       |
+| [`nodes_of_graph`](#meshed.itools.nodes_of_graph)(graph)                            | Set of the keys of `graph` together with its values taken whole.                           |
+| [`out_degrees`](#meshed.itools.out_degrees)(g)                                   | Yield `(node, number_of_children)` for every key of `g`.                                   |
 | [`parents`](#meshed.itools.parents)(g, source)                               | Set of all nodes (not in source) adjacent TO 'source' in 'g'                               |
 | [`predecessors`](#meshed.itools.predecessors)(g, node)                            | Iterator of nodes that have directed paths TO node                                         |
 | [`random_graph`](#meshed.itools.random_graph)([n_nodes])                          | Get a random graph.                                                                        |
 | [`reverse_edges`](#meshed.itools.reverse_edges)(g)                                 | Generator of reversed edges.                                                               |
 | [`root_ancestors`](#meshed.itools.root_ancestors)(graph, nodes)                     | Returns the roots of the sub-dag that contribute to compute the given nodes.               |
-| [`root_nodes`](#meshed.itools.root_nodes)(g)                                    |                                                                                            |
-| `subtract_subgraph`(graph, subgraph)                                                              |                                                                                            |
+| [`root_nodes`](#meshed.itools.root_nodes)(g)                                    | Nodes of `g` that no other node points to (isolated nodes included).                       |
+| [`subtract_subgraph`](#meshed.itools.subtract_subgraph)(graph, subgraph)               | Copy of `graph` with the nodes of `subgraph` removed.                                      |
 | [`successors`](#meshed.itools.successors)(g, node[, \_exclude_nodes])           | Iterator of nodes that have directed paths FROM node                                       |
 | [`topological_sort`](#meshed.itools.topological_sort)(g)                              | Return the list of nodes in topological sort order.                                        |
 
@@ -72,6 +97,13 @@ Set of all nodes (not in source) adjacent FROM ‘source’ in ‘g’
 >>> children(g, [4])
 set()
 ```
+
+### meshed.itools.copy_of_g_with_some_keys_removed(g, keys)
+
+Shallow copy of `g` without the given keys.
+
+A whitespace-separated string of keys is accepted. References to the removed
+keys inside other adjacencies are kept.
 
 ### meshed.itools.descendants(g, source, \_exclude_nodes=None)
 
@@ -124,6 +156,16 @@ Generates edges of graph, i.e. `(from_node, to_node)` tuples.
 ...     ('c', 'e'), ('d', 'c'), ('e', 'c'), ('e', 'z')]
 ```
 
+### meshed.itools.filter_dict_on_keys(d, condition)
+
+Keep the `(k, v)` items of `d` for which `condition(k, v)` is true.
+
+### meshed.itools.filter_dict_with_list_values(d, condition)
+
+Keep, in each value of `d`, only the elements satisfying `condition`.
+
+The filtered values are lists, whatever the originals were.
+
 ### meshed.itools.find_path(g, src, dst, path=None)
 
 find a path from src to dst nodes in graph
@@ -165,7 +207,7 @@ Makes a graphviz graph using the links specified by dict d
   ['e', 'c', 'b', 'a', 'e']
   ```
 * **Return type:**
-  [`list`](https://docs.python.org/3/library/stdtypes.html#list)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`)]
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`)]
 
 Design notes:
 
@@ -230,6 +272,8 @@ True
 
 ### meshed.itools.in_degrees(g)
 
+Yield `(node, number_of_parents)` for every node of `g`.
+
 ```pycon
 >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
 >>> assert dict(in_degrees(g)) == (
@@ -239,7 +283,7 @@ True
 
 ### meshed.itools.isolated_nodes(g)
 
-Nodes that
+Nodes of `g` whose adjacency is empty (no outgoing edges).
 
 ```pycon
 >>> g = dict(a='c', b='ce', c=list('abde'), d='c', e=['c', 'z'], f={})
@@ -248,6 +292,8 @@ Nodes that
 ```
 
 ### meshed.itools.leaf_nodes(g)
+
+Nodes of `g` that point to no other node (isolated nodes included).
 
 ```pycon
 >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
@@ -260,13 +306,23 @@ root and leaf nodes both.
 
 ### meshed.itools.nodes(g)
 
+Yield every node of `g` once: each key, then each node it points to.
+
 ```pycon
 >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
 >>> sorted(nodes(g))
 ['a', 'b', 'c', 'd', 'e', 'f', 'z']
 ```
 
+### meshed.itools.nodes_of_graph(graph)
+
+Set of the keys of `graph` together with its values taken whole.
+
+The values go in as they are, so they must be hashable.
+
 ### meshed.itools.out_degrees(g)
+
+Yield `(node, number_of_children)` for every key of `g`.
 
 ```pycon
 >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
@@ -351,6 +407,8 @@ Returns the roots of the sub-dag that contribute to compute the given nodes.
 
 ### meshed.itools.root_nodes(g)
 
+Nodes of `g` that no other node points to (isolated nodes included).
+
 ```pycon
 >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
 >>> sorted(root_nodes(g))
@@ -359,6 +417,13 @@ Returns the roots of the sub-dag that contribute to compute the given nodes.
 
 Note that `f` is present: Isolated nodes are considered both as
 root and leaf nodes both.
+
+### meshed.itools.subtract_subgraph(graph, subgraph)
+
+Copy of `graph` with the nodes of `subgraph` removed.
+
+The nodes are those of `nodes_of_graph(subgraph)`; they are removed from keys
+and adjacencies, and keys left with no adjacencies are dropped.
 
 ### meshed.itools.successors(g, node, \_exclude_nodes=None)
 
@@ -381,8 +446,8 @@ Notice that 1 is a successor of 1 here because there’s a 1-2-1 directed path
 
 Return the list of nodes in topological sort order.
 
-This order is such that a node parents will all occur before;
-: If order[i] is parent of order[j] then i < j
+This order is such that a node’s parents will all occur before it:
+if `order[i]` is a parent of `order[j]` then `i < j`.
 
 This is often used to compute the order of computation in a DAG.
 
@@ -401,20 +466,16 @@ This is often used to compute the order of computation in a DAG.
 Here’s an ascii art of the graph, to verify that the topological sort is
 indeed as expected.
 
-```default
-```
-
+```text
 ┌───┐     ┌───┐     ┌───┐     ┌───┐
 │ 0 │ ──▶ │ 2 │ ──▶ │ 3 │ ──▶ │ 1 │
 └───┘     └───┘     └───┘     └───┘
-
-> │                   ▲         ▲
-> │                   │         │
-> ▼                   │         │
-
+  │                   ▲         ▲
+  │                   │         │
+  ▼                   │         │
 ┌───┐                 │         │
 │ 4 │ ────────────────┼─────────┘
 └───┘                 │
-
-> │                   │
-> └───────────────────┘
+  │                   │
+  └───────────────────┘
+```

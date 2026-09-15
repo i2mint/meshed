@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
     <link rel="prev" title="meshed.ext" href="meshed.ext.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -475,7 +475,7 @@ Instead, this module uses meshed’s itools library to represent the computation
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.ext.gk.Data">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Data" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>This wraps any data that is consumed or produced
 by a Operation. This data should also know how to serialize
 itself appropriately.
@@ -486,7 +486,7 @@ any class working with data in the HiC framework.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.ext.gk.DataPlaceholderNode">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">DataPlaceholderNode</span></span><a class="reference internal" href="../_modules/meshed/ext/gk.html#DataPlaceholderNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.DataPlaceholderNode" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 <p>A node for the Network graph that describes the name of a Data instance
 produced or required by a layer.</p>
 </dd></dl>
@@ -494,7 +494,7 @@ produced or required by a layer.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.ext.gk.DeleteInstruction">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">DeleteInstruction</span></span><a class="reference internal" href="../_modules/meshed/ext/gk.html#DeleteInstruction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.DeleteInstruction" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 <p>An instruction for the compiled list of evaluation steps to free or delete
 a Data instance from the Network’s cache after it is no longer needed.</p>
 </dd></dl>
@@ -508,7 +508,7 @@ a Data instance from the Network’s cache after it is no longer needed.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.ext.gk.Network">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Network" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>This is the main network implementation. The class contains all of the
 code necessary to weave together operations into a directed-acyclic-graph (DAG)
 and pass data through.</p>
@@ -539,11 +539,11 @@ and freeing memory as necessary</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – The names of the data node you’d like to have returned
+<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – The names of the data node you’d like to have returned
 once all necessary computations are complete.
 If you set this variable to <code class="docutils literal notranslate"><span class="pre">None</span></code>, all
 data nodes will be kept and returned at runtime.</p></li>
-<li><p><strong>named_inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dict of key/value pairs where the keys
+<li><p><strong>named_inputs</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dict of key/value pairs where the keys
 represent the data nodes you want to populate,
 and the values are the concrete values you
 want to set for the data node.</p></li>
@@ -563,7 +563,7 @@ want to set for the data node.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Write the output to a png, pdf, or graphviz dot file. The extension
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Write the output to a png, pdf, or graphviz dot file. The extension
 controls the output format.</p></li>
 <li><p><strong>show</strong> (<em>boolean</em>) – If this is set to True, use matplotlib to show the graph diagram
 (Default: False)</p></li>
@@ -590,13 +590,13 @@ controls the output format.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="meshed.ext.gk.NetworkOperation.set_execution_method">
 <span class="sig-name descname"><span class="pre">set_execution_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#NetworkOperation.set_execution_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.NetworkOperation.set_execution_method" title="Link to this definition">#</a></dt>
-<dd><p>Determine how the network will be executed.
-:type method: 
-:param method: str</p>
-<blockquote>
-<div><p>If “parallel”, execute graph operations concurrently
+<dd><p>Determine how the network will be executed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>method</strong> – If “parallel”, execute graph operations concurrently
 using a threadpool.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -604,7 +604,7 @@ using a threadpool.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.ext.gk.Operation">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">Operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">needs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provides</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#Operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.Operation" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>This is an abstract class representing a data transformation. To use this,
 please inherit from this class and customize the <code class="docutils literal notranslate"><span class="pre">.compute</span></code> method to your
 specific application.</p>
@@ -614,10 +614,10 @@ names are used to construct the graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The name the operation (e.g. conv1, conv2, etc..)</p></li>
-<li><p><strong>needs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span>) – Names of input data objects this layer requires.</p></li>
-<li><p><strong>provides</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span>) – Names of output data objects this provides.</p></li>
-<li><p><strong>params</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – <p>A dict of key/value pairs representing parameters
+<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The name the operation (e.g. conv1, conv2, etc..)</p></li>
+<li><p><strong>needs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span>) – Names of input data objects this layer requires.</p></li>
+<li><p><strong>provides</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span>) – Names of output data objects this provides.</p></li>
+<li><p><strong>params</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – <p>A dict of key/value pairs representing parameters
 associated with your operation. These values will be
 accessible using the <code class="docutils literal notranslate"><span class="pre">.params</span></code> attribute of your object.</p>
 <dl class="simple">
@@ -636,7 +636,7 @@ argument must be pickelable.</p>
 computation on a given set of inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of <a class="reference internal" href="#meshed.ext.gk.Data" title="meshed.ext.gk.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code></a> objects on which to run the layer’s
+<dd class="field-odd"><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – A list of <a class="reference internal" href="#meshed.ext.gk.Data" title="meshed.ext.gk.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code></a> objects on which to run the layer’s
 feed-forward computation.</p>
 </dd>
 <dt class="field-even">Returns list<span class="colon">:</span></dt>
@@ -652,14 +652,14 @@ the results of running the feed-forward computation on
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.ext.gk.compose">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/ext/gk.html#compose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.compose" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>This is a simple class that’s used to compose <code class="docutils literal notranslate"><span class="pre">operation</span></code> instances into
 a computation graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A name for the graph being composed by this object.</p></li>
-<li><p><strong>merge</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, this compose object will attempt to merge together
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A name for the graph being composed by this object.</p></li>
+<li><p><strong>merge</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, this compose object will attempt to merge together
 <code class="docutils literal notranslate"><span class="pre">operation</span></code> instances that represent entire computation graphs.
 Specifically, if one of the <code class="docutils literal notranslate"><span class="pre">operation</span></code> instances passed to this
 <code class="docutils literal notranslate"><span class="pre">compose</span></code> object is itself a graph operation created by an
@@ -693,13 +693,13 @@ relationship to other operations in the graph is specified via its
 <li><p><strong>fn</strong> (<em>function</em>) – The function used by this operation.  This does not need to be
 specified when the operation object is instantiated and can instead
 be set via <code class="docutils literal notranslate"><span class="pre">__call__</span></code> later.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The name of the operation in the computation graph.</p></li>
-<li><p><strong>needs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Names of input data objects this operation requires.  These should
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The name of the operation in the computation graph.</p></li>
+<li><p><strong>needs</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Names of input data objects this operation requires.  These should
 correspond to the <code class="docutils literal notranslate"><span class="pre">args</span></code> of <code class="docutils literal notranslate"><span class="pre">fn</span></code>.</p></li>
-<li><p><strong>provides</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Names of output data objects this operation provides.</p></li>
-<li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dict of key/value pairs representing constant parameters
+<li><p><strong>provides</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Names of output data objects this operation provides.</p></li>
+<li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dict of key/value pairs representing constant parameters
 associated with your operation.  These can correspond to either
-<code class="docutils literal notranslate"><span class="pre">args</span></code> or <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> of <a href="#id1"><span class="problematic" id="id2">``</span></a>fn`.</p></li>
+<code class="docutils literal notranslate"><span class="pre">args</span></code> or <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> of <code class="docutils literal notranslate"><span class="pre">fn</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -708,7 +708,7 @@ associated with your operation.  These can correspond to either
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.ext.gk.optional">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.ext.gk.</span></span><span class="sig-name descname"><span class="pre">optional</span></span><a class="reference internal" href="../_modules/meshed/ext/gk.html#optional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.ext.gk.optional" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 <p>Input values in <code class="docutils literal notranslate"><span class="pre">needs</span></code> may be designated as optional using this modifier.
 If this modifier is applied to an input value, that value will be input to
 the <code class="docutils literal notranslate"><span class="pre">operation</span></code> if it is available.  The function underlying the
@@ -743,10 +743,9 @@ cache.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name::</strong> – The name of the data node to check</p></li>
-<li><p><strong>has_executed</strong> – set
-A set containing all operations that have been executed so far</p></li>
-<li><p><strong>graph::</strong> – The networkx graph containing the operations and data nodes</p></li>
+<li><p><strong>name</strong> – The name of the data node to check</p></li>
+<li><p><strong>has_executed</strong> – A set containing all operations that have been executed so far</p></li>
+<li><p><strong>graph</strong> – The networkx graph containing the operations and data nodes</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -763,10 +762,9 @@ what has already been executed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>op::</strong> – The Operation object to check</p></li>
-<li><p><strong>has_executed</strong> – set
-A set containing all operations that have been executed so far</p></li>
-<li><p><strong>graph::</strong> – The networkx graph containing the operations and data nodes</p></li>
+<li><p><strong>op</strong> – The Operation object to check</p></li>
+<li><p><strong>has_executed</strong> – A set containing all operations that have been executed so far</p></li>
+<li><p><strong>graph</strong> – The networkx graph containing the operations and data nodes</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

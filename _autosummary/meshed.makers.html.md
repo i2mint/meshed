@@ -4,6 +4,17 @@ Makers
 
 This module contains tools to make meshed objects in different ways.
 
+Main entry points:
+
+- `code_to_dag`: turn a function whose body is `out = func(args...)` lines
+  (or such a function’s source string) into a `DAG`.
+- `code_to_fnodes`: the same parsing, but returning the tuple of `FuncNode`
+  objects instead of assembling a `DAG`.
+- `src_to_func_node_factory`: the lower-level step yielding `FuncNode`
+  factories (partials that still lack their `func`).
+- `mk_fnodes_from_fn_factories`: inject functions into those factories to get
+  `FuncNode` objects.
+
 Let’s start with an example where we have some code representing a user story:
 
 ```pycon
@@ -113,8 +124,8 @@ simply use a different `factory_to_func` argument. The default one is:
 ```
 
 which you can also reuse to make your own.
-See below how we provide a `name_to_func_map` to specify how `func_label``s should
-map to actual functions, and set ``use_place_holder_fallback=False` to make
+See below how we provide a `name_to_func_map` to specify how `func_label` values should
+map to actual functions, and set `use_place_holder_fallback=False` to make
 sure that we don’t ever fallback on a placeholder function as we did above.
 
 ```pycon
@@ -166,38 +177,46 @@ But see below that the dag is now using the functions we specified:
 
 ### Functions
 
-| `attr_dict`(obj)                                                                                |                                                                                                                                          |
-|-------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| `code_to_dag`([src, func_src, ...])                                                             | Get a `meshed.DAG` from src code                                                                                                         |
-| `code_to_digraph`(src)                                                                          |                                                                                                                                          |
-| `code_to_fnodes`([src, func_src, ...])                                                          | Get func_nodes from src code                                                                                                             |
-| [`dag_to_jdict`](#meshed.makers.dag_to_jdict)(dag, \*[, func_to_jdict])         | Will produce a json-serializable dictionary from a dag.                                                                                  |
-| [`dlft_factory_to_func`](#meshed.makers.dlft_factory_to_func)(factory[, ...])           | Get a function for the given factory, using                                                                                              |
-| `fnode_to_jdict`(fnode, \*[, func_to_jdict])                                                    |                                                                                                                                          |
-| [`func_nodes_to_named_funcs`](#meshed.makers.func_nodes_to_named_funcs)(func_nodes)          |                                                                                                                                          |
-| `is_from_ast_module`(o)                                                                         |                                                                                                                                          |
-| `iterize`(func)                                                                                 |                                                                                                                                          |
-| [`jdict_to_dag`](#meshed.makers.jdict_to_dag)(jdict, \*[, jdict_to_func])       | Will produce a dag from a json-serializable dictionary.                                                                                  |
-| `jdict_to_fnode`(jdict, \*[, jdict_to_func])                                                    |                                                                                                                                          |
-| `lined_dag`(funcs)                                                                              |                                                                                                                                          |
-| [`mk_fnodes_from_fn_factories`](#meshed.makers.mk_fnodes_from_fn_factories)(fnodes_factories)  | Make func nodes from func node factories and a specification of how to make the nodes from these.                                        |
-| [`named_funcs_to_func_nodes`](#meshed.makers.named_funcs_to_func_nodes)(named_funcs)         | Make `FuncNode``s from keyword arguments, using the key as the ``.out` of the `FuncNode` and the value as the `.func` of the `FuncNode`. |
-| `node_kwargs_to_func_node_factory`(node_kwargs)                                                 |                                                                                                                                          |
-| `parse_assignment`(body[, info])                                                                |                                                                                                                                          |
-| [`parse_assignment_steps`](#meshed.makers.parse_assignment_steps)(src)                    | Parse source code and generate tuples of information about it.                                                                           |
-| `parse_body`(body, \*[, body_index])                                                            |                                                                                                                                          |
-| [`parse_steps`](#meshed.makers.parse_steps)(src)                               | Parse source code and generate tuples of information about it.                                                                           |
-| [`parsed_to_node_kwargs`](#meshed.makers.parsed_to_node_kwargs)(target_value)            | Extract FuncNode kwargs (name, out, and bind) from ast (target,value) pairs                                                              |
-| `robust_ast_parse`(src)                                                                         |                                                                                                                                          |
-| [`signed_itemgetter`](#meshed.makers.signed_itemgetter)(\*keys)                      | Like `operator.itemgetter`, except has a signature, which we needed                                                                      |
-| `simple_code_to_digraph`(src)                                                                   |                                                                                                                                          |
-| [`src_to_func_node_factory`](#meshed.makers.src_to_func_node_factory)(src[, exclude_names]) |                                                                                                                                          |
-| [`triples_to_fnodes`](#meshed.makers.triples_to_fnodes)(triples)                     | Converts an iterable of func call triples to an iterable of <br/><br/>```<br/>``<br/>```<br/><br/>FuncNode\`\`s.                         |
+| [`attr_dict`](#meshed.makers.attr_dict)(obj)                                 | Map every attribute name of `obj` not starting with an underscore to its value.                                                               |
+|-------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| `code_to_dag`([src, func_src, ...])                                                             | Build a `DAG` from Python code whose lines are `out = func(args...)` calls.                                                                   |
+| [`code_to_digraph`](#meshed.makers.code_to_digraph)(src)                           | Make a `graphviz.Digraph` of the `DAG` that `code_to_dag(src)` builds.                                                                        |
+| `code_to_fnodes`([src, func_src, ...])                                                          | Parse `out = func(args...)` code into a tuple of `FuncNode` objects.                                                                          |
+| [`dag_to_jdict`](#meshed.makers.dag_to_jdict)(dag, \*[, func_to_jdict])         | Will produce a json-serializable dictionary from a dag.                                                                                       |
+| [`dlft_factory_to_func`](#meshed.makers.dlft_factory_to_func)(factory[, ...])           | Get a function for the given factory, looking its `func_label` up in `name_to_func_map`.                                                      |
+| [`fnode_to_jdict`](#meshed.makers.fnode_to_jdict)(fnode, \*[, func_to_jdict])     | Serialize a `FuncNode` to a dict of its `name`, `func_label`, `bind` and `out`.                                                               |
+| [`func_nodes_to_named_funcs`](#meshed.makers.func_nodes_to_named_funcs)(func_nodes)          | Make some components (kwargs) based on the `.out` and `.func` of the `FuncNode` objects.                                                      |
+| [`is_from_ast_module`](#meshed.makers.is_from_ast_module)(o)                          | Tell whether the class of `o` reports `_ast` as its module.                                                                                   |
+| `iterize`(func)                                                                                 |                                                                                                                                               |
+| [`jdict_to_dag`](#meshed.makers.jdict_to_dag)(jdict, \*[, jdict_to_func])       | Will produce a dag from a json-serializable dictionary.                                                                                       |
+| [`jdict_to_fnode`](#meshed.makers.jdict_to_fnode)(jdict, \*[, jdict_to_func])     | Rebuild a `FuncNode` from a dict made by `fnode_to_jdict`.                                                                                    |
+| [`lined_dag`](#meshed.makers.lined_dag)(funcs)                               | Chain `funcs` into a `DAG` where each function's output feeds the first parameter of the next.                                                |
+| [`mk_fnodes_from_fn_factories`](#meshed.makers.mk_fnodes_from_fn_factories)(fnodes_factories)  | Make func nodes from func node factories and a specification of how to make the nodes from these.                                             |
+| [`named_funcs_to_func_nodes`](#meshed.makers.named_funcs_to_func_nodes)(named_funcs)         | Make `FuncNode` objects from keyword arguments, using the key as the `.out` of the `FuncNode` and the value as the `.func` of the `FuncNode`. |
+| [`node_kwargs_to_func_node_factory`](#meshed.makers.node_kwargs_to_func_node_factory)(node_kwargs)  | Curry `FuncNode` with `node_kwargs` (`name`, `out`, `bind`, ...), leaving `func` to be supplied.                                              |
+| [`parse_assignment`](#meshed.makers.parse_assignment)(body[, info])                 | Split an assignment statement into its `(target, call)` ast nodes.                                                                            |
+| [`parse_assignment_steps`](#meshed.makers.parse_assignment_steps)(src)                    | Parse source code and generate tuples of information about it.                                                                                |
+| [`parse_body`](#meshed.makers.parse_body)(body, \*[, body_index])             | Turn one body statement into a `(target, call)` pair of ast nodes, or `None`.                                                                 |
+| [`parse_steps`](#meshed.makers.parse_steps)(src)                               | Parse source code and generate tuples of information about it.                                                                                |
+| [`parsed_to_node_kwargs`](#meshed.makers.parsed_to_node_kwargs)(target_value)            | Extract FuncNode kwargs (name, out, and bind) from ast (target,value) pairs                                                                   |
+| [`robust_ast_parse`](#meshed.makers.robust_ast_parse)(src)                          | Parse `src` with `ast.parse`, retrying with the common leading indent stripped on `IndentationError`.                                         |
+| [`signed_itemgetter`](#meshed.makers.signed_itemgetter)(\*keys)                      | Like `operator.itemgetter`, except has a signature, which we needed                                                                           |
+| [`simple_code_to_digraph`](#meshed.makers.simple_code_to_digraph)(src)                    | Make a `graphviz.Digraph` of the `DAG` that `code_to_dag(src)` builds.                                                                        |
+| [`src_to_func_node_factory`](#meshed.makers.src_to_func_node_factory)(src[, exclude_names]) |                                                                                                                                               |
+| [`triples_to_fnodes`](#meshed.makers.triples_to_fnodes)(triples)                     | Converts an iterable of func call triples to an iterable of `FuncNode` objects.                                                               |
 
 ### Classes
 
-| [`dlft_factory_to_func_mapping`](#meshed.makers.dlft_factory_to_func_mapping)()   |    |
-|-----------------------------------------------------------------------------------|----|
+| [`dlft_factory_to_func_mapping`](#meshed.makers.dlft_factory_to_func_mapping)()   | Mapping view of `dlft_factory_to_func`: `m[factory]` is `dlft_factory_to_func(factory)`.   |
+|-----------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+
+### meshed.makers.attr_dict(obj)
+
+Map every attribute name of `obj` not starting with an underscore to its value.
+
+### meshed.makers.code_to_digraph(src)
+
+Make a `graphviz.Digraph` of the `DAG` that `code_to_dag(src)` builds.
 
 ### meshed.makers.dag_to_jdict(dag, , func_to_jdict=None)
 
@@ -205,30 +224,41 @@ Will produce a json-serializable dictionary from a dag.
 
 ### meshed.makers.dlft_factory_to_func(factory, name_to_func_map=None, use_place_holder_fallback=True)
 
-Get a function for the given factory, using
+Get a function for the given factory, looking its `func_label` up in `name_to_func_map`.
+
+If the label is missing from the map, a placeholder function (see
+`meshed.util.mk_place_holder_func`) is made unless `use_place_holder_fallback`
+is `False`, in which case `KeyError` is raised.
 
 ### *class* meshed.makers.dlft_factory_to_func_mapping
 
 Bases: [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)
 
+Mapping view of `dlft_factory_to_func`: `m[factory]` is `dlft_factory_to_func(factory)`.
+
+Only `__getitem__` is defined, so a subclass must add `__iter__` and
+`__len__` before it can be instantiated.
+
 ### meshed.makers.extract_tokens(string, pos=0, endpos=9223372036854775807)
 
 Return a list of all non-overlapping matches of pattern in string.
 
+### meshed.makers.fnode_to_jdict(fnode, , func_to_jdict=None)
+
+Serialize a `FuncNode` to a dict of its `name`, `func_label`, `bind` and `out`.
+
+The function itself is included (under `func`) only when `func_to_jdict` is
+given to serialize it.
+
 ### meshed.makers.func_nodes_to_named_funcs(func_nodes)
 
-* **Return type:**
-  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/library/stdtypes.html#str), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
-
 Make some components (kwargs) based on the `.out` and `.func` of the
-
-```
-``
-```
-
-FuncNode\`\`s.
+`FuncNode` objects.
 
 Example use: To get from `DAG` to `Slabs`.
+
+* **Return type:**
+  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
 
 ```pycon
 >>> from meshed import DAG, FuncNode
@@ -257,9 +287,31 @@ The inverse of this function is `named_funcs_to_func_nodes`.
 >>> assert dag2(x=3) == dag(x=3) == 24
 ```
 
+### meshed.makers.is_from_ast_module(o)
+
+Tell whether the class of `o` reports `_ast` as its module.
+
+Note that on Python 3.12 the `ast` node classes report `ast`, not `_ast`,
+so this returns `False` for them.
+
 ### meshed.makers.jdict_to_dag(jdict, , jdict_to_func=None)
 
 Will produce a dag from a json-serializable dictionary.
+
+### meshed.makers.jdict_to_fnode(jdict, , jdict_to_func=None)
+
+Rebuild a `FuncNode` from a dict made by `fnode_to_jdict`.
+
+`jdict_to_func` is required to turn `jdict["func"]` back into a callable;
+without it, `NotImplementedError` is raised.
+
+### meshed.makers.lined_dag(funcs)
+
+Chain `funcs` into a `DAG` where each function’s output feeds the first parameter of the next.
+
+Edges are added with `DAG.add_edges`, which raises `ValueError` if a
+function’s first parameter already carries the name of another function in
+`funcs`.
 
 ### meshed.makers.mk_fnodes_from_fn_factories(fnodes_factories, factory_to_func=<function dlft_factory_to_func>)
 
@@ -267,8 +319,8 @@ Make func nodes from func node factories and a specification of how to make the
 nodes from these.
 
 * **Parameters:**
-  * **fnodes_factories** ([`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[`...`](https://docs.python.org/3/library/constants.html#Ellipsis), [`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]]) – An iterable of FuncNodeFactory
-  * **factory_to_func** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[`...`](https://docs.python.org/3/library/constants.html#Ellipsis), [`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]], [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]) – A function that will give you a function given a
+  * **fnodes_factories** ([`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[`...`](https://docs.python.org/3/builtins/constants.html#Ellipsis), [`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]]) – An iterable of FuncNodeFactory
+  * **factory_to_func** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[`...`](https://docs.python.org/3/builtins/constants.html#Ellipsis), [`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]], [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]) – A function that will give you a function given a
     FuncNodeFactory input (where it will draw the information it needs to know
     what kind of function to make).
 * **Return type:**
@@ -277,7 +329,7 @@ nodes from these.
 
 ### meshed.makers.named_funcs_to_func_nodes(named_funcs)
 
-Make `FuncNode``s from keyword arguments, using the key as the ``.out` of the
+Make `FuncNode` objects from keyword arguments, using the key as the `.out` of the
 `FuncNode` and the value as the `.func` of the `FuncNode`.
 
 Example use: To get from `Slabs` to `DAG`.
@@ -304,6 +356,25 @@ The inverse of this function is `func_nodes_to_named_funcs`.
 >>> dag2 = DAG(named_funcs_to_func_nodes(named_funcs))
 >>> assert dag2(x=3) == dag(x=3) == 24
 ```
+
+### meshed.makers.node_kwargs_to_func_node_factory(node_kwargs)
+
+Curry `FuncNode` with `node_kwargs` (`name`, `out`, `bind`, …), leaving
+`func` to be supplied.
+
+* **Return type:**
+  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], [`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]
+
+### meshed.makers.parse_assignment(body, info=None)
+
+Split an assignment statement into its `(target, call)` ast nodes.
+
+Raises `ValueError` if `body` is not an (annotated) assignment, and
+`AssertionError` if it has several targets or its value is not a call.
+The `info` argument is ignored (it is recomputed from `body`).
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)
 
 ### meshed.makers.parse_assignment_steps(src)
 
@@ -343,6 +414,14 @@ Let’s look at the first target_value to see what it contains:
 ```
 
 Basically, these ast objects contain all we need to know about the (parsed) source.
+
+### meshed.makers.parse_body(body, , body_index=None)
+
+Turn one body statement into a `(target, call)` pair of ast nodes, or `None`.
+
+Assignments go through `parse_assignment`; a bare call gets the dummy target
+`_{body_index}`; `return` statements and string constants (docstrings) give
+`None` (skipped); anything else raises `ValueError`.
 
 ### meshed.makers.parse_steps(src)
 
@@ -390,7 +469,7 @@ Extract FuncNode kwargs (name, out, and bind) from ast (target,value) pairs
 * **Parameters:**
   **target_value** – A (target, value) pair
 * **Return type:**
-  [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`dict`](https://docs.python.org/3/library/stdtypes.html#dict)]
+  [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
 * **Returns:**
   A `{name:..., out:..., bind:...}` dict (meant to be used to curry FuncNode
 
@@ -408,9 +487,18 @@ Where can you make make target_values? With the `parse_assignment_steps` functio
 {'name': 'func2', 'out': 'y', 'bind': {0: 'x', 1: 'func1', 'c': 3, 'd': 'x'}}
 ```
 
+### meshed.makers.robust_ast_parse(src)
+
+Parse `src` with `ast.parse`, retrying with the common leading indent stripped
+on `IndentationError`.
+
 ### meshed.makers.signed_itemgetter(\*keys)
 
 Like `operator.itemgetter`, except has a signature, which we needed
+
+### meshed.makers.simple_code_to_digraph(src)
+
+Make a `graphviz.Digraph` of the `DAG` that `code_to_dag(src)` builds.
 
 ### meshed.makers.src_to_func_node_factory(src, exclude_names=None)
 
@@ -418,13 +506,13 @@ Like `operator.itemgetter`, except has a signature, which we needed
   * **src** – Callable or string of callable.
   * **exclude_names** – Names to exclude when making func_nodes
 * **Return type:**
-  [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`FuncNode`](meshed.base.html.md#meshed.base.FuncNode) | [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[`...`](https://docs.python.org/3/library/constants.html#Ellipsis), [`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]]
+  [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`FuncNode`](meshed.base.html.md#meshed.base.FuncNode) | [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[`...`](https://docs.python.org/3/builtins/constants.html#Ellipsis), [`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]]
 * **Returns:**
 
 ### meshed.makers.triples_to_fnodes(triples)
 
-Converts an iterable of func call triples to an iterable of `FuncNode``s.
-(Which in turn can be converted to a ``DAG`.)
+Converts an iterable of func call triples to an iterable of `FuncNode` objects.
+(Which in turn can be converted to a `DAG`.)
 
 Note how the python identifiers are extracted (on the basis of “an unbroken
 sequence of alphanumerical (and underscore) characters”, ignoring all other

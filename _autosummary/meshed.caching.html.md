@@ -1,6 +1,37 @@
 # meshed.caching
 
-Caching meshes
+Turn functions into cached properties of a class.
+
+The functions here attach `functools.cached_property` attributes to a class
+after the fact, so a value is computed once per instance, on first access, from
+other attributes of that instance. `LazyProps` does this for every
+one-argument callable of a subclass at class-creation time; the
+`with_cached_properties` decorator does it for a chosen list of functions,
+sourcing each function’s parameters from same-named instance attributes.
+
+Main entry points:
+
+- `LazyProps`: base class that makes each one-argument method a cached property.
+- `with_cached_properties`: class decorator adding the given functions as cached
+  properties.
+- `add_cached_property_from_func`: the same for a single function, without decorating.
+
+```pycon
+>>> from meshed.caching import with_cached_properties
+>>> def area(width, height):
+...     print('computing area')
+...     return width * height
+>>> @with_cached_properties([area])
+... class Rect:
+...     def __init__(self, width, height):
+...         self.width, self.height = width, height
+>>> r = Rect(2, 3)
+>>> r.area
+computing area
+6
+>>> r.area
+6
+```
 
 ### Functions
 
@@ -17,7 +48,7 @@ Caching meshes
 
 ### *class* meshed.caching.LazyProps
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 A class that makes all its attributes cached_property properties.
 

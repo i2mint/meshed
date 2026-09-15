@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -709,6 +709,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">pull data from some sources, compute a new stream based on previous ones, or push some</span>
 <span class="sd">of the streams to further processes (such as visualization, or storage systems).</span>
 
+<span class="sd">Main entry points:</span>
+
+<span class="sd">- ``Slabs``: the stream-of-slabs object; iterate it, or ``run()`` it for side effects.</span>
+<span class="sd">- ``IteratorExit``: raise it from a component to stop the iteration cleanly.</span>
+<span class="sd">- ``conditional_sentinel``: decorator returning a sentinel instead of calling the function</span>
+<span class="sd">  when a condition on its arguments holds (``output_none_if_none_arguments`` is one).</span>
+
 <span class="sd">A slab is a collection of items of a same interval of time.</span>
 <span class="sd">We represent a slab using a `dict` or mapping.</span>
 <span class="sd">Typically, a slab will be the aggregation of multiple information streams that</span>
@@ -746,7 +753,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">...                 except self.handle_exceptions as exc_val:</span>
 <span class="sd">...                     # use specific exceptions to signal that iteration should stop</span>
 <span class="sd">...                     break</span>
-
 <span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -805,7 +811,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">    </span><span class="sd">"""An exception handler is an argument-less callable that is called when a handled</span>
 <span class="sd">    exception occurs during iteration. Most often, the handler does nothing,</span>
 <span class="sd">    but could be used whose output will be ignored, unless it is do_not_break,</span>
-<span class="sd">    which will signal that the iteration should continue."""</span>
+<span class="sd">    which will signal that the iteration should continue.</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExceptionHandlerOutput</span><span class="p">:</span>
         <span class="k">pass</span></div>
@@ -825,13 +832,24 @@ window.runMermaid = runMermaid;</script>
 <span class="p">]</span>
 
 
+<div class="viewcode-block" id="do_nothing">
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.do_nothing">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">do_nothing</span><span class="p">():</span>
-    <span class="k">pass</span>
+<span class="w">    </span><span class="sd">"""Argument-less no-op, the default handler of handled exceptions.</span>
+
+<span class="sd">    Its ``None`` output lets the ``Slabs`` iteration stop.</span>
+<span class="sd">    """</span>
+    <span class="k">pass</span></div>
 
 
+
+<div class="viewcode-block" id="log_and_return">
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.log_and_return">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">log_and_return</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="nb">print</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Pass ``msg`` to ``logger`` (``print`` by default) and return it unchanged."""</span>
     <span class="n">logger</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">msg</span>
+    <span class="k">return</span> <span class="n">msg</span></div>
+
 
 
 <span class="c1"># TODO: Could consider (topologically) ordering the exceptions to reduce the matching</span>
@@ -878,9 +896,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Two uses cases here:</span>
 
 <span class="sd">    - using a scope dict as both the source of `Slabs` components, and as a place</span>
-<span class="sd">    to temporarily store the outputs of these components.</span>
+<span class="sd">      to temporarily store the outputs of these components.</span>
 
 <span class="sd">    - exception handlers: We'd like the exception handlers to be easy to express.</span>
+
 <span class="sd">    Maybe you need the object raising the exception to handle it,</span>
 <span class="sd">    maybe you just want to log the event.</span>
 <span class="sd">    In the first case, you the handler needs the said object to be passed to it,</span>
@@ -888,7 +907,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    With _call_from_dict, we don't have to choose, we just have to impose that</span>
 <span class="sd">    the handler use specific keywords (namely `exc_val` and/or `instance`)</span>
 <span class="sd">    when there are inputs.</span>
-
 <span class="sd">    """</span>
     <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">mk_args_and_kwargs</span><span class="p">(</span>
         <span class="n">kwargs</span><span class="p">,</span>
@@ -1076,7 +1094,6 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    To help you with this, check out the `dol &lt;https://pypi.org/project/dol/&gt;`_</span>
 <span class="sd">    and `py2store &lt;https://pypi.org/project/py2store/&gt;`_ libraries.</span>
-
 <span class="sd">    """</span>
 
     <span class="n">_output_of_context_enter</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1130,16 +1147,28 @@ window.runMermaid = runMermaid;</script>
                         <span class="bp">self</span><span class="o">.</span><span class="n">exit_value</span> <span class="o">=</span> <span class="n">handler_output</span>  <span class="c1"># remember, in case useful</span>
                         <span class="k">break</span>
 
+<div class="viewcode-block" id="Slabs.open">
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.Slabs.open">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Enter the context of every component that has one, and return ``self``."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_output_of_context_enter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
+
+<div class="viewcode-block" id="Slabs.close">
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.Slabs.close">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc_val</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exc_tb</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_of_context_enter</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Exit the component contexts entered by ``open``."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_of_context_enter</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="Slabs.run">
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.Slabs.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Iterate through all the slabs, discarding them (for the side effects only)."""</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">pass</span>
+            <span class="k">pass</span></div>
+
 
     <span class="fm">__enter__</span> <span class="o">=</span> <span class="nb">open</span>
     <span class="fm">__exit__</span> <span class="o">=</span> <span class="n">close</span>
@@ -1178,12 +1207,23 @@ window.runMermaid = runMermaid;</script>
 
     <span class="n">from_dag</span> <span class="o">=</span> <span class="n">from_func_nodes</span>  <span class="c1"># TODO: Have a vote if we want this alias.</span>
 
+<div class="viewcode-block" id="Slabs.to_func_nodes">
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.Slabs.to_func_nodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Yield a ``FuncNode`` per component.</span>
 
+<span class="sd">        Each node's name and output var node are the component's name.</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Slabs.to_dag">
+<a class="viewcode-back" href="../../_autosummary/meshed.slabs.html#meshed.slabs.Slabs.to_dag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_dag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_func_nodes</span><span class="p">()))</span>
+<span class="w">        </span><span class="sd">"""Build a ``DAG`` from the ``FuncNode`` objects of ``to_func_nodes``."""</span>
+        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_func_nodes</span><span class="p">()))</span></div>
+
 
     <span class="c1"># TODO: Add @wraps(dot_digraph_body) to have DAG.dot_digraph signature</span>
 <div class="viewcode-block" id="Slabs.dot_digraph">
@@ -1221,6 +1261,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Args:</span>
 <span class="sd">        condition_func (Callable): A function that takes the arguments and keyword</span>
 <span class="sd">            arguments of the decorated function as input and returns a boolean value.</span>
+
 <span class="sd">        sentinel (Any): The value to return if the condition is met.</span>
 
 <span class="sd">    &gt;&gt;&gt; division_by_zero = lambda args, kwargs: (</span>
@@ -1247,7 +1288,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    &gt;&gt;&gt; foo(1, 2)</span>
 <span class="sd">    3</span>
 <span class="sd">    &gt;&gt;&gt; assert foo(None, None) is None</span>
-
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>

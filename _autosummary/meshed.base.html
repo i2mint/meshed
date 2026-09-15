@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
     <link rel="prev" title="meshed" href="meshed.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -404,7 +404,30 @@
                   
   <section id="module-meshed.base">
 <span id="meshed-base"></span><h1>meshed.base<a class="headerlink" href="#module-meshed.base" title="Link to this heading">#</a></h1>
-<p>Base functionality of meshed</p>
+<p>Define <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code>, the unit of computation that <code class="docutils literal notranslate"><span class="pre">meshed</span></code> assembles into DAGs.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> wraps a function together with a <code class="docutils literal notranslate"><span class="pre">name</span></code> (its identity in the network),
+a <code class="docutils literal notranslate"><span class="pre">bind</span></code> (which scope variables feed which parameters) and an <code class="docutils literal notranslate"><span class="pre">out</span></code> (the scope
+variable its result is written to). Calling the node on a scope, a mutable mapping,
+reads its inputs from there and writes its output back. This module also holds the
+helpers that validate, convert, rewrite and render such nodes; <code class="docutils literal notranslate"><span class="pre">meshed.dag</span></code> builds
+on them to wire many nodes into a <code class="docutils literal notranslate"><span class="pre">DAG</span></code>.</p>
+<p>Main entry points:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FuncNode</span></code>: wrap a function with its name, bind and out.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ensure_func_nodes</span></code>: turn a mix of callables and nodes into <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> objects.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ch_func_node_func</span></code>: swap a node’s function, guarded by a signature comparison.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">func_nodes_to_code</span></code>: render nodes back as Python source.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fn</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'add'</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">'total'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fn</span>
+<span class="go">FuncNode(x,y -&gt; add -&gt; total)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scope</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fn</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scope</span>
+<span class="go">{'x': 1, 'y': 2, 'total': 3}</span>
+</pre></div>
+</div>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
@@ -414,14 +437,14 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.base.ch_func_node_attrs" title="meshed.base.ch_func_node_attrs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ch_func_node_attrs</span></code></a>(fn, **new_attrs_values)</p></td>
 <td><p>Returns a copy of the func node with some of its attributes changed</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ch_func_node_func</span></code>(fn, func, *[, ...])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.base.ch_func_node_func" title="meshed.base.ch_func_node_func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ch_func_node_func</span></code></a>(fn, func, *[, ...])</p></td>
+<td><p>Return a copy of <code class="docutils literal notranslate"><span class="pre">fn</span></code> whose function is <code class="docutils literal notranslate"><span class="pre">func</span></code>, if <code class="docutils literal notranslate"><span class="pre">func_comparator</span></code> accepts the replacement; otherwise hand <code class="docutils literal notranslate"><span class="pre">(fn,</span> <span class="pre">func)</span></code> to <code class="docutils literal notranslate"><span class="pre">alternative</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot_lines_of_func_parameters</span></code>(parameters, ...)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.base.dot_lines_of_func_parameters" title="meshed.base.dot_lines_of_func_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot_lines_of_func_parameters</span></code></a>(parameters, ...)</p></td>
+<td><p>Yield graphviz dot lines drawing <code class="docutils literal notranslate"><span class="pre">parameters</span></code> as variable nodes that feed a function node <code class="docutils literal notranslate"><span class="pre">func_id</span></code>, which in turn feeds the variable node <code class="docutils literal notranslate"><span class="pre">out</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicates</span></code>(elements)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.base.duplicates" title="meshed.base.duplicates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicates</span></code></a>(elements)</p></td>
+<td><p>List the elements that occur more than once, in order of first occurrence.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.base.ensure_func_nodes" title="meshed.base.ensure_func_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_func_nodes</span></code></a>(func_nodes)</p></td>
 <td><p>Converts a list of objects to a list of FuncNodes.</p></td>
@@ -435,26 +458,26 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.base.get_init_params_of_instance" title="meshed.base.get_init_params_of_instance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_init_params_of_instance</span></code></a>(obj)</p></td>
 <td><p>Get names of instance object <code class="docutils literal notranslate"><span class="pre">obj</span></code> that are also parameters of the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> of its class</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_variadics</span></code>(func)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.base.handle_variadics" title="meshed.base.handle_variadics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_variadics</span></code></a>(func)</p></td>
+<td><p>Replace the variadic parameters of <code class="docutils literal notranslate"><span class="pre">func</span></code> (<code class="docutils literal notranslate"><span class="pre">*args</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>) with a tuple and a dict parameter of the same names, returning <code class="docutils literal notranslate"><span class="pre">func</span></code> itself when it has none.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.base.identifier_mapping" title="meshed.base.identifier_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identifier_mapping</span></code></a>(x)</p></td>
 <td><p>Get an <code class="docutils literal notranslate"><span class="pre">IdentifierMapping</span></code> dict from a more loosely defined <code class="docutils literal notranslate"><span class="pre">Bind</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert_func_if_compatible</span></code>([func_comparator])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.base.insert_func_if_compatible" title="meshed.base.insert_func_if_compatible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert_func_if_compatible</span></code></a>([func_comparator])</p></td>
+<td><p>Make a <code class="docutils literal notranslate"><span class="pre">ch_func_node_func</span></code> variant with <code class="docutils literal notranslate"><span class="pre">func_comparator</span></code> fixed.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.base.is_func_node" title="meshed.base.is_func_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_func_node</span></code></a>(obj)</p></td>
-<td><p></p></td>
+<td><p>Whether <code class="docutils literal notranslate"><span class="pre">obj</span></code> is a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> (checked by class name, so it survives reloads).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.base.is_not_func_node" title="meshed.base.is_not_func_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_not_func_node</span></code></a>(obj)</p></td>
-<td><p></p></td>
+<td><p>Whether <code class="docutils literal notranslate"><span class="pre">obj</span></code> is not a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">param_to_dot_definition</span></code>(p[, shape])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.base.param_to_dot_definition" title="meshed.base.param_to_dot_definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">param_to_dot_definition</span></code></a>(p[, shape])</p></td>
+<td><p>Yield the dot line declaring parameter <code class="docutils literal notranslate"><span class="pre">p</span></code> as a node, labelled <code class="docutils literal notranslate"><span class="pre">name=</span></code> when it has a default and <code class="docutils literal notranslate"><span class="pre">*name</span></code> or <code class="docutils literal notranslate"><span class="pre">**name</span></code> when it is variadic.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_signature_mismatch_error</span></code>(fn, func)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.base.raise_signature_mismatch_error" title="meshed.base.raise_signature_mismatch_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_signature_mismatch_error</span></code></a>(fn, func)</p></td>
+<td><p>Raise a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> saying <code class="docutils literal notranslate"><span class="pre">func</span></code> cannot replace <code class="docutils literal notranslate"><span class="pre">fn.func</span></code> because their signatures differ; the default <code class="docutils literal notranslate"><span class="pre">alternative</span></code> of <code class="docutils literal notranslate"><span class="pre">ch_func_node_func</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.base.rebind_to_func" title="meshed.base.rebind_to_func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rebind_to_func</span></code></a>(fnode, new_func)</p></td>
 <td><p>Replaces <code class="docutils literal notranslate"><span class="pre">fnode.func</span></code> with <code class="docutils literal notranslate"><span class="pre">new_func</span></code>, changing the <code class="docutils literal notranslate"><span class="pre">.bind</span></code> accordingly.</p></td>
@@ -475,7 +498,7 @@
 <td><p>A function wrapper that makes the function amenable to operating in a network.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.base.Mesh" title="meshed.base.Mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mesh</span></code></a>(func_nodes)</p></td>
-<td><p></p></td>
+<td><p>Hold a collection of <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> objects, with no wiring or execution logic (for that, use <code class="docutils literal notranslate"><span class="pre">meshed.dag.DAG</span></code>).</p></td>
 </tr>
 </tbody>
 </table>
@@ -483,18 +506,18 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.base.FuncNode">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">FuncNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names_maker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">underscore_func_node_names_maker&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_validator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">basic_node_validator&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#FuncNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.FuncNode" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A function wrapper that makes the function amenable to operating in a network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>func</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a></span>) – Function to wrap</p></li>
-<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The name to associate to the function</p></li>
-<li><p><strong>bind</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – The {func_argname: external_name,…} mapping that defines where
+<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The name to associate to the function</p></li>
+<li><p><strong>bind</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – The {func_argname: external_name,…} mapping that defines where
 the node will source the data to call the function.
 This only has to be used if the external names are different from the names
 of the arguments of the function.</p></li>
-<li><p><strong>out</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The variable name the function should write it’s result to</p></li>
+<li><p><strong>out</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – The variable name the function should write it’s result to</p></li>
 </ul>
 </dd>
 </dl>
@@ -676,23 +699,19 @@ that argument has the the function’s (output) name.</p>
 <dd><p>Validates a func node. Raises ValidationError if something wrong. Returns None.</p>
 <p>Validates:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>that the <code class="docutils literal notranslate"><span class="pre">func_node</span></code> params are valid, that is, if not <code class="docutils literal notranslate"><span class="pre">None</span></code></dt><dd><ul>
+<li><p>that the <code class="docutils literal notranslate"><span class="pre">func_node</span></code> params are valid, that is, if not <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">func</span></code> should be a callable</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">out</span></code> should be <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">bind</span></code> should be a <code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">str]</span></code></p></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl class="simple">
-<dt>that the names (<code class="docutils literal notranslate"><span class="pre">.name</span></code>, <code class="docutils literal notranslate"><span class="pre">.out</span></code> and all <code class="docutils literal notranslate"><span class="pre">.bind.values()</span></code>)</dt><dd><ul>
+<li><p>that the names (<code class="docutils literal notranslate"><span class="pre">.name</span></code>, <code class="docutils literal notranslate"><span class="pre">.out</span></code> and all <code class="docutils literal notranslate"><span class="pre">.bind.values()</span></code>):</p>
+<ul>
 <li><p>are valid python identifiers (alphanumeric or underscore not starting with
 digit)</p></li>
 <li><p>are not repeated (no duplicates)</p></li>
 </ul>
-</dd>
-</dl>
 </li>
 <li><p>that <code class="docutils literal notranslate"><span class="pre">.bind.keys()</span></code> are indeed present as params of <code class="docutils literal notranslate"><span class="pre">.func</span></code></p></li>
 </ul>
@@ -701,22 +720,17 @@ digit)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="meshed.base.FuncNode.synopsis_string">
 <span class="sig-name descname"><span class="pre">synopsis_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bind_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'values'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#FuncNode.synopsis_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.FuncNode.synopsis_string" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Return the one-line <code class="docutils literal notranslate"><span class="pre">bind</span> <span class="pre">-&gt;</span> <span class="pre">name</span> <span class="pre">-&gt;</span> <span class="pre">out</span></code> synopsis of the node.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>bind_info</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'var_nodes'</span></code>, <code class="docutils literal notranslate"><span class="pre">'params'</span></code>, <code class="docutils literal notranslate"><span class="pre">'hybrid'</span></code>]</span>) – <p>How to represent the bind in the synopsis string. Could be:</p>
 <ul class="simple">
 <li><p>’values’, <code class="code docutils literal notranslate"><span class="pre">var_nodes</span></code> or <code class="code docutils literal notranslate"><span class="pre">varnodes</span></code>: the values of the bind (default).</p></li>
 <li><p>’keys’ or ‘params’: the keys of the bind</p></li>
-<li><dl class="simple">
-<dt>’hybrid’: the keys of the bind, but with the values that are the same as</dt><dd><p>the keys omitted.</p>
-</dd>
-</dl>
-</li>
+<li><p>’hybrid’: the keys of the bind, but with the values that are the same as
+the keys omitted.</p></li>
 </ul>
 </p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p></p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fn</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span>
@@ -743,9 +757,19 @@ digit)</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.base.Mesh">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">Mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#Mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.Mesh" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Hold a collection of <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> objects, with no wiring or execution logic
+(for that, use <code class="docutils literal notranslate"><span class="pre">meshed.dag.DAG</span></code>).</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.base.Mesh.synopsis_string">
+<span class="sig-name descname"><span class="pre">synopsis_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bind_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'values'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#Mesh.synopsis_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.Mesh.synopsis_string" title="Link to this definition">#</a></dt>
+<dd><p>Join the synopsis strings of the nodes, one per line.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -754,23 +778,19 @@ digit)</p></li>
 <dd><p>Validates a func node. Raises ValidationError if something wrong. Returns None.</p>
 <p>Validates:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>that the <code class="docutils literal notranslate"><span class="pre">func_node</span></code> params are valid, that is, if not <code class="docutils literal notranslate"><span class="pre">None</span></code></dt><dd><ul>
+<li><p>that the <code class="docutils literal notranslate"><span class="pre">func_node</span></code> params are valid, that is, if not <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">func</span></code> should be a callable</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">out</span></code> should be <code class="docutils literal notranslate"><span class="pre">str</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">bind</span></code> should be a <code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">str]</span></code></p></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl class="simple">
-<dt>that the names (<code class="docutils literal notranslate"><span class="pre">.name</span></code>, <code class="docutils literal notranslate"><span class="pre">.out</span></code> and all <code class="docutils literal notranslate"><span class="pre">.bind.values()</span></code>)</dt><dd><ul>
+<li><p>that the names (<code class="docutils literal notranslate"><span class="pre">.name</span></code>, <code class="docutils literal notranslate"><span class="pre">.out</span></code> and all <code class="docutils literal notranslate"><span class="pre">.bind.values()</span></code>):</p>
+<ul>
 <li><p>are valid python identifiers (alphanumeric or underscore not starting with
 digit)</p></li>
 <li><p>are not repeated (no duplicates)</p></li>
 </ul>
-</dd>
-</dl>
 </li>
 <li><p>that <code class="docutils literal notranslate"><span class="pre">.bind.keys()</span></code> are indeed present as params of <code class="docutils literal notranslate"><span class="pre">.func</span></code></p></li>
 </ul>
@@ -808,6 +828,78 @@ digit)</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.base.ch_func_node_func">
+<span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">ch_func_node_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_comparator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">compare_signatures&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ch_func_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">_ch_func_node_func&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">raise_signature_mismatch_error&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#ch_func_node_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.ch_func_node_func" title="Link to this definition">#</a></dt>
+<dd><p>Return a copy of <code class="docutils literal notranslate"><span class="pre">fn</span></code> whose function is <code class="docutils literal notranslate"><span class="pre">func</span></code>, if <code class="docutils literal notranslate"><span class="pre">func_comparator</span></code>
+accepts the replacement; otherwise hand <code class="docutils literal notranslate"><span class="pre">(fn,</span> <span class="pre">func)</span></code> to <code class="docutils literal notranslate"><span class="pre">alternative</span></code>.</p>
+<p>This is what <code class="docutils literal notranslate"><span class="pre">DAG.ch_funcs</span></code> applies to each node it changes. The default
+comparator requires the two signatures to match exactly; the default
+<code class="docutils literal notranslate"><span class="pre">alternative</span></code> raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_comparator</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeVar" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code></a>(<code class="docutils literal notranslate"><span class="pre">Comparison</span></code>)]</span>) – Called as <code class="docutils literal notranslate"><span class="pre">func_comparator(fn.func,</span> <span class="pre">func)</span></code>; a truthy result
+allows the swap.</p></li>
+<li><p><strong>ch_func_node</strong> – How to build the new node once the swap is allowed; called as
+<code class="docutils literal notranslate"><span class="pre">ch_func_node(fn,</span> <span class="pre">func=func)</span></code>.</p></li>
+<li><p><strong>alternative</strong> – Called as <code class="docutils literal notranslate"><span class="pre">alternative(fn,</span> <span class="pre">func)</span></code> when the swap is refused; its
+return value is returned as is.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fn</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'f'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_fn</span> <span class="o">=</span> <span class="n">ch_func_node_func</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_fn</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<span class="go">6</span>
+</pre></div>
+</div>
+<p>A function with a different signature is refused:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ch_func_node_func</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">:</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">You can only change the func of a FuncNode with a another func if the signatures match.</span>
+<span class="x">...</span>
+</pre></div>
+</div>
+<p>unless <code class="docutils literal notranslate"><span class="pre">alternative</span></code> says otherwise, here by keeping the original node:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kept</span> <span class="o">=</span> <span class="n">ch_func_node_func</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">fn</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">:</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="k">lambda</span> <span class="n">fn</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">fn</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kept</span> <span class="ow">is</span> <span class="n">fn</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.base.dot_lines_of_func_parameters">
+<span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">dot_lines_of_func_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_id</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vnode_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fnode_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'box'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#dot_lines_of_func_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.dot_lines_of_func_parameters" title="Link to this definition">#</a></dt>
+<dd><p>Yield graphviz dot lines drawing <code class="docutils literal notranslate"><span class="pre">parameters</span></code> as variable nodes that feed a
+function node <code class="docutils literal notranslate"><span class="pre">func_id</span></code>, which in turn feeds the variable node <code class="docutils literal notranslate"><span class="pre">out</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func_display</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – When false, no function node is drawn and the parameter nodes
+point straight at <code class="docutils literal notranslate"><span class="pre">out</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.base.duplicates">
+<span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.duplicates" title="Link to this definition">#</a></dt>
+<dd><p>List the elements that occur more than once, in order of first occurrence.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">duplicates</span><span class="p">(</span><span class="s2">"abbaaeccf"</span><span class="p">)</span>
+<span class="go">['a', 'b', 'c']</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.base.ensure_func_nodes">
 <span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">ensure_func_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#ensure_func_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.ensure_func_nodes" title="Link to this definition">#</a></dt>
 <dd><p>Converts a list of objects to a list of FuncNodes.</p>
@@ -836,12 +928,12 @@ is moved to the positional arguments list:</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>func_nodes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference internal" href="#meshed.base.FuncNode" title="meshed.base.FuncNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">FuncNode</span></code></a>]</span>) – Iterable of FuncNode instances to convert to code</p></li>
-<li><p><strong>func_name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Name for the generated function</p></li>
-<li><p><strong>favor_positional</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – When True, transforms kwargs of the form key=key into positional args.</p></li>
+<li><p><strong>func_name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Name for the generated function</p></li>
+<li><p><strong>favor_positional</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – When True, transforms kwargs of the form key=key into positional args.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String containing Python code</p>
@@ -857,6 +949,14 @@ is moved to the positional arguments list:</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.base.handle_variadics">
+<span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">handle_variadics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#handle_variadics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.handle_variadics" title="Link to this definition">#</a></dt>
+<dd><p>Replace the variadic parameters of <code class="docutils literal notranslate"><span class="pre">func</span></code> (<code class="docutils literal notranslate"><span class="pre">*args</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>) with a
+tuple and a dict parameter of the same names, returning <code class="docutils literal notranslate"><span class="pre">func</span></code> itself when it
+has none.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.base.identifier_mapping">
 <span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">identifier_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#identifier_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.identifier_mapping" title="Link to this definition">#</a></dt>
 <dd><p>Get an <code class="docutils literal notranslate"><span class="pre">IdentifierMapping</span></code> dict from a more loosely defined <code class="docutils literal notranslate"><span class="pre">Bind</span></code>.</p>
@@ -865,7 +965,7 @@ from…</p>
 <p>… a single space-separated string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Identifier</span></code> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>), <code class="xref py py-class docutils literal notranslate"><span class="pre">Identifier</span></code> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Identifier</span></code> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>), <code class="xref py py-class docutils literal notranslate"><span class="pre">Identifier</span></code> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)]</span></p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">identifier_mapping</span><span class="p">(</span><span class="s1">'x a_b yz'</span><span class="p">)</span>  <span class="c1">#</span>
@@ -885,11 +985,20 @@ from…</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.base.insert_func_if_compatible">
+<span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">insert_func_if_compatible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_comparator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">compare_signatures&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#insert_func_if_compatible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.insert_func_if_compatible" title="Link to this definition">#</a></dt>
+<dd><p>Make a <code class="docutils literal notranslate"><span class="pre">ch_func_node_func</span></code> variant with <code class="docutils literal notranslate"><span class="pre">func_comparator</span></code> fixed.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.base.is_func_node">
 <span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">is_func_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#is_func_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.is_func_node" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Whether <code class="docutils literal notranslate"><span class="pre">obj</span></code> is a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> (checked by class name, so it survives reloads).</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_func_node</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">))</span>
@@ -903,9 +1012,10 @@ from…</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.base.is_not_func_node">
 <span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">is_not_func_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#is_not_func_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.is_not_func_node" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Whether <code class="docutils literal notranslate"><span class="pre">obj</span></code> is not a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code>.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_not_func_node</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">))</span>
@@ -914,6 +1024,22 @@ from…</p>
 <span class="go">True</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.base.param_to_dot_definition">
+<span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">param_to_dot_definition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#param_to_dot_definition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.param_to_dot_definition" title="Link to this definition">#</a></dt>
+<dd><p>Yield the dot line declaring parameter <code class="docutils literal notranslate"><span class="pre">p</span></code> as a node, labelled <code class="docutils literal notranslate"><span class="pre">name=</span></code> when
+it has a default and <code class="docutils literal notranslate"><span class="pre">*name</span></code> or <code class="docutils literal notranslate"><span class="pre">**name</span></code> when it is variadic.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.base.raise_signature_mismatch_error">
+<span class="sig-prename descclassname"><span class="pre">meshed.base.</span></span><span class="sig-name descname"><span class="pre">raise_signature_mismatch_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/base.html#raise_signature_mismatch_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.base.raise_signature_mismatch_error" title="Link to this definition">#</a></dt>
+<dd><p>Raise a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> saying <code class="docutils literal notranslate"><span class="pre">func</span></code> cannot replace <code class="docutils literal notranslate"><span class="pre">fn.func</span></code> because their
+signatures differ; the default <code class="docutils literal notranslate"><span class="pre">alternative</span></code> of <code class="docutils literal notranslate"><span class="pre">ch_func_node_func</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1028,16 +1154,26 @@ That is:</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.FuncNode.to_dict"><code class="docutils literal notranslate"><span class="pre">FuncNode.to_dict()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.Mesh"><code class="docutils literal notranslate"><span class="pre">Mesh</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.Mesh"><code class="docutils literal notranslate"><span class="pre">Mesh</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.Mesh.synopsis_string"><code class="docutils literal notranslate"><span class="pre">Mesh.synopsis_string()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.basic_node_validator"><code class="docutils literal notranslate"><span class="pre">basic_node_validator()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.ch_func_node_attrs"><code class="docutils literal notranslate"><span class="pre">ch_func_node_attrs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.ch_func_node_func"><code class="docutils literal notranslate"><span class="pre">ch_func_node_func()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.dot_lines_of_func_parameters"><code class="docutils literal notranslate"><span class="pre">dot_lines_of_func_parameters()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.duplicates"><code class="docutils literal notranslate"><span class="pre">duplicates()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.ensure_func_nodes"><code class="docutils literal notranslate"><span class="pre">ensure_func_nodes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.func_node_transformer"><code class="docutils literal notranslate"><span class="pre">func_node_transformer()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.func_nodes_to_code"><code class="docutils literal notranslate"><span class="pre">func_nodes_to_code()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.get_init_params_of_instance"><code class="docutils literal notranslate"><span class="pre">get_init_params_of_instance()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.handle_variadics"><code class="docutils literal notranslate"><span class="pre">handle_variadics()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.identifier_mapping"><code class="docutils literal notranslate"><span class="pre">identifier_mapping()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.insert_func_if_compatible"><code class="docutils literal notranslate"><span class="pre">insert_func_if_compatible()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.is_func_node"><code class="docutils literal notranslate"><span class="pre">is_func_node()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.is_not_func_node"><code class="docutils literal notranslate"><span class="pre">is_not_func_node()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.param_to_dot_definition"><code class="docutils literal notranslate"><span class="pre">param_to_dot_definition()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.raise_signature_mismatch_error"><code class="docutils literal notranslate"><span class="pre">raise_signature_mismatch_error()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.rebind_to_func"><code class="docutils literal notranslate"><span class="pre">rebind_to_func()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.underscore_func_node_names_maker"><code class="docutils literal notranslate"><span class="pre">underscore_func_node_names_maker()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.base.validate_that_func_node_names_are_sane"><code class="docutils literal notranslate"><span class="pre">validate_that_func_node_names_are_sane()</span></code></a></li>

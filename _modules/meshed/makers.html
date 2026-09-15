@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -701,6 +701,17 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">This module contains tools to make meshed objects in different ways.</span>
 
+<span class="sd">Main entry points:</span>
+
+<span class="sd">- ``code_to_dag``: turn a function whose body is ``out = func(args...)`` lines</span>
+<span class="sd">  (or such a function's source string) into a ``DAG``.</span>
+<span class="sd">- ``code_to_fnodes``: the same parsing, but returning the tuple of ``FuncNode``</span>
+<span class="sd">  objects instead of assembling a ``DAG``.</span>
+<span class="sd">- ``src_to_func_node_factory``: the lower-level step yielding ``FuncNode``</span>
+<span class="sd">  factories (partials that still lack their ``func``).</span>
+<span class="sd">- ``mk_fnodes_from_fn_factories``: inject functions into those factories to get</span>
+<span class="sd">  ``FuncNode`` objects.</span>
+
 <span class="sd">Let's start with an example where we have some code representing a user story:</span>
 
 <span class="sd">&gt;&gt;&gt; def user_story():</span>
@@ -794,7 +805,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">&gt;&gt;&gt; from meshed.makers import dlft_factory_to_func</span>
 
 <span class="sd">which you can also reuse to make your own.</span>
-<span class="sd">See below how we provide a ``name_to_func_map`` to specify how ``func_label``s should</span>
+<span class="sd">See below how we provide a ``name_to_func_map`` to specify how ``func_label`` values should</span>
 <span class="sd">map to actual functions, and set ``use_place_holder_fallback=False`` to make</span>
 <span class="sd">sure that we don't ever fallback on a placeholder function as we did above.</span>
 
@@ -838,7 +849,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">&gt;&gt;&gt; # model=5, fvs=[4, 6] -&gt; map_05 -&gt; model_outputs == [5, [4, 6]]</span>
 <span class="sd">&gt;&gt;&gt; dag(1, 2, 3, 4, 5)</span>
 <span class="sd">[5, [4, 6]]</span>
-
 <span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
@@ -876,12 +886,24 @@ window.runMermaid = runMermaid;</script>
 <span class="c1"># -- just a sufficiently expressive subset.</span>
 
 
+<div class="viewcode-block" id="attr_dict">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.attr_dict">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">attr_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)}</span>
+<span class="w">    </span><span class="sd">"""Map every attribute name of ``obj`` not starting with an underscore to its value."""</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)}</span></div>
 
 
+
+<div class="viewcode-block" id="is_from_ast_module">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.is_from_ast_module">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_from_ast_module</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="s2">"__module__"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_ast"</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Tell whether the class of ``o`` reports ``_ast`` as its module.</span>
+
+<span class="sd">    Note that on Python 3.12 the ``ast`` node classes report ``ast``, not ``_ast``,</span>
+<span class="sd">    so this returns ``False`` for them.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="s2">"__module__"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_ast"</span><span class="p">)</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ast_info_str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -930,7 +952,15 @@ window.runMermaid = runMermaid;</script>
         <span class="p">)</span>
 
 
+<div class="viewcode-block" id="parse_body">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.parse_body">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_body</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">body_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Turn one body statement into a ``(target, call)`` pair of ast nodes, or ``None``.</span>
+
+<span class="sd">    Assignments go through ``parse_assignment``; a bare call gets the dummy target</span>
+<span class="sd">    ``_{body_index}``; ``return`` statements and string constants (docstrings) give</span>
+<span class="sd">    ``None`` (skipped); anything else raises ``ValueError``.</span>
+<span class="sd">    """</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">_ast_info_str</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">AnnAssign</span><span class="p">)):</span>
         <span class="k">return</span> <span class="n">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
@@ -943,11 +973,20 @@ window.runMermaid = runMermaid;</script>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Expr</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Constant</span><span class="p">)):</span>
         <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># ignore  # TODO: Would like to actually use this</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_error_handler</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_error_handler</span><span class="p">(</span><span class="n">body</span><span class="p">)</span></div>
+
 
 
 <span class="c1"># Note: generalize? glom?</span>
+<div class="viewcode-block" id="parse_assignment">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.parse_assignment">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_assignment</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Split an assignment statement into its ``(target, call)`` ast nodes.</span>
+
+<span class="sd">    Raises ``ValueError`` if ``body`` is not an (annotated) assignment, and</span>
+<span class="sd">    ``AssertionError`` if it has several targets or its value is not a call.</span>
+<span class="sd">    The ``info`` argument is ignored (it is recomputed from ``body``).</span>
+<span class="sd">    """</span>
     <span class="c1"># TODO: Make this validation better (at least more help in raised error)</span>
     <span class="c1"># TODO: extract validating code out as validation functions?</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">_ast_info_str</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
@@ -971,7 +1010,8 @@ window.runMermaid = runMermaid;</script>
         <span class="sa">f</span><span class="s2">"Only assigned function calls are allowed:"</span> <span class="sa">f</span><span class="s2">" </span><span class="si">{</span><span class="n">info</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">target</span><span class="p">,</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">target</span><span class="p">,</span> <span class="n">value</span></div>
+
 
 
 <span class="c1"># TODO: Evolve this: Perhaps it can be used to centralize this concern:</span>
@@ -1001,7 +1041,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    ...         print(d)</span>
 <span class="sd">    {'name': 'func1', 'out': 'x', 'bind': {0: 'a', 'b': 2}}</span>
 <span class="sd">    {'name': 'func2', 'out': 'y', 'bind': {0: 'x', 1: 'func1', 'c': 3, 'd': 'x'}}</span>
-
 <span class="sd">    """</span>
     <span class="c1"># Note: ast.Tuple has names in 'elts' attribute,</span>
     <span class="c1"># and could be handled, but would need to lead to multiple nodes</span>
@@ -1041,8 +1080,14 @@ window.runMermaid = runMermaid;</script>
 <span class="n">FuncNodeFactory</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">FuncNode</span><span class="p">]</span>
 
 
+<div class="viewcode-block" id="node_kwargs_to_func_node_factory">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.node_kwargs_to_func_node_factory">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">node_kwargs_to_func_node_factory</span><span class="p">(</span><span class="n">node_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncNodeFactory</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">,</span> <span class="o">**</span><span class="n">node_kwargs</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Curry ``FuncNode`` with ``node_kwargs`` (``name``, ``out``, ``bind``, ...), leaving</span>
+<span class="sd">    ``func`` to be supplied.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">FuncNode</span><span class="p">,</span> <span class="o">**</span><span class="n">node_kwargs</span><span class="p">)</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_src_string</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
@@ -1067,11 +1112,17 @@ window.runMermaid = runMermaid;</script>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"I found no indent!"</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="robust_ast_parse">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.robust_ast_parse">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Parse ``src`` with ``ast.parse``, retrying with the common leading indent stripped</span>
+<span class="sd">    on ``IndentationError``.</span>
+<span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IndentationError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">robust_ast_parse</span><span class="p">(</span><span class="n">_remove_indentation</span><span class="p">(</span><span class="n">src</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">robust_ast_parse</span><span class="p">(</span><span class="n">_remove_indentation</span><span class="p">(</span><span class="n">src</span><span class="p">))</span></div>
+
 
 
 <div class="viewcode-block" id="parse_steps">
@@ -1108,7 +1159,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    2</span>
 
 <span class="sd">    Basically, these ast objects contain all we need to know about the (parsed) source.</span>
-
 <span class="sd">    """</span>
     <span class="n">src</span> <span class="o">=</span> <span class="n">_ensure_src_string</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">robust_ast_parse</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
@@ -1166,7 +1216,12 @@ window.runMermaid = runMermaid;</script>
     <span class="n">name_to_func_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Get a function for the given factory, using"""</span>
+<span class="w">    </span><span class="sd">"""Get a function for the given factory, looking its ``func_label`` up in ``name_to_func_map``.</span>
+
+<span class="sd">    If the label is missing from the map, a placeholder function (see</span>
+<span class="sd">    ``meshed.util.mk_place_holder_func``) is made unless ``use_place_holder_fallback``</span>
+<span class="sd">    is ``False``, in which case ``KeyError`` is raised.</span>
+<span class="sd">    """</span>
     <span class="c1"># TODO: Add extra validation (like n_args of return func against bind)</span>
     <span class="n">name_to_func_map</span> <span class="o">=</span> <span class="n">name_to_func_map</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
 
@@ -1226,6 +1281,12 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="dlft_factory_to_func_mapping">
 <a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.dlft_factory_to_func_mapping">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">dlft_factory_to_func_mapping</span><span class="p">(</span><span class="n">Mapping</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mapping view of ``dlft_factory_to_func``: ``m[factory]`` is ``dlft_factory_to_func(factory)``.</span>
+
+<span class="sd">    Only ``__getitem__`` is defined, so a subclass must add ``__iter__`` and</span>
+<span class="sd">    ``__len__`` before it can be instantiated.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">dlft_factory_to_func</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
 
@@ -1262,7 +1323,63 @@ window.runMermaid = runMermaid;</script>
     <span class="n">func_src</span><span class="p">:</span> <span class="n">FuncSource</span> <span class="o">=</span> <span class="n">dlft_factory_to_func</span><span class="p">,</span>
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Get func_nodes from src code"""</span>
+<span class="w">    </span><span class="sd">"""Parse ``out = func(args...)`` code into a tuple of ``FuncNode`` objects.</span>
+
+<span class="sd">    Does the parsing behind ``code_to_dag`` but stops before assembling a ``DAG``,</span>
+<span class="sd">    so you can inspect, filter, or combine the nodes yourself. Works both as a plain</span>
+<span class="sd">    decorator and as a decorator factory (``@code_to_fnodes(func_src=...)``).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        src: A function whose body is the code (its source is read with</span>
+<span class="sd">            ``inspect.getsource``), or a source string holding a single ``def``.</span>
+<span class="sd">        func_src: Where the functions come from: a mapping from called name to</span>
+<span class="sd">            callable, or a callable taking a ``FuncNode`` factory (a</span>
+<span class="sd">            ``functools.partial`` of ``FuncNode``) and returning the function to</span>
+<span class="sd">            use. The default makes placeholder functions that return a string</span>
+<span class="sd">            describing the call.</span>
+<span class="sd">        use_place_holder_fallback: Only consulted when ``func_src`` is a mapping.</span>
+<span class="sd">            If ``True``, names missing from the mapping get a placeholder function</span>
+<span class="sd">            instead of raising ``KeyError``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple of ``FuncNode`` objects, one per assignment line, plus one extractor</span>
+<span class="sd">        node per name when a line unpacks a tuple (``x, y = f(a)``).</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; def f(a):</span>
+<span class="sd">        ...     return a + 1</span>
+<span class="sd">        &gt;&gt;&gt; def g(b, x):</span>
+<span class="sd">        ...     return b * x</span>
+<span class="sd">        &gt;&gt;&gt; @code_to_fnodes(func_src={'f': f, 'g': g})</span>
+<span class="sd">        ... def pipeline():</span>
+<span class="sd">        ...     b = f(a)</span>
+<span class="sd">        ...     c = g(b, x)</span>
+<span class="sd">        &gt;&gt;&gt; pipeline</span>
+<span class="sd">        (FuncNode(a -&gt; f -&gt; b), FuncNode(b,x -&gt; g -&gt; c))</span>
+<span class="sd">        &gt;&gt;&gt; pipeline[0].func is f</span>
+<span class="sd">        True</span>
+
+<span class="sd">        From a source string, with the default placeholder functions:</span>
+
+<span class="sd">        &gt;&gt;&gt; src = '''</span>
+<span class="sd">        ... def pipeline():</span>
+<span class="sd">        ...     b = f(a)</span>
+<span class="sd">        ...     c = g(b, x)</span>
+<span class="sd">        ... '''</span>
+<span class="sd">        &gt;&gt;&gt; fnodes = code_to_fnodes(src)</span>
+<span class="sd">        &gt;&gt;&gt; [node.out for node in fnodes]</span>
+<span class="sd">        ['b', 'c']</span>
+<span class="sd">        &gt;&gt;&gt; from meshed import DAG</span>
+<span class="sd">        &gt;&gt;&gt; DAG(fnodes)(1, 2)</span>
+<span class="sd">        'g(b=f(a=1), x=2)'</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        ``code_to_dag``: the same parsing, assembled into a ``DAG``.</span>
+<span class="sd">        ``mk_fnodes_from_fn_factories``: the lower-level step this wraps, if you</span>
+<span class="sd">        already have ``FuncNode`` factories.</span>
+<span class="sd">        ``DAG``: what to feed the resulting nodes to.</span>
+<span class="sd">    """</span>
     <span class="n">func_src</span> <span class="o">=</span> <span class="n">_ensure_func_src</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">use_place_holder_fallback</span><span class="p">)</span>
     <span class="c1"># Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_code_to_fnodes</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="p">))</span>
@@ -1283,13 +1400,80 @@ window.runMermaid = runMermaid;</script>
     <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Get a ``meshed.DAG`` from src code</span>
+<span class="w">    </span><span class="sd">"""Build a ``DAG`` from Python code whose lines are ``out = func(args...)`` calls.</span>
 
-<span class="sd">    This function parses Python code and creates a DAG that represents the</span>
-<span class="sd">    computational flow. The inverse operation is available through ``dag_to_code``</span>
-<span class="sd">    which can convert a DAG back to executable Python code.</span>
+<span class="sd">    Each assignment line of ``src`` becomes a ``FuncNode``: the assigned name is the</span>
+<span class="sd">    node's ``out``, the called name is its ``name`` (and ``func_label``), and the</span>
+<span class="sd">    call's arguments are its ``bind``. Names that are used but never assigned become</span>
+<span class="sd">    the inputs of the ``DAG``. Works both as a plain decorator and as a decorator</span>
+<span class="sd">    factory (``@code_to_dag(func_src=...)``).</span>
 
-<span class="sd">    See also: ``dag_to_code`` for the inverse operation.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        src: A function whose body is the code (its source is read with</span>
+<span class="sd">            ``inspect.getsource``), or a source string holding a single ``def``.</span>
+<span class="sd">        func_src: Where the functions come from: a mapping from called name to</span>
+<span class="sd">            callable, or a callable taking a ``FuncNode`` factory (a</span>
+<span class="sd">            ``functools.partial`` of ``FuncNode``) and returning the function to</span>
+<span class="sd">            use. The default makes placeholder functions that return a string</span>
+<span class="sd">            describing the call.</span>
+<span class="sd">        use_place_holder_fallback: Only consulted when ``func_src`` is a mapping.</span>
+<span class="sd">            If ``True``, names missing from the mapping get a placeholder function</span>
+<span class="sd">            instead of raising ``KeyError``.</span>
+<span class="sd">        name: Name of the resulting ``DAG``. Defaults to the name of ``src`` (for</span>
+<span class="sd">            a string, the name of its single ``def``).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ``DAG`` computing the parsed lines; the source is kept on its</span>
+<span class="sd">        ``_code_to_dag_src`` attribute.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: When ``func_src`` is a mapping missing a called name and</span>
+<span class="sd">            ``use_place_holder_fallback`` is ``False``.</span>
+<span class="sd">        ValueError: When a statement of the body is neither an assignment nor a</span>
+<span class="sd">            bare call (for example an ``if`` statement).</span>
+<span class="sd">        AssertionError: When an assignment's value is not a call (``c = a + b``), or</span>
+<span class="sd">            it has several targets.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; @code_to_dag</span>
+<span class="sd">        ... def pipeline():</span>
+<span class="sd">        ...     b = f(a)</span>
+<span class="sd">        ...     c = g(b, x)</span>
+<span class="sd">        &gt;&gt;&gt; print(pipeline.synopsis_string())</span>
+<span class="sd">        a -&gt; f -&gt; b</span>
+<span class="sd">        b,x -&gt; g -&gt; c</span>
+<span class="sd">        &gt;&gt;&gt; pipeline(1, 2)</span>
+<span class="sd">        'g(b=f(a=1), x=2)'</span>
+
+<span class="sd">        Give it real functions through ``func_src``:</span>
+
+<span class="sd">        &gt;&gt;&gt; def f(a):</span>
+<span class="sd">        ...     return a + 1</span>
+<span class="sd">        &gt;&gt;&gt; def g(b, x):</span>
+<span class="sd">        ...     return b * x</span>
+<span class="sd">        &gt;&gt;&gt; @code_to_dag(func_src={'f': f, 'g': g})</span>
+<span class="sd">        ... def pipeline():</span>
+<span class="sd">        ...     b = f(a)</span>
+<span class="sd">        ...     c = g(b, x)</span>
+<span class="sd">        &gt;&gt;&gt; pipeline(1, 2)</span>
+<span class="sd">        4</span>
+
+<span class="sd">        A source string works too:</span>
+
+<span class="sd">        &gt;&gt;&gt; src = '''</span>
+<span class="sd">        ... def doubled():</span>
+<span class="sd">        ...     y = double(x)</span>
+<span class="sd">        ... '''</span>
+<span class="sd">        &gt;&gt;&gt; dag = code_to_dag(src, func_src={'double': lambda x: 2 * x})</span>
+<span class="sd">        &gt;&gt;&gt; dag.name, dag(3)</span>
+<span class="sd">        ('doubled', 6)</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        ``code_to_fnodes``: the same parsing, returning the ``FuncNode`` objects</span>
+<span class="sd">        without assembling a ``DAG``.</span>
+<span class="sd">        ``DAG``: the result type; ``DAG.synopsis_string`` shows the wiring.</span>
+<span class="sd">        ``meshed.dag.dag_to_code``: the inverse operation, from ``DAG`` back to code.</span>
 <span class="sd">    """</span>
     <span class="n">fnodes</span> <span class="o">=</span> <span class="n">code_to_fnodes</span><span class="p">(</span>
         <span class="n">src</span><span class="p">,</span> <span class="n">func_src</span><span class="o">=</span><span class="n">func_src</span><span class="p">,</span> <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="n">use_place_holder_fallback</span>
@@ -1299,8 +1483,12 @@ window.runMermaid = runMermaid;</script>
     <span class="k">return</span> <span class="n">_reconfigure_signature_according_to_src</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="code_to_digraph">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.code_to_digraph">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">code_to_digraph</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">"""Make a ``graphviz.Digraph`` of the ``DAG`` that ``code_to_dag(src)`` builds."""</span>
+    <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span></div>
+
 
 
 <span class="n">simple_code_to_digraph</span> <span class="o">=</span> <span class="n">code_to_digraph</span>  <span class="c1"># back-compatability alias</span>
@@ -1315,7 +1503,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="triples_to_fnodes">
 <a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.triples_to_fnodes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">triples_to_fnodes</span><span class="p">(</span><span class="n">triples</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Converts an iterable of func call triples to an iterable of ``FuncNode``s.</span>
+<span class="w">    </span><span class="sd">"""Converts an iterable of func call triples to an iterable of ``FuncNode`` objects.</span>
 <span class="sd">    (Which in turn can be converted to a ``DAG``.)</span>
 
 <span class="sd">    Note how the python identifiers are extracted (on the basis of "an unbroken</span>
@@ -1407,7 +1595,15 @@ window.runMermaid = runMermaid;</script>
 <span class="c1">#     return visitor.store</span>
 
 
+<div class="viewcode-block" id="lined_dag">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.lined_dag">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">lined_dag</span><span class="p">(</span><span class="n">funcs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Chain ``funcs`` into a ``DAG`` where each function's output feeds the first parameter of the next.</span>
+
+<span class="sd">    Edges are added with ``DAG.add_edges``, which raises ``ValueError`` if a</span>
+<span class="sd">    function's first parameter already carries the name of another function in</span>
+<span class="sd">    ``funcs``.</span>
+<span class="sd">    """</span>
     <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">funcs</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">funcs</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">dag</span>
@@ -1415,7 +1611,8 @@ window.runMermaid = runMermaid;</script>
         <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">]</span>
         <span class="n">pairs</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
         <span class="n">dag</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">add_edges</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dag</span>
+        <span class="k">return</span> <span class="n">dag</span></div>
+
 
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span>
@@ -1426,7 +1623,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="named_funcs_to_func_nodes">
 <a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.named_funcs_to_func_nodes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">named_funcs_to_func_nodes</span><span class="p">(</span><span class="n">named_funcs</span><span class="p">:</span> <span class="n">NamedFuncs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Make ``FuncNode``s from keyword arguments, using the key as the ``.out`` of the</span>
+<span class="w">    </span><span class="sd">"""Make ``FuncNode`` objects from keyword arguments, using the key as the ``.out`` of the</span>
 <span class="sd">    ``FuncNode`` and the value as the ``.func`` of the ``FuncNode``.</span>
 
 <span class="sd">    Example use: To get from ``Slabs`` to ``DAG``.</span>
@@ -1446,7 +1643,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    &gt;&gt;&gt; named_funcs = func_nodes_to_named_funcs(dag.func_nodes)</span>
 <span class="sd">    &gt;&gt;&gt; dag2 = DAG(named_funcs_to_func_nodes(named_funcs))</span>
 <span class="sd">    &gt;&gt;&gt; assert dag2(x=3) == dag(x=3) == 24</span>
-
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">_"</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span> <span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">named_funcs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -1458,7 +1654,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.func_nodes_to_named_funcs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">func_nodes_to_named_funcs</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">FuncNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NamedFuncs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Make some components (kwargs) based on the ``.out`` and ``.func`` of the</span>
-<span class="sd">    ``FuncNode``s.</span>
+<span class="sd">    ``FuncNode`` objects.</span>
 
 <span class="sd">    Example use: To get from ``DAG`` to ``Slabs``.</span>
 
@@ -1484,8 +1680,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    &gt;&gt;&gt; func_nodes = list(named_funcs_to_func_nodes(named_funcs))</span>
 <span class="sd">    &gt;&gt;&gt; dag2 = DAG(func_nodes)</span>
 <span class="sd">    &gt;&gt;&gt; assert dag2(x=3) == dag(x=3) == 24</span>
-
-
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">node</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">func</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">}</span></div>
 
@@ -1508,9 +1702,16 @@ window.runMermaid = runMermaid;</script>
 <span class="n">Jdict</span> <span class="o">=</span> <span class="nb">dict</span>  <span class="c1"># json-serializable dictionary</span>
 
 
+<div class="viewcode-block" id="fnode_to_jdict">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.fnode_to_jdict">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fnode_to_jdict</span><span class="p">(</span>
     <span class="n">fnode</span><span class="p">:</span> <span class="n">FuncNode</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">func_to_jdict</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Jdict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Serialize a ``FuncNode`` to a dict of its ``name``, ``func_label``, ``bind`` and ``out``.</span>
+
+<span class="sd">    The function itself is included (under ``func``) only when ``func_to_jdict`` is</span>
+<span class="sd">    given to serialize it.</span>
+<span class="sd">    """</span>
     <span class="n">jdict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">"name"</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
         <span class="s2">"func_label"</span><span class="p">:</span> <span class="n">fnode</span><span class="o">.</span><span class="n">func_label</span><span class="p">,</span>
@@ -1519,10 +1720,18 @@ window.runMermaid = runMermaid;</script>
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">func_to_jdict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">jdict</span><span class="p">[</span><span class="s2">"func"</span><span class="p">]</span> <span class="o">=</span> <span class="n">func_to_jdict</span><span class="p">(</span><span class="n">fnode</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">jdict</span>
+    <span class="k">return</span> <span class="n">jdict</span></div>
 
 
+
+<div class="viewcode-block" id="jdict_to_fnode">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.jdict_to_fnode">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">jdict_to_fnode</span><span class="p">(</span><span class="n">jdict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">jdict_to_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Jdict</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Rebuild a ``FuncNode`` from a dict made by ``fnode_to_jdict``.</span>
+
+<span class="sd">    ``jdict_to_func`` is required to turn ``jdict["func"]`` back into a callable;</span>
+<span class="sd">    without it, ``NotImplementedError`` is raised.</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">jdict_to_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FuncNode</span><span class="p">(</span>
             <span class="n">func</span><span class="o">=</span><span class="n">jdict_to_func</span><span class="p">(</span><span class="n">jdict</span><span class="p">[</span><span class="s2">"func"</span><span class="p">]),</span>
@@ -1532,7 +1741,8 @@ window.runMermaid = runMermaid;</script>
             <span class="n">out</span><span class="o">=</span><span class="n">jdict</span><span class="p">[</span><span class="s2">"out"</span><span class="p">],</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Need a function"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Need a function"</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="dag_to_jdict">

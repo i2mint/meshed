@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -697,8 +697,25 @@ window.runMermaid = runMermaid;</script>
                 <article class="bd-article">
                   
   <h1>Source code for meshed.components</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""</span>
-<span class="sd">Specialized components for meshed.</span>
+<span></span><span class="sd">"""Ready-made extraction components for meshed graphs.</span>
+
+<span class="sd">A ``DAG`` node needs a ``__name__`` and a signature to know what var node it reads</span>
+<span class="sd">and what var node it writes. Plain ``operator.itemgetter`` and ``attrgetter``</span>
+<span class="sd">objects have no ``__name__`` and no usable one-parameter signature, so this module</span>
+<span class="sd">wraps them in ``Extractor``, a callable that</span>
+<span class="sd">carries a chosen name and a single positional-only parameter, and can therefore</span>
+<span class="sd">be listed directly among the functions given to ``DAG``.</span>
+
+<span class="sd">Main entry points:</span>
+
+<span class="sd">- ``Itemgetter``: extracts one item, or a tuple of items, from its input by key.</span>
+<span class="sd">- ``AttrGetter``: extracts one attribute, or a tuple of attributes, from its input.</span>
+<span class="sd">- ``Extractor``: the general form; give it a factory and the parameters to build with.</span>
+
+<span class="sd">&gt;&gt;&gt; from meshed.components import Itemgetter</span>
+<span class="sd">&gt;&gt;&gt; get_ab = Itemgetter(['a', 'b'])</span>
+<span class="sd">&gt;&gt;&gt; get_ab({'a': 1, 'b': 2, 'c': 3})</span>
+<span class="sd">(1, 2)</span>
 <span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span>
@@ -713,6 +730,21 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../_autosummary/meshed.components.html#meshed.components.Extractor">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Extractor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Callable extracting from its single input, named and signed to be a DAG node.</span>
+
+<span class="sd">    Calling an instance applies ``extractor_factory(extractor_params)`` to the input.</span>
+<span class="sd">    The instance carries a chosen ``__name__`` and a one-parameter signature, which</span>
+<span class="sd">    is what ``DAG`` needs to wire it to var nodes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        extractor_factory: Called once with ``extractor_params`` to make the</span>
+<span class="sd">            function that is applied to the input.</span>
+<span class="sd">        extractor_params: Passed to ``extractor_factory``.</span>
+<span class="sd">        name: Becomes the ``__name__`` of the instance.</span>
+<span class="sd">        input_name: Name of the single positional-only parameter of the instance's</span>
+<span class="sd">            signature (the var node a DAG will bind it to).</span>
+<span class="sd">    """</span>
+
     <span class="n">extractor_factory</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]</span>
     <span class="n">extractor_params</span><span class="p">:</span> <span class="n">Any</span>
     <span class="c1"># TODO: When migrating CI to 3.10+, can use `kw_only=True` here</span>

@@ -26,7 +26,7 @@
 
 ### *class* meshed.scrap.cached_dag.CachedDag(dag, cache=True, name=None)
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Wraps a DAG, using it to compute any of it’s var nodes from it’s dependents,
 with the capability of caching intermediate var nodes for later reuse.
@@ -48,7 +48,9 @@ with the capability of caching intermediate var nodes for later reuse.
 >>> print(dag.dot_digraph_ascii())
 ```
 
-```w
+```text
+               w
+
             │
             │
             ▼
@@ -167,10 +169,10 @@ But we need to protect the user from such effects!
 
 First, we probably should cache inputs too.
 
-The we can:
+Then we can:
 
-- Make  computation take precedence over cache, overwriting the existing cache
-  : with the new resulting values
+- Make computation take precedence over cache, overwriting the existing cache
+  with the new resulting values
 - Allow the user to declare the entire cache, or just some variables in it,
   as write-once, to avoid creating bugs with the above proposal.
 - Cache multiple paths (lru_cache style) for different input combinations
@@ -199,7 +201,7 @@ x,y -> subtract -> z
 
 ### *class* meshed.scrap.cached_dag.NoOverwritesDict
 
-Bases: [`dict`](https://docs.python.org/3/library/stdtypes.html#dict)
+Bases: [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 A dict where you’re not allowed to write to a key that already has a value in it.
 
@@ -235,7 +237,7 @@ cached_dag.OverWritesNotAllowedError: The b key already exists and you're not al
 
 ### *exception* meshed.scrap.cached_dag.NotAllowed
 
-Bases: [`Exception`](https://docs.python.org/3/library/exceptions.html#Exception)
+Bases: [`Exception`](https://docs.python.org/3/builtins/exceptions.html#Exception)
 
 To use to indicate that something is not allowed
 

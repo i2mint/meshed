@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
     <link rel="prev" title="meshed.base" href="meshed.base.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -404,7 +404,36 @@
                   
   <section id="module-meshed.caching">
 <span id="meshed-caching"></span><h1>meshed.caching<a class="headerlink" href="#module-meshed.caching" title="Link to this heading">#</a></h1>
-<p>Caching meshes</p>
+<p>Turn functions into cached properties of a class.</p>
+<p>The functions here attach <code class="docutils literal notranslate"><span class="pre">functools.cached_property</span></code> attributes to a class
+after the fact, so a value is computed once per instance, on first access, from
+other attributes of that instance. <code class="docutils literal notranslate"><span class="pre">LazyProps</span></code> does this for every
+one-argument callable of a subclass at class-creation time; the
+<code class="docutils literal notranslate"><span class="pre">with_cached_properties</span></code> decorator does it for a chosen list of functions,
+sourcing each function’s parameters from same-named instance attributes.</p>
+<p>Main entry points:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LazyProps</span></code>: base class that makes each one-argument method a cached property.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">with_cached_properties</span></code>: class decorator adding the given functions as cached
+properties.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">add_cached_property_from_func</span></code>: the same for a single function, without decorating.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.caching</span><span class="w"> </span><span class="kn">import</span> <span class="n">with_cached_properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">area</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">'computing area'</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">width</span> <span class="o">*</span> <span class="n">height</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@with_cached_properties</span><span class="p">([</span><span class="n">area</span><span class="p">])</span>
+<span class="gp">... </span><span class="k">class</span><span class="w"> </span><span class="nc">Rect</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">area</span>
+<span class="go">computing area</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">area</span>
+<span class="go">6</span>
+</pre></div>
+</div>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
@@ -435,7 +464,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.caching.LazyProps">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.caching.</span></span><span class="sig-name descname"><span class="pre">LazyProps</span></span><a class="reference internal" href="../_modules/meshed/caching.html#LazyProps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.caching.LazyProps" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A class that makes all its attributes cached_property properties.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Klass</span><span class="p">(</span><span class="n">LazyProps</span><span class="p">):</span>

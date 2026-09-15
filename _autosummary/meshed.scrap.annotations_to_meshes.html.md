@@ -47,4 +47,4 @@ Produces a typing.Protocol based on a dictionary of
 Produces a scaffold class containing the said methods, with given annotations
 
 * **Return type:**
-  [`str`](https://docs.python.org/3/library/stdtypes.html#str)
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)

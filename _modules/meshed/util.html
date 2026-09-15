@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -697,7 +697,35 @@ window.runMermaid = runMermaid;</script>
                 <article class="bd-article">
                   
   <h1>Source code for meshed.util</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""util functions"""</span>
+<span></span><span class="sd">"""Function-wrapping, naming, and small data helpers shared across ``meshed``.</span>
+
+<span class="sd">Most of what lives here is glue that the DAG machinery leans on: decorators</span>
+<span class="sd">that turn a scalar function into one that maps over a stream (``iterize``,</span>
+<span class="sd">``ConditionalIterize``), name generation that avoids clashes when several</span>
+<span class="sd">functions share argument names (``find_first_free_name``, ``mk_func_name``,</span>
+<span class="sd">``arg_names``), signature reconciliation (``parameter_merger``), and dict</span>
+<span class="sd">and iterable utilities (``extract_values``, ``replace_item_in_iterable``).</span>
+<span class="sd">A few graph-rendering helpers (``funcs_to_digraph``, ``dot_to_ascii``) are</span>
+<span class="sd">also kept here.</span>
+
+<span class="sd">Main entry points:</span>
+
+<span class="sd">- ``iterize``: wrap ``func`` so it maps over an iterable (a partial of ``map``).</span>
+<span class="sd">- ``ConditionalIterize``: iterize a call only when the first argument satisfies</span>
+<span class="sd">  a condition (by default, when it is an ``Iterator``).</span>
+<span class="sd">- ``provides``: decorator that records, on ``func._provides``, the var node</span>
+<span class="sd">  names a function can source.</span>
+<span class="sd">- ``parameter_merger``: check that several ``inspect.Parameter`` objects agree</span>
+<span class="sd">  (name, kind, default, annotation) and return the first, raising</span>
+<span class="sd">  ``ValidationError`` otherwise.</span>
+<span class="sd">- ``replace_item_in_iterable``: replace items of an iterable that satisfy a</span>
+<span class="sd">  condition, keeping the container type for lists, tuples and sets.</span>
+
+<span class="sd">&gt;&gt;&gt; from meshed.util import iterize</span>
+<span class="sd">&gt;&gt;&gt; times_ten = iterize(lambda x: x * 10)</span>
+<span class="sd">&gt;&gt;&gt; list(times_ten(iter([1, 2, 3])))</span>
+<span class="sd">[10, 20, 30]</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
@@ -735,6 +763,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    ----------</span>
 <span class="sd">    module: Union[str, ModuleType]</span>
 <span class="sd">        The module to look up. Can either be</span>
+
 <span class="sd">        - the module object itself,</span>
 <span class="sd">        - a string specifying the module's fully qualified name (e.g., 'os.path'), or</span>
 <span class="sd">        - a .py filepath to the module</span>
@@ -760,6 +789,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
+
 <span class="sd">    &gt;&gt;&gt; import os</span>
 <span class="sd">    &gt;&gt;&gt; all_os_objects = objects_defined_in_module(os)</span>
 <span class="sd">    &gt;&gt;&gt; 'removedirs' in all_os_objects</span>
@@ -777,7 +807,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; callable(this_modules_funcs['objects_defined_in_module'])</span>
 <span class="sd">    True</span>
-
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".py"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
@@ -880,7 +909,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    ...     return x + 1</span>
 <span class="sd">    &gt;&gt;&gt; h._provides</span>
 <span class="sd">    ('b', 'h')</span>
-
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_provides_attribute</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -909,7 +937,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    'a string'</span>
 <span class="sd">    &gt;&gt;&gt; f('42')</span>
 <span class="sd">    42</span>
-
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">if_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">then_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -939,7 +966,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    it is ``False`` because it is not a string.</span>
 <span class="sd">    This shows that the second function is not applied to the input at all, since it</span>
 <span class="sd">    doesn't need to, and if it were, we'd get an error (length of a number?!).</span>
-
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="n">Pipe</span><span class="p">(</span><span class="n">FuncFanout</span><span class="p">(</span><span class="o">*</span><span class="n">funcs</span><span class="p">),</span> <span class="n">partial</span><span class="p">(</span><span class="nb">map</span><span class="p">,</span> <span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nb">all</span><span class="p">)</span></div>
 
@@ -961,23 +987,38 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<div class="viewcode-block" id="extra_wraps">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.extra_wraps">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">extra_wraps</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="s2">""</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Set ``func.__name__`` and ``func.__doc__`` in place, returning ``func``.</span>
+
+<span class="sd">    The name is ``name`` or ``func_name(func)``; the doc becomes</span>
+<span class="sd">    ``doc_prefix + func.__name__``.</span>
+<span class="sd">    """</span>
     <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">func_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc_prefix</span> <span class="o">+</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">"__name__"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">func</span>
+    <span class="k">return</span> <span class="n">func</span></div>
 
 
+
+<div class="viewcode-block" id="mywraps">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.mywraps">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">mywraps</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="s2">""</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Make a decorator applying ``functools.wraps(func)`` then ``extra_wraps`` to a</span>
+<span class="sd">    callable.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="n">wrapped</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">extra_wraps</span><span class="p">(</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="n">wrapped</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">doc_prefix</span><span class="o">=</span><span class="n">doc_prefix</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">wrapper</span>
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
 
 
 <div class="viewcode-block" id="iterize">
 <a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.iterize">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">iterize</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""From an Input-&gt;Ouput function, makes a Iterator[Input]-&gt;Itertor[Output]</span>
+<span class="w">    </span><span class="sd">"""From an Input-&gt;Output function, makes a Iterator[Input]-&gt;Iterator[Output]</span>
 <span class="sd">    Some call this "vectorization", but it's not really a vector, but an</span>
 <span class="sd">    iterable, thus the name.</span>
 
@@ -1016,7 +1057,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    of such objects.</span>
 <span class="sd">    (You might be familiar (if you use `numpy` for example) with the related</span>
 <span class="sd">    concept of "vectorization",</span>
-<span class="sd">    or [array programming](https://en.wikipedia.org/wiki/Array_programming).)</span>
+<span class="sd">    or `array programming &lt;https://en.wikipedia.org/wiki/Array_programming&gt;`_.)</span>
 
 
 <span class="sd">    &gt;&gt;&gt; from i2 import Pipe</span>
@@ -1059,7 +1100,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    True</span>
 <span class="sd">    &gt;&gt;&gt; isinstance_of_str(3)</span>
 <span class="sd">    False</span>
-
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="p">)</span></div>
 
@@ -1075,7 +1115,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    True</span>
 <span class="sd">    &gt;&gt;&gt; isinstance_of_str(3)</span>
 <span class="sd">    False</span>
-
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">my_isinstance</span><span class="p">,</span> <span class="n">class_or_tuple</span><span class="o">=</span><span class="n">class_or_tuple</span><span class="p">)</span></div>
 
@@ -1175,7 +1214,6 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    &gt;&gt;&gt; str(signature(foo))</span>
 <span class="sd">    '(x: Union[int, Iterable[int]], y=2)'</span>
-
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -1230,26 +1268,41 @@ window.runMermaid = runMermaid;</script>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">new_sig</span>
 
+<div class="viewcode-block" id="ConditionalIterize.wrap">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.ConditionalIterize.wrap">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">wrap</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">iterize_type</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">Iterator</span><span class="p">,</span>
         <span class="n">iterize_condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Make a decorator building a ``ConditionalIterize`` with the given type and</span>
+<span class="sd">        condition.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">partial</span><span class="p">(</span>
             <span class="bp">cls</span><span class="p">,</span> <span class="n">iterize_type</span><span class="o">=</span><span class="n">iterize_type</span><span class="p">,</span> <span class="n">iterize_condition</span><span class="o">=</span><span class="n">iterize_condition</span>
         <span class="p">)</span></div>
+</div>
 
 
 
+<div class="viewcode-block" id="ModuleNotFoundIgnore">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.ModuleNotFoundIgnore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModuleNotFoundIgnore</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Context manager that suppresses any exception raised inside its block.</span>
+
+<span class="sd">    Written to silence ``ModuleNotFoundError``, but ``__exit__`` returns ``True``</span>
+<span class="sd">    unconditionally, so every exception type is swallowed.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">exc_type</span> <span class="ow">is</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
             <span class="k">pass</span>
-        <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
 
 
 <div class="viewcode-block" id="incremental_str_maker">
@@ -1319,13 +1372,20 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<div class="viewcode-block" id="funcs_to_digraph">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.funcs_to_digraph">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">funcs_to_digraph</span><span class="p">(</span><span class="n">funcs</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Add ``(arg_name, func_name)`` edges of ``funcs`` to a ``graphviz.Digraph``.</span>
+
+<span class="sd">    A new ``Digraph`` is made if ``graph`` is None; functions are drawn as boxes.</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">graphviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">Digraph</span>
 
     <span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span> <span class="ow">or</span> <span class="n">Digraph</span><span class="p">()</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">args_funcnames</span><span class="p">(</span><span class="n">funcs</span><span class="p">)))</span>
     <span class="n">graph</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">funcs</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" [shape=box]"</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">graph</span>
+    <span class="k">return</span> <span class="n">graph</span></div>
+
 
 
 <div class="viewcode-block" id="dot_to_ascii">
@@ -1362,7 +1422,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">      └───────────────────── │   │</span>
 <span class="sd">                             └───┘</span>
 <span class="sd">    &lt;BLANKLINE&gt;</span>
-
 <span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
@@ -1396,10 +1455,17 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<div class="viewcode-block" id="print_ascii_graph">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.print_ascii_graph">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">print_ascii_graph</span><span class="p">(</span><span class="n">funcs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Print an ascii rendering of ``funcs_to_digraph(funcs)``.</span>
+
+<span class="sd">    Uses ``dot_to_ascii``, so needs an internet connection.</span>
+<span class="sd">    """</span>
     <span class="n">digraph</span> <span class="o">=</span> <span class="n">funcs_to_digraph</span><span class="p">(</span><span class="n">funcs</span><span class="p">)</span>
     <span class="n">dot_str</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">digraph</span><span class="o">.</span><span class="n">body</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">dot_to_ascii</span><span class="p">(</span><span class="n">dot_str</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dot_to_ascii</span><span class="p">(</span><span class="n">dot_str</span><span class="p">))</span></div>
+
 
 
 <div class="viewcode-block" id="ValidationError">
@@ -1430,7 +1496,19 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<div class="viewcode-block" id="find_first_free_name">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.find_first_free_name">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_first_free_name</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">(),</span> <span class="n">start_at</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return ``prefix``, or the first ``f"{prefix}__{i}"`` not in ``exclude_names``.</span>
+
+<span class="sd">    ``prefix`` itself is returned when it is not excluded; otherwise ``i`` counts</span>
+<span class="sd">    up from ``start_at``.</span>
+
+<span class="sd">    &gt;&gt;&gt; find_first_free_name('ab', ('cd',))</span>
+<span class="sd">    'ab'</span>
+<span class="sd">    &gt;&gt;&gt; find_first_free_name('ab', ('ab', 'ab__2'))</span>
+<span class="sd">    'ab__3'</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">prefix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">prefix</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1439,7 +1517,8 @@ window.runMermaid = runMermaid;</script>
             <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">name</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
 
 
 <div class="viewcode-block" id="mk_func_name">
@@ -1447,7 +1526,8 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
 <span class="w">    </span><span class="sd">"""Makes a function name that doesn't clash with the exclude_names iterable.</span>
 <span class="sd">    Tries it's best to not be lazy, but instead extract a name from the function</span>
-<span class="sd">    itself."""</span>
+<span class="sd">    itself.</span>
+<span class="sd">    """</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"func"</span>
     <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"&lt;lambda&gt;"</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">lambda_name</span><span class="p">()</span>  <span class="c1"># make a lambda name that is a unique identifier</span>
@@ -1455,7 +1535,17 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<div class="viewcode-block" id="arg_names">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.arg_names">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">arg_names</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">"""List ``func``'s parameter names, renaming those found in ``exclude_names``.</span>
+
+<span class="sd">    A clashing name becomes the first free ``f"{func_name}__{name}"`` variant</span>
+<span class="sd">    (see ``find_first_free_name``).</span>
+
+<span class="sd">    &gt;&gt;&gt; arg_names(lambda a, b, c: None, 'myf', exclude_names=('a',))</span>
+<span class="sd">    ['myf__a', 'b', 'c']</span>
+<span class="sd">    """</span>
     <span class="n">names</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">names</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">():</span>
@@ -1470,7 +1560,8 @@ window.runMermaid = runMermaid;</script>
                 <span class="k">yield</span> <span class="n">found_name</span>
                 <span class="n">_exclude_names</span> <span class="o">=</span> <span class="n">_exclude_names</span> <span class="o">+</span> <span class="p">(</span><span class="n">found_name</span><span class="p">,)</span>
 
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span></div>
+
 
 
 <div class="viewcode-block" id="named_partial">
@@ -1528,7 +1619,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    '(arg_names_or_sig, name=None, defaults=(), annotations=())'</span>
 <span class="sd">    &gt;&gt;&gt; g(1,2,defaults=3, annotations=4)</span>
 <span class="sd">    'mk_place_holder_func(arg_names_or_sig=1, name=2, defaults=3, annotations=4)'</span>
-
 <span class="sd">    """</span>
     <span class="n">defaults</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">arg_names_or_sig</span><span class="p">)</span>
@@ -1574,26 +1664,54 @@ window.runMermaid = runMermaid;</script>
 <span class="c1"># utils to reorder funcnodes</span>
 
 
+<div class="viewcode-block" id="pairs">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.pairs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pairs</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""List the consecutive ``(xs[i], xs[i+1])`` pairs of a sequence.</span>
+
+<span class="sd">    A sequence of length 0 or 1 is returned as is.</span>
+
+<span class="sd">    &gt;&gt;&gt; pairs([1, 2, 3])</span>
+<span class="sd">    [(1, 2), (2, 3)]</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">xs</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">xs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
-    <span class="k">return</span> <span class="n">pairs</span>
+    <span class="k">return</span> <span class="n">pairs</span></div>
 
 
+
+<div class="viewcode-block" id="curry">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.curry">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">curry</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Wrap ``func`` so that positional arguments are passed to it as a single tuple.</span>
+
+<span class="sd">    &gt;&gt;&gt; curry(sum)(1, 2, 3)</span>
+<span class="sd">    6</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">res</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">res</span></div>
 
 
+
+<div class="viewcode-block" id="uncurry">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.uncurry">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">uncurry</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Wrap ``func`` so that it takes one tuple and unpacks it into positional arguments.</span>
+
+<span class="sd">    &gt;&gt;&gt; uncurry(lambda a, b: a + b)((1, 2))</span>
+<span class="sd">    3</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">res</span><span class="p">(</span><span class="n">tup</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">tup</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
 
 
 <span class="n">Renamer</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
@@ -1630,7 +1748,8 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="numbered_suffix_renamer">
 <a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.numbered_suffix_renamer">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">numbered_suffix_renamer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">"_"</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
+<span class="w">    </span><span class="sd">"""Append ``sep + "1"`` to ``name``, or increment its existing numbered suffix.</span>
+
 <span class="sd">    &gt;&gt;&gt; numbered_suffix_renamer('item')</span>
 <span class="sd">    'item_1'</span>
 <span class="sd">    &gt;&gt;&gt; numbered_suffix_renamer('item_1')</span>
@@ -1650,7 +1769,8 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.InvalidFunctionParameters">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InvalidFunctionParameters</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""To be used when a function's parameters are not compliant with some rule about</span>
-<span class="sd">    them."""</span></div>
+<span class="sd">    them.</span>
+<span class="sd">    """</span></div>
 
 
 
@@ -1705,7 +1825,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    &gt;&gt;&gt; # from meshed import Literal</span>
 <span class="sd">    &gt;&gt;&gt; conditional_trans(LiteralVal('10'), str.isnumeric, float)</span>
 <span class="sd">    '10'</span>
-
 <span class="sd">    """</span>
     <span class="c1"># TODO: Maybe make Literal checking less sensitive to isinstance checks, using</span>
     <span class="c1">#   hasattr instead for example.</span>
@@ -1757,7 +1876,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    ... iter([1,2,3,4,5]), is_even, lambda x: x * 10, egress=sorted</span>
 <span class="sd">    ... )</span>
 <span class="sd">    [1, 3, 5, 20, 40]</span>
-
 <span class="sd">    """</span>
     <span class="c1"># If condition or replacement are not callable, make them so</span>
     <span class="n">condition</span> <span class="o">=</span> <span class="n">conditional_trans</span><span class="p">(</span>
@@ -1792,7 +1910,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    &gt;&gt;&gt; _complete_dict_with_iterable_of_required_keys(d, 'abc')</span>
 <span class="sd">    &gt;&gt;&gt; d</span>
 <span class="sd">    {'a': 'A', 'c': 'C', 'b': 'b'}</span>
-
 <span class="sd">    """</span>
     <span class="n">keys_already_covered</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">to_complete</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">required_key</span> <span class="ow">in</span> <span class="n">complete_with</span><span class="p">:</span>
@@ -1800,12 +1917,23 @@ window.runMermaid = runMermaid;</script>
             <span class="n">to_complete</span><span class="p">[</span><span class="n">required_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">required_key</span>
 
 
+<div class="viewcode-block" id="inverse_dict_asserting_losslessness">
+<a class="viewcode-back" href="../../_autosummary/meshed.util.html#meshed.util.inverse_dict_asserting_losslessness">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">inverse_dict_asserting_losslessness</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Invert ``d`` (values become keys), asserting that no values are duplicated.</span>
+
+<span class="sd">    Raises ``AssertionError`` if two keys share a value, since the inversion would</span>
+<span class="sd">    lose one of them.</span>
+
+<span class="sd">    &gt;&gt;&gt; inverse_dict_asserting_losslessness({'a': 1, 'b': 2})</span>
+<span class="sd">    {1: 'a', 2: 'b'}</span>
+<span class="sd">    """</span>
     <span class="n">inv_d</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">inv_d</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="p">(</span>
         <span class="sa">f</span><span class="s2">"can't invert: You have some duplicate values in this dict: "</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">inv_d</span>
+    <span class="k">return</span> <span class="n">inv_d</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_extract_values</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">):</span>
@@ -1834,7 +1962,6 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    &gt;&gt;&gt; extract_values({'a': 1, 'b': 2, 'c': 3}, ['c', 'a'])</span>
 <span class="sd">    (3, 1)</span>
-
 <span class="sd">    """</span>
     <span class="n">tup</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_extract_values</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">keys</span><span class="p">))</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -1853,7 +1980,6 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    &gt;&gt;&gt; list(extract_items({'a': 1, 'b': 2, 'c': 3}, ['a', 'c']))</span>
 <span class="sd">    [('a', 1), ('c', 3)]</span>
-
 <span class="sd">    """</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span></div>
@@ -1872,7 +1998,6 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    &gt;&gt;&gt; extract_dict({'a': 1, 'b': 2, 'c': 3}, ['c', 'a'])</span>
 <span class="sd">    {'c': 3, 'a': 1}</span>
-
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">extract_items</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">keys</span><span class="p">))</span></div>
 

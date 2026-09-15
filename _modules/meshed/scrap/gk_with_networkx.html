@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../../../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -741,14 +741,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Names may be given to this layer and its inputs and outputs. This is</span>
 <span class="sd">    important when connecting layers and data in a Network object, as the</span>
 <span class="sd">    names are used to construct the graph.</span>
+
 <span class="sd">    :param str name: The name the operation (e.g. conv1, conv2, etc..)</span>
 <span class="sd">    :param list needs: Names of input data objects this layer requires.</span>
 <span class="sd">    :param list provides: Names of output data objects this provides.</span>
 <span class="sd">    :param dict params: A dict of key/value pairs representing parameters</span>
 <span class="sd">                        associated with your operation. These values will be</span>
 <span class="sd">                        accessible using the ``.params`` attribute of your object.</span>
-<span class="sd">                        NOTE: It's important that any values stored in this</span>
-<span class="sd">                        argument must be pickelable.</span>
+
+<span class="sd">                        NOTE:</span>
+<span class="sd">                            It's important that any values stored in this</span>
+<span class="sd">                            argument must be pickelable.</span>
 <span class="sd">    """</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">"None"</span><span class="p">)</span>
@@ -786,6 +789,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        This method must be implemented to perform this layer's feed-forward</span>
 <span class="sd">        computation on a given set of inputs.</span>
+
 <span class="sd">        :param list inputs:</span>
 <span class="sd">            A list of :class:`Data` objects on which to run the layer's</span>
 <span class="sd">            feed-forward computation.</span>
@@ -868,11 +872,10 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="NetworkOperation.set_execution_method">
 <a class="viewcode-back" href="../../../_autosummary/meshed.scrap.gk_with_networkx.html#meshed.scrap.gk_with_networkx.NetworkOperation.set_execution_method">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_execution_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Determine how the network will be executed.</span>
+<span class="w">        </span><span class="sd">"""Determine how the network will be executed.</span>
+
 <span class="sd">        Args:</span>
-<span class="sd">            method: str</span>
-<span class="sd">                If "parallel", execute graph operations concurrently</span>
+<span class="sd">            method: If "parallel", execute graph operations concurrently</span>
 <span class="sd">                using a threadpool.</span>
 <span class="sd">        """</span>
         <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"parallel"</span><span class="p">,</span> <span class="s2">"sequential"</span><span class="p">]</span>
@@ -931,7 +934,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        # The graph works with and without 'c' provided as input.</span>
 <span class="sd">        assert graph({'a': 5, 'b': 2, 'c': 4})['sum'] == 11</span>
 <span class="sd">        assert graph({'a': 5, 'b': 2})['sum'] == 7</span>
-
 <span class="sd">    """</span>
 
     <span class="k">pass</span></div>
@@ -1323,6 +1325,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Plot the graph.</span>
 
 <span class="sd">            params:</span>
+
 <span class="sd">            :param str filename:</span>
 <span class="sd">                Write the output to a png, pdf, or graphviz dot file. The extension</span>
 <span class="sd">                controls the output format.</span>
@@ -1333,7 +1336,6 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">            :returns:</span>
 <span class="sd">                An instance of the pydot graph</span>
-
 <span class="sd">            """</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">suppress</span>
 
@@ -1401,12 +1403,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        what has already been executed.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            op:</span>
-<span class="sd">                The Operation object to check</span>
-<span class="sd">            has_executed: set</span>
-<span class="sd">                A set containing all operations that have been executed so far</span>
-<span class="sd">            graph:</span>
-<span class="sd">                The networkx graph containing the operations and data nodes</span>
+<span class="sd">            op: The Operation object to check</span>
+
+<span class="sd">            has_executed: A set containing all operations that have been executed so far</span>
+
+<span class="sd">            graph: The networkx graph containing the operations and data nodes</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            A boolean indicating whether the operation may be scheduled for</span>
 <span class="sd">            execution based on what has already been executed.</span>
@@ -1422,12 +1424,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        cache.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name:</span>
-<span class="sd">                The name of the data node to check</span>
-<span class="sd">            has_executed: set</span>
-<span class="sd">                A set containing all operations that have been executed so far</span>
-<span class="sd">            graph:</span>
-<span class="sd">                The networkx graph containing the operations and data nodes</span>
+<span class="sd">            name: The name of the data node to check</span>
+
+<span class="sd">            has_executed: A set containing all operations that have been executed so far</span>
+
+<span class="sd">            graph: The networkx graph containing the operations and data nodes</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            A boolean indicating whether the data node can be deleted or not.</span>
 <span class="sd">        """</span>
@@ -1516,7 +1518,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param dict params:</span>
 <span class="sd">            A dict of key/value pairs representing constant parameters</span>
 <span class="sd">            associated with your operation.  These can correspond to either</span>
-<span class="sd">            ``args`` or ``kwargs`` of ``fn`.</span>
+<span class="sd">            ``args`` or ``kwargs`` of ``fn``.</span>
 <span class="sd">        """</span>
 
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

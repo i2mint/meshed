@@ -15,9 +15,9 @@ Specific use of FuncNode and DAG
 ### meshed.composition.func_node_name_trans(name_trans, , also_apply_to_func_label=False)
 
 * **Parameters:**
-  * **name_trans** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`str`](https://docs.python.org/3/library/stdtypes.html#str)], [`str`](https://docs.python.org/3/library/stdtypes.html#str) | [`None`](https://docs.python.org/3/library/constants.html#None)]) – A function taking a str and returning a str, or None (to indicate
+  * **name_trans** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)], [`str`](https://docs.python.org/3/builtins/stdtypes.html#str) | [`None`](https://docs.python.org/3/builtins/constants.html#None)]) – A function taking a str and returning a str, or None (to indicate
     that no transformation should take place).
-  * **also_apply_to_func_label** ([`bool`](https://docs.python.org/3/library/functions.html#bool))
+  * **also_apply_to_func_label** ([`bool`](https://docs.python.org/3/builtins/functions.html#bool))
 * **Returns:**
 
 ### meshed.composition.get_param(func)
@@ -37,7 +37,7 @@ This ensures that the func will be able to be bound to FuncNode fields and
 therefore used as a func_node (kwargs) transformer.
 
 * **Return type:**
-  [`bool`](https://docs.python.org/3/library/functions.html#bool)
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
 ### meshed.composition.line_with_dag(\*steps)
 

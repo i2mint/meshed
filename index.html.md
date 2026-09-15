@@ -9,8 +9,20 @@ To install: `pip install meshed`
 
 [Documentation](https://i2mint.github.io/meshed/)
 
-Note: The initial focuus of `meshed` was on DAGs, a versatile and probably most known kind of composition of functions,
+Note: The initial focus of `meshed` was on DAGs, a versatile and probably most known kind of composition of functions,
 but `meshed` aims at capturing much more than that.
+
+<!-- epythet:agentic-readme:start -->
+
+# For AI agents
+
+`meshed` ships tooling for coding agents. If you are one, start here.
+
+**The documentation, machine-readable**: [`llms.txt`](https://i2mint.github.io/meshed/llms.txt) indexes every page; [`meshed.md`](https://i2mint.github.io/meshed/meshed.md) is the whole documentation in one file; every page has a `.md` twin; [`objects.inv`](https://i2mint.github.io/meshed/objects.inv) maps symbols to URLs.
+
+If you identify as a dinosaur, the rest of this README is written for you, starting at [Quick Start]().
+
+<!-- epythet:agentic-readme:end -->
 
 # Quick Start
 
@@ -335,7 +347,7 @@ you can easily create one using one of the many tools of `py2store` meant exactl
 
 # Examples
 
-```pydocstring
+```python
 >>> from meshed.itools import edges, nodes, isolated_nodes
 >>> graph = dict(a='c', b='ce', c='abde', d='c', e=['c', 'b'], f={})
 >>> sorted(edges(graph))
@@ -345,7 +357,7 @@ you can easily create one using one of the many tools of `py2store` meant exactl
 >>> set(isolated_nodes(graph))
 {'f'}
 >>>
->>> from meshed.makers import edge_reversed_graph
+>>> from meshed.itools import edge_reversed_graph
 >>> g = dict(a='c', b='cd', c='abd', e='')
 >>> assert edge_reversed_graph(g) == {'c': ['a', 'b'], 'd': ['b', 'c'], 'a': ['c'], 'b': ['c'], 'e': []}
 >>> reverse_g_with_sets = edge_reversed_graph(g, set, set.add)

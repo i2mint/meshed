@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "built_at": "2026-09-15T09:53:03Z",
+  "package": {
+    "name": "meshed",
+    "version": "0.1.168",
+    "display_name": "meshed",
+    "source": "setup.cfg"
+  },
+  "git": {
+    "available": true,
+    "commit": "0cb260952aa201313ccfbbca5a81dc0fd07c7a2a",
+    "short_commit": "0cb2609",
+    "branch": "master",
+    "tags": [
+      "0.1.168"
+    ],
+    "dirty": false,
+    "remote_url": "https://github.com/i2mint/meshed",
+    "commit_url": "https://github.com/i2mint/meshed/commit/0cb260952aa201313ccfbbca5a81dc0fd07c7a2a",
+    "error": null
+  },
+  "ci": {
+    "provider": "github",
+    "repository": "i2mint/meshed",
+    "sha": "086bd85da534561b03653f6a24cddeee7e06e60d",
+    "sha_in_history": true,
+    "ref": "refs/heads/master",
+    "ref_name": "master",
+    "run_id": "34954693760",
+    "run_url": "https://github.com/i2mint/meshed/actions/runs/34954693760",
+    "server_url": "https://github.com"
+  },
+  "tools": {
+    "epythet": "0.2.8",
+    "sphinx": "9.1.0",
+    "docutils": "0.22.4",
+    "python": "3.12.14"
+  },
+  "config": {
+    "theme": "auto",
+    "html_theme": "pydata_sphinx_theme",
+    "accent": "#486300",
+    "mode": "auto",
+    "api_generator": "autosummary",
+    "ignore": [
+      "tests/"
+    ],
+    "agent_outputs": true,
+    "aggregates": [
+      "md"
+    ],
+    "ai_artifacts": true,
+    "provenance": true,
+    "docs_dir": "docsrc"
+  },
+  "site": {
+    "modules_documented": 29,
+    "objects_documented": 257
+  },
+  "pypi": {
+    "checked": true,
+    "latest": "0.1.168",
+    "relation": "same",
+    "error": null
+  },
+  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 0cb260952aa201313ccfbbca5a81dc0fd07c7a2a\npip install \"epythet==0.2.8\"\nepythet quickstart . --ignore tests/",
+  "warnings": [],
+  "alignment": {
+    "aligned": true,
+    "notes": []
+  }
+}

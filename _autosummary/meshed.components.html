@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
     <link rel="prev" title="meshed.caching" href="meshed.caching.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -404,12 +404,30 @@
                   
   <section id="module-meshed.components">
 <span id="meshed-components"></span><h1>meshed.components<a class="headerlink" href="#module-meshed.components" title="Link to this heading">#</a></h1>
-<p>Specialized components for meshed.</p>
+<p>Ready-made extraction components for meshed graphs.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">DAG</span></code> node needs a <code class="docutils literal notranslate"><span class="pre">__name__</span></code> and a signature to know what var node it reads
+and what var node it writes. Plain <code class="docutils literal notranslate"><span class="pre">operator.itemgetter</span></code> and <code class="docutils literal notranslate"><span class="pre">attrgetter</span></code>
+objects have no <code class="docutils literal notranslate"><span class="pre">__name__</span></code> and no usable one-parameter signature, so this module
+wraps them in <code class="docutils literal notranslate"><span class="pre">Extractor</span></code>, a callable that
+carries a chosen name and a single positional-only parameter, and can therefore
+be listed directly among the functions given to <code class="docutils literal notranslate"><span class="pre">DAG</span></code>.</p>
+<p>Main entry points:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Itemgetter</span></code>: extracts one item, or a tuple of items, from its input by key.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AttrGetter</span></code>: extracts one attribute, or a tuple of attributes, from its input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Extractor</span></code>: the general form; give it a factory and the parameters to build with.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">Itemgetter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_ab</span> <span class="o">=</span> <span class="n">Itemgetter</span><span class="p">([</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_ab</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<span class="go">(1, 2)</span>
+</pre></div>
+</div>
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.components.Extractor" title="meshed.components.Extractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Extractor</span></code></a>(extractor_factory, extractor_params, *)</p></td>
-<td><p></p></td>
+<td><p>Callable extracting from its single input, named and signed to be a DAG node.</p></td>
 </tr>
 </tbody>
 </table>
@@ -417,8 +435,22 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.components.Extractor">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.components.</span></span><span class="sig-name descname"><span class="pre">Extractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extractor_factory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extractor_params</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'extractor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'x'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/components.html#Extractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.components.Extractor" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Callable extracting from its single input, named and signed to be a DAG node.</p>
+<p>Calling an instance applies <code class="docutils literal notranslate"><span class="pre">extractor_factory(extractor_params)</span></code> to the input.
+The instance carries a chosen <code class="docutils literal notranslate"><span class="pre">__name__</span></code> and a one-parameter signature, which
+is what <code class="docutils literal notranslate"><span class="pre">DAG</span></code> needs to wire it to var nodes.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>extractor_factory</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>]</span>) – Called once with <code class="docutils literal notranslate"><span class="pre">extractor_params</span></code> to make the
+function that is applied to the input.</p></li>
+<li><p><strong>extractor_params</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></span>) – Passed to <code class="docutils literal notranslate"><span class="pre">extractor_factory</span></code>.</p></li>
+<li><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Becomes the <code class="docutils literal notranslate"><span class="pre">__name__</span></code> of the instance.</p></li>
+<li><p><strong>input_name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Name of the single positional-only parameter of the instance’s
+signature (the var node a DAG will bind it to).</p></li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 

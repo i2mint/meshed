@@ -42,7 +42,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=b37d7122"></script>
+    <script src="../_static/documentation_options.js?v=ff1f56f9"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
     <link rel="prev" title="meshed.examples" href="meshed.examples.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.166" />
+  <meta name="docsearch:version" content="0.1.168" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -408,21 +408,15 @@
   <section id="module-meshed.examples.online_marketing">
 <span id="meshed-examples-online-marketing"></span><h1>meshed.examples.online_marketing<a class="headerlink" href="#module-meshed.examples.online_marketing" title="Link to this heading">#</a></h1>
 <p>Online marketing funnel: impressions and clicks to sales and profit.</p>
-<blockquote>
-<div><blockquote>
-<div><p>┌──────────────────────┐
-│ click_per_impression │
-└──────────────────────┘</p>
-<blockquote>
-<div><p>│
-▼</p>
-</div></blockquote>
-</div></blockquote>
-<p>┌─────────────────┐     ┌──────────────────────┐
-│   impressions   │ ──▶ │        clicks        │
-└─────────────────┘     └──────────────────────┘</p>
-</div></blockquote>
-<p>┌────┘                       │
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>                           ┌──────────────────────┐
+                           │ click_per_impression │
+                           └──────────────────────┘
+                             │
+                             ▼
+   ┌─────────────────┐     ┌──────────────────────┐
+   │   impressions   │ ──▶ │        clicks        │
+   └─────────────────┘     └──────────────────────┘
+┌────┘                       │
 │                            ▼
 │  ┌─────────────────┐     ┌──────────────────────┐
 │  │ sales_per_click │ ──▶ │        sales         │
@@ -443,10 +437,10 @@
 │                            │                       │
 │                            ▼                       │
 │                          ┌──────────────────────┐  │
-└────────────────────────▶ │         cost         │ ─┘</p>
-<blockquote>
-<div><p>└──────────────────────┘</p>
-</div></blockquote>
+└────────────────────────▶ │         cost         │ ─┘
+                           └──────────────────────┘
+</pre></div>
+</div>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>

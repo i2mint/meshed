@@ -12,6 +12,13 @@ simple interface: An (ordered) list of components that are called in sequence to
 pull data from some sources, compute a new stream based on previous ones, or push some
 of the streams to further processes (such as visualization, or storage systems).
 
+Main entry points:
+
+- `Slabs`: the stream-of-slabs object; iterate it, or `run()` it for side effects.
+- `IteratorExit`: raise it from a component to stop the iteration cleanly.
+- `conditional_sentinel`: decorator returning a sentinel instead of calling the function
+  when a condition on its arguments holds (`output_none_if_none_arguments` is one).
+
 A slab is a collection of items of a same interval of time.
 We represent a slab using a `dict` or mapping.
 Typically, a slab will be the aggregation of multiple information streams that
@@ -53,12 +60,12 @@ For a discussion about the design of Slabs, see
 
 ### Functions
 
-| [`all_arguments_are_none`](#meshed.slabs.all_arguments_are_none)(args, kwargs)             | Return True if all arguments are None.                             |
-|---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| [`conditional_sentinel`](#meshed.slabs.conditional_sentinel)(condition_func[, sentinel]) | Decorator that returns sentinel based on a user-defined condition. |
-| `do_nothing`()                                                                                    |                                                                    |
-| `log_and_return`(msg[, logger])                                                                   |                                                                    |
-| [`output_none_if_none_arguments`](#meshed.slabs.output_none_if_none_arguments)(func)              | Decorator that returns None if all arguments are None.             |
+| [`all_arguments_are_none`](#meshed.slabs.all_arguments_are_none)(args, kwargs)             | Return True if all arguments are None.                               |
+|---------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| [`conditional_sentinel`](#meshed.slabs.conditional_sentinel)(condition_func[, sentinel]) | Decorator that returns sentinel based on a user-defined condition.   |
+| [`do_nothing`](#meshed.slabs.do_nothing)()                                     | Argument-less no-op, the default handler of handled exceptions.      |
+| [`log_and_return`](#meshed.slabs.log_and_return)(msg[, logger])                    | Pass `msg` to `logger` (`print` by default) and return it unchanged. |
+| [`output_none_if_none_arguments`](#meshed.slabs.output_none_if_none_arguments)(func)              | Decorator that returns None if all arguments are None.               |
 
 ### Classes
 
@@ -85,7 +92,7 @@ which will signal that the iteration should continue.
 
 ### *exception* meshed.slabs.ExceptionalException
 
-Bases: [`Exception`](https://docs.python.org/3/library/exceptions.html#Exception)
+Bases: [`Exception`](https://docs.python.org/3/builtins/exceptions.html#Exception)
 
 Raised when an exception was supposed to be handled, but no matching handler
 was found.
@@ -94,7 +101,7 @@ See the `_handle_exception` function, where it is raised.
 
 ### *exception* meshed.slabs.IteratorExit
 
-Bases: [`BaseException`](https://docs.python.org/3/library/exceptions.html#BaseException)
+Bases: [`BaseException`](https://docs.python.org/3/builtins/exceptions.html#BaseException)
 
 Raised when an iterator should quit being iterated on, signaling this event
 any process that cares to catch the signal.
@@ -106,7 +113,7 @@ See: [https://docs.python.org/3/library/exceptions.html#GeneratorExit](https://d
 
 ### *class* meshed.slabs.Slabs(handle_exceptions=(<class 'StopIteration'>, <class 'meshed.slabs.IteratorExit'>, <class 'KeyboardInterrupt'>), scope_factory=<class 'dict'>, \*\*components)
 
-Bases: [`object`](https://docs.python.org/3/library/functions.html#object)
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Object to source and manipulate multiple streams.
 
@@ -272,6 +279,13 @@ store the intermediate results, and have the components read and write to it.
 To help you with this, check out the [dol](https://pypi.org/project/dol/)
 and [py2store](https://pypi.org/project/py2store/) libraries.
 
+#### close(exc_type=None, exc_val=None, exc_tb=None)
+
+Exit the component contexts entered by `open`.
+
+* **Return type:**
+  [`None`](https://docs.python.org/3/builtins/constants.html#None)
+
 #### dot_digraph(\*args, \*\*kwargs)
 
 Returns a dot_digraph of the DAG of the SlabsIter (see `DAG.dot_digraph`)
@@ -283,6 +297,30 @@ Make a Slabs object from a list of functions and/or FuncNodes, DAG, …
 #### *classmethod* from_func_nodes(func_nodes, \*, handle_exceptions=(<class 'StopIteration'>, <class 'meshed.slabs.IteratorExit'>, <class 'KeyboardInterrupt'>), scope_factory=<class 'dict'>)
 
 Make a Slabs object from a list of functions and/or FuncNodes, DAG, …
+
+#### open()
+
+Enter the context of every component that has one, and return `self`.
+
+#### run()
+
+Iterate through all the slabs, discarding them (for the side effects only).
+
+#### to_dag()
+
+Build a `DAG` from the `FuncNode` objects of `to_func_nodes`.
+
+* **Return type:**
+  [`DAG`](meshed.dag.html.md#meshed.dag.DAG)
+
+#### to_func_nodes()
+
+Yield a `FuncNode` per component.
+
+Each node’s name and output var node are the component’s name.
+
+* **Return type:**
+  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]
 
 ### meshed.slabs.SlabsIter
 
@@ -301,7 +339,7 @@ decorated function as input and return a boolean value. If the condition is met,
 the sentinel value is returned instead of the decorated function’s return value.
 
 * **Parameters:**
-  * **condition_func** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`tuple`](https://docs.python.org/3/library/stdtypes.html#tuple), [`dict`](https://docs.python.org/3/library/stdtypes.html#dict)], [`bool`](https://docs.python.org/3/library/functions.html#bool)]) – A function that takes the arguments and keyword
+  * **condition_func** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple), [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)], [`bool`](https://docs.python.org/3/builtins/functions.html#bool)]) – A function that takes the arguments and keyword
     arguments of the decorated function as input and returns a boolean value.
   * **sentinel** ([`Any`](https://docs.python.org/3/library/typing.html#typing.Any)) – The value to return if the condition is met.
 
@@ -333,6 +371,16 @@ See also `output_none_if_none_arguments`, made from `conditional_sentinel`:
 3
 >>> assert foo(None, None) is None
 ```
+
+### meshed.slabs.do_nothing()
+
+Argument-less no-op, the default handler of handled exceptions.
+
+Its `None` output lets the `Slabs` iteration stop.
+
+### meshed.slabs.log_and_return(msg, logger=<built-in function print>)
+
+Pass `msg` to `logger` (`print` by default) and return it unchanged.
 
 ### meshed.slabs.output_none_if_none_arguments(func)
 
