@@ -2,6 +2,17 @@ r"""Makers
 
 This module contains tools to make meshed objects in different ways.
 
+Main entry points:
+
+- ``code_to_dag``: turn a function whose body is ``out = func(args...)`` lines
+  (or such a function's source string) into a ``DAG``.
+- ``code_to_fnodes``: the same parsing, but returning the tuple of ``FuncNode``
+  objects instead of assembling a ``DAG``.
+- ``src_to_func_node_factory``: the lower-level step yielding ``FuncNode``
+  factories (partials that still lack their ``func``).
+- ``mk_fnodes_from_fn_factories``: inject functions into those factories to get
+  ``FuncNode`` objects.
+
 Let's start with an example where we have some code representing a user story:
 
 >>> def user_story():
@@ -177,10 +188,16 @@ T = TypeVar("T")
 
 
 def attr_dict(obj):
+    """Map every attribute name of ``obj`` not starting with an underscore to its value."""
     return {a: getattr(obj, a) for a in dir(obj) if not a.startswith("_")}
 
 
 def is_from_ast_module(o):
+    """Tell whether the class of ``o`` reports ``_ast`` as its module.
+
+    Note that on Python 3.12 the ``ast`` node classes report ``ast``, not ``_ast``,
+    so this returns ``False`` for them.
+    """
     return getattr(type(o), "__module__", "").startswith("_ast")
 
 
@@ -228,6 +245,12 @@ def _error_handler(body, info=None):
 
 
 def parse_body(body, *, body_index=None):
+    """Turn one body statement into a ``(target, call)`` pair of ast nodes, or ``None``.
+
+    Assignments go through ``parse_assignment``; a bare call gets the dummy target
+    ``_{body_index}``; ``return`` statements and string constants (docstrings) give
+    ``None`` (skipped); anything else raises ``ValueError``.
+    """
     info = _ast_info_str(body)
     if isinstance(body, (ast.Assign, ast.AnnAssign)):
         return parse_assignment(body, info=info)
@@ -245,6 +268,12 @@ def parse_body(body, *, body_index=None):
 
 # Note: generalize? glom?
 def parse_assignment(body: ast.Assign, info=None) -> tuple:
+    """Split an assignment statement into its ``(target, call)`` ast nodes.
+
+    Raises ``ValueError`` if ``body`` is not an (annotated) assignment, and
+    ``AssertionError`` if it has several targets or its value is not a call.
+    The ``info`` argument is ignored (it is recomputed from ``body``).
+    """
     # TODO: Make this validation better (at least more help in raised error)
     # TODO: extract validating code out as validation functions?
     info = _ast_info_str(body)
@@ -335,6 +364,9 @@ FuncNodeFactory = Callable[[Callable], FuncNode]
 
 
 def node_kwargs_to_func_node_factory(node_kwargs) -> FuncNodeFactory:
+    """Curry ``FuncNode`` with ``node_kwargs`` (``name``, ``out``, ``bind``, ...), leaving
+    ``func`` to be supplied.
+    """
     return partial(FuncNode, **node_kwargs)
 
 
@@ -361,6 +393,9 @@ def _remove_indentation(src):
 
 
 def robust_ast_parse(src):
+    """Parse ``src`` with ``ast.parse``, retrying with the common leading indent stripped
+    on ``IndentationError``.
+    """
     try:
         return ast.parse(src)
     except IndentationError:
@@ -450,7 +485,12 @@ def dlft_factory_to_func(
     name_to_func_map: dict[str, Callable] | None = None,
     use_place_holder_fallback=True,
 ):
-    """Get a function for the given factory, using"""
+    """Get a function for the given factory, looking its ``func_label`` up in ``name_to_func_map``.
+
+    If the label is missing from the map, a placeholder function (see
+    ``meshed.util.mk_place_holder_func``) is made unless ``use_place_holder_fallback``
+    is ``False``, in which case ``KeyError`` is raised.
+    """
     # TODO: Add extra validation (like n_args of return func against bind)
     name_to_func_map = name_to_func_map or dict()
 
@@ -504,6 +544,12 @@ def mk_fnodes_from_fn_factories(
 
 
 class dlft_factory_to_func_mapping(Mapping):
+    """Mapping view of ``dlft_factory_to_func``: ``m[factory]`` is ``dlft_factory_to_func(factory)``.
+
+    Only ``__getitem__`` is defined, so a subclass must add ``__iter__`` and
+    ``__len__`` before it can be instantiated.
+    """
+
     def __getitem__(self, item):
         return dlft_factory_to_func(item)
 
@@ -539,7 +585,63 @@ def code_to_fnodes(
     func_src: FuncSource = dlft_factory_to_func,
     use_place_holder_fallback=False,
 ) -> tuple[FuncNode]:
-    """Get func_nodes from src code"""
+    """Parse ``out = func(args...)`` code into a tuple of ``FuncNode`` objects.
+
+    Does the parsing behind ``code_to_dag`` but stops before assembling a ``DAG``,
+    so you can inspect, filter, or combine the nodes yourself. Works both as a plain
+    decorator and as a decorator factory (``@code_to_fnodes(func_src=...)``).
+
+    Args:
+        src: A function whose body is the code (its source is read with
+            ``inspect.getsource``), or a source string holding a single ``def``.
+        func_src: Where the functions come from: a mapping from called name to
+            callable, or a callable taking a ``FuncNode`` factory (a
+            ``functools.partial`` of ``FuncNode``) and returning the function to
+            use. The default makes placeholder functions that return a string
+            describing the call.
+        use_place_holder_fallback: Only consulted when ``func_src`` is a mapping.
+            If ``True``, names missing from the mapping get a placeholder function
+            instead of raising ``KeyError``.
+
+    Returns:
+        A tuple of ``FuncNode`` objects, one per assignment line, plus one extractor
+        node per name when a line unpacks a tuple (``x, y = f(a)``).
+
+    Examples:
+
+        >>> def f(a):
+        ...     return a + 1
+        >>> def g(b, x):
+        ...     return b * x
+        >>> @code_to_fnodes(func_src={'f': f, 'g': g})
+        ... def pipeline():
+        ...     b = f(a)
+        ...     c = g(b, x)
+        >>> pipeline
+        (FuncNode(a -> f -> b), FuncNode(b,x -> g -> c))
+        >>> pipeline[0].func is f
+        True
+
+        From a source string, with the default placeholder functions:
+
+        >>> src = '''
+        ... def pipeline():
+        ...     b = f(a)
+        ...     c = g(b, x)
+        ... '''
+        >>> fnodes = code_to_fnodes(src)
+        >>> [node.out for node in fnodes]
+        ['b', 'c']
+        >>> from meshed import DAG
+        >>> DAG(fnodes)(1, 2)
+        'g(b=f(a=1), x=2)'
+
+    See Also:
+        ``code_to_dag``: the same parsing, assembled into a ``DAG``.
+        ``mk_fnodes_from_fn_factories``: the lower-level step this wraps, if you
+        already have ``FuncNode`` factories.
+        ``DAG``: what to feed the resulting nodes to.
+    """
     func_src = _ensure_func_src(func_src, use_place_holder_fallback)
     # Pass on to _code_to_fnodes to get func nodes iterable needed to make DAG
     return tuple(_code_to_fnodes(src, func_src))
@@ -560,14 +662,78 @@ def code_to_dag(
     use_place_holder_fallback=False,
     name: str = None,
 ) -> DAG:
-    """Get a ``meshed.DAG`` from src code
+    """Build a ``DAG`` from Python code whose lines are ``out = func(args...)`` calls.
 
-    This function parses Python code and creates a DAG that represents the
-    computational flow. The inverse operation is available through ``dag_to_code``
-    which can convert a DAG back to executable Python code.
+    Each assignment line of ``src`` becomes a ``FuncNode``: the assigned name is the
+    node's ``out``, the called name is its ``name`` (and ``func_label``), and the
+    call's arguments are its ``bind``. Names that are used but never assigned become
+    the inputs of the ``DAG``. Works both as a plain decorator and as a decorator
+    factory (``@code_to_dag(func_src=...)``).
 
-    See also:
-        ``dag_to_code`` for the inverse operation.
+    Args:
+        src: A function whose body is the code (its source is read with
+            ``inspect.getsource``), or a source string holding a single ``def``.
+        func_src: Where the functions come from: a mapping from called name to
+            callable, or a callable taking a ``FuncNode`` factory (a
+            ``functools.partial`` of ``FuncNode``) and returning the function to
+            use. The default makes placeholder functions that return a string
+            describing the call.
+        use_place_holder_fallback: Only consulted when ``func_src`` is a mapping.
+            If ``True``, names missing from the mapping get a placeholder function
+            instead of raising ``KeyError``.
+        name: Name of the resulting ``DAG``. Defaults to the name of ``src`` (for
+            a string, the name of its single ``def``).
+
+    Returns:
+        A ``DAG`` computing the parsed lines; the source is kept on its
+        ``_code_to_dag_src`` attribute.
+
+    Raises:
+        KeyError: When ``func_src`` is a mapping missing a called name and
+            ``use_place_holder_fallback`` is ``False``.
+        ValueError: When a statement of the body is neither an assignment of a call
+            nor a bare call (for example an ``if`` statement).
+
+    Examples:
+
+        >>> @code_to_dag
+        ... def pipeline():
+        ...     b = f(a)
+        ...     c = g(b, x)
+        >>> print(pipeline.synopsis_string())
+        a -> f -> b
+        b,x -> g -> c
+        >>> pipeline(1, 2)
+        'g(b=f(a=1), x=2)'
+
+        Give it real functions through ``func_src``:
+
+        >>> def f(a):
+        ...     return a + 1
+        >>> def g(b, x):
+        ...     return b * x
+        >>> @code_to_dag(func_src={'f': f, 'g': g})
+        ... def pipeline():
+        ...     b = f(a)
+        ...     c = g(b, x)
+        >>> pipeline(1, 2)
+        4
+
+        A source string works too:
+
+        >>> src = '''
+        ... def doubled():
+        ...     y = double(x)
+        ... '''
+        >>> dag = code_to_dag(src, func_src={'double': lambda x: 2 * x})
+        >>> dag.name, dag(3)
+        ('doubled', 6)
+
+    See Also:
+        ``code_to_fnodes``: the same parsing, returning the ``FuncNode`` objects
+        without assembling a ``DAG``.
+        ``DAG``: the result type; ``DAG.synopsis_string`` shows the wiring.
+        ``meshed.dag.dag_to_code``: the inverse operation, from ``DAG`` back to code.
     """
     fnodes = code_to_fnodes(
         src, func_src=func_src, use_place_holder_fallback=use_place_holder_fallback
@@ -578,6 +744,7 @@ def code_to_dag(
 
 
 def code_to_digraph(src):
+    """Make a ``graphviz.Digraph`` of the ``DAG`` that ``code_to_dag(src)`` builds."""
     return code_to_dag(src).dot_digraph()
 
 
@@ -591,7 +758,7 @@ extract_tokens = re.compile(r"\w+").findall
 
 
 def triples_to_fnodes(triples: Iterable[tuple[str, str, str]]) -> Iterable[FuncNode]:
-    """Converts an iterable of func call triples to an iterable of ``FuncNode``s.
+    """Converts an iterable of func call triples to an iterable of ``FuncNode`` objects.
     (Which in turn can be converted to a ``DAG``.)
 
     Note how the python identifiers are extracted (on the basis of "an unbroken
@@ -683,6 +850,12 @@ def _ensure_name(name, src):
 
 
 def lined_dag(funcs):
+    """Chain ``funcs`` into a ``DAG`` where each function's output feeds the first parameter of the next.
+
+    Edges are added with ``DAG.add_edges``, which raises ``ValueError`` if a
+    function's first parameter already carries the name of another function in
+    ``funcs``.
+    """
     dag = DAG(funcs)
     if not funcs:
         return dag
@@ -699,7 +872,7 @@ NamedFuncs = Mapping[str, Callable]
 
 
 def named_funcs_to_func_nodes(named_funcs: NamedFuncs) -> Iterable[FuncNode]:
-    """Make ``FuncNode``s from keyword arguments, using the key as the ``.out`` of the
+    """Make ``FuncNode`` objects from keyword arguments, using the key as the ``.out`` of the
     ``FuncNode`` and the value as the ``.func`` of the ``FuncNode``.
 
     Example use: To get from ``Slabs`` to ``DAG``.
@@ -777,6 +950,11 @@ Jdict = dict  # json-serializable dictionary
 def fnode_to_jdict(
     fnode: FuncNode, *, func_to_jdict: Callable[[Callable], Jdict] = None
 ):
+    """Serialize a ``FuncNode`` to a dict of its ``name``, ``func_label``, ``bind`` and ``out``.
+
+    The function itself is included (under ``func``) only when ``func_to_jdict`` is
+    given to serialize it.
+    """
     jdict = {
         "name": fnode.name,
         "func_label": fnode.func_label,
@@ -789,6 +967,11 @@ def fnode_to_jdict(
 
 
 def jdict_to_fnode(jdict: dict, *, jdict_to_func: Callable[[Jdict], Callable] = None):
+    """Rebuild a ``FuncNode`` from a dict made by ``fnode_to_jdict``.
+
+    ``jdict_to_func`` is required to turn ``jdict["func"]`` back into a callable;
+    without it, ``NotImplementedError`` is raised.
+    """
     if jdict_to_func is not None:
         return FuncNode(
             func=jdict_to_func(jdict["func"]),

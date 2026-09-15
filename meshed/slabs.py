@@ -10,6 +10,13 @@ simple interface: An (ordered) list of components that are called in sequence to
 pull data from some sources, compute a new stream based on previous ones, or push some
 of the streams to further processes (such as visualization, or storage systems).
 
+Main entry points:
+
+- ``Slabs``: the stream-of-slabs object; iterate it, or ``run()`` it for side effects.
+- ``IteratorExit``: raise it from a component to stop the iteration cleanly.
+- ``conditional_sentinel``: decorator returning a sentinel instead of calling the function
+  when a condition on its arguments holds (``output_none_if_none_arguments`` is one).
+
 A slab is a collection of items of a same interval of time.
 We represent a slab using a `dict` or mapping.
 Typically, a slab will be the aggregation of multiple information streams that
@@ -97,7 +104,8 @@ class ExceptionHandler(Protocol):
     """An exception handler is an argument-less callable that is called when a handled
     exception occurs during iteration. Most often, the handler does nothing,
     but could be used whose output will be ignored, unless it is do_not_break,
-    which will signal that the iteration should continue."""
+    which will signal that the iteration should continue.
+    """
 
     def __call__(self) -> ExceptionHandlerOutput:
         pass
@@ -117,10 +125,15 @@ HandledExceptionsMapSpec = Union[
 
 
 def do_nothing():
+    """Argument-less no-op, the default handler of handled exceptions.
+
+    Its ``None`` output lets the ``Slabs`` iteration stop.
+    """
     pass
 
 
 def log_and_return(msg, logger=print):
+    """Pass ``msg`` to ``logger`` (``print`` by default) and return it unchanged."""
     logger(msg)
     return msg
 
@@ -419,13 +432,16 @@ class Slabs:
                         break
 
     def open(self):
+        """Enter the context of every component that has one, and return ``self``."""
         self._output_of_context_enter = self.context.__enter__()
         return self
 
     def close(self, exc_type=None, exc_val=None, exc_tb=None) -> None:
+        """Exit the component contexts entered by ``open``."""
         return self._output_of_context_enter.__exit__(exc_type, exc_val, exc_tb)
 
     def run(self):
+        """Iterate through all the slabs, discarding them (for the side effects only)."""
         for _ in self:
             pass
 
@@ -464,10 +480,15 @@ class Slabs:
     from_dag = from_func_nodes  # TODO: Have a vote if we want this alias.
 
     def to_func_nodes(self) -> Iterable[FuncNode]:
+        """Yield a ``FuncNode`` per component.
+
+        Each node's name and output var node are the component's name.
+        """
         for name, func in self.components.items():
             yield FuncNode(func, name=name, out=name)
 
     def to_dag(self) -> DAG:
+        """Build a ``DAG`` from the ``FuncNode`` objects of ``to_func_nodes``."""
         return DAG(list(self.to_func_nodes()))
 
     # TODO: Add @wraps(dot_digraph_body) to have DAG.dot_digraph signature

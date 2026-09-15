@@ -93,7 +93,8 @@ class CachedDag:
     ...     z = subtract(x, y)
     >>> print(dag.dot_digraph_ascii())  # doctest: +SKIP
 
-    .. code-block::
+    .. code-block:: text
+
                         w
 
                      │

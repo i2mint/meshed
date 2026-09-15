@@ -1,6 +1,17 @@
 """
 Making DAGs
 
+Main entry points:
+
+- ``DAG``: a callable graph of functions; give it functions or ``FuncNode`` objects,
+  call it with the root variables and get the leaf outputs back.
+- ``FuncNode`` (``meshed.base``): wraps one function with the node ``name``, the
+  variables its parameters ``bind`` to, and the ``out`` variable it writes.
+- ``ch_funcs``: copy of a DAG with some of its node functions replaced.
+- ``ch_names``: copy of a DAG with its variables and function nodes renamed.
+- ``code_to_dag`` (``meshed.makers``): build a DAG from Python source (a function
+  or a string) whose statements are ``out = func(...)`` assignments.
+
 In it's simplest form, consider this:
 
 >>> from meshed import DAG
@@ -204,6 +215,7 @@ FuncMapping = Union[Mapping[KT, Callable], Iterable[tuple[KT, Callable]]]
 
 
 def order_subset_from_list(items, sublist):
+    """Sort ``sublist`` by the position its elements have in ``items``."""
     assert set(sublist).issubset(set(items)), f"{sublist} is not contained in {items}"
     d = {k: v for v, k in enumerate(items)}
 
@@ -211,6 +223,9 @@ def order_subset_from_list(items, sublist):
 
 
 def find_first_free_name(prefix, exclude_names=(), start_at=2):
+    """Return ``prefix`` if not in ``exclude_names``, else the first free ``prefix__<i>``
+    with ``i`` counting up from ``start_at``.
+    """
     if prefix not in exclude_names:
         return prefix
     else:
@@ -223,6 +238,10 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
 
 
 def mk_mock_funcnode(arg, out):
+    """Make a ``FuncNode`` whose no-op function takes the single parameter ``arg`` and
+    writes to ``out``, named ``_mock_<arg>_<out>``.
+    """
+
     @Sig(arg)
     def func():
         pass
@@ -234,6 +253,10 @@ def mk_mock_funcnode(arg, out):
 
 
 def mk_func_name(func, exclude_names=()):
+    """Derive a name for ``func`` (its ``__name__``, a generated lambda name, or the wrapped function's name for a ``partial``) that is not in ``exclude_names``.
+
+    A ``func`` with no ``__name__`` that is not a ``partial`` raises ``NameValidationError``.
+    """
     name = getattr(func, "__name__", "")
     if name == "<lambda>":
         name = lambda_name()  # make a lambda name that is a unique identifier
@@ -246,6 +269,9 @@ def mk_func_name(func, exclude_names=()):
 
 
 def mk_list_names_unique(nodes, exclude_names=()):
+    """List the ``.name`` of each node, suffixing repeats (and names in ``exclude_names``)
+    with ``__<i>`` so all are distinct.
+    """
     names = [node.name for node in nodes]
 
     def gen():
@@ -263,6 +289,9 @@ def mk_list_names_unique(nodes, exclude_names=()):
 
 
 def mk_nodes_names_unique(nodes):
+    """Set each node's ``.name`` in place to the unique names of ``mk_list_names_unique``
+    and return ``nodes``.
+    """
     new_names = mk_list_names_unique(nodes)
     for node, new_name in zip(nodes, new_names):
         node.name = new_name
@@ -270,6 +299,9 @@ def mk_nodes_names_unique(nodes):
 
 
 def arg_names(func, func_name, exclude_names=()):
+    """List the parameter names of ``func``, replacing any found in ``exclude_names`` with
+    a free ``<func_name>__<name>`` variant.
+    """
     names = Sig(func).names
 
     def gen():
@@ -368,7 +400,8 @@ _not_found = object()
 
 def _find_unique_element(item, search_iterable, key: Callable[[Any, Any], bool]):
     """Find item in search_iterable, using key as the matching function,
-    raising a NotFound error if no match and a NotUniqueError if more than one."""
+    raising a NotFound error if no match and a NotUniqueError if more than one.
+    """
     it = filter(lambda x: key(item, x), search_iterable)
     first = next(it, _not_found)
     if first == _not_found:
@@ -381,6 +414,9 @@ def _find_unique_element(item, search_iterable, key: Callable[[Any, Any], bool])
 
 
 def modified_func_node(func_node, **modifications) -> FuncNode:
+    """Make a new ``FuncNode`` from ``func_node`` with some of ``func``, ``name``, ``bind``
+    and ``out`` replaced by ``modifications``.
+    """
     modifiable_attrs = {"func", "name", "bind", "out"}
     assert not modifications.keys().isdisjoint(
         modifiable_attrs
@@ -399,6 +435,10 @@ from i2 import partialx
 
 # TODO: doctests
 def partialized_funcnodes(func_nodes, **keyword_defaults):
+    """Yield the func nodes, replacing the function of any node whose parameters include a
+    ``keyword_defaults`` name with a partial where those parameters are defaulted and
+    moved last; other nodes are yielded as is.
+    """
     for func_node in func_nodes:
         if argnames_to_be_bound := set(keyword_defaults).intersection(
             func_node.sig.names
@@ -428,6 +468,9 @@ def _name_attr_or_x(x):
 
 
 def change_value_on_cond(d, cond, func):
+    """Replace, in place, each value ``v`` of ``d`` where ``cond(k, v)`` holds with
+    ``func(v)``, and return ``d``.
+    """
     for k, v in d.items():
         if cond(k, v):
             d[k] = func(v)
@@ -435,6 +478,9 @@ def change_value_on_cond(d, cond, func):
 
 
 def dflt_debugger_feedback(func_node, scope, output, step):
+    """Print the step number, func node and scope, then return ``output`` unchanged
+    (default feedback of ``DAG.debugger``).
+    """
     print(f"{step} --------------------------------------------------------------")
     print(f"\t{func_node=}\n\t{scope=}")
     return output
@@ -555,6 +601,9 @@ class DAG:
         return cls(func_nodes)
 
     def bindings_cleaner(self):
+        """Make func node names unique and rewrite bind values that name a func node into
+        that node's ``out`` (called at the end of ``__post_init__``).
+        """
         self.func_nodes = mk_nodes_names_unique(self.func_nodes)
         funcnodes_names = [node.name for node in self.func_nodes]
         func = lambda v: self._func_node_for[v].out
@@ -563,6 +612,10 @@ class DAG:
             node.bind = change_value_on_cond(node.bind, cond, func)
 
     def __call__(self, *args, **kwargs):
+        """Run the DAG: map the arguments to the root variables (applying defaults),
+        call every func node in topological order on that scope, and return what
+        ``extract_output_from_scope`` extracts for the leaf variables.
+        """
         return self._call(*args, **kwargs)
 
     def _get_kwargs(self, *args, **kwargs):
@@ -848,6 +901,13 @@ class DAG:
         return new_dag
 
     def process_item(self, item):
+        """Resolve a ``slice`` of node specifications into ``(input_nodes, output_nodes)`` lists, as used by ``__getitem__``.
+
+        Each side of the slice may be ``None`` (all var nodes), a space-separated
+        string of names, a callable, or an iterable of names and callables; names are
+        resolved with ``get_node_matching``. An ``item`` that is not a ``slice`` fails
+        an assertion, and a side of none of these forms raises ``ValidationError``.
+        """
         assert isinstance(item, slice), f"must be a slice, was: {item}"
 
         input_names, outs = item.start, item.stop
@@ -873,6 +933,11 @@ class DAG:
         return input_names, outs
 
     def get_node_matching(self, idx):
+        """Return ``idx`` itself if it names a var node, else the ``FuncNode`` that ``idx`` (a node name, an ``out``, or a function unique in the DAG) indexes.
+
+        A string matching no node raises ``KeyError``; an ``idx`` that is neither a
+        string nor a callable raises ``NotFound``.
+        """
         if isinstance(idx, str):
             if idx in self.var_nodes:
                 return idx
@@ -946,6 +1011,23 @@ class DAG:
         return {k: v for k, v in d.items() if v is not None}
 
     def find_func_node(self, node, default=None):
+        """Return the ``FuncNode`` that ``node`` refers to, or ``default`` when nothing matches.
+
+        A ``FuncNode`` is returned as is; anything else is looked up as a node name,
+        an ``out``, or a function unique in the DAG.
+
+        >>> def f(a, b):
+        ...     return a + b
+        >>> dag = DAG([f])
+        >>> dag.find_func_node('f')  # by out
+        FuncNode(a,b -> f_ -> f)
+        >>> dag.find_func_node('f_')  # by name
+        FuncNode(a,b -> f_ -> f)
+        >>> dag.find_func_node(f)  # by function
+        FuncNode(a,b -> f_ -> f)
+        >>> dag.find_func_node('nope') is None
+        True
+        """
         if isinstance(node, FuncNode):
             return node
         return self._func_node_for.get(node, default)
@@ -1254,6 +1336,20 @@ class DAG:
         return DAG(list(self.func_nodes) + self._prepare_other_for_addition(other))
 
     def copy(self, renamer=numbered_suffix_renamer):
+        """Make a new ``DAG`` from renamed copies of the func nodes (see ``ch_names`` for what ``renamer`` may be).
+
+        With the default renamer every variable and function node gets a ``_1``
+        suffix (or an incremented one):
+
+        >>> def f(a, b):
+        ...     return a + b
+        >>> def g(f, c):
+        ...     return f * c
+        >>> dag = DAG([f, g])
+        >>> print(dag.copy().synopsis_string())
+        a_1,b_1 -> f__1 -> f_1
+        f_1,c_1 -> g__1 -> g_1
+        """
         return DAG(ch_names(self.func_nodes, renamer=renamer))
 
     def add_edge(self, from_node, to_node, to_param=None):
@@ -1468,9 +1564,16 @@ class DAG:
     # ------------ display -------------------------------------------------------------
 
     def to_code(self):
+        """Render the DAG as the source of a function named after the DAG, one ``out =
+        node_name(args)`` line per func node (see ``dag_to_code``).
+        """
         return dag_to_code(self)
 
     def synopsis_string(self, bind_info: BindInfo = "var_nodes"):
+        """Join the ``synopsis_string`` of every func node, one per line in topological
+        order; ``bind_info`` controls how inputs are shown (see
+        ``FuncNode.synopsis_string``).
+        """
         return "\n".join(
             func_node.synopsis_string(bind_info) for func_node in self.func_nodes
         )
@@ -1517,6 +1620,10 @@ class DAG:
 
     @wraps(dot_digraph_body)
     def dot_digraph(self, *args, **kwargs):
+        """Return a ``graphviz.Digraph`` of the DAG, taking the same arguments as
+        ``dot_digraph_body``; raises ``ModuleNotFoundError`` if ``graphviz`` is not
+        installed.
+        """
         try:
             import graphviz
         except (ModuleNotFoundError, ImportError) as e:
@@ -1531,22 +1638,35 @@ class DAG:
     # NOTE: "sig = property(__signature__)" is not working. So, doing the following instead.
     @property
     def sig(self):
+        """The DAG's ``__signature__`` (an ``i2.Sig``); assigning to it replaces
+        ``__signature__``.
+        """
         return self.__signature__
 
     @sig.setter
     def sig(self, value):
+        """Replace the DAG's ``__signature__`` with ``value``."""
         self.__signature__ = value
 
     def find_funcs(self, filt: Callable[[FuncNode], bool] = None) -> Iterable[Callable]:
+        """Yield the ``.func`` of the func nodes for which ``filt`` is true (all of them
+        when ``filt`` is ``None``).
+        """
         return (func_node.func for func_node in filter(filt, self.func_nodes))
 
 
 def call_func(func, kwargs):
+    """Re-key ``kwargs`` by each key's ``__name__`` and pass the resulting dict to
+    ``Sig(func).source_kwargs``.
+    """
     kwargs = {k.__name__: v for k, v in kwargs.items()}
     return Sig(func).source_kwargs(kwargs)
 
 
 def print_dag_string(dag: DAG, bind_info: BindInfo = "hybrid"):
+    """Print ``dag.synopsis_string(bind_info)``; the default shows an input as
+    ``param=var`` only where the two names differ.
+    """
     print(dag.synopsis_string(bind_info=bind_info))
 
 
@@ -1680,10 +1800,15 @@ mk_mock_funcnode_from_tuple = uncurry(mk_mock_funcnode)
 
 
 def funcnodes_from_pairs(pairs):
+    """Make one mock func node per ``(arg, out)`` pair (see ``mk_mock_funcnode``)."""
     return list(map(mk_mock_funcnode_from_tuple, pairs))
 
 
 def reorder_on_constraints(funcnodes, outs):
+    """Topologically sort ``funcnodes`` after appending (in place) mock nodes that chain
+    each ``outs`` element to the next, print the order, and return ``(func_nodes,
+    var_nodes)`` without the mock nodes.
+    """
     extra_nodes = funcnodes_from_pairs(pairs(outs))
     funcnodes += extra_nodes
     graph = _func_nodes_to_graph_dict(funcnodes)
@@ -1793,13 +1918,58 @@ def ch_funcs(
     ] = ch_func_node_func,
     # func_comparator: CallableComparator = compare_signatures,
 ):
-    """Function (and decorator) to change the functions of func_nodes according to
-    the specification of a func_mapping whose keys are ``.name`` or ``.out`` values
-    of the nodes of ``func_nodes`` and the values are the callable we want to replace
-    them by.
+    """Copy a DAG (or iterable of func nodes) with some of its node functions replaced.
 
-    A constrained version of ``ch_funcs`` is used as a method of ``DAG``.
-    The present function is given to provide more control.
+    ``func_mapping`` maps node identifiers (a node's ``.name`` or ``.out``) to the
+    callables that should replace those nodes' functions; the nodes' names, binds and
+    outputs are kept, only ``.func`` changes. Built with ``double_up_as_factory``, so
+    calling it without ``func_nodes`` returns a factory to apply later. ``DAG.ch_funcs``
+    is a constrained version of this function, given as a method.
+
+    Args:
+        func_nodes: The ``DAG``, or iterable of func nodes, to copy.
+        func_mapping: ``identifier -> callable`` pairs, as a mapping or an iterable of pairs.
+        validate_func_mapping: Called on ``(func_mapping, func_nodes)`` before any
+            change; ``None`` skips validation, so unknown keys are silently ignored.
+        ch_func_node_func: How one node's function is swapped; the default only
+            accepts a replacement whose signature matches the original's.
+
+    Returns:
+        A new ``DAG`` with the replacements applied.
+
+    Raises:
+        KeyError: A key of ``func_mapping`` is neither the ``.name`` nor the ``.out``
+            of any node (default validation).
+        TypeError: A value of ``func_mapping`` is not callable (default validation).
+        ValueError: A replacement's signature differs from the original's (default
+            ``ch_func_node_func``).
+
+    Examples:
+        >>> def f(a, b):
+        ...     return a + b
+        >>> def g(f, c):
+        ...     return f * c
+        >>> dag = DAG([f, g])
+        >>> dag(1, 2, 3)  # (1 + 2) * 3
+        9
+        >>> new_dag = ch_funcs(dag, func_mapping={'f': lambda a, b: a - b})
+        >>> new_dag(1, 2, 3)  # (1 - 2) * 3
+        -3
+        >>> dag(1, 2, 3)  # the original is untouched
+        9
+
+        Above, ``'f'`` is a node's ``.out``; a node's ``.name`` (``'g_'`` below) works
+        too. Without ``func_nodes`` you get a factory to apply later:
+
+        >>> swap_g = ch_funcs(func_mapping={'g_': lambda f, c: f ** c})
+        >>> swap_g(dag)(1, 2, 3)  # (1 + 2) ** 3
+        27
+
+    See Also:
+        ``DAG.ch_funcs``: the same operation as a method, taking ``name=func`` keywords.
+        ``ch_names``: rename nodes instead of swapping their functions.
+        ``meshed.base.ch_func_node_func``: the per-node swap, where signature
+        compatibility is decided.
     """
     func_mapping = dict(func_mapping)
     if validate_func_mapping:

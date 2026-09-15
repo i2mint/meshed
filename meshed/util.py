@@ -1,4 +1,31 @@
-"""util functions"""
+"""Function-wrapping, naming, and small data helpers shared across ``meshed``.
+
+Most of what lives here is glue that the DAG machinery leans on: decorators
+that turn a scalar function into one that maps over a stream (``iterize``,
+``ConditionalIterize``), name generation that avoids clashes when several
+functions share argument names (``find_first_free_name``, ``mk_func_name``,
+``arg_names``), signature reconciliation (``parameter_merger``), and dict
+and iterable utilities (``extract_values``, ``replace_item_in_iterable``).
+A few graph-rendering helpers (``funcs_to_digraph``, ``dot_to_ascii``) are
+also kept here.
+
+Main entry points:
+
+- ``iterize``: wrap ``func`` so it maps over an iterable (a partial of ``map``).
+- ``ConditionalIterize``: iterize a call only when the first argument satisfies
+  a condition (by default, when it is an ``Iterator``).
+- ``provides``: decorator that records, on ``func._provides``, the var node
+  names a function can source.
+- ``parameter_merger``: assert that several ``inspect.Parameter`` objects agree
+  (name, kind, default, annotation) and return the first.
+- ``replace_item_in_iterable``: replace items of an iterable that satisfy a
+  condition, keeping the container type for lists, tuples and sets.
+
+>>> from meshed.util import iterize
+>>> times_ten = iterize(lambda x: x * 10)
+>>> list(times_ten(iter([1, 2, 3])))
+[10, 20, 30]
+"""
 
 import re
 from functools import partial, wraps
@@ -243,12 +270,21 @@ def funcs_disjunction(*funcs):
 
 
 def extra_wraps(func, name=None, doc_prefix=""):
+    """Set ``func.__name__`` and ``func.__doc__`` in place, returning ``func``.
+
+    The name is ``name`` or ``func_name(func)``; the doc becomes
+    ``doc_prefix + func.__name__``.
+    """
     func.__name__ = name or func_name(func)
     func.__doc__ = doc_prefix + getattr(func, "__name__", "")
     return func
 
 
 def mywraps(func, name=None, doc_prefix=""):
+    """Make a decorator applying ``functools.wraps(func)`` then ``extra_wraps`` to a
+    callable.
+    """
+
     def wrapper(wrapped):
         return extra_wraps(wraps(func)(wrapped), name=name, doc_prefix=doc_prefix)
 
@@ -256,7 +292,7 @@ def mywraps(func, name=None, doc_prefix=""):
 
 
 def iterize(func, name=None):
-    """From an Input->Ouput function, makes a Iterator[Input]->Itertor[Output]
+    """From an Input->Output function, makes a Iterator[Input]->Iterator[Output]
     Some call this "vectorization", but it's not really a vector, but an
     iterable, thus the name.
 
@@ -503,12 +539,17 @@ class ConditionalIterize:
         iterize_type: type = Iterator,
         iterize_condition: Callable[[Any], bool] | None = None,
     ):
+        """Make a decorator building a ``ConditionalIterize`` with the given type and
+        condition.
+        """
         return partial(
             cls, iterize_type=iterize_type, iterize_condition=iterize_condition
         )
 
 
 class ModuleNotFoundIgnore:
+    """Context manager meant to silence ``ModuleNotFoundError`` raised inside its block."""
+
     def __enter__(self):
         pass
 
@@ -577,6 +618,10 @@ def args_funcnames(
 
 
 def funcs_to_digraph(funcs, graph=None):
+    """Add ``(arg_name, func_name)`` edges of ``funcs`` to a ``graphviz.Digraph``.
+
+    A new ``Digraph`` is made if ``graph`` is None; functions are drawn as boxes.
+    """
     from graphviz import Digraph
 
     graph = graph or Digraph()
@@ -650,6 +695,10 @@ def dot_to_ascii(dot: str, fancy: bool = True):
 
 
 def print_ascii_graph(funcs):
+    """Print an ascii rendering of ``funcs_to_digraph(funcs)``.
+
+    Uses ``dot_to_ascii``, so needs an internet connection.
+    """
     digraph = funcs_to_digraph(funcs)
     dot_str = "\n".join(map(lambda x: x[1:], digraph.body[:-1]))
     print(dot_to_ascii(dot_str))
@@ -672,6 +721,16 @@ class NameValidationError(ValueError):
 
 
 def find_first_free_name(prefix, exclude_names=(), start_at=2):
+    """Return ``prefix``, or the first ``f"{prefix}__{i}"`` not in ``exclude_names``.
+
+    ``prefix`` itself is returned when it is not excluded; otherwise ``i`` counts
+    up from ``start_at``.
+
+    >>> find_first_free_name('ab', ('cd',))
+    'ab'
+    >>> find_first_free_name('ab', ('ab', 'ab__2'))
+    'ab__3'
+    """
     if prefix not in exclude_names:
         return prefix
     else:
@@ -686,7 +745,8 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
 def mk_func_name(func, exclude_names=()):
     """Makes a function name that doesn't clash with the exclude_names iterable.
     Tries it's best to not be lazy, but instead extract a name from the function
-    itself."""
+    itself.
+    """
     name = name_of_obj(func) or "func"
     if name == "<lambda>":
         name = lambda_name()  # make a lambda name that is a unique identifier
@@ -694,6 +754,14 @@ def mk_func_name(func, exclude_names=()):
 
 
 def arg_names(func, func_name, exclude_names=()):
+    """List ``func``'s parameter names, renaming those found in ``exclude_names``.
+
+    A clashing name becomes the first free ``f"{func_name}__{name}"`` variant
+    (see ``find_first_free_name``).
+
+    >>> arg_names(lambda a, b, c: None, 'myf', exclude_names=('a',))
+    ['myf__a', 'b', 'c']
+    """
     names = Sig(func).names
 
     def gen():
@@ -803,6 +871,13 @@ def ordered_set_operations(a: Iterable, b: Iterable) -> tuple[list, list, list]:
 
 
 def pairs(xs):
+    """List the consecutive ``(xs[i], xs[i+1])`` pairs of a sequence.
+
+    A sequence of length 0 or 1 is returned as is.
+
+    >>> pairs([1, 2, 3])
+    [(1, 2), (2, 3)]
+    """
     if len(xs) <= 1:
         return xs
     else:
@@ -811,6 +886,12 @@ def pairs(xs):
 
 
 def curry(func):
+    """Wrap ``func`` so that positional arguments are passed to it as a single tuple.
+
+    >>> curry(sum)(1, 2, 3)
+    6
+    """
+
     def res(*args):
         return func(tuple(args))
 
@@ -818,6 +899,12 @@ def curry(func):
 
 
 def uncurry(func):
+    """Wrap ``func`` so that it takes one tuple and unpacks it into positional arguments.
+
+    >>> uncurry(lambda a, b: a + b)((1, 2))
+    3
+    """
+
     def res(tup):
         return func(*tup)
 
@@ -874,7 +961,8 @@ def numbered_suffix_renamer(name, sep="_"):
 
 class InvalidFunctionParameters(ValueError):
     """To be used when a function's parameters are not compliant with some rule about
-    them."""
+    them.
+    """
 
 
 def _suffix(start=0):
@@ -1015,6 +1103,14 @@ def _complete_dict_with_iterable_of_required_keys(
 
 
 def inverse_dict_asserting_losslessness(d: dict):
+    """Invert ``d`` (values become keys), asserting that no values are duplicated.
+
+    Raises ``AssertionError`` if two keys share a value, since the inversion would
+    lose one of them.
+
+    >>> inverse_dict_asserting_losslessness({'a': 1, 'b': 2})
+    {1: 'a', 2: 'b'}
+    """
     inv_d = {v: k for k, v in d.items()}
     assert len(inv_d) == len(d), (
         f"can't invert: You have some duplicate values in this dict: " f"{d}"

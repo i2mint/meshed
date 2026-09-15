@@ -1,5 +1,28 @@
-"""Functions that provide iterators of g elements where g is any
-adjacency Mapping representation.
+"""Graph operations over adjacency mappings.
+
+Here a graph ``g`` is any ``Mapping`` whose keys are nodes and whose values
+are iterables of the nodes they point to (``g[src]`` lists the ``dst`` nodes of
+the edges ``src -> dst``). A plain ``dict`` of lists is the usual form, but any
+Mapping with iterable values works, including strings, where each character is
+a node. Nodes that only appear as destinations need not be keys. The functions
+here mostly iterate or compute sets over such a mapping without building any
+other graph structure; ``meshed.dag`` uses them to order and query its
+``FuncNode`` graph.
+
+Main entry points:
+
+- ``topological_sort``: order the nodes so that every node comes after its parents.
+- ``edges`` and ``nodes``: iterate the edges or the (deduplicated) nodes of ``g``.
+- ``root_nodes`` and ``leaf_nodes``: nodes with no parents, or no children.
+- ``ancestors`` and ``descendants``: everything reachable to, or from, some nodes.
+- ``edge_reversed_graph``: the same graph with every edge flipped.
+
+>>> from meshed.itools import topological_sort, root_nodes, leaf_nodes
+>>> g = {0: [1, 2], 1: [3], 2: [3]}
+>>> topological_sort(g)
+[0, 1, 2, 3]
+>>> root_nodes(g), leaf_nodes(g)
+({0}, {3})
 """
 
 from typing import (
@@ -535,6 +558,11 @@ def in_degrees(g: Graph):
 
 
 def copy_of_g_with_some_keys_removed(g: Graph, keys: Iterable):
+    """Shallow copy of ``g`` without the given keys.
+
+    A whitespace-separated string of keys is accepted. References to the removed
+    keys inside other adjacencies are kept.
+    """
     keys = _split_if_str(keys)
     return {k: v for k, v in g.items() if k not in keys}
 
@@ -651,18 +679,32 @@ def edge_reversed_graph(
 
 
 def filter_dict_with_list_values(d, condition):
+    """Keep, in each value of ``d``, only the elements satisfying ``condition``.
+
+    The filtered values are lists, whatever the originals were.
+    """
     return {k: list(filter(condition, d[k])) for k, v in d.items()}
 
 
 def filter_dict_on_keys(d, condition):
+    """Keep the ``(k, v)`` items of ``d`` for which ``condition(k, v)`` is true."""
     return {k: v for k, v in d.items() if condition(k, v)}
 
 
 def nodes_of_graph(graph):
+    """Set of the keys of ``graph`` together with its values taken whole.
+
+    The values go in as they are, so they must be hashable.
+    """
     return {*graph.keys(), *graph.values()}
 
 
 def subtract_subgraph(graph, subgraph):
+    """Copy of ``graph`` with the nodes of ``subgraph`` removed.
+
+    The nodes are those of ``nodes_of_graph(subgraph)``; they are removed from keys
+    and adjacencies, and keys left with no adjacencies are dropped.
+    """
     subnodes = nodes_of_graph(subgraph)
     is_not_subnode = lambda x: x not in subnodes
     not_only_subnodes = lambda x: set(x).issubset(set(subnodes))
