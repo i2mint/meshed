@@ -699,8 +699,7 @@ def ready_to_schedule_operation(op, has_executed, graph):
     Args:
         op: The Operation object to check
 
-        has_executed: set
-            A set containing all operations that have been executed so far
+        has_executed: A set containing all operations that have been executed so far
 
         graph: The networkx graph containing the operations and data nodes
 
@@ -722,8 +721,7 @@ def ready_to_delete_data_node(name, has_executed, graph):
     Args:
         name: The name of the data node to check
 
-        has_executed: set
-            A set containing all operations that have been executed so far
+        has_executed: A set containing all operations that have been executed so far
 
         graph: The networkx graph containing the operations and data nodes
 

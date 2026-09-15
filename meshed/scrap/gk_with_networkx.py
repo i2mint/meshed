@@ -688,8 +688,7 @@ with suppress(ModuleNotFoundError, ImportError):
         Args:
             op: The Operation object to check
 
-            has_executed: set
-                A set containing all operations that have been executed so far
+            has_executed: A set containing all operations that have been executed so far
 
             graph: The networkx graph containing the operations and data nodes
 
@@ -710,8 +709,7 @@ with suppress(ModuleNotFoundError, ImportError):
         Args:
             name: The name of the data node to check
 
-            has_executed: set
-                A set containing all operations that have been executed so far
+            has_executed: A set containing all operations that have been executed so far
 
             graph: The networkx graph containing the operations and data nodes
 
