@@ -686,16 +686,12 @@ with suppress(ModuleNotFoundError, ImportError):
         what has already been executed.
 
         Args:
-            op::
-
-                The Operation object to check
+            op: The Operation object to check
 
             has_executed: set
                 A set containing all operations that have been executed so far
 
-            graph::
-
-                The networkx graph containing the operations and data nodes
+            graph: The networkx graph containing the operations and data nodes
 
         Returns:
             A boolean indicating whether the operation may be scheduled for
@@ -712,16 +708,12 @@ with suppress(ModuleNotFoundError, ImportError):
         cache.
 
         Args:
-            name::
-
-                The name of the data node to check
+            name: The name of the data node to check
 
             has_executed: set
                 A set containing all operations that have been executed so far
 
-            graph::
-
-                The networkx graph containing the operations and data nodes
+            graph: The networkx graph containing the operations and data nodes
 
         Returns:
             A boolean indicating whether the data node can be deleted or not.
@@ -853,9 +845,7 @@ with suppress(ModuleNotFoundError, ImportError):
                 def myadd(a, b):
                     return a + b
 
-            or::
-
-                def myadd(a, b):
+            or: def myadd(a, b):
                     return a + b
                 operator(name='myadd1', needs=['a', 'b'], provides=['c'])(myadd)
 

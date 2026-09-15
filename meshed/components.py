@@ -2,7 +2,8 @@
 
 A ``DAG`` node needs a ``__name__`` and a signature to know what var node it reads
 and what var node it writes. Plain ``operator.itemgetter`` and ``attrgetter``
-objects have neither, so this module wraps them in ``Extractor``, a callable that
+objects have no ``__name__`` and no usable one-parameter signature, so this module
+wraps them in ``Extractor``, a callable that
 carries a chosen name and a single positional-only parameter, and can therefore
 be listed directly among the functions given to ``DAG``.
 

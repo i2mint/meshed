@@ -16,8 +16,9 @@ Main entry points:
   a condition (by default, when it is an ``Iterator``).
 - ``provides``: decorator that records, on ``func._provides``, the var node
   names a function can source.
-- ``parameter_merger``: assert that several ``inspect.Parameter`` objects agree
-  (name, kind, default, annotation) and return the first.
+- ``parameter_merger``: check that several ``inspect.Parameter`` objects agree
+  (name, kind, default, annotation) and return the first, raising
+  ``ValidationError`` otherwise.
 - ``replace_item_in_iterable``: replace items of an iterable that satisfy a
   condition, keeping the container type for lists, tuples and sets.
 
@@ -548,7 +549,11 @@ class ConditionalIterize:
 
 
 class ModuleNotFoundIgnore:
-    """Context manager meant to silence ``ModuleNotFoundError`` raised inside its block."""
+    """Context manager that suppresses any exception raised inside its block.
+
+    Written to silence ``ModuleNotFoundError``, but ``__exit__`` returns ``True``
+    unconditionally, so every exception type is swallowed.
+    """
 
     def __enter__(self):
         pass

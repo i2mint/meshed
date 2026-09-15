@@ -691,8 +691,10 @@ def code_to_dag(
     Raises:
         KeyError: When ``func_src`` is a mapping missing a called name and
             ``use_place_holder_fallback`` is ``False``.
-        ValueError: When a statement of the body is neither an assignment of a call
-            nor a bare call (for example an ``if`` statement).
+        ValueError: When a statement of the body is neither an assignment nor a
+            bare call (for example an ``if`` statement).
+        AssertionError: When an assignment's value is not a call (``c = a + b``), or
+            it has several targets.
 
     Examples:
 
