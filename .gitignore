@@ -109,3 +109,6 @@ venv.bak/
 
 # PyCharm
 .idea
+
+# epythet scaffolds docsrc/ on every build (epythet quickstart / the Pages action)
+docsrc/

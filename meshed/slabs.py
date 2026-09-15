@@ -10,6 +10,13 @@ simple interface: An (ordered) list of components that are called in sequence to
 pull data from some sources, compute a new stream based on previous ones, or push some
 of the streams to further processes (such as visualization, or storage systems).
 
+Main entry points:
+
+- ``Slabs``: the stream-of-slabs object; iterate it, or ``run()`` it for side effects.
+- ``IteratorExit``: raise it from a component to stop the iteration cleanly.
+- ``conditional_sentinel``: decorator returning a sentinel instead of calling the function
+  when a condition on its arguments holds (``output_none_if_none_arguments`` is one).
+
 A slab is a collection of items of a same interval of time.
 We represent a slab using a `dict` or mapping.
 Typically, a slab will be the aggregation of multiple information streams that
@@ -47,7 +54,6 @@ https://github.com/i2mint/meshed/discussions/49.
 ...                 except self.handle_exceptions as exc_val:
 ...                     # use specific exceptions to signal that iteration should stop
 ...                     break
-
 """
 
 from typing import (
@@ -98,7 +104,8 @@ class ExceptionHandler(Protocol):
     """An exception handler is an argument-less callable that is called when a handled
     exception occurs during iteration. Most often, the handler does nothing,
     but could be used whose output will be ignored, unless it is do_not_break,
-    which will signal that the iteration should continue."""
+    which will signal that the iteration should continue.
+    """
 
     def __call__(self) -> ExceptionHandlerOutput:
         pass
@@ -118,10 +125,15 @@ HandledExceptionsMapSpec = Union[
 
 
 def do_nothing():
+    """Argument-less no-op, the default handler of handled exceptions.
+
+    Its ``None`` output lets the ``Slabs`` iteration stop.
+    """
     pass
 
 
 def log_and_return(msg, logger=print):
+    """Pass ``msg`` to ``logger`` (``print`` by default) and return it unchanged."""
     logger(msg)
     return msg
 
@@ -170,9 +182,10 @@ def _call_from_dict(kwargs: MutableMapping, func: Callable, sig: Sig):
     Two uses cases here:
 
     - using a scope dict as both the source of `Slabs` components, and as a place
-    to temporarily store the outputs of these components.
+      to temporarily store the outputs of these components.
 
     - exception handlers: We'd like the exception handlers to be easy to express.
+
     Maybe you need the object raising the exception to handle it,
     maybe you just want to log the event.
     In the first case, you the handler needs the said object to be passed to it,
@@ -180,7 +193,6 @@ def _call_from_dict(kwargs: MutableMapping, func: Callable, sig: Sig):
     With _call_from_dict, we don't have to choose, we just have to impose that
     the handler use specific keywords (namely `exc_val` and/or `instance`)
     when there are inputs.
-
     """
     args, kwargs = sig.mk_args_and_kwargs(
         kwargs,
@@ -366,7 +378,6 @@ class Slabs:
 
     To help you with this, check out the `dol <https://pypi.org/project/dol/>`_
     and `py2store <https://pypi.org/project/py2store/>`_ libraries.
-
     """
 
     _output_of_context_enter = None
@@ -421,13 +432,16 @@ class Slabs:
                         break
 
     def open(self):
+        """Enter the context of every component that has one, and return ``self``."""
         self._output_of_context_enter = self.context.__enter__()
         return self
 
     def close(self, exc_type=None, exc_val=None, exc_tb=None) -> None:
+        """Exit the component contexts entered by ``open``."""
         return self._output_of_context_enter.__exit__(exc_type, exc_val, exc_tb)
 
     def run(self):
+        """Iterate through all the slabs, discarding them (for the side effects only)."""
         for _ in self:
             pass
 
@@ -466,10 +480,15 @@ class Slabs:
     from_dag = from_func_nodes  # TODO: Have a vote if we want this alias.
 
     def to_func_nodes(self) -> Iterable[FuncNode]:
+        """Yield a ``FuncNode`` per component.
+
+        Each node's name and output var node are the component's name.
+        """
         for name, func in self.components.items():
             yield FuncNode(func, name=name, out=name)
 
     def to_dag(self) -> DAG:
+        """Build a ``DAG`` from the ``FuncNode`` objects of ``to_func_nodes``."""
         return DAG(list(self.to_func_nodes()))
 
     # TODO: Add @wraps(dot_digraph_body) to have DAG.dot_digraph signature
@@ -502,6 +521,7 @@ def conditional_sentinel(
     Args:
         condition_func (Callable): A function that takes the arguments and keyword
             arguments of the decorated function as input and returns a boolean value.
+
         sentinel (Any): The value to return if the condition is met.
 
     >>> division_by_zero = lambda args, kwargs: (
@@ -528,7 +548,6 @@ def conditional_sentinel(
     >>> foo(1, 2)
     3
     >>> assert foo(None, None) is None
-
     """
 
     def decorator(func):

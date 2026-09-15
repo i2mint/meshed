@@ -1,5 +1,27 @@
-"""
-Base functionality of meshed
+"""Define ``FuncNode``, the unit of computation that ``meshed`` assembles into DAGs.
+
+A ``FuncNode`` wraps a function together with a ``name`` (its identity in the network),
+a ``bind`` (which scope variables feed which parameters) and an ``out`` (the scope
+variable its result is written to). Calling the node on a scope, a mutable mapping,
+reads its inputs from there and writes its output back. This module also holds the
+helpers that validate, convert, rewrite and render such nodes; ``meshed.dag`` builds
+on them to wire many nodes into a ``DAG``.
+
+Main entry points:
+
+- ``FuncNode``: wrap a function with its name, bind and out.
+- ``ensure_func_nodes``: turn a mix of callables and nodes into ``FuncNode`` objects.
+- ``ch_func_node_func``: swap a node's function, guarded by a signature comparison.
+- ``func_nodes_to_code``: render nodes back as Python source.
+
+>>> fn = FuncNode(lambda x, y: x + y, name='add', out='total')
+>>> fn
+FuncNode(x,y -> add -> total)
+>>> scope = {'x': 1, 'y': 2}
+>>> fn.call_on_scope(scope)
+3
+>>> scope
+{'x': 1, 'y': 2, 'total': 3}
 """
 
 from collections import Counter
@@ -65,16 +87,19 @@ def basic_node_validator(func_node):
 
     Validates:
 
-    * that the ``func_node`` params are valid, that is, if not ``None``
-        * ``func`` should be a callable
-        * ``name`` and ``out`` should be ``str``
-        * ``bind`` should be a ``Dict[str, str]``
-    * that the names (``.name``, ``.out`` and all ``.bind.values()``)
-        * are valid python identifiers (alphanumeric or underscore not starting with
-          digit)
-        * are not repeated (no duplicates)
-    * that ``.bind.keys()`` are indeed present as params of ``.func``
+    * that the ``func_node`` params are valid, that is, if not ``None``:
 
+      * ``func`` should be a callable
+      * ``name`` and ``out`` should be ``str``
+      * ``bind`` should be a ``Dict[str, str]``
+
+    * that the names (``.name``, ``.out`` and all ``.bind.values()``):
+
+      * are valid python identifiers (alphanumeric or underscore not starting with
+        digit)
+      * are not repeated (no duplicates)
+
+    * that ``.bind.keys()`` are indeed present as params of ``.func``
     """
     _func_node_args_validation(
         func=func_node.func, name=func_node.name, bind=func_node.bind, out=func_node.out
@@ -106,6 +131,10 @@ def basic_node_validator(func_node):
 
 
 def handle_variadics(func):
+    """Replace the variadic parameters of ``func`` (``*args``, ``**kwargs``) with a
+    tuple and a dict parameter of the same names, returning ``func`` itself when it
+    has none.
+    """
     func = ch_variadics_to_non_variadic_kind(func)
     # sig = Sig(func)
     # var_kw = sig.var_keyword_name
@@ -150,6 +179,7 @@ class FuncNode:
     >>> total_price = multiply(item_price, num_of_items)
 
     What the execution of `total_price = multiply(item_price, num_of_items)` does is
+
     - grab the values (in the locals scope -- a dict), of ``item_price`` and ``num_of_items``,
     - call the multiply function on these, and then
     - write the result to a variable (in locals) named ``total_price``
@@ -213,12 +243,11 @@ class FuncNode:
     >>> FuncNode(multiply, name='total_price')
     FuncNode(x,y -> total_price -> _total_price)
 
-    Note: In the context of networks if you want to reuse a same function
-    (say, `multiply`) in multiple places
-    you'll **need** to give it a custom name because the functions are identified by
-    this name in the network.
-
-
+    Note:
+        In the context of networks if you want to reuse a same function
+        (say, `multiply`) in multiple places
+        you'll **need** to give it a custom name because the functions are identified by
+        this name in the network.
     """
 
     # TODO: Make everything but func keyword-only (check for non-keyword usage before)
@@ -285,14 +314,14 @@ class FuncNode:
     #  language describes the bind data structure (dict), but the var_nodes/params
     #  language describes their contextual use. If had to choose, I'd chose the latter.
     def synopsis_string(self, bind_info: BindInfo = "values"):
-        """
+        """Return the one-line ``bind -> name -> out`` synopsis of the node.
 
         :param bind_info: How to represent the bind in the synopsis string. Could be:
+
             - 'values', `var_nodes` or `varnodes`: the values of the bind (default).
             - 'keys' or 'params': the keys of the bind
             - 'hybrid': the keys of the bind, but with the values that are the same as
-                the keys omitted.
-        :return:
+              the keys omitted.
 
         >>> fn = FuncNode(
         ...     func=lambda y, c: None , name='h', bind={'y': 'b', 'c': 'c'}, out='d'
@@ -328,9 +357,11 @@ class FuncNode:
         """Call the function using the given scope both to source arguments and write
         results.
 
-        Note: This method is only meant to be used as a backend to __call__, not as
-        an actual interface method. Additional control/constraints on read and writes
-        can be implemented by providing a custom scope for that."""
+        Note:
+            This method is only meant to be used as a backend to __call__, not as
+            an actual interface method. Additional control/constraints on read and writes
+            can be implemented by providing a custom scope for that.
+        """
         relevant_kwargs = dict(self.extractor(scope))
         args, kwargs = self.sig.mk_args_and_kwargs(relevant_kwargs)
         output = call_somewhat_forgivingly(
@@ -462,6 +493,13 @@ def dot_lines_of_func_parameters(
     fnode_shape: str = dflt_configs["fnode_shape"],
     func_display: bool = dflt_configs["func_display"],
 ) -> Iterable[str]:
+    """Yield graphviz dot lines drawing ``parameters`` as variable nodes that feed a
+    function node ``func_id``, which in turn feeds the variable node ``out``.
+
+    Args:
+        func_display: When false, no function node is drawn and the parameter nodes
+            point straight at ``out``.
+    """
     assert func_id != out, (
         f"Your func and output name shouldn't be the " f"same: {out=} {func_id=}"
     )
@@ -481,6 +519,9 @@ def dot_lines_of_func_parameters(
 
 
 def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
+    """Yield the dot line declaring parameter ``p`` as a node, labelled ``name=`` when
+    it has a default and ``*name`` or ``**name`` when it is variadic.
+    """
     if p.default is not empty:
         name = p.name + "="
     elif p.kind == p.VAR_POSITIONAL:
@@ -497,9 +538,14 @@ def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
 
 @dataclass
 class Mesh:
+    """Hold a collection of ``FuncNode`` objects, with no wiring or execution logic
+    (for that, use ``meshed.dag.DAG``).
+    """
+
     func_nodes: Iterable[FuncNode]
 
     def synopsis_string(self, bind_info: BindInfo = "values"):
+        """Join the synopsis strings of the nodes, one per line."""
         return "\n".join(
             func_node.synopsis_string(bind_info) for func_node in self.func_nodes
         )
@@ -561,7 +607,8 @@ def _func_nodes_to_graph_dict(func_nodes):
 
 
 def is_func_node(obj) -> bool:
-    """
+    """Whether ``obj`` is a ``FuncNode`` (checked by class name, so it survives reloads).
+
     >>> is_func_node(FuncNode(lambda x: x))
     True
     >>> is_func_node("I am not a FuncNode: I'm a string")
@@ -584,7 +631,8 @@ def is_func_node(obj) -> bool:
 
 
 def is_not_func_node(obj) -> bool:
-    """
+    """Whether ``obj`` is not a ``FuncNode``.
+
     >>> is_not_func_node(FuncNode(lambda x: x))
     False
     >>> is_not_func_node("I am not a FuncNode: I'm a string")
@@ -595,7 +643,8 @@ def is_not_func_node(obj) -> bool:
 
 def get_init_params_of_instance(obj):
     """Get names of instance object ``obj`` that are also parameters of the
-    ``__init__`` of its class"""
+    ``__init__`` of its class
+    """
     return {k: v for k, v in vars(obj).items() if k in Sig(type(obj)).names}
 
 
@@ -635,6 +684,9 @@ def ch_func_node_attrs(fn: FuncNode, **new_attrs_values):
 
 
 def raise_signature_mismatch_error(fn, func):
+    """Raise a ``ValueError`` saying ``func`` cannot replace ``fn.func`` because their
+    signatures differ; the default ``alternative`` of ``ch_func_node_func``.
+    """
     raise ValueError(
         "You can only change the func of a FuncNode with a another func if the "
         "signatures match.\n"
@@ -661,6 +713,42 @@ def ch_func_node_func(
     ch_func_node=_ch_func_node_func,
     alternative=raise_signature_mismatch_error,
 ):
+    """Return a copy of ``fn`` whose function is ``func``, if ``func_comparator``
+    accepts the replacement; otherwise hand ``(fn, func)`` to ``alternative``.
+
+    This is what ``DAG.ch_funcs`` applies to each node it changes. The default
+    comparator requires the two signatures to match exactly; the default
+    ``alternative`` raises a ``ValueError``.
+
+    Args:
+        func_comparator: Called as ``func_comparator(fn.func, func)``; a truthy result
+            allows the swap.
+        ch_func_node: How to build the new node once the swap is allowed; called as
+            ``ch_func_node(fn, func=func)``.
+        alternative: Called as ``alternative(fn, func)`` when the swap is refused; its
+            return value is returned as is.
+
+    >>> fn = FuncNode(lambda a, b: a + b, name='f')
+    >>> new_fn = ch_func_node_func(fn, lambda a, b: a * b)
+    >>> new_fn.call_on_scope({'a': 2, 'b': 3})
+    6
+
+    A function with a different signature is refused:
+
+    >>> ch_func_node_func(fn, lambda a, b, c=0: a * b)  # doctest: +ELLIPSIS
+    Traceback (most recent call last):
+      ...
+    ValueError: You can only change the func of a FuncNode with a another func if the signatures match.
+    ...
+
+    unless ``alternative`` says otherwise, here by keeping the original node:
+
+    >>> kept = ch_func_node_func(
+    ...     fn, lambda a, b, c=0: a * b, alternative=lambda fn, func: fn
+    ... )
+    >>> kept is fn
+    True
+    """
     if func_comparator(fn.func, func):
         return ch_func_node(fn, func=func)
     else:
@@ -700,6 +788,7 @@ def rebind_to_func(fnode: FuncNode, new_func: Callable):
 
 
 def insert_func_if_compatible(func_comparator: CallableComparator = compare_signatures):
+    """Make a ``ch_func_node_func`` variant with ``func_comparator`` fixed."""
     return partial(ch_func_node_func, func_comparator=func_comparator)
 
 
@@ -724,7 +813,6 @@ def _func_node_args_validation(
     * ``bind`` should be a ``Dict[str, str]``, ``Dict[int, str]`` or ``List[str]``
 
     * ``out`` should be a str
-
     """
     if func is not None and not isinstance(func, Callable):
         raise ValidationError(f"Should be callable: {func}")
@@ -752,7 +840,6 @@ def _old_mapped_extraction(extract_from: dict, key_map: dict):
     ... )
     >>> dict(extracted)
     {'a': 1, 'c': 3}
-
     """
     for k, v in key_map.items():
         if v in extract_from:
@@ -776,7 +863,6 @@ def _mapped_extraction(src: dict, to_extract: dict):
     ... )
     >>> dict(extracted)
     {'a': 1, 'c': 3}
-
     """
     for desired_name, src_name in to_extract.items():
         if src_name in src:
@@ -784,6 +870,11 @@ def _mapped_extraction(src: dict, to_extract: dict):
 
 
 def duplicates(elements: Iterable | Sized):
+    """List the elements that occur more than once, in order of first occurrence.
+
+    >>> duplicates("abbaaeccf")
+    ['a', 'b', 'c']
+    """
     c = Counter(elements)
     if len(c) != len(elements):
         return [name for name, count in c.items() if count > 1]
@@ -828,7 +919,6 @@ def _complete_dict_with_iterable_of_required_keys(
     >>> _complete_dict_with_iterable_of_required_keys(d, 'abc')
     >>> d
     {'a': 'A', 'c': 'C', 'b': 'b'}
-
     """
     keys_already_covered = set(to_complete)
     for required_key in complete_with:
@@ -923,8 +1013,6 @@ def func_nodes_to_code(
     :param func_name: Name for the generated function
     :param favor_positional: When True, transforms kwargs of the form key=key into positional args.
     :return: String containing Python code
-
-
     """
 
     def lines():

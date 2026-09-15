@@ -7,11 +7,14 @@ One of the main differences is that we got rid of the networkx dependency,
 which was used to represent the computation graph.
 Instead, this module uses meshed's itools library to represent the computation graph.
 
-# Yahoo's graphkit library is under Apache License 2.0:
-# Copyright 2016, Yahoo Inc.
-# Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.
+.. rubric:: Yahoo's graphkit library is under Apache License 2.0:
 
-NOTE: This module is only meant to an exploratory "extension". It is not planned to be maintained.
+.. rubric:: Copyright 2016, Yahoo Inc.
+
+.. rubric:: Licensed under the terms of the Apache License, Version 2.0. See the LICENSE file associated with the project for terms.
+
+NOTE:
+    This module is only meant to an exploratory "extension". It is not planned to be maintained.
 """
 
 # ---------- base --------------------------------------------------------------
@@ -49,14 +52,17 @@ class Operation:
     Names may be given to this layer and its inputs and outputs. This is
     important when connecting layers and data in a Network object, as the
     names are used to construct the graph.
+
     :param str name: The name the operation (e.g. conv1, conv2, etc..)
     :param list needs: Names of input data objects this layer requires.
     :param list provides: Names of output data objects this provides.
     :param dict params: A dict of key/value pairs representing parameters
                         associated with your operation. These values will be
                         accessible using the ``.params`` attribute of your object.
-                        NOTE: It's important that any values stored in this
-                        argument must be pickelable.
+
+                        NOTE:
+                            It's important that any values stored in this
+                            argument must be pickelable.
     """
 
     name: str = field(default="None")
@@ -92,6 +98,7 @@ class Operation:
         """
         This method must be implemented to perform this layer's feed-forward
         computation on a given set of inputs.
+
         :param list inputs:
             A list of :class:`Data` objects on which to run the layer's
             feed-forward computation.
@@ -168,11 +175,10 @@ class NetworkOperation(Operation):
         return self._compute(*args, **kwargs)
 
     def set_execution_method(self, method):
-        """
-        Determine how the network will be executed.
+        """Determine how the network will be executed.
+
         Args:
-            method: str
-                If "parallel", execute graph operations concurrently
+            method: If "parallel", execute graph operations concurrently
                 using a threadpool.
         """
         options = ["parallel", "sequential"]
@@ -227,7 +233,6 @@ class optional(str):
         # The graph works with and without 'c' provided as input.
         assert graph({'a': 5, 'b': 2, 'c': 4})['sum'] == 11
         assert graph({'a': 5, 'b': 2})['sum'] == 7
-
     """
 
     pass
@@ -613,6 +618,7 @@ class Network:
         Plot the graph.
 
         params:
+
         :param str filename:
             Write the output to a png, pdf, or graphviz dot file. The extension
             controls the output format.
@@ -623,7 +629,6 @@ class Network:
 
         :returns:
             An instance of the pydot graph
-
         """
         from contextlib import suppress
 
@@ -692,12 +697,12 @@ def ready_to_schedule_operation(op, has_executed, graph):
     what has already been executed.
 
     Args:
-        op:
-            The Operation object to check
-        has_executed: set
-            A set containing all operations that have been executed so far
-        graph:
-            The networkx graph containing the operations and data nodes
+        op: The Operation object to check
+
+        has_executed: A set containing all operations that have been executed so far
+
+        graph: The networkx graph containing the operations and data nodes
+
     Returns:
         A boolean indicating whether the operation may be scheduled for
         execution based on what has already been executed.
@@ -714,12 +719,12 @@ def ready_to_delete_data_node(name, has_executed, graph):
     cache.
 
     Args:
-        name:
-            The name of the data node to check
-        has_executed: set
-            A set containing all operations that have been executed so far
-        graph:
-            The networkx graph containing the operations and data nodes
+        name: The name of the data node to check
+
+        has_executed: A set containing all operations that have been executed so far
+
+        graph: The networkx graph containing the operations and data nodes
+
     Returns:
         A boolean indicating whether the data node can be deleted or not.
     """
@@ -810,7 +815,7 @@ class operation(Operation):
     :param dict params:
         A dict of key/value pairs representing constant parameters
         associated with your operation.  These can correspond to either
-        ``args`` or ``kwargs`` of ``fn`.
+        ``args`` or ``kwargs`` of ``fn``.
     """
 
     def __init__(self, fn=None, **kwargs):

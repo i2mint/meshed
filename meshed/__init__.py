@@ -13,7 +13,6 @@ Extras
 
 `itools.py` contain tools that enable operations on graphs where graphs are represented
 by an adjacency Mapping.
-
 """
 
 from meshed.dag import DAG, ch_funcs, ch_names

@@ -96,6 +96,7 @@ def get_param(func):
     """
     Find the name of the parameter of a function with exactly one parameter.
     Raise an error if more or less parameters.
+
     :param func: callable, the function to inspect
     :return: str, the name of the single parameter of func
     """
@@ -111,8 +112,9 @@ def get_param(func):
 def line_with_dag(*steps):
     """
     Emulate a Line object with a DAG
+
     :param steps: an iterable of callables, the steps of the pipeline. Each step should have exactly one parameter
-    and the output of each step is fed into the next
+        and the output of each step is fed into the next
     :return: a DAG instance computing the composition of all the functions in steps, in the provided order
     """
 
