@@ -36,23 +36,25 @@ DAGs and Pipelines
 ...     return zip(*[iter(sequence)] * chk_size)
 >>>
 >>> my_chunker = partial(chunker, chk_size=3)
+>>> def to_list(iterable):
+...     return list(iterable)
 >>>
 >>> vec = range(8)  # when appropriate, use easier to read sequences
->>> list(my_chunker(vec))
+>>> to_list(my_chunker(vec))
 [(0, 1, 2), (3, 4, 5)]
 
-Oh, that's just a ``my_chunker -> list`` pipeline!
+Oh, that's just a ``my_chunker -> to_list`` pipeline!
 A pipeline is a subset of DAG, so let me do this:
 
->>> dag = DAG([my_chunker, list])
+>>> dag = DAG([my_chunker, to_list])
 >>> dag(vec)
 Traceback (most recent call last):
 ...
-TypeError: missing a required argument: 'sequence'
+TypeError: missing a required argument: 'iterable'
 
 What happened here?
-You're assuming that saying ``[my_chunker, list]`` is enough for DAG to know that
-what you meant is for ``my_chunker`` to feed it's input to ``list``.
+You're assuming that saying ``[my_chunker, to_list]`` is enough for DAG to know that
+what you meant is for ``my_chunker`` to feed it's input to ``to_list``.
 Sure, DAG has enough information to do so, but the default connection policy doesn't
 assume that it's a pipeline you want to make.
 In fact, the order you specify the functions doesn't have an affect on the connections
@@ -62,12 +64,13 @@ See what the signature of ``dag`` is:
 
 >>> from inspect import signature
 >>> str(signature(dag))
-'(iterable=(), /, sequence, *, chk_size: int = 3)'
+'(sequence, iterable, *, chk_size: int = 3)'
 
 So dag actually works just fine. Here's the proof:
 
->>> dag([1,2,3], vec)  # doctest: +SKIP
-([1, 2, 3], <zip object at 0x104d7f080>)
+>>> chunks, as_list = dag(vec, [1, 2, 3])
+>>> list(chunks), as_list
+([(0, 1, 2), (3, 4, 5)], [1, 2, 3])
 
 It's just not what you might have intended.
 
@@ -92,7 +95,7 @@ In the current case a fully specified DAG would look something like this:
 ...             out='chks'
 ...         ),
 ...         FuncNode(
-...             func=list,
+...             func=to_list,
 ...             name='gather_chks_into_list',
 ...             bind=dict(iterable='chks'),
 ...             out='list_of_chks'
@@ -104,11 +107,11 @@ In the current case a fully specified DAG would look something like this:
 
 But really, if you didn't care about the names of things,
 all you need in this case was to make sure that the output of ``my_chunker`` was
-fed to ``list``, and therefore the following was sufficient:
+fed to ``to_list``, and therefore the following was sufficient:
 
 >>> dag = DAG([
 ...     FuncNode(my_chunker, out='chks'),  # call the output of chunker "chks"
-...     FuncNode(list, bind=dict(iterable='chks'))  # source list input from "chks"
+...     FuncNode(to_list, bind=dict(iterable='chks'))  # source to_list input from "chks"
 ... ])
 >>> list(dag(vec))
 [(0, 1, 2), (3, 4, 5)]
@@ -128,7 +131,6 @@ But defining components and the way they should be assembled can go a long way
 in achieving consistency, separation of concerns, adaptability, and flexibility.
 All quite useful things. Also in production. Especially in production.
 That said it is your responsiblity to use the right policy for your particular context.
-
 """
 
 from functools import partial, wraps, cached_property
@@ -312,9 +314,9 @@ def hook_up(func, variables: MutableMapping, output_name=None):
     output there as well.
 
     :param variables: The MutableMapping (like... a dict) where the function
-    should both read it's input and write it's output.
+        should both read it's input and write it's output.
     :param output_name: The key of the variables mapping that should be used
-    to write the output of the function
+        to write the output of the function
     :return: A function
 
     >>> def formula1(w, /, x: float, y=1, *, z: int = 1):
@@ -327,6 +329,7 @@ def hook_up(func, variables: MutableMapping, output_name=None):
     >>> f()
 
     Note that there's no output. The output is in d
+
     >>> d
     {'w': 2, 'x': 3, 'y': 4, 'formula1': 20}
 
@@ -337,7 +340,6 @@ def hook_up(func, variables: MutableMapping, output_name=None):
     >>> f()
     >>> d['formula1']
     9
-
     """
     _func = ch_func_to_all_pk(func)  # makes a position-keyword copy of func
     output_key = output_name
@@ -443,7 +445,8 @@ def dflt_debugger_feedback(func_node, scope, output, step):
 #  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)
 @dataclass
 class DAG:
-    """
+    """A callable graph of functions: root variables in, leaf variables out.
+
     >>> from meshed.dag import DAG, Sig
     >>>
     >>> def this(a, b=1):
@@ -484,7 +487,6 @@ class DAG:
     (the `out` argument) and a mapping from the function's arguments names to
     "network names" (through the `bind` argument).
     The edges of the DAG are defined by matching `out` TO `bind`.
-
     """
 
     func_nodes: Iterable[FuncNode | Callable] = ()
@@ -545,7 +547,6 @@ class DAG:
         x,_0 -> y_ -> y
         >>> dag(3)
         16
-
         """
         named_funcs = dict(MultiFunc(*funcs, **named_funcs))
         func_nodes = [
@@ -589,7 +590,6 @@ class DAG:
 
         - If scope is None, create a new one calling self.new_scope()
         - If self.cache_last_scope is True, remember the scope in self.last_scope
-
         """
         if scope is None:
             scope = self.new_scope()  # fresh new scope
@@ -614,11 +614,12 @@ class DAG:
         """Calls the func_nodes using scope (a dict or MutableMapping) both to
         source it's arguments and write it's results.
 
-        Note: This method is only meant to be used as a backend to __call__, not as
-        an actual interface method. Additional control/constraints on read and writes
-        can be implemented by providing a custom scope for that. For example, one could
-        log read and/or writes to specific keys, or disallow overwriting to an existing
-        key (useful for pipeline sanity), etc.
+        Note:
+            This method is only meant to be used as a backend to __call__, not as
+            an actual interface method. Additional control/constraints on read and writes
+            can be implemented by providing a custom scope for that. For example, one could
+            log read and/or writes to specific keys, or disallow overwriting to an existing
+            key (useful for pipeline sanity), etc.
         """
         scope = self._preprocess_scope(scope)
         self._call_func_nodes_on_scope(scope)
@@ -923,7 +924,6 @@ class DAG:
         A word of warning though: The function index is provided as a convenience, but
         using identifiers is preferable since referencing via the function object
         depends on the other functions of the DAG, so could change if we add nodes.
-
         """
         d = dict()
         for func_node in self.func_nodes:
@@ -952,9 +952,11 @@ class DAG:
 
     def __iter__(self):
         """Yields the self.func_nodes
-        Note: The raison d'etre of this ``__iter__`` is simply because if no custom one
-        is provided, python defaults to yielding ``__getitem__[i]`` for integers,
-        which leads to an error being raised.
+
+        Note:
+            The raison d'etre of this ``__iter__`` is simply because if no custom one
+            is provided, python defaults to yielding ``__getitem__[i]`` for integers,
+            which leads to an error being raised.
 
         At least here we yield something sensible.
 
@@ -1103,7 +1105,6 @@ class DAG:
         ... )
         >>> ch_fnode2 = partial(ch_func_node_func, func_comparator=same_set_of_names)
         >>> d = dag.ch_funcs(ch_fnode2, g=lambda z=2, y=1: y / z);
-
         """
         return ch_funcs(
             self, func_mapping=func_mapping, ch_func_node_func=ch_func_node_func
@@ -1204,7 +1205,6 @@ class DAG:
         ...     'mult': ['exp_'],
         ...     'exp_': ['exp']
         ... }
-
         """
         return {
             _name_attr_or_x(k): list(map(_name_attr_or_x, v))
@@ -1232,7 +1232,6 @@ class DAG:
         iterable -> tuple_ -> tuple
         >>> dag([1,2,3])
         ([1, 2, 3], (1, 2, 3))
-
         """
         # We could have just returned self + other to be commutative, but perhaps
         # we would like to control some orders of things via the order of addition
@@ -1335,7 +1334,6 @@ class DAG:
         g,h -> f_ -> f
 
         See Also ``DAG.add_edges`` to add multiple edges at once
-
         """
         # resolve from_node and to_node into FuncNodes
         from_node, to_node = map(self.find_func_node, (from_node, to_node))
@@ -1452,7 +1450,6 @@ class DAG:
         2 --------------------------------------------------------------
             func_node=FuncNode(f,g -> h_ -> h)
             scope={'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 3, 'g': 12, 'h': 9}
-
         """
 
         # TODO: Add feedback callable validation
@@ -1496,10 +1493,9 @@ class DAG:
         >>> func_nodes = [
         ...     FuncNode(add, out='x'), FuncNode(mult, name='the_product'), FuncNode(exp)
         ... ]
-
-        #
-        # >>> assert list(DAG(func_nodes).dot_digraph_body()) == [
-        # ]
+        >>> lines = list(DAG(func_nodes).dot_digraph_body())
+        >>> lines[0]
+        'x [label="x" shape="none"]'
         """
         if isinstance(start_lines, str):
             start_lines = start_lines.split()  # TODO: really? split on space?
@@ -1604,8 +1600,6 @@ def dag_to_code(dag):
     >>> # Verify they're equivalent:
     >>> dag.synopsis_string() == dag2.synopsis_string()
     True
-
-
     """
     return func_nodes_to_code(dag.func_nodes, dag.name)
 
@@ -1642,7 +1636,6 @@ def parametrized_dag_factory(dag: DAG, param_var_nodes: str | Iterable[str]):
     (b)
     >>> d(b='bananna')
     'applesauce(c=apple(a=criss(aa=1, aaa=2), b=bananna), d=sauce(a=criss(aa=1, aaa=2), b=bananna))'
-
     """
 
     if isinstance(param_var_nodes, str):
@@ -1704,6 +1697,7 @@ def reorder_on_constraints(funcnodes, outs):
 
 def attribute_vals(objs: Iterable, attrs: Iterable[str], egress=None):
     """Extract attributes from an iterable of objects
+
     >>> list(attribute_vals([print, map], attrs=['__name__', '__module__']))
     [('print', 'builtins'), ('map', 'builtins')]
     """
@@ -1729,7 +1723,7 @@ def _validate_func_mapping(func_mapping: FuncMapping, func_nodes: DagAble):
     That is, it assures that:
 
     - The keys of ``func_mapping`` are all ``FuncNode`` identifiers (i.e. appear as a
-    ``.name`` or ``.out`` of one of the ``func_nodes``.
+      ``.name`` or ``.out`` of one of the ``func_nodes``.
 
     - The values of ``func_mapping`` are all callable.
 
@@ -1764,7 +1758,6 @@ def _validate_func_mapping(func_mapping: FuncMapping, func_nodes: DagAble):
     Traceback (most recent call last):
       ...
     TypeError: These values of func_src weren't callable: hello world
-
     """
     allowed_identifiers = set(
         chain.from_iterable(names_and_outs(DAG(func_nodes).func_nodes))
@@ -1807,7 +1800,6 @@ def ch_funcs(
 
     A constrained version of ``ch_funcs`` is used as a method of ``DAG``.
     The present function is given to provide more control.
-
     """
     func_mapping = dict(func_mapping)
     if validate_func_mapping:
@@ -1873,11 +1865,13 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
 
     :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``
     :param renamer: A function taking an old name and returning the new one, or:
+
         - A dictionary ``{old_name: new_name, ...}`` mapping old names to new ones
         - A string, which will be appended to all identifiers of the ``func_nodes``
+
     :return: func_nodes with some or all identifiers changed. If the input ``func_nodes``
-    is an iterable of ``FuncNodes``, a list of func_nodes will be returned, and if the
-    input ``func_nodes`` is a ``DAG`` instance, a ``DAG`` will be returned.
+        is an iterable of ``FuncNodes``, a list of func_nodes will be returned, and if the
+        input ``func_nodes`` is a ``DAG`` instance, a ``DAG`` will be returned.
 
     >>> from meshed.makers import code_to_dag
     >>> from meshed.dag import print_dag_string
@@ -1945,7 +1939,6 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
     a=alpha -> f -> bravo
     x=alpha -> g -> c
     b=bravo,y=c -> h -> d
-
     """
     if isinstance(func_nodes, DAG):
         egress = DAG

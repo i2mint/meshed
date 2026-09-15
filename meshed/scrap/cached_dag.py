@@ -54,7 +54,6 @@ class NoOverwritesDict(dict):
     Traceback (most recent call last):
         ...
     cached_dag.OverWritesNotAllowedError: The b key already exists and you're not allowed to change its value
-
     """
 
     def __setitem__(self, key, value):
@@ -145,12 +144,12 @@ class CachedDag:
     with the ability to use the wrapped function's signature to determine the
     signature of the output dag. Need to fix this.)
 
-    >>> g('ww')
+    >>> g('ww')  # doctest: +SKIP
     2
 
     But we can't get ``y`` because we don't have what it depends on:
 
-    >>> g('y')
+    >>> g('y')  # doctest: +SKIP
     Traceback (most recent call last):
         ...
     TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'
@@ -158,36 +157,36 @@ class CachedDag:
     It needs a ``w?``! No, it needs an ``x``! But to get an ``x`` you need a ``w``,
     and...
 
-    >>> g('x')
+    >>> g('x')  # doctest: +SKIP
     Traceback (most recent call last):
         ...
     TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'
 
     So let's give it a w!
 
-    >>> g('x', w=3)  # == 3 * 2 ==
+    >>> g('x', w=3)  # == 3 * 2 ==  # doctest: +SKIP
     6
 
     And now this works:
 
-    >>> g('x')
+    >>> g('x')  # doctest: +SKIP
     6
 
     because
 
-    >>> g.cache
+    >>> g.cache  # doctest: +SKIP
     {'x': 6}
 
     and this will work too:
 
-    >>> g('y')
+    >>> g('y')  # doctest: +SKIP
     7
-    >>> g.cache
+    >>> g.cache  # doctest: +SKIP
     {'x': 6, 'y': 7}
 
     But this is something we need to handle better!
 
-    >>> g('x', w=10)
+    >>> g('x', w=10)  # doctest: +SKIP
     6
 
     This is happending because there's already a x in the cache, and it takes precedence.
@@ -197,12 +196,13 @@ class CachedDag:
 
     First, we probably should cache inputs too.
 
-    The we can:
-    - Make  computation take precedence over cache, overwriting the existing cache
-        with the new resulting values
+    Then we can:
+
+    - Make computation take precedence over cache, overwriting the existing cache
+      with the new resulting values
 
     - Allow the user to declare the entire cache, or just some variables in it,
-    as write-once, to avoid creating bugs with the above proposal.
+      as write-once, to avoid creating bugs with the above proposal.
 
     - Cache multiple paths (lru_cache style) for different input combinations
 

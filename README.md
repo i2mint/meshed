@@ -352,7 +352,7 @@ you can easily create one using one of the many tools of `py2store` meant exactl
 
 # Examples
 
-```pydocstring
+```python
 >>> from meshed.itools import edges, nodes, isolated_nodes
 >>> graph = dict(a='c', b='ce', c='abde', d='c', e=['c', 'b'], f={})
 >>> sorted(edges(graph))

@@ -88,7 +88,6 @@ def dot_lines_of_objs(objs: Iterable, start_lines=(), end_lines=(), **kwargs):
     <BLANKLINE>
                    exp
     <BLANKLINE>
-
     """
     # Should we validate here, or outside this module?
     # from meshed.base import validate_that_func_node_names_are_sane

@@ -65,16 +65,19 @@ def basic_node_validator(func_node):
 
     Validates:
 
-    * that the ``func_node`` params are valid, that is, if not ``None``
-        * ``func`` should be a callable
-        * ``name`` and ``out`` should be ``str``
-        * ``bind`` should be a ``Dict[str, str]``
-    * that the names (``.name``, ``.out`` and all ``.bind.values()``)
-        * are valid python identifiers (alphanumeric or underscore not starting with
-          digit)
-        * are not repeated (no duplicates)
-    * that ``.bind.keys()`` are indeed present as params of ``.func``
+    * that the ``func_node`` params are valid, that is, if not ``None``:
 
+      * ``func`` should be a callable
+      * ``name`` and ``out`` should be ``str``
+      * ``bind`` should be a ``Dict[str, str]``
+
+    * that the names (``.name``, ``.out`` and all ``.bind.values()``):
+
+      * are valid python identifiers (alphanumeric or underscore not starting with
+        digit)
+      * are not repeated (no duplicates)
+
+    * that ``.bind.keys()`` are indeed present as params of ``.func``
     """
     _func_node_args_validation(
         func=func_node.func, name=func_node.name, bind=func_node.bind, out=func_node.out
@@ -150,6 +153,7 @@ class FuncNode:
     >>> total_price = multiply(item_price, num_of_items)
 
     What the execution of `total_price = multiply(item_price, num_of_items)` does is
+
     - grab the values (in the locals scope -- a dict), of ``item_price`` and ``num_of_items``,
     - call the multiply function on these, and then
     - write the result to a variable (in locals) named ``total_price``
@@ -213,12 +217,11 @@ class FuncNode:
     >>> FuncNode(multiply, name='total_price')
     FuncNode(x,y -> total_price -> _total_price)
 
-    Note: In the context of networks if you want to reuse a same function
-    (say, `multiply`) in multiple places
-    you'll **need** to give it a custom name because the functions are identified by
-    this name in the network.
-
-
+    Note:
+        In the context of networks if you want to reuse a same function
+        (say, `multiply`) in multiple places
+        you'll **need** to give it a custom name because the functions are identified by
+        this name in the network.
     """
 
     # TODO: Make everything but func keyword-only (check for non-keyword usage before)
@@ -285,14 +288,14 @@ class FuncNode:
     #  language describes the bind data structure (dict), but the var_nodes/params
     #  language describes their contextual use. If had to choose, I'd chose the latter.
     def synopsis_string(self, bind_info: BindInfo = "values"):
-        """
+        """Return the one-line ``bind -> name -> out`` synopsis of the node.
 
         :param bind_info: How to represent the bind in the synopsis string. Could be:
+
             - 'values', `var_nodes` or `varnodes`: the values of the bind (default).
             - 'keys' or 'params': the keys of the bind
             - 'hybrid': the keys of the bind, but with the values that are the same as
-                the keys omitted.
-        :return:
+              the keys omitted.
 
         >>> fn = FuncNode(
         ...     func=lambda y, c: None , name='h', bind={'y': 'b', 'c': 'c'}, out='d'
@@ -328,9 +331,10 @@ class FuncNode:
         """Call the function using the given scope both to source arguments and write
         results.
 
-        Note: This method is only meant to be used as a backend to __call__, not as
-        an actual interface method. Additional control/constraints on read and writes
-        can be implemented by providing a custom scope for that."""
+        Note:
+            This method is only meant to be used as a backend to __call__, not as
+            an actual interface method. Additional control/constraints on read and writes
+            can be implemented by providing a custom scope for that."""
         relevant_kwargs = dict(self.extractor(scope))
         args, kwargs = self.sig.mk_args_and_kwargs(relevant_kwargs)
         output = call_somewhat_forgivingly(
@@ -561,7 +565,8 @@ def _func_nodes_to_graph_dict(func_nodes):
 
 
 def is_func_node(obj) -> bool:
-    """
+    """Whether ``obj`` is a ``FuncNode`` (checked by class name, so it survives reloads).
+
     >>> is_func_node(FuncNode(lambda x: x))
     True
     >>> is_func_node("I am not a FuncNode: I'm a string")
@@ -584,7 +589,8 @@ def is_func_node(obj) -> bool:
 
 
 def is_not_func_node(obj) -> bool:
-    """
+    """Whether ``obj`` is not a ``FuncNode``.
+
     >>> is_not_func_node(FuncNode(lambda x: x))
     False
     >>> is_not_func_node("I am not a FuncNode: I'm a string")
@@ -724,7 +730,6 @@ def _func_node_args_validation(
     * ``bind`` should be a ``Dict[str, str]``, ``Dict[int, str]`` or ``List[str]``
 
     * ``out`` should be a str
-
     """
     if func is not None and not isinstance(func, Callable):
         raise ValidationError(f"Should be callable: {func}")
@@ -752,7 +757,6 @@ def _old_mapped_extraction(extract_from: dict, key_map: dict):
     ... )
     >>> dict(extracted)
     {'a': 1, 'c': 3}
-
     """
     for k, v in key_map.items():
         if v in extract_from:
@@ -776,7 +780,6 @@ def _mapped_extraction(src: dict, to_extract: dict):
     ... )
     >>> dict(extracted)
     {'a': 1, 'c': 3}
-
     """
     for desired_name, src_name in to_extract.items():
         if src_name in src:
@@ -828,7 +831,6 @@ def _complete_dict_with_iterable_of_required_keys(
     >>> _complete_dict_with_iterable_of_required_keys(d, 'abc')
     >>> d
     {'a': 'A', 'c': 'C', 'b': 'b'}
-
     """
     keys_already_covered = set(to_complete)
     for required_key in complete_with:
@@ -923,8 +925,6 @@ def func_nodes_to_code(
     :param func_name: Name for the generated function
     :param favor_positional: When True, transforms kwargs of the form key=key into positional args.
     :return: String containing Python code
-
-
     """
 
     def lines():

@@ -47,7 +47,6 @@ https://github.com/i2mint/meshed/discussions/49.
 ...                 except self.handle_exceptions as exc_val:
 ...                     # use specific exceptions to signal that iteration should stop
 ...                     break
-
 """
 
 from typing import (
@@ -170,9 +169,10 @@ def _call_from_dict(kwargs: MutableMapping, func: Callable, sig: Sig):
     Two uses cases here:
 
     - using a scope dict as both the source of `Slabs` components, and as a place
-    to temporarily store the outputs of these components.
+      to temporarily store the outputs of these components.
 
     - exception handlers: We'd like the exception handlers to be easy to express.
+
     Maybe you need the object raising the exception to handle it,
     maybe you just want to log the event.
     In the first case, you the handler needs the said object to be passed to it,
@@ -180,7 +180,6 @@ def _call_from_dict(kwargs: MutableMapping, func: Callable, sig: Sig):
     With _call_from_dict, we don't have to choose, we just have to impose that
     the handler use specific keywords (namely `exc_val` and/or `instance`)
     when there are inputs.
-
     """
     args, kwargs = sig.mk_args_and_kwargs(
         kwargs,
@@ -366,7 +365,6 @@ class Slabs:
 
     To help you with this, check out the `dol <https://pypi.org/project/dol/>`_
     and `py2store <https://pypi.org/project/py2store/>`_ libraries.
-
     """
 
     _output_of_context_enter = None
@@ -502,6 +500,7 @@ def conditional_sentinel(
     Args:
         condition_func (Callable): A function that takes the arguments and keyword
             arguments of the decorated function as input and returns a boolean value.
+
         sentinel (Any): The value to return if the condition is met.
 
     >>> division_by_zero = lambda args, kwargs: (
@@ -528,7 +527,6 @@ def conditional_sentinel(
     >>> foo(1, 2)
     3
     >>> assert foo(None, None) is None
-
     """
 
     def decorator(func):

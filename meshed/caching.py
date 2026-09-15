@@ -22,7 +22,7 @@ class LazyProps:
     """
     A class that makes all its attributes cached_property properties.
 
-    Example:
+    .. rubric:: Example
 
     >>> class Klass(LazyProps):
     ...     a = 1

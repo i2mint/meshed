@@ -1,6 +1,5 @@
 """Functions that provide iterators of g elements where g is any
 adjacency Mapping representation.
-
 """
 
 from typing import (
@@ -117,7 +116,8 @@ def edges(g: Graph):
 
 
 def nodes(g: Graph):
-    """
+    """Yield every node of ``g`` once: each key, then each node it points to.
+
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> sorted(nodes(g))
     ['a', 'b', 'c', 'd', 'e', 'f', 'z']
@@ -165,7 +165,6 @@ def has_node(g: Graph, node, check_adjacencies=True):
     ... }
     >>> has_node(g, 2, check_adjacencies=False)
     True
-
     """
     if node in g:
         return True
@@ -328,7 +327,8 @@ def descendants(g: Graph, source: Iterable[N], _exclude_nodes=None):
 
 # TODO: Can serious be optimized, and hasn't been tested much: Revise
 def root_nodes(g: Graph):
-    """
+    """Nodes of ``g`` that no other node points to (isolated nodes included).
+
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> sorted(root_nodes(g))
     ['f']
@@ -354,7 +354,8 @@ def root_ancestors(graph: dict, nodes: str | Iterable[str]):
 
 # TODO: Can serious be optimized, and hasn't been tested much: Revise
 def leaf_nodes(g: Graph):
-    """
+    """Nodes of ``g`` that point to no other node (isolated nodes included).
+
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> sorted(leaf_nodes(g))
     ['f', 'z']
@@ -366,7 +367,8 @@ def leaf_nodes(g: Graph):
 
 
 def isolated_nodes(g: Graph):
-    """Nodes that
+    """Nodes of ``g`` whose adjacency is empty (no outgoing edges).
+
     >>> g = dict(a='c', b='ce', c=list('abde'), d='c', e=['c', 'z'], f={})
     >>> set(isolated_nodes(g))
     {'f'}
@@ -389,7 +391,6 @@ def find_path(g: Graph, src, dst, path=None):
     >>> find_path(g, 'a', 'z')
     ['a', 'c', 'b', 'e', 'z']
     >>> assert find_path(g, 'a', 'f') == None
-
     """
     if path == None:
         path = []
@@ -414,8 +415,9 @@ def reverse_edges(g: Graph):
     ...     ('a', 'c'), ('b', 'c'), ('c', 'a'), ('c', 'b'), ('c', 'd'), ('c', 'e'),
     ...     ('d', 'c'), ('e', 'b'), ('e', 'c'), ('z', 'e')]
 
-    NOTE: Not to be confused with  ``edge_reversed_graph`` which inverts the direction
-    of edges.
+    NOTE:
+        Not to be confused with  ``edge_reversed_graph`` which inverts the direction
+        of edges.
     """
     for src, dst_nodes in g.items():
         yield from product(dst_nodes, src)
@@ -429,6 +431,7 @@ def has_cycle(g: Graph) -> list[N]:
                   and values are lists of nodes pointing to the key node (parents of the key node).
 
         Example usage:
+
         >>> g = dict(e=['c', 'd'], c=['b'], d=['b'], b=['a'])
         >>> has_cycle(g)
         []
@@ -440,24 +443,25 @@ def has_cycle(g: Graph) -> list[N]:
     Design notes:
 
     - **Graph Representation**: The graph is interpreted such that each key is a child node,
-    and the values are lists of its parents. This representation requires traversing
-    the graph in reverse, from child to parent, to detect cycles.
+      and the values are lists of its parents. This representation requires traversing
+      the graph in reverse, from child to parent, to detect cycles.
+
     I regret this design choice, which was aligned with the original problem that was
     being solved, but which doesn't follow the usual representation of a graph.
-    - **Consistent Return Type**: The function systematically returns a list. A non-empty
-    list indicates a cycle (showing the path of the cycle), while an empty list indicates
-    the absence of a cycle.
-    - **Depth-First Search (DFS)**: The function performs a DFS on the graph to detect
-    cycles. It uses a recursion stack (rec_stack) to track the path being explored and
-    a visited set (visited) to avoid re-exploring nodes.
-    - **Cycle Detection and Path Reconstruction**: When a node currently in the recursion
-    stack is encountered again, a cycle is detected. The function then reconstructs the
-    cycle path from the current path explored, including the start and end node to
-    illustrate the cycle closure.
-    - **Efficient Backtracking**: After exploring a node's children, the function
-    backtracks by removing the node from the recursion stack and the current path,
-    ensuring accurate path tracking for subsequent explorations.
 
+    - **Consistent Return Type**: The function systematically returns a list. A non-empty
+      list indicates a cycle (showing the path of the cycle), while an empty list indicates
+      the absence of a cycle.
+    - **Depth-First Search (DFS)**: The function performs a DFS on the graph to detect
+      cycles. It uses a recursion stack (rec_stack) to track the path being explored and
+      a visited set (visited) to avoid re-exploring nodes.
+    - **Cycle Detection and Path Reconstruction**: When a node currently in the recursion
+      stack is encountered again, a cycle is detected. The function then reconstructs the
+      cycle path from the current path explored, including the start and end node to
+      illustrate the cycle closure.
+    - **Efficient Backtracking**: After exploring a node's children, the function
+      backtracks by removing the node from the recursion stack and the current path,
+      ensuring accurate path tracking for subsequent explorations.
     """
     visited = set()  # Tracks visited nodes to avoid re-processing
     rec_stack = set()  # Tracks nodes currently in the recursion stack to detect cycles
@@ -465,6 +469,7 @@ def has_cycle(g: Graph) -> list[N]:
     def _has_cycle(node, path):
         """
         Helper function to perform DFS on the graph and detect cycles.
+
         :param node: Current node being processed
         :param path: Current path taken from the start node to the current node
         :return: List representing the cycle, empty if no cycle is found
@@ -507,7 +512,8 @@ def has_cycle(g: Graph) -> list[N]:
 
 
 def out_degrees(g: Graph):
-    """
+    """Yield ``(node, number_of_children)`` for every key of ``g``.
+
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> assert dict(out_degrees(g)) == (
     ...     {'a': 1, 'b': 2, 'c': 4, 'd': 1, 'e': 2, 'f': 0}
@@ -518,7 +524,8 @@ def out_degrees(g: Graph):
 
 
 def in_degrees(g: Graph):
-    """
+    """Yield ``(node, number_of_parents)`` for every node of ``g``.
+
     >>> g = dict(a='c', b='ce', c='abde', d='c', e=['c', 'z'], f={})
     >>> assert dict(in_degrees(g)) == (
     ... {'a': 1, 'b': 1, 'c': 4,  'd': 1, 'e': 2, 'f': 0, 'z': 1}
@@ -550,8 +557,8 @@ def _topological_sort_helper(g, parent, visited, stack):
 def topological_sort(g: Graph):
     """Return the list of nodes in topological sort order.
 
-    This order is such that a node parents will all occur before;
-        If order[i] is parent of order[j] then i < j
+    This order is such that a node's parents will all occur before it:
+    if ``order[i]`` is a parent of ``order[j]`` then ``i < j``.
 
     This is often used to compute the order of computation in a DAG.
 
@@ -568,18 +575,20 @@ def topological_sort(g: Graph):
     Here's an ascii art of the graph, to verify that the topological sort is
     indeed as expected.
 
-    .. code-block::
-    ┌───┐     ┌───┐     ┌───┐     ┌───┐
-    │ 0 │ ──▶ │ 2 │ ──▶ │ 3 │ ──▶ │ 1 │
-    └───┘     └───┘     └───┘     └───┘
-      │                   ▲         ▲
-      │                   │         │
-      ▼                   │         │
-    ┌───┐                 │         │
-    │ 4 │ ────────────────┼─────────┘
-    └───┘                 │
-      │                   │
-      └───────────────────┘
+    .. code-block:: text
+
+        ┌───┐     ┌───┐     ┌───┐     ┌───┐
+        │ 0 │ ──▶ │ 2 │ ──▶ │ 3 │ ──▶ │ 1 │
+        └───┘     └───┘     └───┘     └───┘
+          │                   ▲         ▲
+          │                   │         │
+          ▼                   │         │
+
+        ┌───┐                 │         │
+        │ 4 │ ────────────────┼─────────┘
+        └───┘                 │
+          │                   │
+          └───────────────────┘
     """
     visited = set()
     stack = []
@@ -609,6 +618,7 @@ def edge_reversed_graph(
     ...     'c': {'a', 'b'}, 'd': {'b', 'c'}, 'a': {'c'}, 'b': {'c'}, 'e': set([])}
 
     Testing border cases
+
     >>> assert edge_reversed_graph(dict(e='', a='e')) == {'e': ['a'], 'a': []}
     >>> assert edge_reversed_graph(dict(a='e', e='')) == {'e': ['a'], 'a': []}
     """

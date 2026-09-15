@@ -2,8 +2,6 @@
 Code related to work on the "From annotated functions to meshes" discussion:
 
 https://github.com/i2mint/meshed/discussions/55
-
-
 """
 
 import typing
@@ -60,7 +58,6 @@ def callable_annots_to_signature(
     ['self', 'mytype', 'arg_01']
     >>> sig.parameters['arg_01'].annotation
     <class 'str'>
-
     """
     origin = typing.get_origin(callable_annots)
     if not _is_callable_type_annot(origin):

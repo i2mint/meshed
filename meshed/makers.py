@@ -95,7 +95,7 @@ simply use a different ``factory_to_func`` argument. The default one is:
 >>> from meshed.makers import dlft_factory_to_func
 
 which you can also reuse to make your own.
-See below how we provide a ``name_to_func_map`` to specify how ``func_label``s should
+See below how we provide a ``name_to_func_map`` to specify how ``func_label`` values should
 map to actual functions, and set ``use_place_holder_fallback=False`` to make
 sure that we don't ever fallback on a placeholder function as we did above.
 
@@ -139,7 +139,6 @@ But see below that the dag is now using the functions we specified:
 >>> # model=5, fvs=[4, 6] -> map_05 -> model_outputs == [5, [4, 6]]
 >>> dag(1, 2, 3, 4, 5)
 [5, [4, 6]]
-
 """
 
 import ast
@@ -297,7 +296,6 @@ def parsed_to_node_kwargs(target_value) -> Iterator[dict]:
     ...         print(d)
     {'name': 'func1', 'out': 'x', 'bind': {0: 'a', 'b': 2}}
     {'name': 'func2', 'out': 'y', 'bind': {0: 'x', 1: 'func1', 'c': 3, 'd': 'x'}}
-
     """
     # Note: ast.Tuple has names in 'elts' attribute,
     # and could be handled, but would need to lead to multiple nodes
@@ -401,7 +399,6 @@ def parse_steps(src):
     2
 
     Basically, these ast objects contain all we need to know about the (parsed) source.
-
     """
     src = _ensure_src_string(src)
     root = robust_ast_parse(src)
@@ -569,7 +566,8 @@ def code_to_dag(
     computational flow. The inverse operation is available through ``dag_to_code``
     which can convert a DAG back to executable Python code.
 
-    See also: ``dag_to_code`` for the inverse operation.
+    See also:
+        ``dag_to_code`` for the inverse operation.
     """
     fnodes = code_to_fnodes(
         src, func_src=func_src, use_place_holder_fallback=use_place_holder_fallback
@@ -721,7 +719,6 @@ def named_funcs_to_func_nodes(named_funcs: NamedFuncs) -> Iterable[FuncNode]:
     >>> named_funcs = func_nodes_to_named_funcs(dag.func_nodes)
     >>> dag2 = DAG(named_funcs_to_func_nodes(named_funcs))
     >>> assert dag2(x=3) == dag(x=3) == 24
-
     """
     return (
         FuncNode(func, name=f"{out}_", out=out) for out, func in named_funcs.items()
@@ -730,7 +727,7 @@ def named_funcs_to_func_nodes(named_funcs: NamedFuncs) -> Iterable[FuncNode]:
 
 def func_nodes_to_named_funcs(func_nodes: Iterable[FuncNode]) -> NamedFuncs:
     """Make some components (kwargs) based on the ``.out`` and ``.func`` of the
-    ``FuncNode``s.
+    ``FuncNode`` objects.
 
     Example use: To get from ``DAG`` to ``Slabs``.
 
@@ -756,8 +753,6 @@ def func_nodes_to_named_funcs(func_nodes: Iterable[FuncNode]) -> NamedFuncs:
     >>> func_nodes = list(named_funcs_to_func_nodes(named_funcs))
     >>> dag2 = DAG(func_nodes)
     >>> assert dag2(x=3) == dag(x=3) == 24
-
-
     """
     return {node.out: node.func for node in func_nodes}
 

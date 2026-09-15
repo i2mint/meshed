@@ -1,7 +1,6 @@
 """Ideas on collapsing and expanding nodes
 See "Collapse and expand nodes" discussion:
 https://github.com/i2mint/meshed/discussions/54
-
 """
 
 import re
@@ -19,7 +18,8 @@ def remove_decorator_code(
     If decorator_names is None, will remove all decorators.
     If decorator_names is an iterable of strings, will remove the decorators with those names.
 
-    Examples:
+    .. rubric:: Examples
+
     >>> src = '''
     ... @decorator
     ... def func():
@@ -107,7 +107,8 @@ def collapse_function_calls(
     That is, in source code, or a dag made from code_to_dag, replace calls of the form
     `call(func, arg)` with `func(arg)`.
 
-    Note: Doesn't work with arbitrary DAG src, only those made from code_to_dag.
+    Note:
+        Doesn't work with arbitrary DAG src, only those made from code_to_dag.
     """
     src_string = get_src_string(src)
 
@@ -197,7 +198,6 @@ class CollapsedDAG:
 
     This is useful for when you want to use a DAG as a function,
     but you don't want to see all the arguments.
-
     """
 
     dag: DAG

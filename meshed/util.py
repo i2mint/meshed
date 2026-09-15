@@ -34,6 +34,7 @@ def objects_defined_in_module(
     ----------
     module: Union[str, ModuleType]
         The module to look up. Can either be
+
         - the module object itself,
         - a string specifying the module's fully qualified name (e.g., 'os.path'), or
         - a .py filepath to the module
@@ -59,6 +60,7 @@ def objects_defined_in_module(
 
     Examples
     --------
+
     >>> import os
     >>> all_os_objects = objects_defined_in_module(os)
     >>> 'removedirs' in all_os_objects
@@ -76,7 +78,6 @@ def objects_defined_in_module(
     ... )
     >>> callable(this_modules_funcs['objects_defined_in_module'])
     True
-
     """
     if isinstance(module, str):
         if module.endswith(".py") and os.path.isfile(module):
@@ -173,7 +174,6 @@ def provides(*var_names: str) -> Callable[[Callable], Callable]:
     ...     return x + 1
     >>> h._provides
     ('b', 'h')
-
     """
 
     def add_provides_attribute(func):
@@ -199,7 +199,6 @@ def if_then_else(if_func, then_func, else_func, *args, **kwargs):
     'a string'
     >>> f('42')
     42
-
     """
     if if_func(*args, **kwargs):
         return then_func(*args, **kwargs)
@@ -226,7 +225,6 @@ def funcs_conjunction(*funcs):
     it is ``False`` because it is not a string.
     This shows that the second function is not applied to the input at all, since it
     doesn't need to, and if it were, we'd get an error (length of a number?!).
-
     """
     return Pipe(FuncFanout(*funcs), partial(map, itemgetter(1)), all)
 
@@ -297,7 +295,7 @@ def iterize(func, name=None):
     of such objects.
     (You might be familiar (if you use `numpy` for example) with the related
     concept of "vectorization",
-    or [array programming](https://en.wikipedia.org/wiki/Array_programming).)
+    or `array programming <https://en.wikipedia.org/wiki/Array_programming>`_.)
 
 
     >>> from i2 import Pipe
@@ -337,7 +335,6 @@ def my_isinstance(obj, class_or_tuple):
     True
     >>> isinstance_of_str(3)
     False
-
     """
     return isinstance(obj, class_or_tuple)
 
@@ -350,7 +347,6 @@ def instance_checker(class_or_tuple):
     True
     >>> isinstance_of_str(3)
     False
-
     """
     return partial(my_isinstance, class_or_tuple=class_or_tuple)
 
@@ -447,7 +443,6 @@ class ConditionalIterize:
 
     >>> str(signature(foo))
     '(x: Union[int, Iterable[int]], y=2)'
-
     """
 
     def __init__(
@@ -622,7 +617,6 @@ def dot_to_ascii(dot: str, fancy: bool = True):
       └───────────────────── │   │
                              └───┘
     <BLANKLINE>
-
     """
     import requests
 
@@ -767,7 +761,6 @@ def mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=(
     '(arg_names_or_sig, name=None, defaults=(), annotations=())'
     >>> g(1,2,defaults=3, annotations=4)
     'mk_place_holder_func(arg_names_or_sig=1, name=2, defaults=3, annotations=4)'
-
     """
     defaults = dict(defaults)
     sig = Sig(arg_names_or_sig)
@@ -863,7 +856,8 @@ def _if_none_return_input(func):
 
 
 def numbered_suffix_renamer(name, sep="_"):
-    """
+    """Append ``sep + "1"`` to ``name``, or increment its existing numbered suffix.
+
     >>> numbered_suffix_renamer('item')
     'item_1'
     >>> numbered_suffix_renamer('item_1')
@@ -932,7 +926,6 @@ def conditional_trans(
     >>> # from meshed import Literal
     >>> conditional_trans(LiteralVal('10'), str.isnumeric, float)
     '10'
-
     """
     # TODO: Maybe make Literal checking less sensitive to isinstance checks, using
     #   hasattr instead for example.
@@ -981,7 +974,6 @@ def replace_item_in_iterable(iterable, condition, replacement, *, egress=None):
     ... iter([1,2,3,4,5]), is_even, lambda x: x * 10, egress=sorted
     ... )
     [1, 3, 5, 20, 40]
-
     """
     # If condition or replacement are not callable, make them so
     condition = conditional_trans(
@@ -1015,7 +1007,6 @@ def _complete_dict_with_iterable_of_required_keys(
     >>> _complete_dict_with_iterable_of_required_keys(d, 'abc')
     >>> d
     {'a': 'A', 'c': 'C', 'b': 'b'}
-
     """
     keys_already_covered = set(to_complete)
     for required_key in complete_with:
@@ -1055,7 +1046,6 @@ def extract_values(d: dict, keys: Iterable):
 
     >>> extract_values({'a': 1, 'b': 2, 'c': 3}, ['c', 'a'])
     (3, 1)
-
     """
     tup = tuple(_extract_values(d, keys))
     if len(tup) > 1:
@@ -1071,7 +1061,6 @@ def extract_items(d: dict, keys: Iterable):
 
     >>> list(extract_items({'a': 1, 'b': 2, 'c': 3}, ['a', 'c']))
     [('a', 1), ('c', 3)]
-
     """
     for k in keys:
         yield k, d[k]
@@ -1087,7 +1076,6 @@ def extract_dict(d: dict, keys: Iterable):
 
     >>> extract_dict({'a': 1, 'b': 2, 'c': 3}, ['c', 'a'])
     {'c': 3, 'a': 1}
-
     """
     return dict(extract_items(d, keys))
 

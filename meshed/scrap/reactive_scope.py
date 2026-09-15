@@ -159,8 +159,10 @@ class ReactiveScope(MutableMapping):
         self.clear()
 
     def clear(self):
-        """Note: This actually doesn't clear the mapping, but rather, resets it to it's original state,
-        as defined by the `.scope_factory`"""
+        """
+        Note:
+            This actually doesn't clear the mapping, but rather, resets it to it's original state,
+            as defined by the `.scope_factory`"""
         self.scope = self.scope_factory()
 
     def __getitem__(self, k):
