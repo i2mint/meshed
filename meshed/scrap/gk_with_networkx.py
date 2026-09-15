@@ -843,7 +843,9 @@ with suppress(ModuleNotFoundError, ImportError):
                 def myadd(a, b):
                     return a + b
 
-            or: def myadd(a, b):
+            or::
+
+                def myadd(a, b):
                     return a + b
                 operator(name='myadd1', needs=['a', 'b'], provides=['c'])(myadd)
 
