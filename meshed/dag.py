@@ -490,6 +490,50 @@ def dflt_debugger_feedback(func_node, scope, output, step):
 # TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
 #  concern. Perhaps a more general form would be to define a cache factory defaulting
 #  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)
+class DuplicateOutsWarning(UserWarning):
+    """Warns that several ``FuncNode``s of a ``DAG`` write to the same var node.
+
+    The dag will still compute all of them, but only the value of the last one
+    (in topological order) is visible: see i2mint/meshed#40.
+    """
+
+
+def _warn_if_duplicate_outs(func_nodes):
+    """Warn (with ``DuplicateOutsWarning``) if several func nodes share an ``out``.
+
+    Two functions with the same ``__name__`` get distinct func node names, but both
+    still write to the same var node:
+
+    >>> import warnings
+    >>> def foo(x): return x + 1
+    >>> t = foo
+    >>> def foo(y): return y * 2
+    >>> tt = foo
+    >>> with warnings.catch_warnings(record=True) as w:
+    ...     warnings.simplefilter('always')
+    ...     _ = DAG([t, tt])
+    ...     print(w[0].category.__name__)
+    ...     print(w[0].message)
+    DuplicateOutsWarning
+    Several func nodes of this DAG write to the same var node(s): foo (foo_, foo___2). Only the last value computed for such a node is visible; consider giving these nodes distinct `out`s.
+    """
+    outs_of = defaultdict(list)
+    for func_node in func_nodes:
+        outs_of[func_node.out].append(func_node.name)
+    duplicated = {out: names for out, names in outs_of.items() if len(names) > 1}
+    if duplicated:
+        details = "; ".join(
+            f"{out} ({', '.join(names)})" for out, names in duplicated.items()
+        )
+        warn(
+            f"Several func nodes of this DAG write to the same var node(s): "
+            f"{details}. Only the last value computed for such a node is visible; "
+            f"consider giving these nodes distinct `out`s.",
+            DuplicateOutsWarning,
+            stacklevel=3,
+        )
+
+
 @dataclass
 class DAG:
     """A callable graph of functions: root variables in, leaf variables out.
@@ -573,6 +617,7 @@ class DAG:
         self.__name__ = self.name or "DAG"
 
         self.bindings_cleaner()
+        _warn_if_duplicate_outs(self.func_nodes)
 
     # TODO: No control of other DAG args (cache_last_scope etc.).
     @classmethod
