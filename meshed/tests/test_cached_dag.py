@@ -68,3 +68,73 @@ def test_custom_mapping_cache():
     c = _cached_dag(cache=cache)
     assert c("g", a=1) == 2
     assert cache == {"g": 2, "a": 1}
+
+
+def k2(y, a):
+    return y - a
+
+
+def test_failed_call_does_not_cache_inputs_regardless_of_arg_order():
+    c = CachedDag(DAG([k2]))
+    with pytest.raises(TypeError):
+        c("k2", y=5)  # missing ``a``, which comes *after* ``y``
+    assert c.cache == {}
+
+
+def h(f, g):
+    return f + g
+
+
+def test_multi_level_dag_with_values_without_plain_equality():
+    class Arr:
+        """Stand-in for a numpy array: ``==`` has an ambiguous truth value."""
+
+        def __init__(self, v):
+            self.v = v
+
+        def __add__(self, other):
+            return Arr(self.v + (other.v if isinstance(other, Arr) else other))
+
+        __radd__ = __add__
+
+        def __mul__(self, other):
+            return Arr(self.v * other)
+
+        def __eq__(self, other):
+            class Ambiguous:
+                def __bool__(self):
+                    raise ValueError("ambiguous")
+
+            return Ambiguous()
+
+        __ne__ = __eq__
+
+    c = CachedDag(DAG([f, g, h]))
+    a = Arr(1)
+    assert c("h", a=a).v == 4  # (1 + 1) + (1 * 2)
+    assert c.cache["a"] is a
+    assert c("h", a=a).v == 4  # same object again: allowed
+
+
+def test_nan_input():
+    nan = float("nan")
+    c = _cached_dag()
+    out = c("f", a=nan)
+    assert out != out  # nan
+    c("g", a=nan)  # the same nan object is accepted again
+
+
+def test_input_contradicting_cached_outputs_raises():
+    c = _cached_dag()
+    c("f", a=1)  # computed with the default x=1
+    assert c("f", a=1, x=1) == 2  # same as the default used: fine
+    with pytest.raises(ValueError):
+        c("f", a=1, x=5)  # f was computed with x=1
+
+
+def test_intermediate_node_as_input():
+    c = CachedDag(DAG([f, g, h]))
+    assert c("h", f=100, a=1) == 102
+    assert c.cache["f"] == 100
+    with pytest.raises(ValueError):
+        c("h", f=5)
