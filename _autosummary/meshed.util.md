@@ -60,6 +60,7 @@ Main entry points:
 | [`my_isinstance`](#meshed.util.my_isinstance)(obj, class_or_tuple)                | Same as builtin instance, but without position only constraint.                                                                                                         |
 | [`mywraps`](#meshed.util.mywraps)(func[, name, doc_prefix])                 | Make a decorator applying `functools.wraps(func)` then `extra_wraps` to a callable.                                                                                     |
 | [`named_partial`](#meshed.util.named_partial)(func, \*args[, \_\_name_\_])        | functools.partial, but with a \_\_name_\_                                                                                                                               |
+| [`not_set_to_empty`](#meshed.util.not_set_to_empty)(param)                           | Return `param`, but with no default if its default is `i2`'s `NotSet`.                                                                                                  |
 | [`numbered_suffix_renamer`](#meshed.util.numbered_suffix_renamer)(name[, sep])              | Append `sep + "1"` to `name`, or increment its existing numbered suffix.                                                                                                |
 | [`objects_defined_in_module`](#meshed.util.objects_defined_in_module)(module, \*[, ...])      | Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.                                                                  |
 | [`ordered_set_operations`](#meshed.util.ordered_set_operations)(a, b)                      | Returns a triple (a-b, a&b, b-a) for two iterables a and b.                                                                                                             |
@@ -667,6 +668,25 @@ functools.partial, but with a \_\_name_\_
 >>> f = named_partial(print, sep='\n', __name__='now_partial_has_a_name')
 >>> f.__name__
 'now_partial_has_a_name'
+```
+
+### meshed.util.not_set_to_empty(param)
+
+Return `param`, but with no default if its default is `i2`’s `NotSet`.
+
+`NotSet` in a signature (e.g. an `i2.FuncFactory`’s) means “no value given”,
+not a real default. A DAG treats such a param as required, so that it keeps its
+positional order and merges with same-named params that have no default.
+
+* **Return type:**
+  [`Parameter`](https://docs.python.org/3/library/inspect.html#inspect.Parameter)
+
+```pycon
+>>> from i2.deco import NotSet
+>>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=NotSet))
+<Parameter "x">
+>>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=3))
+<Parameter "x=3">
 ```
 
 ### meshed.util.numbered_suffix_renamer(name, sep='_')

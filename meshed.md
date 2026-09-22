@@ -1,4 +1,4 @@
-> built 2026-09-22 14:51 UTC from 82199dc (master) · meshed 0.1.169. Details: build_info.json
+> built 2026-09-22 15:40 UTC from cc6239b (master) · meshed 0.1.170. Details: build_info.json
 
 # index.html.md
 
@@ -5099,6 +5099,7 @@ Main entry points:
 | [`my_isinstance`](_autosummary/meshed.util.html.md#meshed.util.my_isinstance)(obj, class_or_tuple)                | Same as builtin instance, but without position only constraint.                                                                                                         |
 | [`mywraps`](_autosummary/meshed.util.html.md#meshed.util.mywraps)(func[, name, doc_prefix])                 | Make a decorator applying `functools.wraps(func)` then `extra_wraps` to a callable.                                                                                     |
 | [`named_partial`](_autosummary/meshed.util.html.md#meshed.util.named_partial)(func, \*args[, \_\_name_\_])        | functools.partial, but with a \_\_name_\_                                                                                                                               |
+| [`not_set_to_empty`](_autosummary/meshed.util.html.md#meshed.util.not_set_to_empty)(param)                           | Return `param`, but with no default if its default is `i2`'s `NotSet`.                                                                                                  |
 | [`numbered_suffix_renamer`](_autosummary/meshed.util.html.md#meshed.util.numbered_suffix_renamer)(name[, sep])              | Append `sep + "1"` to `name`, or increment its existing numbered suffix.                                                                                                |
 | [`objects_defined_in_module`](_autosummary/meshed.util.html.md#meshed.util.objects_defined_in_module)(module, \*[, ...])      | Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.                                                                  |
 | [`ordered_set_operations`](_autosummary/meshed.util.html.md#meshed.util.ordered_set_operations)(a, b)                      | Returns a triple (a-b, a&b, b-a) for two iterables a and b.                                                                                                             |
@@ -5708,6 +5709,25 @@ functools.partial, but with a \_\_name_\_
 'now_partial_has_a_name'
 ```
 
+### meshed.util.not_set_to_empty(param)
+
+Return `param`, but with no default if its default is `i2`’s `NotSet`.
+
+`NotSet` in a signature (e.g. an `i2.FuncFactory`’s) means “no value given”,
+not a real default. A DAG treats such a param as required, so that it keeps its
+positional order and merges with same-named params that have no default.
+
+* **Return type:**
+  [`Parameter`](https://docs.python.org/3/library/inspect.html#inspect.Parameter)
+
+```pycon
+>>> from i2.deco import NotSet
+>>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=NotSet))
+<Parameter "x">
+>>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=3))
+<Parameter "x=3">
+```
+
 ### meshed.util.numbered_suffix_renamer(name, sep='_')
 
 Append `sep + "1"` to `name`, or increment its existing numbered suffix.
@@ -6136,7 +6156,7 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
 # About this build
 
-This documentation was built on **2026-09-22 14:51 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/82199dce68ebe7e3de181baad85710f9631177af"><code>82199dc</code></a> on branch <code>master</code>, for **meshed 0.1.169** (from <code>setup.cfg</code>).
+This documentation was built on **2026-09-22 15:40 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/cc6239b8be4e8935679ad1467cd7b6a493916457"><code>cc6239b</code></a> on branch <code>master</code>, for **meshed 0.1.170** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -6145,9 +6165,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/82199dce68ebe7e3de181baad85710f9631177af"><code>82199dce68ebe7e3de181baad85710f9631177af</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/cc6239b8be4e8935679ad1467cd7b6a493916457"><code>cc6239b8be4e8935679ad1467cd7b6a493916457</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.169</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.170</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6156,9 +6176,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/35742914294">35742914294</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/35748635102">35748635102</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>b948ffdb5d512838b358ee6c01d79550b4f37cf6</code> (in the history of the built commit) |
+| Event commit | <code>d9d6096c737503dbea0fb51d28a10a090ccb945f</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6183,13 +6203,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.169/">0.1.169</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.170/">0.1.170</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout 82199dce68ebe7e3de181baad85710f9631177af
+git checkout cc6239b8be4e8935679ad1467cd7b6a493916457
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/
 ```

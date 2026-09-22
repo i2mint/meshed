@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=5b67d2e0"></script>
+    <script src="../_static/documentation_options.js?v=b843b5b2"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -57,7 +57,7 @@
     <link rel="prev" title="meshed.tools" href="meshed.tools.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.169" />
+  <meta name="docsearch:version" content="0.1.170" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -529,34 +529,37 @@ condition, keeping the container type for lists, tuples and sets.</p></li>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.named_partial" title="meshed.util.named_partial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_partial</span></code></a>(func, *args[, __name__])</p></td>
 <td><p>functools.partial, but with a __name__</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.numbered_suffix_renamer" title="meshed.util.numbered_suffix_renamer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numbered_suffix_renamer</span></code></a>(name[, sep])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.not_set_to_empty" title="meshed.util.not_set_to_empty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">not_set_to_empty</span></code></a>(param)</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">param</span></code>, but with no default if its default is <code class="docutils literal notranslate"><span class="pre">i2</span></code>'s <code class="docutils literal notranslate"><span class="pre">NotSet</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.numbered_suffix_renamer" title="meshed.util.numbered_suffix_renamer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numbered_suffix_renamer</span></code></a>(name[, sep])</p></td>
 <td><p>Append <code class="docutils literal notranslate"><span class="pre">sep</span> <span class="pre">+</span> <span class="pre">&quot;1&quot;</span></code> to <code class="docutils literal notranslate"><span class="pre">name</span></code>, or increment its existing numbered suffix.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.objects_defined_in_module" title="meshed.util.objects_defined_in_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objects_defined_in_module</span></code></a>(module, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.objects_defined_in_module" title="meshed.util.objects_defined_in_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">objects_defined_in_module</span></code></a>(module, *[, ...])</p></td>
 <td><p>Get a dictionary of objects defined in a Python module, optionally filtered by their names and values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.ordered_set_operations" title="meshed.util.ordered_set_operations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ordered_set_operations</span></code></a>(a, b)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.ordered_set_operations" title="meshed.util.ordered_set_operations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ordered_set_operations</span></code></a>(a, b)</p></td>
 <td><p>Returns a triple (a-b, a&amp;b, b-a) for two iterables a and b.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.pairs" title="meshed.util.pairs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs</span></code></a>(xs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.pairs" title="meshed.util.pairs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pairs</span></code></a>(xs)</p></td>
 <td><p>List the consecutive <code class="docutils literal notranslate"><span class="pre">(xs[i],</span> <span class="pre">xs[i+1])</span></code> pairs of a sequence.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.parameter_merger" title="meshed.util.parameter_merger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_merger</span></code></a>(*params[, same_name, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.parameter_merger" title="meshed.util.parameter_merger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parameter_merger</span></code></a>(*params[, same_name, ...])</p></td>
 <td><p>Validates that all the params are exactly the same, returning the first if so.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.print_ascii_graph" title="meshed.util.print_ascii_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_ascii_graph</span></code></a>(funcs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.print_ascii_graph" title="meshed.util.print_ascii_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_ascii_graph</span></code></a>(funcs)</p></td>
 <td><p>Print an ascii rendering of <code class="docutils literal notranslate"><span class="pre">funcs_to_digraph(funcs)</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.provides" title="meshed.util.provides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">provides</span></code></a>(*var_names)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.provides" title="meshed.util.provides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">provides</span></code></a>(*var_names)</p></td>
 <td><p>Decorator to assign <code class="docutils literal notranslate"><span class="pre">var_names</span></code> to a <code class="docutils literal notranslate"><span class="pre">_provides</span></code> attribute of function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.replace_item_in_iterable" title="meshed.util.replace_item_in_iterable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_item_in_iterable</span></code></a>(iterable, ...[, egress])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.replace_item_in_iterable" title="meshed.util.replace_item_in_iterable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_item_in_iterable</span></code></a>(iterable, ...[, egress])</p></td>
 <td><p>Returns a list where all items satisfying <code class="docutils literal notranslate"><span class="pre">condition(item)</span></code> were replaced with <code class="docutils literal notranslate"><span class="pre">replacement(item)</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.util.uncurry" title="meshed.util.uncurry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uncurry</span></code></a>(func)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.util.uncurry" title="meshed.util.uncurry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uncurry</span></code></a>(func)</p></td>
 <td><p>Wrap <code class="docutils literal notranslate"><span class="pre">func</span></code> so that it takes one tuple and unpacks it into positional arguments.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unnameable_func_name</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unnameable_func_name</span></code>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -1197,6 +1200,27 @@ callable.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.util.not_set_to_empty">
+<span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">not_set_to_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#not_set_to_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.not_set_to_empty" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">param</span></code>, but with no default if its default is <code class="docutils literal notranslate"><span class="pre">i2</span></code>’s <code class="docutils literal notranslate"><span class="pre">NotSet</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">NotSet</span></code> in a signature (e.g. an <code class="docutils literal notranslate"><span class="pre">i2.FuncFactory</span></code>’s) means “no value given”,
+not a real default. A DAG treats such a param as required, so that it keeps its
+positional order and merges with same-named params that have no default.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/inspect.html#inspect.Parameter" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a></span></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">i2.deco</span><span class="w"> </span><span class="kn">import</span> <span class="n">NotSet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">not_set_to_empty</span><span class="p">(</span><span class="n">Parameter</span><span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSet</span><span class="p">))</span>
+<span class="go">&lt;Parameter "x"&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">not_set_to_empty</span><span class="p">(</span><span class="n">Parameter</span><span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+<span class="go">&lt;Parameter "x=3"&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.util.numbered_suffix_renamer">
 <span class="sig-prename descclassname"><span class="pre">meshed.util.</span></span><span class="sig-name descname"><span class="pre">numbered_suffix_renamer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/util.html#numbered_suffix_renamer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.util.numbered_suffix_renamer" title="Link to this definition">#</a></dt>
 <dd><p>Append <code class="docutils literal notranslate"><span class="pre">sep</span> <span class="pre">+</span> <span class="pre">&quot;1&quot;</span></code> to <code class="docutils literal notranslate"><span class="pre">name</span></code>, or increment its existing numbered suffix.</p>
@@ -1510,6 +1534,7 @@ transformed items.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.my_isinstance"><code class="docutils literal notranslate"><span class="pre">my_isinstance()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.mywraps"><code class="docutils literal notranslate"><span class="pre">mywraps()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.named_partial"><code class="docutils literal notranslate"><span class="pre">named_partial()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.not_set_to_empty"><code class="docutils literal notranslate"><span class="pre">not_set_to_empty()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.numbered_suffix_renamer"><code class="docutils literal notranslate"><span class="pre">numbered_suffix_renamer()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.objects_defined_in_module"><code class="docutils literal notranslate"><span class="pre">objects_defined_in_module()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.util.ordered_set_operations"><code class="docutils literal notranslate"><span class="pre">ordered_set_operations()</span></code></a></li>

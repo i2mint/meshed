@@ -34,6 +34,7 @@ meshed.util
       my_isinstance
       mywraps
       named_partial
+      not_set_to_empty
       numbered_suffix_renamer
       objects_defined_in_module
       ordered_set_operations
