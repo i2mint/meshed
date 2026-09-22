@@ -70,6 +70,27 @@ class NoOverwritesDict(dict):
 NoSuchKey = type("NoSuchKey", (), {})
 
 
+def _is_same_value(a, b):
+    """Whether ``a`` and ``b`` are the same value, never raising.
+
+    Identity counts as sameness (so a ``nan`` object equals itself). Values whose
+    ``==`` doesn't give a plain truth value (e.g. numpy arrays) are only considered
+    the same if they are identical.
+
+    >>> _is_same_value(1, 1), _is_same_value(1, 2)
+    (True, False)
+    >>> nan = float('nan')
+    >>> _is_same_value(nan, nan), _is_same_value(nan, float('nan'))
+    (True, False)
+    """
+    if a is b:
+        return True
+    try:
+        return bool(a == b)
+    except Exception:
+        return False
+
+
 # TODO: Cache validation and invalidation
 # TODO: Continue constructing uppward towards lazyprop-using class (instances are
 #  varnodes)
@@ -227,7 +248,11 @@ class CachedDag:
                 "This type of cache is not implemented (must resolve to a Mapping): "
                 f"{cache=}"
             )
-        self._cache = ChainMap(self.defaults, self.cache)
+        else:
+            self.cache = cache
+        # Cached values (computed outputs and inputs the dag was called with) take
+        # precedence over the dag's defaults.
+        self._cache = ChainMap(self.cache, self.defaults)
 
     @property
     def __name__(self):
@@ -244,37 +269,110 @@ class CachedDag:
     # TODO: Consider having args and kwargs instead of just input_kwargs.
     #   or making it (k, /, *args, **kwargs)
     def __call__(self, k, /, **input_kwargs):
-        #         print(f"Calling ({k=},{input_kwargs=})\t{self.cache=}")
         input_kwargs = dict(input_kwargs)
-        if intersection := (input_kwargs.keys() & self.cache.keys()):
+        self._validate_inputs_against_cache(input_kwargs)
+        keys_before = set(self.cache)
+        try:
+            output = self._compute(k, input_kwargs)
+        except BaseException:
+            # Roll back the outputs computed during this failed call, so the cache
+            # stays consistent with its (uncached) inputs and the call can be retried.
+            try:
+                for key in set(self.cache) - keys_before:
+                    del self.cache[key]
+            except Exception:  # pragma: no cover - e.g. a cache without __delitem__
+                pass  # never mask the original error with a rollback error
+            raise
+        # Only persist inputs once they led to a successful computation, so that a
+        # failed (e.g. mistaken) call doesn't pin values in the cache.
+        self._cache_inputs(input_kwargs)
+        return output
+
+    def _validate_inputs_against_cache(self, input_kwargs):
+        """Raise a ``ValueError`` if ``input_kwargs`` contradicts the cache.
+
+        An input contradicts the cache if:
+
+        - it is already cached with a different value, or
+        - it is not cached, but cached outputs downstream of it were computed using
+          its default (or it has no default), and the given value differs from it, or
+        - it is not cached and not a root, but the cache (and the dag's defaults)
+          already determine everything it would be computed from.
+
+        Note that inputs are only validated against the *cache*: values given in the
+        same call are not checked against each other (``c('h', f=100, a=1)`` is
+        accepted even if ``f`` wouldn't be computed as ``100`` from ``a=1``).
+
+        Values are compared with ``_is_same_value``: for values without a plain
+        ``==`` truth value (e.g. numpy arrays), only the very same object counts as
+        the same value.
+        """
+        conflicts = {
+            name
+            for name in input_kwargs.keys() & self.cache.keys()
+            if not _is_same_value(input_kwargs[name], self.cache[name])
+        }
+        if conflicts:
             # TODO: Can give the user a more informative/correct message, since the
             #  user has more options than just the root nodes: They some combination of
             #  intermediates would also satisfy requirements.
             raise ValueError(
-                f"input_kwargs can't contain any keys that are already in cache! "
-                f"These names were in both: {intersection}"
+                f"input_kwargs can't contain keys that are already in cache with a "
+                f"different value! These names were in both: {conflicts}"
             )
+        for name in input_kwargs.keys() - self.cache.keys():
+            if name not in self.var_nodes:
+                continue
+            cached_downstream = descendants(self.dag.graph_ids, [name]) & set(
+                self.cache
+            )
+            if cached_downstream and not _is_same_value(
+                input_kwargs[name], self.defaults.get(name, NoSuchKey)
+            ):
+                raise ValueError(
+                    f"The value given for {name!r} contradicts the cache: "
+                    f"{sorted(cached_downstream)} were already computed without it."
+                )
+            if name not in self.roots and self._is_determined_by_cache(name):
+                cached_upstream = descendants(self.reversed_graph, [name]) & set(
+                    self.cache
+                )
+                raise ValueError(
+                    f"{name!r} is already determined by the cache "
+                    f"({sorted(cached_upstream)}), so it can't be given as an input."
+                )
+
+    def _is_determined_by_cache(self, k):
+        """Whether ``k``'s value is already fixed by the cache and the dag's defaults
+        (that is, whether ``self(k)``, with no inputs, would give a value)."""
+        if k in self.cache or k in self.defaults:
+            return True
+        func_node_id = self.func_node_id(k)
+        if func_node_id is None:  # a root node with no value in sight
+            return False
+        func_node = self.func_node_of_id[func_node_id]
+        return all(
+            self._is_determined_by_cache(src) for src in func_node.bind.values()
+        )
+
+    def _compute(self, k, input_kwargs):
         _cache = ChainMap(input_kwargs, self._cache)
         if k in _cache:
             return _cache[k]
-        input_kwargs = dict(input_kwargs)
         func_node_id = self.func_node_id(k)
-        #         print(f"{func_node_id=}")
         if func_node_id:
             if (output := self.cache.get(func_node_id)) is not None:
                 return output
             else:
                 func_node = self.func_node_of_id[func_node_id]
                 input_sources = {
-                    src: self(src, **input_kwargs) for src in func_node.bind.values()
+                    src: self._compute(src, input_kwargs)
+                    for src in func_node.bind.values()
                 }
-                #                 inputs = dict(input_sources, **input_kwargs)  #
                 # TODO: do we need to include **self.defaults in the middle?
                 inputs = ChainMap(_cache, input_sources)
-                #                 print(f"Computing {func_node_id}: ", end=" ")
                 output = func_node.call_on_scope(inputs, write_output_into_scope=False)
                 self.cache[func_node_id] = output
-                #                 print(f"result -> {output}")
                 return output
         else:  # k is a root node
             assert k in self.roots, f"Was expecting this to be a root node: {k}"
@@ -286,6 +384,15 @@ class CachedDag:
                     f"The input_kwargs of a {self.__name__} call is missing 1 required "
                     f"argument: '{k}'"
                 )
+
+    def _cache_inputs(self, input_kwargs):
+        """Persist the (explicitly given) values of the dag's var nodes in the cache,
+        so later calls can reuse them (see https://github.com/i2mint/meshed/issues/34).
+        Keys that are not var nodes of the dag, or that are already cached (and were
+        validated to hold the same value), are not written."""
+        for name, value in input_kwargs.items():
+            if name in self.var_nodes and name not in self.cache:
+                self.cache[name] = value
 
     def _call(self, k, /, **kwargs):
         return self(k, **kwargs)
@@ -359,9 +466,9 @@ def cached_dag_test():
     dag = DAG([f, g])
 
     c = CachedDag(dag)
-    c("g", a=1)
+    assert c("g", a=1) == 2
     assert c.cache == {"g": 2, "a": 1}
-    assert c("f" == 2)
+    assert c("f") == 2
 
 
 def add(a, b=1):
