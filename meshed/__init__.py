@@ -15,7 +15,16 @@ Extras
 by an adjacency Mapping.
 """
 
-from meshed.dag import DAG, ch_funcs, ch_names
+from meshed.dag import (
+    DAG,
+    ch_funcs,
+    ch_names,
+    DuplicateOutsWarning,
+    duplicate_outs,
+    warn_on_duplicate_outs,
+    ignore_duplicate_outs,
+    raise_on_duplicate_outs,
+)
 from meshed.base import FuncNode, compare_signatures
 from meshed.makers import code_to_dag, code_to_fnodes
 from meshed.itools import random_graph, topological_sort
