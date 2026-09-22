@@ -169,3 +169,10 @@ def test_exception_in_function_can_be_retried():
     with pytest.raises(RuntimeError):
         c("total", a=1)
     assert c("total", a=1) == 3
+
+
+def test_input_determined_by_cached_upstream_values_raises():
+    c = CachedDag(DAG([f, g, h]))
+    c("f", a=1)  # caches a=1, which determines g (and therefore h)
+    with pytest.raises(ValueError):
+        c("h", g=99)

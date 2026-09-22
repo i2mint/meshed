@@ -277,8 +277,11 @@ class CachedDag:
         except BaseException:
             # Roll back the outputs computed during this failed call, so the cache
             # stays consistent with its (uncached) inputs and the call can be retried.
-            for key in set(self.cache) - keys_before:
-                del self.cache[key]
+            try:
+                for key in set(self.cache) - keys_before:
+                    del self.cache[key]
+            except Exception:  # pragma: no cover - e.g. a cache without __delitem__
+                pass  # never mask the original error with a rollback error
             raise
         # Only persist inputs once they led to a successful computation, so that a
         # failed (e.g. mistaken) call doesn't pin values in the cache.
@@ -292,7 +295,13 @@ class CachedDag:
 
         - it is already cached with a different value, or
         - it is not cached, but cached outputs downstream of it were computed using
-          its default (or it has no default), and the given value differs from it.
+          its default (or it has no default), and the given value differs from it, or
+        - it is not cached and not a root, but values it would be computed from are
+          cached (so the cache already determines it).
+
+        Note that inputs are only validated against the *cache*: values given in the
+        same call are not checked against each other (``c('h', f=100, a=1)`` is
+        accepted even if ``f`` wouldn't be computed as ``100`` from ``a=1``).
 
         Values are compared with ``_is_same_value``: for values without a plain
         ``==`` truth value (e.g. numpy arrays), only the very same object counts as
@@ -323,6 +332,12 @@ class CachedDag:
                 raise ValueError(
                     f"The value given for {name!r} contradicts the cache: "
                     f"{sorted(cached_downstream)} were already computed without it."
+                )
+            cached_upstream = descendants(self.reversed_graph, [name]) & set(self.cache)
+            if cached_upstream:
+                raise ValueError(
+                    f"{name!r} is determined by values that are already cached "
+                    f"({sorted(cached_upstream)}), so it can't be given as an input."
                 )
 
     def _compute(self, k, input_kwargs):
