@@ -102,3 +102,54 @@ def test_duplicate_outs_lists_nodes_in_execution_order():
     # the last one listed is the one whose value the dag returns
     assert dag(x=1, y=2) == getattr(dag, "last_scope", None) or True
     assert names[-1] == dag.func_nodes[-1].name
+
+
+def _baz(c):
+    return c
+
+
+def test_strategy_survives_derivation():
+    from meshed.dag import raise_on_duplicate_outs as _raise
+
+    nodes = [FuncNode(_foo, name="n1", out="u"), FuncNode(_bar, name="n2", out="v")]
+    strict = DAG(nodes, on_duplicate_outs=_raise)
+    # a union that CREATES a duplication still uses the strict strategy
+    with pytest.raises(ValueError):
+        strict + DAG([FuncNode(_baz, name="n3", out="u")])
+
+
+def test_opting_out_survives_derivation():
+    dag = _dag_with_duplicate_outs(on_duplicate_outs=ignore_duplicate_outs)
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", DuplicateOutsWarning)
+        dag + DAG([])
+
+
+def test_renaming_copy_that_creates_a_duplicate_warns():
+    dag = DAG([FuncNode(_foo, name="n1", out="alpha"), FuncNode(_bar, name="n2", out="beta")])
+    collapsing = lambda name: "z" if name in ("alpha", "beta") else name + "_c"
+    with pytest.warns(DuplicateOutsWarning):
+        dag.copy(renamer=collapsing)
+
+
+def test_warning_points_at_the_callers_code(tmp_path):
+    # the caller must be outside of meshed (this test module is inside it), so build
+    # the dag from a little module of its own
+    caller = tmp_path / "dag_builder.py"
+    caller.write_text(
+        "from meshed import DAG, FuncNode\n"
+        "def f(a): return a\n"
+        "def g(b): return b\n"
+        "def build():\n"
+        "    return DAG([FuncNode(f, name='n1', out='same'),"
+        " FuncNode(g, name='n2', out='same')])\n"
+    )
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("dag_builder", caller)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    with pytest.warns(DuplicateOutsWarning) as record:
+        module.build()
+    assert record[0].filename == str(caller)
+    assert record[0].lineno == 5  # the DAG(...) call
