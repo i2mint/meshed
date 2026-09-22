@@ -487,9 +487,6 @@ def dflt_debugger_feedback(func_node, scope, output, step):
     return output
 
 
-# TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
-#  concern. Perhaps a more general form would be to define a cache factory defaulting
-#  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)
 class DuplicateOutsWarning(UserWarning):
     """Warns that several ``FuncNode``s of a ``DAG`` write to the same var node.
 
@@ -498,42 +495,57 @@ class DuplicateOutsWarning(UserWarning):
     """
 
 
-def _warn_if_duplicate_outs(func_nodes):
-    """Warn (with ``DuplicateOutsWarning``) if several func nodes share an ``out``.
+def duplicate_outs(func_nodes) -> dict:
+    """``{out: [names of the func nodes writing to it]}``, for the outs written to by
+    more than one func node (the last name is the one whose value is visible).
 
-    Two functions with the same ``__name__`` get distinct func node names, but both
-    still write to the same var node:
-
-    >>> import warnings
-    >>> def foo(x): return x + 1
-    >>> t = foo
-    >>> def foo(y): return y * 2
-    >>> tt = foo
-    >>> with warnings.catch_warnings(record=True) as w:
-    ...     warnings.simplefilter('always')
-    ...     _ = DAG([t, tt])
-    ...     print(w[0].category.__name__)
-    ...     print(w[0].message)
-    DuplicateOutsWarning
-    Several func nodes of this DAG write to the same var node(s): foo (foo_, foo___2). Only the last value computed for such a node is visible; consider giving these nodes distinct `out`s.
+    >>> def foo(a): return a
+    >>> nodes = [FuncNode(foo, name='x1', out='x'), FuncNode(foo, name='x2', out='x')]
+    >>> duplicate_outs(nodes)
+    {'x': ['x1', 'x2']}
+    >>> duplicate_outs([FuncNode(foo, name='x1', out='x')])
+    {}
     """
-    outs_of = defaultdict(list)
+    names_of_out = defaultdict(list)
     for func_node in func_nodes:
-        outs_of[func_node.out].append(func_node.name)
-    duplicated = {out: names for out, names in outs_of.items() if len(names) > 1}
-    if duplicated:
-        details = "; ".join(
-            f"{out} ({', '.join(names)})" for out, names in duplicated.items()
-        )
-        warn(
-            f"Several func nodes of this DAG write to the same var node(s): "
-            f"{details}. Only the last value computed for such a node is visible; "
-            f"consider giving these nodes distinct `out`s.",
-            DuplicateOutsWarning,
-            stacklevel=3,
-        )
+        names_of_out[func_node.out].append(func_node.name)
+    return {out: names for out, names in names_of_out.items() if len(names) > 1}
 
 
+def warn_on_duplicate_outs(duplicates: dict, *, dag_name=None):
+    """Emit a ``DuplicateOutsWarning`` describing ``duplicates``.
+
+    This is the default ``on_duplicate_outs`` strategy of ``DAG``. Use
+    ``ignore_duplicate_outs`` (or any callable of your own) to change that.
+    """
+    details = "; ".join(
+        f"{out} (written by {', '.join(names)}: {names[-1]}'s value is the visible one)"
+        for out, names in duplicates.items()
+    )
+    of_dag = f" of {dag_name}" if dag_name else ""
+    warn(
+        f"Several func nodes{of_dag} write to the same var node(s): {details}. "
+        "The other values are computed and dropped. If that's intentional, pass "
+        "on_duplicate_outs=ignore_duplicate_outs to the DAG.",
+        DuplicateOutsWarning,
+        stacklevel=4,  # 4: warn <- strategy <- __post_init__ <- (dataclass) __init__
+    )
+
+
+def ignore_duplicate_outs(duplicates: dict, *, dag_name=None):
+    """``on_duplicate_outs`` strategy that says nothing about duplicate outs."""
+
+
+def raise_on_duplicate_outs(duplicates: dict, *, dag_name=None):
+    """``on_duplicate_outs`` strategy that raises a ``ValidationError``."""
+    raise ValidationError(
+        f"Several func nodes write to the same var node(s): {duplicates}"
+    )
+
+
+# TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging
+#  concern. Perhaps a more general form would be to define a cache factory defaulting
+#  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)
 @dataclass
 class DAG:
     """A callable graph of functions: root variables in, leaf variables out.
@@ -591,6 +603,11 @@ class DAG:
     extract_output_from_scope: Callable[[Scope, VarNames], DagOutput] = field(
         default=extract_values, repr=False
     )
+    # What to do when several func nodes write to the same var node (see #40).
+    # Alternatives: ignore_duplicate_outs, raise_on_duplicate_outs, or your own.
+    on_duplicate_outs: Callable[[dict], None] = field(
+        default=warn_on_duplicate_outs, repr=False
+    )
 
     def __post_init__(self):
         self.func_nodes = tuple(ensure_func_nodes(self.func_nodes))
@@ -617,7 +634,8 @@ class DAG:
         self.__name__ = self.name or "DAG"
 
         self.bindings_cleaner()
-        _warn_if_duplicate_outs(self.func_nodes)
+        if duplicates := duplicate_outs(self.func_nodes):
+            self.on_duplicate_outs(duplicates, dag_name=self.name)
 
     # TODO: No control of other DAG args (cache_last_scope etc.).
     @classmethod
@@ -858,6 +876,7 @@ class DAG:
             func_nodes=self._ordered_subgraph_nodes(item),
             cache_last_scope=self.cache_last_scope,
             parameter_merge=self.parameter_merge,
+            on_duplicate_outs=ignore_duplicate_outs,  # already warned about, if any
         )
 
     def _ordered_subgraph_nodes(self, item):
@@ -940,7 +959,7 @@ class DAG:
         # TODO: mk_instance: What about other init args (cache_last_scope, ...)?
         mk_instance = type(self)
         func_nodes = partialized_funcnodes(self, **keyword_dflts)
-        new_dag = mk_instance(func_nodes)
+        new_dag = mk_instance(func_nodes, on_duplicate_outs=ignore_duplicate_outs)
         if _remove_bound_arguments:
             new_sig = Sig(new_dag).remove_names(list(keyword_dflts))
             new_sig(new_dag)  # Change the signature of new_dag with bound args removed
@@ -1348,7 +1367,7 @@ class DAG:
             # having to specify the initial DAG() value of sum (which is 0 by default).
             other = DAG()
         else:
-            other = list(DAG(other).func_nodes)
+            other = list(DAG(other, on_duplicate_outs=ignore_duplicate_outs).func_nodes)
 
         return other
 
@@ -1397,7 +1416,10 @@ class DAG:
         a_1,b_1 -> f__1 -> f_1
         f_1,c_1 -> g__1 -> g_1
         """
-        return DAG(ch_names(self.func_nodes, renamer=renamer))
+        return DAG(
+            ch_names(self.func_nodes, renamer=renamer),
+            on_duplicate_outs=ignore_duplicate_outs,
+        )
 
     def add_edge(self, from_node, to_node, to_param=None):
         """Add an e
@@ -1514,7 +1536,8 @@ class DAG:
                 self.func_nodes,
                 condition=lambda x: x == to_node,
                 replacement=lambda x: new_to_node,
-            )
+            ),
+            on_duplicate_outs=ignore_duplicate_outs,
         )
 
     # TODO: There are optimization and pre-validation opportunities here!
@@ -1932,7 +1955,11 @@ def _validate_func_mapping(func_mapping: FuncMapping, func_nodes: DagAble):
     TypeError: These values of func_src weren't callable: hello world
     """
     allowed_identifiers = set(
-        chain.from_iterable(names_and_outs(DAG(func_nodes).func_nodes))
+        chain.from_iterable(
+            names_and_outs(
+                DAG(func_nodes, on_duplicate_outs=ignore_duplicate_outs).func_nodes
+            )
+        )
     )
     if not_allowed := (func_mapping.keys() - allowed_identifiers):
         raise KeyError(
@@ -2045,10 +2072,11 @@ def ch_funcs(
                 dag.func_nodes,
                 condition=condition,
                 replacement=replacement,
-            )
+            ),
+            on_duplicate_outs=ignore_duplicate_outs,
         )
 
-    new_dag = DAG(func_nodes)
+    new_dag = DAG(func_nodes, on_duplicate_outs=ignore_duplicate_outs)
     for key, func in func_mapping.items():
         new_dag = ch_func(new_dag, key, func)
     return new_dag
