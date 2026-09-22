@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "built_at": "2026-09-22T15:40:07Z",
+  "built_at": "2026-09-22T18:12:59Z",
   "package": {
     "name": "meshed",
-    "version": "0.1.170",
+    "version": "0.1.171",
     "display_name": "meshed",
     "source": "setup.cfg"
   },
   "git": {
     "available": true,
-    "commit": "cc6239b8be4e8935679ad1467cd7b6a493916457",
-    "short_commit": "cc6239b",
+    "commit": "54c8c0f25f52af3c139b49db45fa60a563bd95a2",
+    "short_commit": "54c8c0f",
     "branch": "master",
     "tags": [
-      "0.1.170"
+      "0.1.171"
     ],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/meshed",
-    "commit_url": "https://github.com/i2mint/meshed/commit/cc6239b8be4e8935679ad1467cd7b6a493916457",
+    "commit_url": "https://github.com/i2mint/meshed/commit/54c8c0f25f52af3c139b49db45fa60a563bd95a2",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/meshed",
-    "sha": "d9d6096c737503dbea0fb51d28a10a090ccb945f",
+    "sha": "3226386c2176ee989653111dea68f7a46ca30641",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "35748635102",
-    "run_url": "https://github.com/i2mint/meshed/actions/runs/35748635102",
+    "run_id": "35765391635",
+    "run_url": "https://github.com/i2mint/meshed/actions/runs/35765391635",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -60,11 +60,11 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.170",
+    "latest": "0.1.171",
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout cc6239b8be4e8935679ad1467cd7b6a493916457\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/",
+  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 54c8c0f25f52af3c139b49db45fa60a563bd95a2\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/",
   "warnings": [],
   "alignment": {
     "aligned": true,
