@@ -126,7 +126,9 @@ def test_opting_out_survives_derivation():
 
 
 def test_renaming_copy_that_creates_a_duplicate_warns():
-    dag = DAG([FuncNode(_foo, name="n1", out="alpha"), FuncNode(_bar, name="n2", out="beta")])
+    dag = DAG(
+        [FuncNode(_foo, name="n1", out="alpha"), FuncNode(_bar, name="n2", out="beta")]
+    )
     collapsing = lambda name: "z" if name in ("alpha", "beta") else name + "_c"
     with pytest.warns(DuplicateOutsWarning):
         dag.copy(renamer=collapsing)
