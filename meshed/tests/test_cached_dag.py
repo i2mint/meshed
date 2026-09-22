@@ -176,3 +176,15 @@ def test_input_determined_by_cached_upstream_values_raises():
     c("f", a=1)  # caches a=1, which determines g (and therefore h)
     with pytest.raises(ValueError):
         c("h", g=99)
+
+
+def test_input_not_determined_by_cache_is_allowed():
+    def u(t):
+        return t + 1
+
+    def v(u, s):
+        return u + s
+
+    c = CachedDag(DAG([u, v]))
+    c("u", t=1)  # caches t, u -- but ``v`` also needs ``s``, so it isn't determined
+    assert c("v", v=10) == 10

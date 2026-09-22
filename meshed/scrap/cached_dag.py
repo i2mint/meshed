@@ -296,8 +296,8 @@ class CachedDag:
         - it is already cached with a different value, or
         - it is not cached, but cached outputs downstream of it were computed using
           its default (or it has no default), and the given value differs from it, or
-        - it is not cached and not a root, but values it would be computed from are
-          cached (so the cache already determines it).
+        - it is not cached and not a root, but the cache (and the dag's defaults)
+          already determine everything it would be computed from.
 
         Note that inputs are only validated against the *cache*: values given in the
         same call are not checked against each other (``c('h', f=100, a=1)`` is
@@ -333,12 +333,27 @@ class CachedDag:
                     f"The value given for {name!r} contradicts the cache: "
                     f"{sorted(cached_downstream)} were already computed without it."
                 )
-            cached_upstream = descendants(self.reversed_graph, [name]) & set(self.cache)
-            if cached_upstream:
+            if name not in self.roots and self._is_determined_by_cache(name):
+                cached_upstream = descendants(self.reversed_graph, [name]) & set(
+                    self.cache
+                )
                 raise ValueError(
-                    f"{name!r} is determined by values that are already cached "
+                    f"{name!r} is already determined by the cache "
                     f"({sorted(cached_upstream)}), so it can't be given as an input."
                 )
+
+    def _is_determined_by_cache(self, k):
+        """Whether ``k``'s value is already fixed by the cache and the dag's defaults
+        (that is, whether ``self(k)``, with no inputs, would give a value)."""
+        if k in self.cache or k in self.defaults:
+            return True
+        func_node_id = self.func_node_id(k)
+        if func_node_id is None:  # a root node with no value in sight
+            return False
+        func_node = self.func_node_of_id[func_node_id]
+        return all(
+            self._is_determined_by_cache(src) for src in func_node.bind.values()
+        )
 
     def _compute(self, k, input_kwargs):
         _cache = ChainMap(input_kwargs, self._cache)
