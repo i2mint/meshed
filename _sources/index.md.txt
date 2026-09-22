@@ -12,4 +12,5 @@
 :hidden:
 
 api
+ai-agents
 ```
