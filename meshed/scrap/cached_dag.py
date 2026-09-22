@@ -351,9 +351,7 @@ class CachedDag:
         if func_node_id is None:  # a root node with no value in sight
             return False
         func_node = self.func_node_of_id[func_node_id]
-        return all(
-            self._is_determined_by_cache(src) for src in func_node.bind.values()
-        )
+        return all(self._is_determined_by_cache(src) for src in func_node.bind.values())
 
     def _compute(self, k, input_kwargs):
         _cache = ChainMap(input_kwargs, self._cache)
