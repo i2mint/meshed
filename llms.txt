@@ -37,7 +37,7 @@
 - [meshed.util](_autosummary/meshed.util.html.md): Function-wrapping, naming, and small data helpers shared across &#96;meshed&#96;.
 - [meshed.viz](_autosummary/meshed.viz.html.md): Visualization utilities for the meshed package.
 - [For AI agents](ai-agents.html.md): &#96;meshed&#96; ships artifacts for coding agents alongside its code. This page lists
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-09-22 18:12 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-09-22 18:56 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
 
 ## Optional
 

@@ -1,4 +1,4 @@
-> built 2026-09-22 18:12 UTC from 54c8c0f (master) · meshed 0.1.171. Details: build_info.json
+> built 2026-09-22 18:56 UTC from f82b64b (master) · meshed 0.1.172. Details: build_info.json
 
 # index.html.md
 
@@ -1321,38 +1321,49 @@ That said it is your responsiblity to use the right policy for your particular c
 
 ### Functions
 
-| [`arg_names`](_autosummary/meshed.dag.html.md#meshed.dag.arg_names)(func, func_name[, exclude_names])      | List the parameter names of `func`, replacing any found in `exclude_names` with a free `<func_name>__<name>` variant.                                                                                          |
-|---------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`attribute_vals`](_autosummary/meshed.dag.html.md#meshed.dag.attribute_vals)(objs, attrs[, egress])            | Extract attributes from an iterable of objects                                                                                                                                                                 |
-| [`call_func`](_autosummary/meshed.dag.html.md#meshed.dag.call_func)(func, kwargs)                          | Re-key `kwargs` by each key's `__name__` and pass the resulting dict to `Sig(func).source_kwargs`.                                                                                                             |
-| `ch_funcs`([func_nodes, func_mapping, ...])                                                       | Copy a DAG (or iterable of func nodes) with some of its node functions replaced.                                                                                                                               |
-| `ch_names`([func_nodes, renamer])                                                                 | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                         |
-| `change_funcs`([func_nodes, func_mapping, ...])                                                   | Copy a DAG (or iterable of func nodes) with some of its node functions replaced.                                                                                                                               |
-| [`change_value_on_cond`](_autosummary/meshed.dag.html.md#meshed.dag.change_value_on_cond)(d, cond, func)              | Replace, in place, each value `v` of `d` where `cond(k, v)` holds with `func(v)`, and return `d`.                                                                                                              |
-| [`dag_to_code`](_autosummary/meshed.dag.html.md#meshed.dag.dag_to_code)(dag)                                 | Convert a DAG to code.                                                                                                                                                                                         |
-| [`dflt_debugger_feedback`](_autosummary/meshed.dag.html.md#meshed.dag.dflt_debugger_feedback)(func_node, scope, ...)    | Print the step number, func node and scope, then return `output` unchanged (default feedback of `DAG.debugger`).                                                                                               |
-| [`find_first_free_name`](_autosummary/meshed.dag.html.md#meshed.dag.find_first_free_name)(prefix[, ...])              | Return `prefix` if not in `exclude_names`, else the first free `prefix__<i>` with `i` counting up from `start_at`.                                                                                             |
-| [`funcnodes_from_pairs`](_autosummary/meshed.dag.html.md#meshed.dag.funcnodes_from_pairs)(pairs)                      | Make one mock func node per `(arg, out)` pair (see `mk_mock_funcnode`).                                                                                                                                        |
-| [`hook_up`](_autosummary/meshed.dag.html.md#meshed.dag.hook_up)(func, variables[, output_name])          | Source inputs and write outputs to given variables mapping.                                                                                                                                                    |
-| [`mk_func_name`](_autosummary/meshed.dag.html.md#meshed.dag.mk_func_name)(func[, exclude_names])              | Derive a name for `func` (its `__name__`, a generated lambda name, or the wrapped function's name for a `partial`) that is not in `exclude_names`.                                                             |
-| [`mk_list_names_unique`](_autosummary/meshed.dag.html.md#meshed.dag.mk_list_names_unique)(nodes[, exclude_names])     | List the `.name` of each node, suffixing repeats (and names in `exclude_names`) with `__<i>` so all are distinct.                                                                                              |
-| [`mk_mock_funcnode`](_autosummary/meshed.dag.html.md#meshed.dag.mk_mock_funcnode)(arg, out)                       | Make a `FuncNode` whose no-op function takes the single parameter `arg` and writes to `out`, named `_mock_<arg>_<out>`.                                                                                        |
-| [`mk_nodes_names_unique`](_autosummary/meshed.dag.html.md#meshed.dag.mk_nodes_names_unique)(nodes)                     | Set each node's `.name` in place to the unique names of `mk_list_names_unique` and return `nodes`.                                                                                                             |
-| [`modified_func_node`](_autosummary/meshed.dag.html.md#meshed.dag.modified_func_node)(func_node, \*\*modifications) | Make a new `FuncNode` from `func_node` with some of `func`, `name`, `bind` and `out` replaced by `modifications`.                                                                                              |
-| [`named_partial`](_autosummary/meshed.dag.html.md#meshed.dag.named_partial)(func, \*args[, \_\_name_\_])       | functools.partial, but with a \_\_name_\_                                                                                                                                                                      |
-| [`order_subset_from_list`](_autosummary/meshed.dag.html.md#meshed.dag.order_subset_from_list)(items, sublist)           | Sort `sublist` by the position its elements have in `items`.                                                                                                                                                   |
-| [`parametrized_dag_factory`](_autosummary/meshed.dag.html.md#meshed.dag.parametrized_dag_factory)(dag, param_var_nodes)   | Constructs a factory for sub-DAGs derived from the input DAG, with values of specific 'parameter' variable nodes precomputed and fixed.                                                                        |
-| [`partialized_funcnodes`](_autosummary/meshed.dag.html.md#meshed.dag.partialized_funcnodes)(func_nodes, ...)           | Yield the func nodes, replacing the function of any node whose parameters include a `keyword_defaults` name with a partial where those parameters are defaulted and moved last; other nodes are yielded as is. |
-| [`print_dag_string`](_autosummary/meshed.dag.html.md#meshed.dag.print_dag_string)(dag[, bind_info])               | Print `dag.synopsis_string(bind_info)`; the default shows an input as `param=var` only where the two names differ.                                                                                             |
-| `rename_nodes`([func_nodes, renamer])                                                             | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                         |
-| [`reorder_on_constraints`](_autosummary/meshed.dag.html.md#meshed.dag.reorder_on_constraints)(funcnodes, outs)          | Topologically sort `funcnodes` after appending (in place) mock nodes that chain each `outs` element to the next, print the order, and return `(func_nodes, var_nodes)` without the mock nodes.                 |
+| [`arg_names`](_autosummary/meshed.dag.html.md#meshed.dag.arg_names)(func, func_name[, exclude_names])        | List the parameter names of `func`, replacing any found in `exclude_names` with a free `<func_name>__<name>` variant.                                                                                                                                     |
+|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`attribute_vals`](_autosummary/meshed.dag.html.md#meshed.dag.attribute_vals)(objs, attrs[, egress])              | Extract attributes from an iterable of objects                                                                                                                                                                                                            |
+| [`call_func`](_autosummary/meshed.dag.html.md#meshed.dag.call_func)(func, kwargs)                            | Re-key `kwargs` by each key's `__name__` and pass the resulting dict to `Sig(func).source_kwargs`.                                                                                                                                                        |
+| `ch_funcs`([func_nodes, func_mapping, ...])                                                         | Copy a DAG (or iterable of func nodes) with some of its node functions replaced.                                                                                                                                                                          |
+| `ch_names`([func_nodes, renamer])                                                                   | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
+| `change_funcs`([func_nodes, func_mapping, ...])                                                     | Copy a DAG (or iterable of func nodes) with some of its node functions replaced.                                                                                                                                                                          |
+| [`change_value_on_cond`](_autosummary/meshed.dag.html.md#meshed.dag.change_value_on_cond)(d, cond, func)                | Replace, in place, each value `v` of `d` where `cond(k, v)` holds with `func(v)`, and return `d`.                                                                                                                                                         |
+| [`dag_to_code`](_autosummary/meshed.dag.html.md#meshed.dag.dag_to_code)(dag)                                   | Convert a DAG to code.                                                                                                                                                                                                                                    |
+| [`dflt_debugger_feedback`](_autosummary/meshed.dag.html.md#meshed.dag.dflt_debugger_feedback)(func_node, scope, ...)      | Print the step number, func node and scope, then return `output` unchanged (default feedback of `DAG.debugger`).                                                                                                                                          |
+| [`duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.duplicate_outs)(func_nodes)                         | `{out: [names of the func nodes writing to it]}`, for the outs written to by more than one func node (the last name is the one whose value is visible).                                                                                                   |
+| [`duplicate_outs_string`](_autosummary/meshed.dag.html.md#meshed.dag.duplicate_outs_string)(duplicates, \*[, dag_name])  | Human readable description of a `duplicate_outs` mapping.                                                                                                                                                                                                 |
+| [`find_first_free_name`](_autosummary/meshed.dag.html.md#meshed.dag.find_first_free_name)(prefix[, ...])                | Return `prefix` if not in `exclude_names`, else the first free `prefix__<i>` with `i` counting up from `start_at`.                                                                                                                                        |
+| [`funcnodes_from_pairs`](_autosummary/meshed.dag.html.md#meshed.dag.funcnodes_from_pairs)(pairs)                        | Make one mock func node per `(arg, out)` pair (see `mk_mock_funcnode`).                                                                                                                                                                                   |
+| [`hook_up`](_autosummary/meshed.dag.html.md#meshed.dag.hook_up)(func, variables[, output_name])            | Source inputs and write outputs to given variables mapping.                                                                                                                                                                                               |
+| [`ignore_duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.ignore_duplicate_outs)(duplicates, \*[, dag_name])  | `on_duplicate_outs` strategy that says nothing about duplicate outs.                                                                                                                                                                                      |
+| [`mk_func_name`](_autosummary/meshed.dag.html.md#meshed.dag.mk_func_name)(func[, exclude_names])                | Derive a name for `func` (its `__name__`, a generated lambda name, or the wrapped function's name for a `partial`) that is not in `exclude_names`.                                                                                                        |
+| [`mk_list_names_unique`](_autosummary/meshed.dag.html.md#meshed.dag.mk_list_names_unique)(nodes[, exclude_names])       | List the `.name` of each node, suffixing repeats (and names in `exclude_names`) with `__<i>` so all are distinct.                                                                                                                                         |
+| [`mk_mock_funcnode`](_autosummary/meshed.dag.html.md#meshed.dag.mk_mock_funcnode)(arg, out)                         | Make a `FuncNode` whose no-op function takes the single parameter `arg` and writes to `out`, named `_mock_<arg>_<out>`.                                                                                                                                   |
+| [`mk_nodes_names_unique`](_autosummary/meshed.dag.html.md#meshed.dag.mk_nodes_names_unique)(nodes)                       | Set each node's `.name` in place to the unique names of `mk_list_names_unique` and return `nodes`.                                                                                                                                                        |
+| [`modified_func_node`](_autosummary/meshed.dag.html.md#meshed.dag.modified_func_node)(func_node, \*\*modifications)   | Make a new `FuncNode` from `func_node` with some of `func`, `name`, `bind` and `out` replaced by `modifications`.                                                                                                                                         |
+| [`named_partial`](_autosummary/meshed.dag.html.md#meshed.dag.named_partial)(func, \*args[, \_\_name_\_])         | functools.partial, but with a \_\_name_\_                                                                                                                                                                                                                 |
+| [`only_new_duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.only_new_duplicate_outs)(strategy, ...)             | Wrap an `on_duplicate_outs` strategy so that it is only called for duplications that are NOT already those of `known_duplicate_outs` (the duplications of the dag(s) a new dag is derived from, which were already dealt with when those dags were made). |
+| [`order_subset_from_list`](_autosummary/meshed.dag.html.md#meshed.dag.order_subset_from_list)(items, sublist)             | Sort `sublist` by the position its elements have in `items`.                                                                                                                                                                                              |
+| [`parametrized_dag_factory`](_autosummary/meshed.dag.html.md#meshed.dag.parametrized_dag_factory)(dag, param_var_nodes)     | Constructs a factory for sub-DAGs derived from the input DAG, with values of specific 'parameter' variable nodes precomputed and fixed.                                                                                                                   |
+| [`partialized_funcnodes`](_autosummary/meshed.dag.html.md#meshed.dag.partialized_funcnodes)(func_nodes, ...)             | Yield the func nodes, replacing the function of any node whose parameters include a `keyword_defaults` name with a partial where those parameters are defaulted and moved last; other nodes are yielded as is.                                            |
+| [`print_dag_string`](_autosummary/meshed.dag.html.md#meshed.dag.print_dag_string)(dag[, bind_info])                 | Print `dag.synopsis_string(bind_info)`; the default shows an input as `param=var` only where the two names differ.                                                                                                                                        |
+| [`raise_on_duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.raise_on_duplicate_outs)(duplicates, \*[, ...])     | `on_duplicate_outs` strategy that raises a `ValidationError`.                                                                                                                                                                                             |
+| `rename_nodes`([func_nodes, renamer])                                                               | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
+| [`reorder_on_constraints`](_autosummary/meshed.dag.html.md#meshed.dag.reorder_on_constraints)(funcnodes, outs)            | Topologically sort `funcnodes` after appending (in place) mock nodes that chain each `outs` element to the next, print the order, and return `(func_nodes, var_nodes)` without the mock nodes.                                                            |
+| [`warn_on_duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.warn_on_duplicate_outs)(duplicates, \*[, dag_name]) | Emit a `DuplicateOutsWarning` describing `duplicates`.                                                                                                                                                                                                    |
 
 ### Classes
 
 | [`DAG`](_autosummary/meshed.dag.html.md#meshed.dag.DAG)([func_nodes, cache_last_scope, ...])   | A callable graph of functions: root variables in, leaf variables out.   |
 |---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 
-### *class* meshed.dag.DAG(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>)
+### Exceptions
+
+| [`DuplicateOutsWarning`](_autosummary/meshed.dag.html.md#meshed.dag.DuplicateOutsWarning)   | Warns that several `FuncNode``s of a ``DAG` write to the same var node.   |
+|-------------------------------------------------------------------------|---------------------------------------------------------------------------|
+
+### *class* meshed.dag.DAG(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>, on_duplicate_outs=<function warn_on_duplicate_outs>)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -1908,6 +1919,15 @@ Like `.graph`, but with node ids (names).
 
 alias of [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
+#### on_duplicate_outs(, dag_name=None)
+
+Emit a `DuplicateOutsWarning` describing `duplicates`.
+
+This is the default `on_duplicate_outs` strategy of `DAG`. Use
+`ignore_duplicate_outs`, `raise_on_duplicate_outs`, or any callable of your
+own (taking `(duplicates, *, dag_name=None)`) to change that. Note that a
+strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).
+
 #### parameter_merge(, same_name=True, same_kind=True, same_default=True, same_annotation=True)
 
 Validates that all the params are exactly the same, returning the first if so.
@@ -2026,6 +2046,15 @@ order; `bind_info` controls how inputs are shown (see
 Render the DAG as the source of a function named after the DAG, one `out =
 node_name(args)` line per func node (see `dag_to_code`).
 
+### *exception* meshed.dag.DuplicateOutsWarning
+
+Bases: [`UserWarning`](https://docs.python.org/3/builtins/exceptions.html#UserWarning)
+
+Warns that several `FuncNode``s of a ``DAG` write to the same var node.
+
+The dag will still compute all of them, but only the value of the last one
+(in topological order) is visible: see i2mint/meshed#40.
+
 ### meshed.dag.arg_names(func, func_name, exclude_names=())
 
 List the parameter names of `func`, replacing any found in `exclude_names` with
@@ -2103,6 +2132,30 @@ True
 Print the step number, func node and scope, then return `output` unchanged
 (default feedback of `DAG.debugger`).
 
+### meshed.dag.duplicate_outs(func_nodes)
+
+`{out: [names of the func nodes writing to it]}`, for the outs written to by
+more than one func node (the last name is the one whose value is visible).
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+```pycon
+>>> def foo(a): return a
+>>> nodes = [FuncNode(foo, name='x1', out='x'), FuncNode(foo, name='x2', out='x')]
+>>> duplicate_outs(nodes)
+{'x': ['x1', 'x2']}
+>>> duplicate_outs([FuncNode(foo, name='x1', out='x')])
+{}
+```
+
+### meshed.dag.duplicate_outs_string(duplicates, , dag_name=None)
+
+Human readable description of a `duplicate_outs` mapping.
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
 ### meshed.dag.find_first_free_name(prefix, exclude_names=(), start_at=2)
 
 Return `prefix` if not in `exclude_names`, else the first free `prefix__<i>`
@@ -2158,6 +2211,10 @@ Again…
 9
 ```
 
+### meshed.dag.ignore_duplicate_outs(duplicates, , dag_name=None)
+
+`on_duplicate_outs` strategy that says nothing about duplicate outs.
+
 ### meshed.dag.mk_func_name(func, exclude_names=())
 
 Derive a name for `func` (its `__name__`, a generated lambda name, or the wrapped function’s name for a `partial`) that is not in `exclude_names`.
@@ -2212,6 +2269,16 @@ Extract attributes from an iterable of objects
 [('print', 'builtins'), ('map', 'builtins')]
 ```
 
+### meshed.dag.only_new_duplicate_outs(strategy, known_duplicate_outs)
+
+Wrap an `on_duplicate_outs` strategy so that it is only called for
+duplications that are NOT already those of `known_duplicate_outs` (the
+duplications of the dag(s) a new dag is derived from, which were already dealt
+with when those dags were made).
+
+A derived dag may rename its nodes (`copy`, `ch_names`), so a duplication
+that has the same shape as the source’s counts as the same one.
+
 ### meshed.dag.order_subset_from_list(items, sublist)
 
 Sort `sublist` by the position its elements have in `items`.
@@ -2262,11 +2329,24 @@ moved last; other nodes are yielded as is.
 Print `dag.synopsis_string(bind_info)`; the default shows an input as
 `param=var` only where the two names differ.
 
+### meshed.dag.raise_on_duplicate_outs(duplicates, , dag_name=None)
+
+`on_duplicate_outs` strategy that raises a `ValidationError`.
+
 ### meshed.dag.reorder_on_constraints(funcnodes, outs)
 
 Topologically sort `funcnodes` after appending (in place) mock nodes that chain
 each `outs` element to the next, print the order, and return `(func_nodes,
 var_nodes)` without the mock nodes.
+
+### meshed.dag.warn_on_duplicate_outs(duplicates, , dag_name=None)
+
+Emit a `DuplicateOutsWarning` describing `duplicates`.
+
+This is the default `on_duplicate_outs` strategy of `DAG`. Use
+`ignore_duplicate_outs`, `raise_on_duplicate_outs`, or any callable of your
+own (taking `(duplicates, *, dag_name=None)`) to change that. Note that a
+strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).
 
 
 # _autosummary/meshed.examples.html.md
@@ -4573,7 +4653,7 @@ Wrapping dags
 | [`DDag`](_autosummary/meshed.scrap.wrapping_dags.html.md#meshed.scrap.wrapping_dags.DDag)([func_nodes, cache_last_scope, ...])   |    |
 |----------------------------------------------------------------------------------------------|----|
 
-### *class* meshed.scrap.wrapping_dags.DDag(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>)
+### *class* meshed.scrap.wrapping_dags.DDag(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>, on_duplicate_outs=<function warn_on_duplicate_outs>)
 
 Bases: [`DAG`](_autosummary/meshed.dag.html.md#meshed.dag.DAG)
 
@@ -6156,7 +6236,7 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
 # About this build
 
-This documentation was built on **2026-09-22 18:12 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/54c8c0f25f52af3c139b49db45fa60a563bd95a2"><code>54c8c0f</code></a> on branch <code>master</code>, for **meshed 0.1.171** (from <code>setup.cfg</code>).
+This documentation was built on **2026-09-22 18:56 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/f82b64b6e1e74a72f42f8cb631a3e7eeebe57d5b"><code>f82b64b</code></a> on branch <code>master</code>, for **meshed 0.1.172** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -6165,9 +6245,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/54c8c0f25f52af3c139b49db45fa60a563bd95a2"><code>54c8c0f25f52af3c139b49db45fa60a563bd95a2</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/f82b64b6e1e74a72f42f8cb631a3e7eeebe57d5b"><code>f82b64b6e1e74a72f42f8cb631a3e7eeebe57d5b</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.171</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.172</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6176,9 +6256,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/35765391635">35765391635</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/35770223279">35770223279</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>3226386c2176ee989653111dea68f7a46ca30641</code> (in the history of the built commit) |
+| Event commit | <code>e52a06cd5853c488cbf332ffc183482e99c99c58</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6203,13 +6283,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.171/">0.1.171</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.172/">0.1.172</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout 54c8c0f25f52af3c139b49db45fa60a563bd95a2
+git checkout f82b64b6e1e74a72f42f8cb631a3e7eeebe57d5b
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/
 ```

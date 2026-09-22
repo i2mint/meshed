@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=1c3b31ab"></script>
+    <script src="../../_static/documentation_options.js?v=2bc3bbc1"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -410,7 +410,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.171" />
+  <meta name="docsearch:version" content="0.1.172" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -872,6 +872,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">VT</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">double_up_as_factory</span><span class="p">,</span> <span class="n">MultiFunc</span>
@@ -1239,6 +1240,135 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<div class="viewcode-block" id="DuplicateOutsWarning">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DuplicateOutsWarning">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DuplicateOutsWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Warns that several ``FuncNode``s of a ``DAG`` write to the same var node.</span>
+
+<span class="sd">    The dag will still compute all of them, but only the value of the last one</span>
+<span class="sd">    (in topological order) is visible: see i2mint/meshed#40.</span>
+<span class="sd">    """</span></div>
+
+
+
+<div class="viewcode-block" id="duplicate_outs">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.duplicate_outs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">duplicate_outs</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``{out: [names of the func nodes writing to it]}``, for the outs written to by</span>
+<span class="sd">    more than one func node (the last name is the one whose value is visible).</span>
+
+<span class="sd">    &gt;&gt;&gt; def foo(a): return a</span>
+<span class="sd">    &gt;&gt;&gt; nodes = [FuncNode(foo, name='x1', out='x'), FuncNode(foo, name='x2', out='x')]</span>
+<span class="sd">    &gt;&gt;&gt; duplicate_outs(nodes)</span>
+<span class="sd">    {'x': ['x1', 'x2']}</span>
+<span class="sd">    &gt;&gt;&gt; duplicate_outs([FuncNode(foo, name='x1', out='x')])</span>
+<span class="sd">    {}</span>
+<span class="sd">    """</span>
+    <span class="n">names_of_out</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">:</span>
+        <span class="n">names_of_out</span><span class="p">[</span><span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">out</span><span class="p">:</span> <span class="n">names</span> <span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="n">names_of_out</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="duplicate_outs_string">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.duplicate_outs_string">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">duplicate_outs_string</span><span class="p">(</span><span class="n">duplicates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dag_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Human readable description of a ``duplicate_outs`` mapping."""</span>
+    <span class="n">details</span> <span class="o">=</span> <span class="s2">"; "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2"> (written by </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">'s value is the visible one)"</span>
+        <span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">of_dag</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">" of </span><span class="si">{</span><span class="n">dag_name</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">dag_name</span> <span class="k">else</span> <span class="s2">""</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"Several func nodes</span><span class="si">{</span><span class="n">of_dag</span><span class="si">}</span><span class="s2"> write to the same var node(s): </span><span class="si">{</span><span class="n">details</span><span class="si">}</span><span class="s2">"</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_stacklevel_of_first_frame_outside_meshed</span><span class="p">(</span><span class="n">_max_levels</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The ``stacklevel`` (as ``warnings.warn`` counts it, from the caller of this</span>
+<span class="sd">    function) of the first frame that is not meshed's own code, so that a warning</span>
+<span class="sd">    points at the code that built the dag, however many meshed frames lie between.</span>
+<span class="sd">    """</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># the caller: stacklevel 1</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">level</span> <span class="o">&lt;=</span> <span class="n">_max_levels</span><span class="p">:</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_globals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"__name__"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+        <span class="c1"># i2 too: meshed's makers/decorators call through i2's decorator plumbing</span>
+        <span class="n">is_meshed</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"meshed"</span><span class="p">,</span> <span class="s2">"i2"</span><span class="p">)</span>
+        <span class="c1"># the dataclass-generated __init__ has "&lt;string&gt;" for a filename</span>
+        <span class="n">is_generated</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_filename</span> <span class="o">==</span> <span class="s2">"&lt;string&gt;"</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_meshed</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_generated</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">level</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_back</span>
+        <span class="n">level</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="mi">1</span>
+
+
+<div class="viewcode-block" id="warn_on_duplicate_outs">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.warn_on_duplicate_outs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">warn_on_duplicate_outs</span><span class="p">(</span><span class="n">duplicates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dag_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Emit a ``DuplicateOutsWarning`` describing ``duplicates``.</span>
+
+<span class="sd">    This is the default ``on_duplicate_outs`` strategy of ``DAG``. Use</span>
+<span class="sd">    ``ignore_duplicate_outs``, ``raise_on_duplicate_outs``, or any callable of your</span>
+<span class="sd">    own (taking ``(duplicates, *, dag_name=None)``) to change that. Note that a</span>
+<span class="sd">    strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).</span>
+<span class="sd">    """</span>
+    <span class="n">warn</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">duplicate_outs_string</span><span class="p">(</span><span class="n">duplicates</span><span class="p">,</span><span class="w"> </span><span class="n">dag_name</span><span class="o">=</span><span class="n">dag_name</span><span class="p">)</span><span class="si">}</span><span class="s2">. "</span>
+        <span class="s2">"The other values are computed and dropped. If that's intentional, pass "</span>
+        <span class="s2">"on_duplicate_outs=ignore_duplicate_outs to the DAG."</span><span class="p">,</span>
+        <span class="n">DuplicateOutsWarning</span><span class="p">,</span>
+        <span class="c1"># not a constant: a custom strategy delegating here adds frames, and dags are</span>
+        <span class="c1"># also made from within meshed (code_to_dag, dag arithmetic, ...)</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="n">_stacklevel_of_first_frame_outside_meshed</span><span class="p">(),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ignore_duplicate_outs">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.ignore_duplicate_outs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ignore_duplicate_outs</span><span class="p">(</span><span class="n">duplicates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dag_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""``on_duplicate_outs`` strategy that says nothing about duplicate outs."""</span></div>
+
+
+
+<div class="viewcode-block" id="raise_on_duplicate_outs">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.raise_on_duplicate_outs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">raise_on_duplicate_outs</span><span class="p">(</span><span class="n">duplicates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dag_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""``on_duplicate_outs`` strategy that raises a ``ValidationError``."""</span>
+    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">duplicate_outs_string</span><span class="p">(</span><span class="n">duplicates</span><span class="p">,</span> <span class="n">dag_name</span><span class="o">=</span><span class="n">dag_name</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="only_new_duplicate_outs">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.only_new_duplicate_outs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">only_new_duplicate_outs</span><span class="p">(</span><span class="n">strategy</span><span class="p">,</span> <span class="n">known_duplicate_outs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Wrap an ``on_duplicate_outs`` strategy so that it is only called for</span>
+<span class="sd">    duplications that are NOT already those of ``known_duplicate_outs`` (the</span>
+<span class="sd">    duplications of the dag(s) a new dag is derived from, which were already dealt</span>
+<span class="sd">    with when those dags were made).</span>
+
+<span class="sd">    A derived dag may rename its nodes (``copy``, ``ch_names``), so a duplication</span>
+<span class="sd">    that has the same shape as the source's counts as the same one.</span>
+<span class="sd">    """</span>
+    <span class="n">known_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">known_duplicate_outs</span><span class="p">)</span>
+    <span class="n">known_shape</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">known_duplicate_outs</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_duplicate_outs</span><span class="p">(</span><span class="n">duplicates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dag_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">new_duplicates</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">out</span><span class="p">:</span> <span class="n">names</span> <span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">out</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">known_names</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_duplicates</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">duplicates</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="o">==</span> <span class="n">known_shape</span><span class="p">:</span>
+            <span class="k">return</span>  <span class="c1"># same duplications as the source's, only renamed</span>
+        <span class="n">strategy</span><span class="p">(</span><span class="n">new_duplicates</span><span class="p">,</span> <span class="n">dag_name</span><span class="o">=</span><span class="n">dag_name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">on_duplicate_outs</span></div>
+
+
+
 <span class="c1"># TODO: caching last scope isn't really the DAG's direct concern -- it's a debugging</span>
 <span class="c1">#  concern. Perhaps a more general form would be to define a cache factory defaulting</span>
 <span class="c1">#  to a dict, but that could be a "dict" that logs writes (even to an attribute of self)</span>
@@ -1301,6 +1431,11 @@ window.runMermaid = runMermaid;</script>
     <span class="n">extract_output_from_scope</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Scope</span><span class="p">,</span> <span class="n">VarNames</span><span class="p">],</span> <span class="n">DagOutput</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="n">extract_values</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
+    <span class="c1"># What to do when several func nodes write to the same var node (see #40).</span>
+    <span class="c1"># Alternatives: ignore_duplicate_outs, raise_on_duplicate_outs, or your own.</span>
+    <span class="n">on_duplicate_outs</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">warn_on_duplicate_outs</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ensure_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
@@ -1327,6 +1462,8 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">"DAG"</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bindings_cleaner</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">duplicates</span> <span class="o">:=</span> <span class="n">duplicate_outs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">on_duplicate_outs</span><span class="p">(</span><span class="n">duplicates</span><span class="p">,</span> <span class="n">dag_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="c1"># TODO: No control of other DAG args (cache_last_scope etc.).</span>
 <div class="viewcode-block" id="DAG.from_funcs">
@@ -1574,11 +1711,22 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getitem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_derived_on_duplicate_outs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">also_from</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The ``on_duplicate_outs`` to give a dag derived from this one (and,</span>
+<span class="sd">        optionally, other func nodes or dags it's combined with): the same strategy,</span>
+<span class="sd">        but only told about duplications that are new (those of the sources were</span>
+<span class="sd">        already dealt with when the sources were made)."""</span>
+        <span class="n">known</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">duplicate_outs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">also_from</span><span class="p">:</span>
+            <span class="n">known</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">duplicate_outs</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s2">"func_nodes"</span><span class="p">,</span> <span class="n">source</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">only_new_duplicate_outs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_duplicate_outs</span><span class="p">,</span> <span class="n">known</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_getitem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
             <span class="n">func_nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ordered_subgraph_nodes</span><span class="p">(</span><span class="n">item</span><span class="p">),</span>
             <span class="n">cache_last_scope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_last_scope</span><span class="p">,</span>
             <span class="n">parameter_merge</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_merge</span><span class="p">,</span>
+            <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_derived_on_duplicate_outs</span><span class="p">(),</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ordered_subgraph_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
@@ -1663,7 +1811,9 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># TODO: mk_instance: What about other init args (cache_last_scope, ...)?</span>
         <span class="n">mk_instance</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">func_nodes</span> <span class="o">=</span> <span class="n">partialized_funcnodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">keyword_dflts</span><span class="p">)</span>
-        <span class="n">new_dag</span> <span class="o">=</span> <span class="n">mk_instance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+        <span class="n">new_dag</span> <span class="o">=</span> <span class="n">mk_instance</span><span class="p">(</span>
+            <span class="n">func_nodes</span><span class="p">,</span> <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_derived_on_duplicate_outs</span><span class="p">()</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">_remove_bound_arguments</span><span class="p">:</span>
             <span class="n">new_sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">new_dag</span><span class="p">)</span><span class="o">.</span><span class="n">remove_names</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">keyword_dflts</span><span class="p">))</span>
             <span class="n">new_sig</span><span class="p">(</span><span class="n">new_dag</span><span class="p">)</span>  <span class="c1"># Change the signature of new_dag with bound args removed</span>
@@ -1969,9 +2119,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt; ch_fnode2 = partial(ch_func_node_func, func_comparator=same_set_of_names)</span>
 <span class="sd">        &gt;&gt;&gt; d = dag.ch_funcs(ch_fnode2, g=lambda z=2, y=1: y / z);</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">ch_funcs</span><span class="p">(</span>
+        <span class="n">new_dag</span> <span class="o">=</span> <span class="n">ch_funcs</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">func_mapping</span><span class="o">=</span><span class="n">func_mapping</span><span class="p">,</span> <span class="n">ch_func_node_func</span><span class="o">=</span><span class="n">ch_func_node_func</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+        <span class="n">new_dag</span><span class="o">.</span><span class="n">on_duplicate_outs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_derived_on_duplicate_outs</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">new_dag</span></div>
 
 
         <span class="c1"># _validate_func_mapping(func_mapping, self)</span>
@@ -2087,7 +2239,7 @@ window.runMermaid = runMermaid;</script>
             <span class="c1"># having to specify the initial DAG() value of sum (which is 0 by default).</span>
             <span class="n">other</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">other</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">DAG</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">DAG</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="n">ignore_duplicate_outs</span><span class="p">)</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">other</span>
 
@@ -2105,7 +2257,11 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># we would like to control some orders of things via the order of addition</span>
         <span class="c1"># (thinkg list addition versus set addition for example), so instead we write</span>
         <span class="c1"># the explicit code:</span>
-        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_other_for_addition</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
+        <span class="n">other_func_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_other_for_addition</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
+            <span class="n">other_func_nodes</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">),</span>
+            <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_derived_on_duplicate_outs</span><span class="p">(</span><span class="n">other_func_nodes</span><span class="p">),</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""A union of DAGs.</span>
@@ -2119,7 +2275,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt; dag([1,2,3])</span>
 <span class="sd">        ([1, 2, 3], (1, 2, 3))</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_other_for_addition</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+        <span class="n">other_func_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_other_for_addition</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span> <span class="o">+</span> <span class="n">other_func_nodes</span><span class="p">,</span>
+            <span class="c1"># a union can *create* a duplication: only those are worth reporting</span>
+            <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_derived_on_duplicate_outs</span><span class="p">(</span><span class="n">other_func_nodes</span><span class="p">),</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="DAG.copy">
 <a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.copy">[docs]</a>
@@ -2138,7 +2299,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        a_1,b_1 -&gt; f__1 -&gt; f_1</span>
 <span class="sd">        f_1,c_1 -&gt; g__1 -&gt; g_1</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="n">ch_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span>
+            <span class="n">ch_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">),</span>
+            <span class="c1"># a renamer could collapse two outs into one: that would be new</span>
+            <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_derived_on_duplicate_outs</span><span class="p">(),</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DAG.add_edge">
@@ -2258,7 +2423,8 @@ window.runMermaid = runMermaid;</script>
                 <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span>
                 <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">to_node</span><span class="p">,</span>
                 <span class="n">replacement</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">new_to_node</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_derived_on_duplicate_outs</span><span class="p">(),</span>
         <span class="p">)</span></div>
 
 
@@ -2723,7 +2889,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    TypeError: These values of func_src weren't callable: hello world</span>
 <span class="sd">    """</span>
     <span class="n">allowed_identifiers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
-        <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">names_and_outs</span><span class="p">(</span><span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
+        <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
+            <span class="n">names_and_outs</span><span class="p">(</span>
+                <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="n">ignore_duplicate_outs</span><span class="p">)</span><span class="o">.</span><span class="n">func_nodes</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">not_allowed</span> <span class="o">:=</span> <span class="p">(</span><span class="n">func_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="n">allowed_identifiers</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
@@ -2836,10 +3006,11 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">,</span>
                 <span class="n">condition</span><span class="o">=</span><span class="n">condition</span><span class="p">,</span>
                 <span class="n">replacement</span><span class="o">=</span><span class="n">replacement</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="n">ignore_duplicate_outs</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="n">new_dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+    <span class="n">new_dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="n">ignore_duplicate_outs</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">func_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">new_dag</span> <span class="o">=</span> <span class="n">ch_func</span><span class="p">(</span><span class="n">new_dag</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">new_dag</span>

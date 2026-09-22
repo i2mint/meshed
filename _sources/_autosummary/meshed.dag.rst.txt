@@ -17,25 +17,37 @@ meshed.dag
       change_value_on_cond
       dag_to_code
       dflt_debugger_feedback
+      duplicate_outs
+      duplicate_outs_string
       find_first_free_name
       funcnodes_from_pairs
       hook_up
+      ignore_duplicate_outs
       mk_func_name
       mk_list_names_unique
       mk_mock_funcnode
       mk_nodes_names_unique
       modified_func_node
       named_partial
+      only_new_duplicate_outs
       order_subset_from_list
       parametrized_dag_factory
       partialized_funcnodes
       print_dag_string
+      raise_on_duplicate_outs
       rename_nodes
       reorder_on_constraints
+      warn_on_duplicate_outs
    
    .. rubric:: Classes
 
    .. autosummary::
    
       DAG
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      DuplicateOutsWarning
    

@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../_static/documentation_options.js?v=1c3b31ab"></script>
+    <script src="../_static/documentation_options.js?v=2bc3bbc1"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -57,7 +57,7 @@
     <link rel="prev" title="meshed.composition" href="meshed.composition.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.171" />
+  <meta name="docsearch:version" content="0.1.172" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -584,6 +584,12 @@ That said it is your responsiblity to use the right policy for your particular c
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.dflt_debugger_feedback" title="meshed.dag.dflt_debugger_feedback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dflt_debugger_feedback</span></code></a>(func_node, scope, ...)</p></td>
 <td><p>Print the step number, func node and scope, then return <code class="docutils literal notranslate"><span class="pre">output</span></code> unchanged (default feedback of <code class="docutils literal notranslate"><span class="pre">DAG.debugger</span></code>).</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.duplicate_outs" title="meshed.dag.duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate_outs</span></code></a>(func_nodes)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{out:</span> <span class="pre">[names</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">func</span> <span class="pre">nodes</span> <span class="pre">writing</span> <span class="pre">to</span> <span class="pre">it]}</span></code>, for the outs written to by more than one func node (the last name is the one whose value is visible).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.duplicate_outs_string" title="meshed.dag.duplicate_outs_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate_outs_string</span></code></a>(duplicates, *[, dag_name])</p></td>
+<td><p>Human readable description of a <code class="docutils literal notranslate"><span class="pre">duplicate_outs</span></code> mapping.</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.find_first_free_name" title="meshed.dag.find_first_free_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_first_free_name</span></code></a>(prefix[, ...])</p></td>
 <td><p>Return <code class="docutils literal notranslate"><span class="pre">prefix</span></code> if not in <code class="docutils literal notranslate"><span class="pre">exclude_names</span></code>, else the first free <code class="docutils literal notranslate"><span class="pre">prefix__&lt;i&gt;</span></code> with <code class="docutils literal notranslate"><span class="pre">i</span></code> counting up from <code class="docutils literal notranslate"><span class="pre">start_at</span></code>.</p></td>
 </tr>
@@ -593,23 +599,29 @@ That said it is your responsiblity to use the right policy for your particular c
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.hook_up" title="meshed.dag.hook_up"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hook_up</span></code></a>(func, variables[, output_name])</p></td>
 <td><p>Source inputs and write outputs to given variables mapping.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.mk_func_name" title="meshed.dag.mk_func_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_func_name</span></code></a>(func[, exclude_names])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.ignore_duplicate_outs" title="meshed.dag.ignore_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ignore_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy that says nothing about duplicate outs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.mk_func_name" title="meshed.dag.mk_func_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_func_name</span></code></a>(func[, exclude_names])</p></td>
 <td><p>Derive a name for <code class="docutils literal notranslate"><span class="pre">func</span></code> (its <code class="docutils literal notranslate"><span class="pre">__name__</span></code>, a generated lambda name, or the wrapped function's name for a <code class="docutils literal notranslate"><span class="pre">partial</span></code>) that is not in <code class="docutils literal notranslate"><span class="pre">exclude_names</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.mk_list_names_unique" title="meshed.dag.mk_list_names_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_list_names_unique</span></code></a>(nodes[, exclude_names])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.mk_list_names_unique" title="meshed.dag.mk_list_names_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_list_names_unique</span></code></a>(nodes[, exclude_names])</p></td>
 <td><p>List the <code class="docutils literal notranslate"><span class="pre">.name</span></code> of each node, suffixing repeats (and names in <code class="docutils literal notranslate"><span class="pre">exclude_names</span></code>) with <code class="docutils literal notranslate"><span class="pre">__&lt;i&gt;</span></code> so all are distinct.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.mk_mock_funcnode" title="meshed.dag.mk_mock_funcnode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_mock_funcnode</span></code></a>(arg, out)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.mk_mock_funcnode" title="meshed.dag.mk_mock_funcnode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_mock_funcnode</span></code></a>(arg, out)</p></td>
 <td><p>Make a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> whose no-op function takes the single parameter <code class="docutils literal notranslate"><span class="pre">arg</span></code> and writes to <code class="docutils literal notranslate"><span class="pre">out</span></code>, named <code class="docutils literal notranslate"><span class="pre">_mock_&lt;arg&gt;_&lt;out&gt;</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.mk_nodes_names_unique" title="meshed.dag.mk_nodes_names_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_nodes_names_unique</span></code></a>(nodes)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.mk_nodes_names_unique" title="meshed.dag.mk_nodes_names_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_nodes_names_unique</span></code></a>(nodes)</p></td>
 <td><p>Set each node's <code class="docutils literal notranslate"><span class="pre">.name</span></code> in place to the unique names of <code class="docutils literal notranslate"><span class="pre">mk_list_names_unique</span></code> and return <code class="docutils literal notranslate"><span class="pre">nodes</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.modified_func_node" title="meshed.dag.modified_func_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modified_func_node</span></code></a>(func_node, **modifications)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.modified_func_node" title="meshed.dag.modified_func_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modified_func_node</span></code></a>(func_node, **modifications)</p></td>
 <td><p>Make a new <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> from <code class="docutils literal notranslate"><span class="pre">func_node</span></code> with some of <code class="docutils literal notranslate"><span class="pre">func</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">bind</span></code> and <code class="docutils literal notranslate"><span class="pre">out</span></code> replaced by <code class="docutils literal notranslate"><span class="pre">modifications</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.named_partial" title="meshed.dag.named_partial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_partial</span></code></a>(func, *args[, __name__])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.named_partial" title="meshed.dag.named_partial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_partial</span></code></a>(func, *args[, __name__])</p></td>
 <td><p>functools.partial, but with a __name__</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.only_new_duplicate_outs" title="meshed.dag.only_new_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">only_new_duplicate_outs</span></code></a>(strategy, ...)</p></td>
+<td><p>Wrap an <code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy so that it is only called for duplications that are NOT already those of <code class="docutils literal notranslate"><span class="pre">known_duplicate_outs</span></code> (the duplications of the dag(s) a new dag is derived from, which were already dealt with when those dags were made).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.order_subset_from_list" title="meshed.dag.order_subset_from_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">order_subset_from_list</span></code></a>(items, sublist)</p></td>
 <td><p>Sort <code class="docutils literal notranslate"><span class="pre">sublist</span></code> by the position its elements have in <code class="docutils literal notranslate"><span class="pre">items</span></code>.</p></td>
@@ -623,11 +635,17 @@ That said it is your responsiblity to use the right policy for your particular c
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.print_dag_string" title="meshed.dag.print_dag_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_dag_string</span></code></a>(dag[, bind_info])</p></td>
 <td><p>Print <code class="docutils literal notranslate"><span class="pre">dag.synopsis_string(bind_info)</span></code>; the default shows an input as <code class="docutils literal notranslate"><span class="pre">param=var</span></code> only where the two names differ.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rename_nodes</span></code>([func_nodes, renamer])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.raise_on_duplicate_outs" title="meshed.dag.raise_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_on_duplicate_outs</span></code></a>(duplicates, *[, ...])</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy that raises a <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rename_nodes</span></code>([func_nodes, renamer])</p></td>
 <td><p>Renames variables and functions of a <code class="docutils literal notranslate"><span class="pre">DAG</span></code> or iterable of <code class="docutils literal notranslate"><span class="pre">FuncNodes</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.reorder_on_constraints" title="meshed.dag.reorder_on_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reorder_on_constraints</span></code></a>(funcnodes, outs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.reorder_on_constraints" title="meshed.dag.reorder_on_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reorder_on_constraints</span></code></a>(funcnodes, outs)</p></td>
 <td><p>Topologically sort <code class="docutils literal notranslate"><span class="pre">funcnodes</span></code> after appending (in place) mock nodes that chain each <code class="docutils literal notranslate"><span class="pre">outs</span></code> element to the next, print the order, and return <code class="docutils literal notranslate"><span class="pre">(func_nodes,</span> <span class="pre">var_nodes)</span></code> without the mock nodes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.warn_on_duplicate_outs" title="meshed.dag.warn_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warn_on_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
+<td><p>Emit a <code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code> describing <code class="docutils literal notranslate"><span class="pre">duplicates</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -641,11 +659,20 @@ That said it is your responsiblity to use the right policy for your particular c
 </tbody>
 </table>
 </div>
+<p class="rubric">Exceptions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.DuplicateOutsWarning" title="meshed.dag.DuplicateOutsWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code></a></p></td>
+<td><p>Warns that several <code class="docutils literal notranslate"><span class="pre">FuncNode``s</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">``DAG</span></code> write to the same var node.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.dag.DAG">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">DAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_last_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">functools.partial(&lt;function</span> <span class="pre">parameter_merger&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_output_from_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">extract_values&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#DAG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.DAG" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">DAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_last_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">functools.partial(&lt;function</span> <span class="pre">parameter_merger&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_output_from_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">extract_values&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_duplicate_outs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">warn_on_duplicate_outs&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#DAG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.DAG" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A callable graph of functions: root variables in, leaf variables out.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.dag</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">Sig</span>
@@ -1220,6 +1247,18 @@ Like <code class="docutils literal notranslate"><span class="pre">.graph</span><
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="meshed.dag.DAG.on_duplicate_outs">
+<span class="sig-name descname"><span class="pre">on_duplicate_outs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dag_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.dag.DAG.on_duplicate_outs" title="Link to this definition">#</a></dt>
+<dd><p>Emit a <code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code> describing <code class="docutils literal notranslate"><span class="pre">duplicates</span></code>.</p>
+<p>This is the default <code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy of <code class="docutils literal notranslate"><span class="pre">DAG</span></code>. Use
+<code class="docutils literal notranslate"><span class="pre">ignore_duplicate_outs</span></code>, <code class="docutils literal notranslate"><span class="pre">raise_on_duplicate_outs</span></code>, or any callable of your
+own (taking <code class="docutils literal notranslate"><span class="pre">(duplicates,</span> <span class="pre">*,</span> <span class="pre">dag_name=None)</span></code>) to change that. Note that a
+strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="meshed.dag.DAG.parameter_merge">
 <span class="sig-name descname"><span class="pre">parameter_merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meshed.dag.DAG.parameter_merge" title="Link to this definition">#</a></dt>
 <dd><p>Validates that all the params are exactly the same, returning the first if so.</p>
@@ -1355,6 +1394,15 @@ order; <code class="docutils literal notranslate"><span class="pre">bind_info</s
 
 </dd></dl>
 
+<dl class="py exception">
+<dt class="sig sig-object py" id="meshed.dag.DuplicateOutsWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">DuplicateOutsWarning</span></span><a class="reference internal" href="../_modules/meshed/dag.html#DuplicateOutsWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.DuplicateOutsWarning" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#UserWarning" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></a></p>
+<p>Warns that several <code class="docutils literal notranslate"><span class="pre">FuncNode``s</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">``DAG</span></code> write to the same var node.</p>
+<p>The dag will still compute all of them, but only the value of the last one
+(in topological order) is visible: see i2mint/meshed#40.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.dag.arg_names">
 <span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">arg_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#arg_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.arg_names" title="Link to this definition">#</a></dt>
@@ -1439,6 +1487,37 @@ a free <code class="docutils literal notranslate"><span class="pre">&lt;func_nam
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.duplicate_outs">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">duplicate_outs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#duplicate_outs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.duplicate_outs" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">{out:</span> <span class="pre">[names</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">func</span> <span class="pre">nodes</span> <span class="pre">writing</span> <span class="pre">to</span> <span class="pre">it]}</span></code>, for the outs written to by
+more than one func node (the last name is the one whose value is visible).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">FuncNode</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'x1'</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">'x'</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'x2'</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">'x'</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duplicate_outs</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">{'x': ['x1', 'x2']}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">duplicate_outs</span><span class="p">([</span><span class="n">FuncNode</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'x1'</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">'x'</span><span class="p">)])</span>
+<span class="go">{}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.duplicate_outs_string">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">duplicate_outs_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duplicates</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dag_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#duplicate_outs_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.duplicate_outs_string" title="Link to this definition">#</a></dt>
+<dd><p>Human readable description of a <code class="docutils literal notranslate"><span class="pre">duplicate_outs</span></code> mapping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.dag.find_first_free_name">
 <span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">find_first_free_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#find_first_free_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.find_first_free_name" title="Link to this definition">#</a></dt>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">prefix</span></code> if not in <code class="docutils literal notranslate"><span class="pre">exclude_names</span></code>, else the first free <code class="docutils literal notranslate"><span class="pre">prefix__&lt;i&gt;</span></code>
@@ -1495,6 +1574,14 @@ to write the output of the function</p></li>
 <span class="go">9</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.ignore_duplicate_outs">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">ignore_duplicate_outs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duplicates</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dag_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#ignore_duplicate_outs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.ignore_duplicate_outs" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy that says nothing about duplicate outs.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1566,6 +1653,19 @@ and <code class="docutils literal notranslate"><span class="pre">out</span></cod
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.only_new_duplicate_outs">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">only_new_duplicate_outs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strategy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_duplicate_outs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#only_new_duplicate_outs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.only_new_duplicate_outs" title="Link to this definition">#</a></dt>
+<dd><p>Wrap an <code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy so that it is only called for
+duplications that are NOT already those of <code class="docutils literal notranslate"><span class="pre">known_duplicate_outs</span></code> (the
+duplications of the dag(s) a new dag is derived from, which were already dealt
+with when those dags were made).</p>
+<p>A derived dag may rename its nodes (<code class="docutils literal notranslate"><span class="pre">copy</span></code>, <code class="docutils literal notranslate"><span class="pre">ch_names</span></code>), so a duplication
+that has the same shape as the source’s counts as the same one.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.dag.order_subset_from_list">
 <span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">order_subset_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sublist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#order_subset_from_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.order_subset_from_list" title="Link to this definition">#</a></dt>
 <dd><p>Sort <code class="docutils literal notranslate"><span class="pre">sublist</span></code> by the position its elements have in <code class="docutils literal notranslate"><span class="pre">items</span></code>.</p>
@@ -1625,11 +1725,31 @@ moved last; other nodes are yielded as is.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.raise_on_duplicate_outs">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">raise_on_duplicate_outs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duplicates</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dag_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#raise_on_duplicate_outs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.raise_on_duplicate_outs" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy that raises a <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.dag.reorder_on_constraints">
 <span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">reorder_on_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcnodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#reorder_on_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.reorder_on_constraints" title="Link to this definition">#</a></dt>
 <dd><p>Topologically sort <code class="docutils literal notranslate"><span class="pre">funcnodes</span></code> after appending (in place) mock nodes that chain
 each <code class="docutils literal notranslate"><span class="pre">outs</span></code> element to the next, print the order, and return <code class="docutils literal notranslate"><span class="pre">(func_nodes,</span>
 <span class="pre">var_nodes)</span></code> without the mock nodes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.warn_on_duplicate_outs">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">warn_on_duplicate_outs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duplicates</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dag_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#warn_on_duplicate_outs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.warn_on_duplicate_outs" title="Link to this definition">#</a></dt>
+<dd><p>Emit a <code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code> describing <code class="docutils literal notranslate"><span class="pre">duplicates</span></code>.</p>
+<p>This is the default <code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy of <code class="docutils literal notranslate"><span class="pre">DAG</span></code>. Use
+<code class="docutils literal notranslate"><span class="pre">ignore_duplicate_outs</span></code>, <code class="docutils literal notranslate"><span class="pre">raise_on_duplicate_outs</span></code>, or any callable of your
+own (taking <code class="docutils literal notranslate"><span class="pre">(duplicates,</span> <span class="pre">*,</span> <span class="pre">dag_name=None)</span></code>) to change that. Note that a
+strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 </section>
@@ -1704,6 +1824,7 @@ each <code class="docutils literal notranslate"><span class="pre">outs</span></c
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.get_node_matching"><code class="docutils literal notranslate"><span class="pre">DAG.get_node_matching()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.graph_ids"><code class="docutils literal notranslate"><span class="pre">DAG.graph_ids</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.new_scope"><code class="docutils literal notranslate"><span class="pre">DAG.new_scope</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.on_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">DAG.on_duplicate_outs()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.parameter_merge"><code class="docutils literal notranslate"><span class="pre">DAG.parameter_merge()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.params_for_src"><code class="docutils literal notranslate"><span class="pre">DAG.params_for_src</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.partial"><code class="docutils literal notranslate"><span class="pre">DAG.partial()</span></code></a></li>
@@ -1714,15 +1835,19 @@ each <code class="docutils literal notranslate"><span class="pre">outs</span></c
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.to_code"><code class="docutils literal notranslate"><span class="pre">DAG.to_code()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DuplicateOutsWarning"><code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.arg_names"><code class="docutils literal notranslate"><span class="pre">arg_names()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.attribute_vals"><code class="docutils literal notranslate"><span class="pre">attribute_vals()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.call_func"><code class="docutils literal notranslate"><span class="pre">call_func()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.change_value_on_cond"><code class="docutils literal notranslate"><span class="pre">change_value_on_cond()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.dag_to_code"><code class="docutils literal notranslate"><span class="pre">dag_to_code()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.dflt_debugger_feedback"><code class="docutils literal notranslate"><span class="pre">dflt_debugger_feedback()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.duplicate_outs"><code class="docutils literal notranslate"><span class="pre">duplicate_outs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.duplicate_outs_string"><code class="docutils literal notranslate"><span class="pre">duplicate_outs_string()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.find_first_free_name"><code class="docutils literal notranslate"><span class="pre">find_first_free_name()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.funcnodes_from_pairs"><code class="docutils literal notranslate"><span class="pre">funcnodes_from_pairs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.hook_up"><code class="docutils literal notranslate"><span class="pre">hook_up()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.ignore_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">ignore_duplicate_outs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.mk_func_name"><code class="docutils literal notranslate"><span class="pre">mk_func_name()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.mk_list_names_unique"><code class="docutils literal notranslate"><span class="pre">mk_list_names_unique()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.mk_mock_funcnode"><code class="docutils literal notranslate"><span class="pre">mk_mock_funcnode()</span></code></a></li>
@@ -1730,11 +1855,14 @@ each <code class="docutils literal notranslate"><span class="pre">outs</span></c
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.modified_func_node"><code class="docutils literal notranslate"><span class="pre">modified_func_node()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.named_partial"><code class="docutils literal notranslate"><span class="pre">named_partial()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.names_and_outs"><code class="docutils literal notranslate"><span class="pre">names_and_outs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.only_new_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">only_new_duplicate_outs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.order_subset_from_list"><code class="docutils literal notranslate"><span class="pre">order_subset_from_list()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.parametrized_dag_factory"><code class="docutils literal notranslate"><span class="pre">parametrized_dag_factory()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.partialized_funcnodes"><code class="docutils literal notranslate"><span class="pre">partialized_funcnodes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.print_dag_string"><code class="docutils literal notranslate"><span class="pre">print_dag_string()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.raise_on_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">raise_on_duplicate_outs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.reorder_on_constraints"><code class="docutils literal notranslate"><span class="pre">reorder_on_constraints()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.warn_on_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">warn_on_duplicate_outs()</span></code></a></li>
 </ul>
   </nav></div>
 

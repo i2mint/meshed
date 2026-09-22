@@ -12,6 +12,6 @@ Wrapping dags
 | [`DDag`](#meshed.scrap.wrapping_dags.DDag)([func_nodes, cache_last_scope, ...])   |    |
 |----------------------------------------------------------------------------------------------|----|
 
-### *class* meshed.scrap.wrapping_dags.DDag(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>)
+### *class* meshed.scrap.wrapping_dags.DDag(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>, on_duplicate_outs=<function warn_on_duplicate_outs>)
 
 Bases: [`DAG`](meshed.dag.md#meshed.dag.DAG)
