@@ -46,6 +46,34 @@ from operator import itemgetter
 
 from i2 import Sig, name_of_obj, LiteralVal, FuncFanout, Pipe
 
+try:
+    from i2 import is_not_set
+except ImportError:  # older i2: same sentinel, not exported from the root yet
+    from i2.deco import NotSet as _NotSet
+
+    def is_not_set(x) -> bool:
+        """Return True iff ``x`` is ``i2``'s ``NotSet`` sentinel."""
+        return x is _NotSet
+
+
+def not_set_to_empty(param: Parameter) -> Parameter:
+    """Return ``param``, but with no default if its default is ``i2``'s ``NotSet``.
+
+    ``NotSet`` in a signature (e.g. an ``i2.FuncFactory``'s) means "no value given",
+    not a real default. A DAG treats such a param as required, so that it keeps its
+    positional order and merges with same-named params that have no default.
+
+    >>> from i2.deco import NotSet
+    >>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=NotSet))
+    <Parameter "x">
+    >>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=3))
+    <Parameter "x=3">
+    """
+    if is_not_set(param.default):
+        return param.replace(default=Parameter.empty)
+    return param
+
+
 T = TypeVar("T")
 
 

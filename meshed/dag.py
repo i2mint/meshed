@@ -200,6 +200,7 @@ from meshed.util import (
     extract_items,
     ParameterMerger,
     conservative_parameter_merge,
+    not_set_to_empty,
 )
 from meshed.itools import (
     topological_sort,
@@ -1254,8 +1255,9 @@ class DAG:
         for src_name in filter(src_names.__contains__, d):
             params = d[src_name]  # consider all the params that use it
             # make version of these params that have the same name (namely src_name)
+            # (i2's NotSet sentinel default counts as "no default": see not_set_to_empty)
             params_with_name_changed_to_src_name = [
-                p.replace(name=src_name) for p in params
+                not_set_to_empty(p).replace(name=src_name) for p in params
             ]
             if len(params_with_name_changed_to_src_name) == 1:
                 # if there's only one param, yield it (there can be no conflict)
