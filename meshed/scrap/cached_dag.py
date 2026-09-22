@@ -271,7 +271,15 @@ class CachedDag:
     def __call__(self, k, /, **input_kwargs):
         input_kwargs = dict(input_kwargs)
         self._validate_inputs_against_cache(input_kwargs)
-        output = self._compute(k, input_kwargs)
+        keys_before = set(self.cache)
+        try:
+            output = self._compute(k, input_kwargs)
+        except BaseException:
+            # Roll back the outputs computed during this failed call, so the cache
+            # stays consistent with its (uncached) inputs and the call can be retried.
+            for key in set(self.cache) - keys_before:
+                del self.cache[key]
+            raise
         # Only persist inputs once they led to a successful computation, so that a
         # failed (e.g. mistaken) call doesn't pin values in the cache.
         self._cache_inputs(input_kwargs)
@@ -285,6 +293,10 @@ class CachedDag:
         - it is already cached with a different value, or
         - it is not cached, but cached outputs downstream of it were computed using
           its default (or it has no default), and the given value differs from it.
+
+        Values are compared with ``_is_same_value``: for values without a plain
+        ``==`` truth value (e.g. numpy arrays), only the very same object counts as
+        the same value.
         """
         conflicts = {
             name

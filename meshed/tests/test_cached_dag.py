@@ -138,3 +138,34 @@ def test_intermediate_node_as_input():
     assert c.cache["f"] == 100
     with pytest.raises(ValueError):
         c("h", f=5)
+
+
+def k(f, b):
+    return f + b
+
+
+def test_failed_call_can_be_retried():
+    c = CachedDag(DAG([f, k]))
+    with pytest.raises(TypeError):
+        c("k", a=1)  # missing ``b`` (after ``f`` was computed)
+    assert c.cache == {}  # partial results were rolled back
+    assert c("k", a=1, b=3) == 5
+    assert c.cache == {"f": 2, "k": 5, "a": 1, "b": 3}
+
+
+def test_exception_in_function_can_be_retried():
+    calls = []
+
+    def flaky(a):
+        calls.append(a)
+        if len(calls) == 1:
+            raise RuntimeError("transient")
+        return a
+
+    def total(f, flaky):
+        return f + flaky
+
+    c = CachedDag(DAG([f, flaky, total]))
+    with pytest.raises(RuntimeError):
+        c("total", a=1)
+    assert c("total", a=1) == 3
