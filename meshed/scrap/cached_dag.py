@@ -227,7 +227,11 @@ class CachedDag:
                 "This type of cache is not implemented (must resolve to a Mapping): "
                 f"{cache=}"
             )
-        self._cache = ChainMap(self.defaults, self.cache)
+        else:
+            self.cache = cache
+        # Cached values (computed outputs and inputs the dag was called with) take
+        # precedence over the dag's defaults.
+        self._cache = ChainMap(self.cache, self.defaults)
 
     @property
     def __name__(self):
@@ -246,14 +250,25 @@ class CachedDag:
     def __call__(self, k, /, **input_kwargs):
         #         print(f"Calling ({k=},{input_kwargs=})\t{self.cache=}")
         input_kwargs = dict(input_kwargs)
-        if intersection := (input_kwargs.keys() & self.cache.keys()):
+        if conflicts := {
+            name
+            for name in input_kwargs.keys() & self.cache.keys()
+            if input_kwargs[name] != self.cache[name]
+        }:
             # TODO: Can give the user a more informative/correct message, since the
             #  user has more options than just the root nodes: They some combination of
             #  intermediates would also satisfy requirements.
             raise ValueError(
-                f"input_kwargs can't contain any keys that are already in cache! "
-                f"These names were in both: {intersection}"
+                f"input_kwargs can't contain keys that are already in cache with a "
+                f"different value! These names were in both: {conflicts}"
             )
+        output = self._compute(k, input_kwargs)
+        # Only persist inputs once they led to a successful computation, so that a
+        # failed (e.g. mistaken) call doesn't pin values in the cache.
+        self._cache_inputs(input_kwargs)
+        return output
+
+    def _compute(self, k, input_kwargs):
         _cache = ChainMap(input_kwargs, self._cache)
         if k in _cache:
             return _cache[k]
@@ -286,6 +301,14 @@ class CachedDag:
                     f"The input_kwargs of a {self.__name__} call is missing 1 required "
                     f"argument: '{k}'"
                 )
+
+    def _cache_inputs(self, input_kwargs):
+        """Persist the (explicitly given) values of the dag's var nodes in the cache,
+        so later calls can reuse them (see https://github.com/i2mint/meshed/issues/34).
+        Keys that are not var nodes of the dag are not cached."""
+        for name, value in input_kwargs.items():
+            if name in self.var_nodes:
+                self.cache[name] = value
 
     def _call(self, k, /, **kwargs):
         return self(k, **kwargs)
@@ -359,9 +382,9 @@ def cached_dag_test():
     dag = DAG([f, g])
 
     c = CachedDag(dag)
-    c("g", a=1)
+    assert c("g", a=1) == 2
     assert c.cache == {"g": 2, "a": 1}
-    assert c("f" == 2)
+    assert c("f") == 2
 
 
 def add(a, b=1):
