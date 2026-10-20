@@ -953,10 +953,14 @@ class DAG:
     def _subgraph_nodes(self, item):
         ins, outs = self.process_item(item)
         _descendants = set(
-            filter(FuncNode.has_as_instance, set(ins) | descendants(self._node_graph, ins))
+            filter(
+                FuncNode.has_as_instance, set(ins) | descendants(self._node_graph, ins)
+            )
         )
         _ancestors = set(
-            filter(FuncNode.has_as_instance, set(outs) | ancestors(self._node_graph, outs))
+            filter(
+                FuncNode.has_as_instance, set(outs) | ancestors(self._node_graph, outs)
+            )
         )
         subgraph_nodes = _descendants.intersection(_ancestors)
         return subgraph_nodes
