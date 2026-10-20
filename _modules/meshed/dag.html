@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=e04a2b0c"></script>
+    <script src="../../_static/documentation_options.js?v=d7b2a166"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.175" />
+  <meta name="docsearch:version" content="0.1.176" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -3073,7 +3073,12 @@ window.runMermaid = runMermaid;</script>
 <span class="c1"># TODO: Include as method of DAG?</span>
 <span class="c1"># TODO: extract egress functionality to decorator</span>
 <span class="nd">@double_up_as_factory</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">ch_names</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ch_names</span><span class="p">(</span>
+    <span class="n">func_nodes</span><span class="p">:</span> <span class="n">DagAble</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">,</span>
+    <span class="n">include_label_nodes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.</span>
 
 <span class="sd">    :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``</span>
@@ -3081,6 +3086,10 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        - A dictionary ``{old_name: new_name, ...}`` mapping old names to new ones</span>
 <span class="sd">        - A string, which will be appended to all identifiers of the ``func_nodes``</span>
+
+<span class="sd">    :param include_label_nodes: Whether to also rename the ``func_label`` of each</span>
+<span class="sd">        node (the label function nodes are displayed with). By default, only</span>
+<span class="sd">        identifiers (``name``, ``out`` and ``bind`` values) are changed.</span>
 
 <span class="sd">    :return: func_nodes with some or all identifiers changed. If the input ``func_nodes``</span>
 <span class="sd">        is an iterable of ``FuncNodes``, a list of func_nodes will be returned, and if the</span>
@@ -3152,6 +3161,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    a=alpha -&gt; f -&gt; bravo</span>
 <span class="sd">    x=alpha -&gt; g -&gt; c</span>
 <span class="sd">    b=bravo,y=c -&gt; h -&gt; d</span>
+
+<span class="sd">    By default, the labels of the function nodes are left alone. Use</span>
+<span class="sd">    ``include_label_nodes=True`` to rename them too:</span>
+
+<span class="sd">    &gt;&gt;&gt; [fn.func_label for fn in ch_names(dag, renamer='_copy')]</span>
+<span class="sd">    ['f', 'g', 'h']</span>
+<span class="sd">    &gt;&gt;&gt; [fn.func_label for fn in ch_names(dag, renamer='_copy', include_label_nodes=True)]</span>
+<span class="sd">    ['f_copy', 'g_copy', 'h_copy']</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">DAG</span><span class="p">):</span>
         <span class="n">egress</span> <span class="o">=</span> <span class="n">DAG</span>
@@ -3165,17 +3182,25 @@ window.runMermaid = runMermaid;</script>
         <span class="n">old_to_new_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">renamer</span><span class="p">)</span>
         <span class="n">renamer</span> <span class="o">=</span> <span class="n">old_to_new_map</span><span class="o">.</span><span class="n">get</span>
     <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">renamer</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"Could not be resolved into a callable: </span><span class="si">{</span><span class="n">renamer</span><span class="si">}</span><span class="s2">"</span>
-    <span class="n">ktrans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_rename_node</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">)</span>
+    <span class="n">ktrans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+        <span class="n">_rename_node</span><span class="p">,</span> <span class="n">renamer</span><span class="o">=</span><span class="n">renamer</span><span class="p">,</span> <span class="n">include_label_nodes</span><span class="o">=</span><span class="n">include_label_nodes</span>
+    <span class="p">)</span>
     <span class="n">func_node_trans</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">func_node_transformer</span><span class="p">,</span> <span class="n">kwargs_transformers</span><span class="o">=</span><span class="n">ktrans</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">func_node_trans</span><span class="p">,</span> <span class="n">func_nodes</span><span class="p">))</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_rename_node</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">,</span> <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_rename_node</span><span class="p">(</span>
+    <span class="n">fn_kwargs</span><span class="p">,</span>
+    <span class="n">renamer</span><span class="p">:</span> <span class="n">Renamer</span> <span class="o">=</span> <span class="n">numbered_suffix_renamer</span><span class="p">,</span>
+    <span class="n">include_label_nodes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="n">fn_kwargs</span> <span class="o">=</span> <span class="n">fn_kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="c1"># decorate renamer so if the original returns None the decorated will return input</span>
     <span class="n">renamer</span> <span class="o">=</span> <span class="n">_if_none_return_input</span><span class="p">(</span><span class="n">renamer</span><span class="p">)</span>
     <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamer</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"name"</span><span class="p">])</span>
     <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"out"</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamer</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"out"</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">include_label_nodes</span> <span class="ow">and</span> <span class="n">fn_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"func_label"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"func_label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamer</span><span class="p">(</span><span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"func_label"</span><span class="p">])</span>
     <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"bind"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">param</span><span class="p">:</span> <span class="n">renamer</span><span class="p">(</span><span class="n">var_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">var_id</span> <span class="ow">in</span> <span class="n">fn_kwargs</span><span class="p">[</span><span class="s2">"bind"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">}</span>

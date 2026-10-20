@@ -2,20 +2,18 @@
 
 # About this build
 
-This documentation was built on **2026-10-20 07:11 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/d130fbd254de12188c3dfb847b55a26c03f8a0bf"><code>d130fbd</code></a> on branch <code>master</code>, for **meshed 0.1.175** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-20 07:35 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/41a477065ed576bf355f698fac6ba85b85d199c7"><code>41a4770</code></a> on branch <code>master</code>, for **meshed 0.1.176** (from <code>setup.cfg</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.1.175) is ahead of the latest release on PyPI (0.1.174): these docs describe unreleased code.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/d130fbd254de12188c3dfb847b55a26c03f8a0bf"><code>d130fbd254de12188c3dfb847b55a26c03f8a0bf</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/41a477065ed576bf355f698fac6ba85b85d199c7"><code>41a477065ed576bf355f698fac6ba85b85d199c7</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.175</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.176</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -24,9 +22,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39384592746">39384592746</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39387146159">39387146159</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>8dd99a013480a6a9b9b518e5a51954f4da23e1d3</code> (in the history of the built commit) |
+| Event commit | <code>a43d7b933c5de7ed01387ff5aa37dd3d686584c0</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -51,13 +49,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.174/">0.1.174</a>, older than the documented version (0.1.175).
+Latest release: <a href="https://pypi.org/project/meshed/0.1.176/">0.1.176</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout d130fbd254de12188c3dfb847b55a26c03f8a0bf
+git checkout 41a477065ed576bf355f698fac6ba85b85d199c7
 pip install "epythet==0.2.18"
 epythet quickstart . --ignore tests/
 ```

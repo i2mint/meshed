@@ -1,4 +1,4 @@
-> built 2026-10-20 07:11 UTC from d130fbd (master) · meshed 0.1.175. Details: build_info.json
+> built 2026-10-20 07:35 UTC from 41a4770 (master) · meshed 0.1.176. Details: build_info.json
 
 # index.html.md
 
@@ -1331,7 +1331,7 @@ That said it is your responsiblity to use the right policy for your particular c
 | [`attribute_vals`](_autosummary/meshed.dag.html.md#meshed.dag.attribute_vals)(objs, attrs[, egress])              | Extract attributes from an iterable of objects                                                                                                                                                                                                            |
 | [`call_func`](_autosummary/meshed.dag.html.md#meshed.dag.call_func)(func, kwargs)                            | Re-key `kwargs` by each key's `__name__` and pass the resulting dict to `Sig(func).source_kwargs`.                                                                                                                                                        |
 | `ch_funcs`([func_nodes, func_mapping, ...])                                                         | Copy a DAG (or iterable of func nodes) with some of its node functions replaced.                                                                                                                                                                          |
-| `ch_names`([func_nodes, renamer])                                                                   | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
+| `ch_names`([func_nodes, renamer, ...])                                                              | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
 | `change_funcs`([func_nodes, func_mapping, ...])                                                     | Copy a DAG (or iterable of func nodes) with some of its node functions replaced.                                                                                                                                                                          |
 | [`change_value_on_cond`](_autosummary/meshed.dag.html.md#meshed.dag.change_value_on_cond)(d, cond, func)                | Replace, in place, each value `v` of `d` where `cond(k, v)` holds with `func(v)`, and return `d`.                                                                                                                                                         |
 | [`dag_to_code`](_autosummary/meshed.dag.html.md#meshed.dag.dag_to_code)(dag)                                   | Convert a DAG to code.                                                                                                                                                                                                                                    |
@@ -1354,7 +1354,7 @@ That said it is your responsiblity to use the right policy for your particular c
 | [`partialized_funcnodes`](_autosummary/meshed.dag.html.md#meshed.dag.partialized_funcnodes)(func_nodes, ...)             | Yield the func nodes, replacing the function of any node whose parameters include a `keyword_defaults` name with a partial where those parameters are defaulted and moved last; other nodes are yielded as is.                                            |
 | [`print_dag_string`](_autosummary/meshed.dag.html.md#meshed.dag.print_dag_string)(dag[, bind_info])                 | Print `dag.synopsis_string(bind_info)`; the default shows an input as `param=var` only where the two names differ.                                                                                                                                        |
 | [`raise_on_duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.raise_on_duplicate_outs)(duplicates, \*[, ...])     | `on_duplicate_outs` strategy that raises a `ValidationError`.                                                                                                                                                                                             |
-| `rename_nodes`([func_nodes, renamer])                                                               | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
+| `rename_nodes`([func_nodes, renamer, ...])                                                          | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
 | [`reorder_on_constraints`](_autosummary/meshed.dag.html.md#meshed.dag.reorder_on_constraints)(funcnodes, outs)            | Topologically sort `funcnodes` after appending (in place) mock nodes that chain each `outs` element to the next, print the order, and return `(func_nodes, var_nodes)` without the mock nodes.                                                            |
 | [`warn_on_duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.warn_on_duplicate_outs)(duplicates, \*[, dag_name]) | Emit a `DuplicateOutsWarning` describing `duplicates`.                                                                                                                                                                                                    |
 
@@ -6255,20 +6255,18 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
 # About this build
 
-This documentation was built on **2026-10-20 07:11 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/d130fbd254de12188c3dfb847b55a26c03f8a0bf"><code>d130fbd</code></a> on branch <code>master</code>, for **meshed 0.1.175** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-20 07:35 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/41a477065ed576bf355f698fac6ba85b85d199c7"><code>41a4770</code></a> on branch <code>master</code>, for **meshed 0.1.176** (from <code>setup.cfg</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.1.175) is ahead of the latest release on PyPI (0.1.174): these docs describe unreleased code.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/d130fbd254de12188c3dfb847b55a26c03f8a0bf"><code>d130fbd254de12188c3dfb847b55a26c03f8a0bf</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/41a477065ed576bf355f698fac6ba85b85d199c7"><code>41a477065ed576bf355f698fac6ba85b85d199c7</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.175</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.176</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6277,9 +6275,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39384592746">39384592746</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39387146159">39387146159</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>8dd99a013480a6a9b9b518e5a51954f4da23e1d3</code> (in the history of the built commit) |
+| Event commit | <code>a43d7b933c5de7ed01387ff5aa37dd3d686584c0</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6304,13 +6302,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.174/">0.1.174</a>, older than the documented version (0.1.175).
+Latest release: <a href="https://pypi.org/project/meshed/0.1.176/">0.1.176</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout d130fbd254de12188c3dfb847b55a26c03f8a0bf
+git checkout 41a477065ed576bf355f698fac6ba85b85d199c7
 pip install "epythet==0.2.18"
 epythet quickstart . --ignore tests/
 ```

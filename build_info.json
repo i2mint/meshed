@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-20T07:11:18Z",
+  "built_at": "2026-10-20T07:35:12Z",
   "package": {
     "name": "meshed",
-    "version": "0.1.175",
+    "version": "0.1.176",
     "display_name": "meshed",
     "source": "setup.cfg"
   },
   "git": {
     "available": true,
-    "commit": "d130fbd254de12188c3dfb847b55a26c03f8a0bf",
-    "short_commit": "d130fbd",
+    "commit": "41a477065ed576bf355f698fac6ba85b85d199c7",
+    "short_commit": "41a4770",
     "branch": "master",
     "tags": [
-      "0.1.175"
+      "0.1.176"
     ],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/meshed",
-    "commit_url": "https://github.com/i2mint/meshed/commit/d130fbd254de12188c3dfb847b55a26c03f8a0bf",
+    "commit_url": "https://github.com/i2mint/meshed/commit/41a477065ed576bf355f698fac6ba85b85d199c7",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/meshed",
-    "sha": "8dd99a013480a6a9b9b518e5a51954f4da23e1d3",
+    "sha": "a43d7b933c5de7ed01387ff5aa37dd3d686584c0",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "39384592746",
-    "run_url": "https://github.com/i2mint/meshed/actions/runs/39384592746",
+    "run_id": "39387146159",
+    "run_url": "https://github.com/i2mint/meshed/actions/runs/39387146159",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -60,16 +60,14 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.174",
-    "relation": "ahead",
+    "latest": "0.1.176",
+    "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout d130fbd254de12188c3dfb847b55a26c03f8a0bf\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/",
+  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 41a477065ed576bf355f698fac6ba85b85d199c7\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/",
   "warnings": [],
   "alignment": {
-    "aligned": false,
-    "notes": [
-      "The documented version (0.1.175) is ahead of the latest release on PyPI (0.1.174): these docs describe unreleased code."
-    ]
+    "aligned": true,
+    "notes": []
   }
 }
