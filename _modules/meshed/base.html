@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=8fbb3fd8"></script>
+    <script src="../../_static/documentation_options.js?v=4432af15"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.173" />
+  <meta name="docsearch:version" content="0.1.174" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -738,6 +738,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">{'x': 1, 'y': 2, 'total': 3}</span>
 <span class="sd">"""</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">fields</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">wraps</span>
@@ -875,10 +876,60 @@ window.runMermaid = runMermaid;</script>
 <span class="c1"># TODO: FuncNode(func_node) gives us FuncNode(scope -&gt; ...). Should we have it be</span>
 <span class="c1">#  FuncNode.from_dict(func_node.to_dict()) instead?</span>
 <span class="c1"># @dataclass(eq=True, order=True, unsafe_hash=True)</span>
+<span class="n">_NOT_GIVEN</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_called_by_dataclasses_replace</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="c1"># frames: this fn &lt;- __init__ wrapper &lt;- caller (dataclasses.replace's helper)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span><span class="n">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">f_globals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"__name__"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"dataclasses"</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_accept_legacy_name_kwarg</span><span class="p">(</span><span class="n">init</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Let ``FuncNode(..., name=...)`` keep working as an alias of ``func_id=...``.</span>
+
+<span class="sd">    Giving both is an error, except when called by ``dataclasses.replace``, which passes</span>
+<span class="sd">    the old ``func_id`` along with the new ``name``: then ``name`` wins.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="s2">"_accepts_legacy_name"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">init</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">_NOT_GIVEN</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_NOT_GIVEN</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="s2">"func_id"</span> <span class="ow">in</span> <span class="n">kwargs</span>
+            <span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_called_by_dataclasses_replace</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Give only one of `func_id` and its alias `name`"</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">"func_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Advertise the alias in the signature, so introspection (and ``partial``</span>
+    <span class="c1"># with ``name=...``) keeps working</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">(</span><span class="n">init</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">"name"</span><span class="p">]</span>
+    <span class="n">alias</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="fm">__init__</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">Signature</span><span class="p">([</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">alias</span><span class="p">])</span>
+    <span class="fm">__init__</span><span class="o">.</span><span class="n">_accepts_legacy_name</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="fm">__init__</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_LegacyNameMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Wraps every ``__init__`` set on a class (including the one ``@dataclass``</span>
+<span class="sd">    generates, on ``FuncNode`` and on its dataclass subclasses), so that all of them</span>
+<span class="sd">    accept ``name=`` as an alias of ``func_id=``."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">"__init__"</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">_accept_legacy_name_kwarg</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="FuncNode">
 <a class="viewcode-back" href="../../_autosummary/meshed.base.html#meshed.base.FuncNode">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">FuncNode</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FuncNode</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_LegacyNameMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""A function wrapper that makes the function amenable to operating in a network.</span>
 
 <span class="sd">    :param func: Function to wrap</span>
@@ -1302,31 +1353,6 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="c1"># -------------------------------------------------------------------------------------</span>
-
-
-<span class="n">_NOT_GIVEN</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_accept_legacy_name_kwarg</span><span class="p">(</span><span class="n">init</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Let ``FuncNode(..., name=...)`` keep working as an alias of ``func_id=...``"""</span>
-
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">_NOT_GIVEN</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_NOT_GIVEN</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">"func_id"</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Give only one of `func_id` and its alias `name`"</span><span class="p">)</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s2">"func_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="c1"># Advertise the alias in the signature, so introspection (and ``partial``</span>
-    <span class="c1"># with ``name=...``) keeps working</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">signature</span><span class="p">(</span><span class="n">init</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-    <span class="n">alias</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="fm">__init__</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">Signature</span><span class="p">([</span><span class="o">*</span><span class="n">params</span><span class="p">,</span> <span class="n">alias</span><span class="p">])</span>
-    <span class="k">return</span> <span class="fm">__init__</span>
-
-
-<span class="n">FuncNode</span><span class="o">.</span><span class="fm">__init__</span> <span class="o">=</span> <span class="n">_accept_legacy_name_kwarg</span><span class="p">(</span><span class="n">FuncNode</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Mesh">

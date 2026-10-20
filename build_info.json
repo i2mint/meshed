@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-20T05:46:39Z",
+  "built_at": "2026-10-20T06:20:58Z",
   "package": {
     "name": "meshed",
-    "version": "0.1.173",
+    "version": "0.1.174",
     "display_name": "meshed",
     "source": "setup.cfg"
   },
   "git": {
     "available": true,
-    "commit": "125f83ba92e454dca8e5cf711e1ba5c43771fe6b",
-    "short_commit": "125f83b",
+    "commit": "8a9aa6d91b8b19104d52624bd23a587e3602e52b",
+    "short_commit": "8a9aa6d",
     "branch": "master",
     "tags": [
-      "0.1.173"
+      "0.1.174"
     ],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/meshed",
-    "commit_url": "https://github.com/i2mint/meshed/commit/125f83ba92e454dca8e5cf711e1ba5c43771fe6b",
+    "commit_url": "https://github.com/i2mint/meshed/commit/8a9aa6d91b8b19104d52624bd23a587e3602e52b",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/meshed",
-    "sha": "e3a6d22478a6592f22b73333de9203e8a013f004",
+    "sha": "f52010f603e9fd76d9e03f24abce21b2ac4670d7",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "39376438078",
-    "run_url": "https://github.com/i2mint/meshed/actions/runs/39376438078",
+    "run_id": "39379577725",
+    "run_url": "https://github.com/i2mint/meshed/actions/runs/39379577725",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -56,20 +56,18 @@
   },
   "site": {
     "modules_documented": 29,
-    "objects_documented": 267
+    "objects_documented": 268
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.172",
-    "relation": "ahead",
+    "latest": "0.1.174",
+    "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 125f83ba92e454dca8e5cf711e1ba5c43771fe6b\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/",
+  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 8a9aa6d91b8b19104d52624bd23a587e3602e52b\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/",
   "warnings": [],
   "alignment": {
-    "aligned": false,
-    "notes": [
-      "The documented version (0.1.173) is ahead of the latest release on PyPI (0.1.172): these docs describe unreleased code."
-    ]
+    "aligned": true,
+    "notes": []
   }
 }

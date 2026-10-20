@@ -729,10 +729,23 @@ Return `idx` itself if it names a var node, else the `FuncNode` that `idx` (a no
 A string matching no node raises `KeyError`; an `idx` that is neither a
 string nor a callable raises `NotFound`.
 
+#### *property* graph
+
+The `{from_node_id: [to_node_ids]}` dict representing the graph.
+Func nodes are identified by their `func_id` (not by the `FuncNode`
+instance); var nodes by their name. (The instance-keyed graph is `_node_graph`.)
+
+```pycon
+>>> from meshed.dag import DAG
+>>> def add(a, b=1): return a + b
+>>> DAG([add]).graph
+{'a': ['add_'], 'b': ['add_'], 'add_': ['add']}
+```
+
 #### *property* graph_ids
 
 The dict representing the `{from_node: to_nodes}` graph.
-Like `.graph`, but with node ids (names).
+Same as `.graph` (node ids instead of `FuncNode` instances).
 
 ```pycon
 >>> from meshed.dag import DAG

@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=8fbb3fd8"></script>
+    <script src="../_static/documentation_options.js?v=4432af15"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.173" />
+  <meta name="docsearch:version" content="0.1.174" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -1219,10 +1219,24 @@ string nor a callable raises <code class="docutils literal notranslate"><span cl
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="meshed.dag.DAG.graph">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">graph</span></span><a class="headerlink" href="#meshed.dag.DAG.graph" title="Link to this definition">#</a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">{from_node_id:</span> <span class="pre">[to_node_ids]}</span></code> dict representing the graph.
+Func nodes are identified by their <code class="docutils literal notranslate"><span class="pre">func_id</span></code> (not by the <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code>
+instance); var nodes by their name. (The instance-keyed graph is <code class="docutils literal notranslate"><span class="pre">_node_graph</span></code>.)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.dag</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span><span class="p">([</span><span class="n">add</span><span class="p">])</span><span class="o">.</span><span class="n">graph</span>
+<span class="go">{'a': ['add_'], 'b': ['add_'], 'add_': ['add']}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="meshed.dag.DAG.graph_ids">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">graph_ids</span></span><a class="headerlink" href="#meshed.dag.DAG.graph_ids" title="Link to this definition">#</a></dt>
 <dd><p>The dict representing the <code class="docutils literal notranslate"><span class="pre">{from_node:</span> <span class="pre">to_nodes}</span></code> graph.
-Like <code class="docutils literal notranslate"><span class="pre">.graph</span></code>, but with node ids (names).</p>
+Same as <code class="docutils literal notranslate"><span class="pre">.graph</span></code> (node ids instead of <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> instances).</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.dag</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
@@ -1823,6 +1837,7 @@ strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.find_funcs"><code class="docutils literal notranslate"><span class="pre">DAG.find_funcs()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.from_funcs"><code class="docutils literal notranslate"><span class="pre">DAG.from_funcs()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.get_node_matching"><code class="docutils literal notranslate"><span class="pre">DAG.get_node_matching()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.graph"><code class="docutils literal notranslate"><span class="pre">DAG.graph</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.graph_ids"><code class="docutils literal notranslate"><span class="pre">DAG.graph_ids</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.new_scope"><code class="docutils literal notranslate"><span class="pre">DAG.new_scope</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.on_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">DAG.on_duplicate_outs()</span></code></a></li>
