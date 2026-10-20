@@ -62,6 +62,65 @@ def test_bind_to_func_node_out_does_not_warn():
     assert dag(1, 2, 3) == 9
 
 
-def test_bind_to_function_error_suggests_the_out():
-    with pytest.raises(ValidationError, match="bind it to the out"):
-        FuncNode(bar, bind={"y": foo})
+def test_bind_to_function_means_its_node_out():
+    # i2mint/meshed#96
+    dag = DAG([FuncNode(foo), FuncNode(bar, bind={"y": foo})])
+    assert str(Sig(dag)) == "(a, b, x)"
+    assert dag(1, 2, 3) == 9
+    # order does not matter, nor does a custom out
+    dag = DAG([FuncNode(bar, bind={"y": foo}), FuncNode(foo, out="s")])
+    assert dag(a=1, b=2, x=3) == 9
+
+
+def test_bind_to_function_before_dag_shows_in_synopsis():
+    assert str(FuncNode(bar, bind={"y": foo})) == "FuncNode(y=<foo>,x -> bar_ -> bar)"
+
+
+def test_bind_to_function_not_in_dag_raises():
+    def baz(z):
+        return z
+
+    with pytest.raises(ValidationError, match="no func node"):
+        DAG([FuncNode(baz), FuncNode(bar, bind={"y": foo})])
+
+
+def test_bind_to_function_wrapped_twice_raises():
+    with pytest.raises(ValidationError, match="several func nodes"):
+        DAG(
+            [
+                FuncNode(foo, out="s"),
+                FuncNode(foo, name="foo2", out="t"),
+                FuncNode(bar, bind={"y": foo}),
+            ]
+        )
+
+
+def test_bind_to_function_with_variadics():
+    def total(*nums):
+        return sum(nums)
+
+    dag = DAG([FuncNode(total), FuncNode(bar, bind={"y": total})])
+    assert dag(nums=(1, 2), x=3) == 9
+
+
+def test_bind_value_neither_str_nor_callable_raises():
+    with pytest.raises(ValidationError, match="Should be a str"):
+        FuncNode(bar, bind={"y": 3})
+
+
+def test_bind_to_function_node_shared_by_two_dags():
+    fb = FuncNode(bar, bind={"y": foo})
+    assert DAG([FuncNode(foo), fb])(1, 2, 3) == 9
+    dag = DAG([FuncNode(foo, name="F", out="s"), fb])
+    assert str(Sig(dag)) == "(a, b, x)"
+    assert fb.bind["y"] is foo  # the user's node is left as given
+
+
+def test_bind_to_bound_method():
+    class K:
+        def m(self, a):
+            return a + 1
+
+    k = K()
+    dag = DAG([FuncNode(k.m), FuncNode(bar, bind={"y": k.m})])
+    assert dag(a=1, x=3) == 6

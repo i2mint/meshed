@@ -93,7 +93,9 @@ def basic_node_validator(func_node):
 
       * ``func`` should be a callable
       * ``name`` and ``out`` should be ``str``
-      * ``bind`` should be a ``Dict[str, str]``
+      * ``bind`` should be a ``Dict[str, str]`` (callable values, which a ``DAG``
+        resolves to the out of the node wrapping them, are left out of the checks
+        below)
 
     * that the names (``.name``, ``.out`` and all ``.bind.values()``):
 
@@ -106,7 +108,8 @@ def basic_node_validator(func_node):
     _func_node_args_validation(
         func=func_node.func, name=func_node.name, bind=func_node.bind, out=func_node.out
     )
-    names = [func_node.name, func_node.out, *func_node.bind.values()]
+    bind_names = [v for v in func_node.bind.values() if not callable(v)]
+    names = [func_node.name, func_node.out, *bind_names]
 
     names_that_are_not_strings = [name for name in names if not isinstance(name, str)]
     if names_that_are_not_strings:
@@ -396,7 +399,8 @@ class FuncNode(metaclass=_LegacyNameMeta):
         'y=b,c -> h -> d'
         """
         if bind_info in {"values", "varnodes", "var_nodes"}:
-            return f"{','.join(self.bind.values())} -> {self.func_id} " f"-> {self.out}"
+            values = map(_bind_value_str, self.bind.values())
+            return f"{','.join(values)} -> {self.func_id} " f"-> {self.out}"
         elif bind_info == "hybrid":
 
             def gen():
@@ -404,7 +408,7 @@ class FuncNode(metaclass=_LegacyNameMeta):
                     if k == v:
                         yield k
                     else:
-                        yield f"{k}={v}"
+                        yield f"{k}={_bind_value_str(v)}"
 
             return f"{','.join(gen())} -> {self.func_id} " f"-> {self.out}"
         elif bind_info in {"keys", "params"}:
@@ -861,20 +865,19 @@ def insert_func_if_compatible(func_comparator: CallableComparator = compare_sign
     return partial(ch_func_node_func, func_comparator=func_comparator)
 
 
+def _bind_value_str(v):
+    """How a bind value shows in a synopsis: a callable (not resolved yet) by name."""
+    return v if isinstance(v, str) else f"<{getattr(v, '__name__', repr(v))}>"
+
+
 def _keys_and_values_are_strings_validation(d: dict):
+    """Keys must be str. Values must be str, or callables: a callable value stands for
+    the output of the func node wrapping it, which a ``DAG`` resolves (#96)."""
     for k, v in d.items():
         if not isinstance(k, str):
             raise ValidationError(f"Should be a str: {k}")
-        if not isinstance(v, str):
-            hint = ""
-            if callable(v):
-                hint = (
-                    f" (to bind {k!r} to the output of a function, bind it to the out "
-                    "of that function's FuncNode, e.g. "
-                    f"bind={{{k!r}: {getattr(v, '__name__', 'func')!r}}} when the "
-                    "out is the default)"
-                )
-            raise ValidationError(f"Should be a str: {v}{hint}")
+        if not isinstance(v, str) and not callable(v):
+            raise ValidationError(f"Should be a str (or a callable): {v}")
 
 
 def _func_node_args_validation(
@@ -888,6 +891,8 @@ def _func_node_args_validation(
     * ``name`` and ``out`` should be ``str``
 
     * ``bind`` should be a ``Dict[str, str]``, ``Dict[int, str]`` or ``List[str]``
+      (values may also be callables, resolved by a ``DAG``: see
+      ``meshed.dag.resolve_callable_bindings``)
 
     * ``out`` should be a str
     """
