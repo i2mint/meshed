@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=73ca257f"></script>
+    <script src="../../_static/documentation_options.js?v=9bd086bd"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.177" />
+  <meta name="docsearch:version" content="0.1.178" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -859,7 +859,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span><span class="p">,</span> <span class="n">cached_property</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">defaultdict</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
@@ -874,6 +874,8 @@ window.runMermaid = runMermaid;</script>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">double_up_as_factory</span><span class="p">,</span> <span class="n">MultiFunc</span>
@@ -1222,6 +1224,45 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<div class="viewcode-block" id="RepeatedNamesWarning">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.RepeatedNamesWarning">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RepeatedNamesWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Warns that several ``FuncNode``s of a ``DAG`` share a ``name``.</span>
+
+<span class="sd">    The name of a func node is its id within the dag, so the dag renames the repeats</span>
+<span class="sd">    (``f``, ``f__2``, ...) and still works. To choose the names yourself, pass ``name=``</span>
+<span class="sd">    to each ``FuncNode`` (and ``func_label=`` to control what ``dot_digraph`` prints).</span>
+<span class="sd">    See i2mint/meshed#17.</span>
+<span class="sd">    """</span></div>
+
+
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_quiet_repeated_names</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Silence ``RepeatedNamesWarning`` for a dag built internally from nodes the user</span>
+<span class="sd">    already got (or will get) the warning for."""</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">RepeatedNamesWarning</span><span class="p">)</span>
+        <span class="k">yield</span>
+
+
+<div class="viewcode-block" id="repeated_names">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.repeated_names">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">repeated_names</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``{name: how many func nodes have it}``, for the names that more than one has.</span>
+
+<span class="sd">    &gt;&gt;&gt; def foo(z): return z</span>
+<span class="sd">    &gt;&gt;&gt; nodes = [FuncNode(foo, out='x'), FuncNode(foo, out='y')]</span>
+<span class="sd">    &gt;&gt;&gt; repeated_names(nodes)</span>
+<span class="sd">    {'foo': 2}</span>
+<span class="sd">    &gt;&gt;&gt; repeated_names([FuncNode(foo, name='a', out='x'), FuncNode(foo, name='b', out='y')])</span>
+<span class="sd">    {}</span>
+<span class="sd">    """</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">count</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span></div>
+
+
+
 <div class="viewcode-block" id="duplicate_outs">
 <a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.duplicate_outs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">duplicate_outs</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -1472,6 +1513,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">"""Make func node names unique and rewrite bind values that name a func node into</span>
 <span class="sd">        that node's ``out`` (called at the end of ``__post_init__``).</span>
 <span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">repeated</span> <span class="o">:=</span> <span class="n">repeated_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">):</span>
+            <span class="n">details</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> x</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">repeated</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Several func nodes share a name (</span><span class="si">{</span><span class="n">details</span><span class="si">}</span><span class="s2">); the repeats are renamed "</span>
+                <span class="s2">"with a '__&lt;i&gt;' suffix. To pick the names, pass name= to each FuncNode "</span>
+                <span class="s2">"(and func_label= for what dot_digraph prints)."</span><span class="p">,</span>
+                <span class="n">RepeatedNamesWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="n">_stacklevel_of_first_frame_outside_meshed</span><span class="p">(),</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="o">=</span> <span class="n">mk_nodes_names_unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
         <span class="n">funcnodes_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">]</span>
         <span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">out</span>
@@ -2892,12 +2942,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">      ...</span>
 <span class="sd">    TypeError: These values of func_src weren't callable: hello world</span>
 <span class="sd">    """</span>
+    <span class="k">with</span> <span class="n">_quiet_repeated_names</span><span class="p">():</span>
+        <span class="n">internal_dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="n">ignore_duplicate_outs</span><span class="p">)</span>
     <span class="n">allowed_identifiers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
-        <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
-            <span class="n">names_and_outs</span><span class="p">(</span>
-                <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="n">ignore_duplicate_outs</span><span class="p">)</span><span class="o">.</span><span class="n">func_nodes</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">names_and_outs</span><span class="p">(</span><span class="n">internal_dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">not_allowed</span> <span class="o">:=</span> <span class="p">(</span><span class="n">func_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="n">allowed_identifiers</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
@@ -3014,7 +3062,8 @@ window.runMermaid = runMermaid;</script>
             <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="n">ignore_duplicate_outs</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="n">new_dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="n">ignore_duplicate_outs</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">_quiet_repeated_names</span><span class="p">():</span>
+        <span class="n">new_dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">on_duplicate_outs</span><span class="o">=</span><span class="n">ignore_duplicate_outs</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">func_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">new_dag</span> <span class="o">=</span> <span class="n">ch_func</span><span class="p">(</span><span class="n">new_dag</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">new_dag</span>

@@ -1,4 +1,4 @@
-> built 2026-10-20 09:49 UTC from baed882 (master) · meshed 0.1.177. Details: build_info.json
+> built 2026-10-20 11:02 UTC from a1583fc (master) · meshed 0.1.178. Details: build_info.json
 
 # index.html.md
 
@@ -1354,6 +1354,7 @@ That said it is your responsiblity to use the right policy for your particular c
 | [`raise_on_duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.raise_on_duplicate_outs)(duplicates, \*[, ...])     | `on_duplicate_outs` strategy that raises a `ValidationError`.                                                                                                                                                                                             |
 | `rename_nodes`([func_nodes, renamer, ...])                                                          | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
 | [`reorder_on_constraints`](_autosummary/meshed.dag.html.md#meshed.dag.reorder_on_constraints)(funcnodes, outs)            | Topologically sort `funcnodes` after appending (in place) mock nodes that chain each `outs` element to the next, print the order, and return `(func_nodes, var_nodes)` without the mock nodes.                                                            |
+| [`repeated_names`](_autosummary/meshed.dag.html.md#meshed.dag.repeated_names)(func_nodes)                         | `{name: how many func nodes have it}`, for the names that more than one has.                                                                                                                                                                              |
 | [`warn_on_duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.warn_on_duplicate_outs)(duplicates, \*[, dag_name]) | Emit a `DuplicateOutsWarning` describing `duplicates`.                                                                                                                                                                                                    |
 
 ### Classes
@@ -1365,6 +1366,7 @@ That said it is your responsiblity to use the right policy for your particular c
 
 | [`DuplicateOutsWarning`](_autosummary/meshed.dag.html.md#meshed.dag.DuplicateOutsWarning)   | Warns that several `FuncNode``s of a ``DAG` write to the same var node.   |
 |-------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| [`RepeatedNamesWarning`](_autosummary/meshed.dag.html.md#meshed.dag.RepeatedNamesWarning)   | Warns that several `FuncNode``s of a ``DAG` share a `name`.               |
 
 ### *class* meshed.dag.DAG(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>, on_duplicate_outs=<function warn_on_duplicate_outs>)
 
@@ -2071,6 +2073,17 @@ Warns that several `FuncNode``s of a ``DAG` write to the same var node.
 The dag will still compute all of them, but only the value of the last one
 (in topological order) is visible: see i2mint/meshed#40.
 
+### *exception* meshed.dag.RepeatedNamesWarning
+
+Bases: [`UserWarning`](https://docs.python.org/3/builtins/exceptions.html#UserWarning)
+
+Warns that several `FuncNode``s of a ``DAG` share a `name`.
+
+The name of a func node is its id within the dag, so the dag renames the repeats
+(`f`, `f__2`, …) and still works. To choose the names yourself, pass `name=`
+to each `FuncNode` (and `func_label=` to control what `dot_digraph` prints).
+See i2mint/meshed#17.
+
 ### meshed.dag.arg_names(func, func_name, exclude_names=())
 
 List the parameter names of `func`, replacing any found in `exclude_names` with
@@ -2343,6 +2356,22 @@ Print `dag.synopsis_string(bind_info)`; the default shows an input as
 Topologically sort `funcnodes` after appending (in place) mock nodes that chain
 each `outs` element to the next, print the order, and return `(func_nodes,
 var_nodes)` without the mock nodes.
+
+### meshed.dag.repeated_names(func_nodes)
+
+`{name: how many func nodes have it}`, for the names that more than one has.
+
+```pycon
+>>> def foo(z): return z
+>>> nodes = [FuncNode(foo, out='x'), FuncNode(foo, out='y')]
+>>> repeated_names(nodes)
+{'foo': 2}
+>>> repeated_names([FuncNode(foo, name='a', out='x'), FuncNode(foo, name='b', out='y')])
+{}
+```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### meshed.dag.warn_on_duplicate_outs(duplicates, , dag_name=None)
 
@@ -6257,18 +6286,20 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
 # About this build
 
-This documentation was built on **2026-10-20 09:49 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/baed882bb5350b53cfec06608706f5ed7d6d30eb"><code>baed882</code></a> on branch <code>master</code>, for **meshed 0.1.177** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-20 11:02 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/a1583fc18171f77b48a52fc439f96c81352f7981"><code>a1583fc</code></a> on branch <code>master</code>, for **meshed 0.1.178** (from <code>setup.cfg</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.1.178) is ahead of the latest release on PyPI (0.1.177): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/baed882bb5350b53cfec06608706f5ed7d6d30eb"><code>baed882bb5350b53cfec06608706f5ed7d6d30eb</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/a1583fc18171f77b48a52fc439f96c81352f7981"><code>a1583fc18171f77b48a52fc439f96c81352f7981</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.177</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.178</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6277,15 +6308,15 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39403100718">39403100718</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39411772177">39411772177</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>3d2644b3454430c2a9b54435c3d58c7b0de9c309</code> (in the history of the built commit) |
+| Event commit | <code>5ac0e40c52b9b1816a5268d43f18393757706fa8</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.18  |
+| epythet  | 0.2.19  |
 | Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.15 |
@@ -6304,14 +6335,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.177/">0.1.177</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.177/">0.1.177</a>, older than the documented version (0.1.178).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout baed882bb5350b53cfec06608706f5ed7d6d30eb
-pip install "epythet==0.2.18"
+git checkout a1583fc18171f77b48a52fc439f96c81352f7981
+pip install "epythet==0.2.19"
 epythet quickstart . --ignore tests/
 ```
 

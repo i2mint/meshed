@@ -185,6 +185,7 @@ That said it is your responsiblity to use the right policy for your particular c
 | [`raise_on_duplicate_outs`](#meshed.dag.raise_on_duplicate_outs)(duplicates, \*[, ...])     | `on_duplicate_outs` strategy that raises a `ValidationError`.                                                                                                                                                                                             |
 | `rename_nodes`([func_nodes, renamer, ...])                                                          | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
 | [`reorder_on_constraints`](#meshed.dag.reorder_on_constraints)(funcnodes, outs)            | Topologically sort `funcnodes` after appending (in place) mock nodes that chain each `outs` element to the next, print the order, and return `(func_nodes, var_nodes)` without the mock nodes.                                                            |
+| [`repeated_names`](#meshed.dag.repeated_names)(func_nodes)                         | `{name: how many func nodes have it}`, for the names that more than one has.                                                                                                                                                                              |
 | [`warn_on_duplicate_outs`](#meshed.dag.warn_on_duplicate_outs)(duplicates, \*[, dag_name]) | Emit a `DuplicateOutsWarning` describing `duplicates`.                                                                                                                                                                                                    |
 
 ### Classes
@@ -196,6 +197,7 @@ That said it is your responsiblity to use the right policy for your particular c
 
 | [`DuplicateOutsWarning`](#meshed.dag.DuplicateOutsWarning)   | Warns that several `FuncNode``s of a ``DAG` write to the same var node.   |
 |-------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| [`RepeatedNamesWarning`](#meshed.dag.RepeatedNamesWarning)   | Warns that several `FuncNode``s of a ``DAG` share a `name`.               |
 
 ### *class* meshed.dag.DAG(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>, on_duplicate_outs=<function warn_on_duplicate_outs>)
 
@@ -902,6 +904,17 @@ Warns that several `FuncNode``s of a ``DAG` write to the same var node.
 The dag will still compute all of them, but only the value of the last one
 (in topological order) is visible: see i2mint/meshed#40.
 
+### *exception* meshed.dag.RepeatedNamesWarning
+
+Bases: [`UserWarning`](https://docs.python.org/3/builtins/exceptions.html#UserWarning)
+
+Warns that several `FuncNode``s of a ``DAG` share a `name`.
+
+The name of a func node is its id within the dag, so the dag renames the repeats
+(`f`, `f__2`, …) and still works. To choose the names yourself, pass `name=`
+to each `FuncNode` (and `func_label=` to control what `dot_digraph` prints).
+See i2mint/meshed#17.
+
 ### meshed.dag.arg_names(func, func_name, exclude_names=())
 
 List the parameter names of `func`, replacing any found in `exclude_names` with
@@ -1174,6 +1187,22 @@ Print `dag.synopsis_string(bind_info)`; the default shows an input as
 Topologically sort `funcnodes` after appending (in place) mock nodes that chain
 each `outs` element to the next, print the order, and return `(func_nodes,
 var_nodes)` without the mock nodes.
+
+### meshed.dag.repeated_names(func_nodes)
+
+`{name: how many func nodes have it}`, for the names that more than one has.
+
+```pycon
+>>> def foo(z): return z
+>>> nodes = [FuncNode(foo, out='x'), FuncNode(foo, out='y')]
+>>> repeated_names(nodes)
+{'foo': 2}
+>>> repeated_names([FuncNode(foo, name='a', out='x'), FuncNode(foo, name='b', out='y')])
+{}
+```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### meshed.dag.warn_on_duplicate_outs(duplicates, , dag_name=None)
 

@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=73ca257f"></script>
+    <script src="../_static/documentation_options.js?v=9bd086bd"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.177" />
+  <meta name="docsearch:version" content="0.1.178" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -639,7 +639,10 @@ That said it is your responsiblity to use the right policy for your particular c
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.reorder_on_constraints" title="meshed.dag.reorder_on_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reorder_on_constraints</span></code></a>(funcnodes, outs)</p></td>
 <td><p>Topologically sort <code class="docutils literal notranslate"><span class="pre">funcnodes</span></code> after appending (in place) mock nodes that chain each <code class="docutils literal notranslate"><span class="pre">outs</span></code> element to the next, print the order, and return <code class="docutils literal notranslate"><span class="pre">(func_nodes,</span> <span class="pre">var_nodes)</span></code> without the mock nodes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.warn_on_duplicate_outs" title="meshed.dag.warn_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warn_on_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.repeated_names" title="meshed.dag.repeated_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeated_names</span></code></a>(func_nodes)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{name:</span> <span class="pre">how</span> <span class="pre">many</span> <span class="pre">func</span> <span class="pre">nodes</span> <span class="pre">have</span> <span class="pre">it}</span></code>, for the names that more than one has.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.warn_on_duplicate_outs" title="meshed.dag.warn_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warn_on_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
 <td><p>Emit a <code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code> describing <code class="docutils literal notranslate"><span class="pre">duplicates</span></code>.</p></td>
 </tr>
 </tbody>
@@ -659,6 +662,9 @@ That said it is your responsiblity to use the right policy for your particular c
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.DuplicateOutsWarning" title="meshed.dag.DuplicateOutsWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code></a></p></td>
 <td><p>Warns that several <code class="docutils literal notranslate"><span class="pre">FuncNode``s</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">``DAG</span></code> write to the same var node.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.RepeatedNamesWarning" title="meshed.dag.RepeatedNamesWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RepeatedNamesWarning</span></code></a></p></td>
+<td><p>Warns that several <code class="docutils literal notranslate"><span class="pre">FuncNode``s</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">``DAG</span></code> share a <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1412,6 +1418,17 @@ order; <code class="docutils literal notranslate"><span class="pre">bind_info</s
 (in topological order) is visible: see i2mint/meshed#40.</p>
 </dd></dl>
 
+<dl class="py exception">
+<dt class="sig sig-object py" id="meshed.dag.RepeatedNamesWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">RepeatedNamesWarning</span></span><a class="reference internal" href="../_modules/meshed/dag.html#RepeatedNamesWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.RepeatedNamesWarning" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#UserWarning" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></a></p>
+<p>Warns that several <code class="docutils literal notranslate"><span class="pre">FuncNode``s</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">``DAG</span></code> share a <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<p>The name of a func node is its id within the dag, so the dag renames the repeats
+(<code class="docutils literal notranslate"><span class="pre">f</span></code>, <code class="docutils literal notranslate"><span class="pre">f__2</span></code>, …) and still works. To choose the names yourself, pass <code class="docutils literal notranslate"><span class="pre">name=</span></code>
+to each <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> (and <code class="docutils literal notranslate"><span class="pre">func_label=</span></code> to control what <code class="docutils literal notranslate"><span class="pre">dot_digraph</span></code> prints).
+See i2mint/meshed#17.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.dag.arg_names">
 <span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">arg_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#arg_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.arg_names" title="Link to this definition">#</a></dt>
@@ -1736,6 +1753,25 @@ each <code class="docutils literal notranslate"><span class="pre">outs</span></c
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.repeated_names">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">repeated_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#repeated_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.repeated_names" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">{name:</span> <span class="pre">how</span> <span class="pre">many</span> <span class="pre">func</span> <span class="pre">nodes</span> <span class="pre">have</span> <span class="pre">it}</span></code>, for the names that more than one has.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">z</span><span class="p">):</span> <span class="k">return</span> <span class="n">z</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">FuncNode</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">'x'</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">'y'</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">repeated_names</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">{'foo': 2}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">repeated_names</span><span class="p">([</span><span class="n">FuncNode</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">'x'</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'b'</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s1">'y'</span><span class="p">)])</span>
+<span class="go">{}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.dag.warn_on_duplicate_outs">
 <span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">warn_on_duplicate_outs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duplicates</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dag_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#warn_on_duplicate_outs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.warn_on_duplicate_outs" title="Link to this definition">#</a></dt>
 <dd><p>Emit a <code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code> describing <code class="docutils literal notranslate"><span class="pre">duplicates</span></code>.</p>
@@ -1832,6 +1868,7 @@ strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DuplicateOutsWarning"><code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.RepeatedNamesWarning"><code class="docutils literal notranslate"><span class="pre">RepeatedNamesWarning</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.arg_names"><code class="docutils literal notranslate"><span class="pre">arg_names()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.attribute_vals"><code class="docutils literal notranslate"><span class="pre">attribute_vals()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.call_func"><code class="docutils literal notranslate"><span class="pre">call_func()</span></code></a></li>
@@ -1856,6 +1893,7 @@ strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.print_dag_string"><code class="docutils literal notranslate"><span class="pre">print_dag_string()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.raise_on_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">raise_on_duplicate_outs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.reorder_on_constraints"><code class="docutils literal notranslate"><span class="pre">reorder_on_constraints()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.repeated_names"><code class="docutils literal notranslate"><span class="pre">repeated_names()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.warn_on_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">warn_on_duplicate_outs()</span></code></a></li>
 </ul>
   </nav></div>
