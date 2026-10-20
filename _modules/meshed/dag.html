@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=cdc10c8d"></script>
+    <script src="../../_static/documentation_options.js?v=69b98894"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.180" />
+  <meta name="docsearch:version" content="0.1.181" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -1262,6 +1262,63 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_wraps_func</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Whether ``node`` wraps ``func`` (directly, or via the wrapper FuncNode puts on</span>
+<span class="sd">    functions with variadics)."""</span>
+    <span class="c1"># ``==`` too, since a bound method is a new object at each attribute access</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">func</span> <span class="ow">is</span> <span class="n">func</span>
+        <span class="ow">or</span> <span class="n">node</span><span class="o">.</span><span class="n">func</span> <span class="o">==</span> <span class="n">func</span>
+        <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="s2">"__wrapped__"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="n">func</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="resolve_callable_bindings">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.resolve_callable_bindings">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_callable_bindings</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``func_nodes`` with every bind value that is a callable rewritten into the</span>
+<span class="sd">    ``out`` of the unique func node of ``func_nodes`` wrapping that callable (#96).</span>
+
+<span class="sd">    The nodes that change are copies, so a node given to several DAGs resolves its</span>
+<span class="sd">    callables anew in each.</span>
+
+<span class="sd">    &gt;&gt;&gt; def foo(a, b): return a + b</span>
+<span class="sd">    &gt;&gt;&gt; def bar(x, y): return x * y</span>
+<span class="sd">    &gt;&gt;&gt; nodes = [FuncNode(foo), FuncNode(bar, bind={'y': foo})]</span>
+<span class="sd">    &gt;&gt;&gt; resolve_callable_bindings(nodes)[1].bind</span>
+<span class="sd">    {'y': 'foo', 'x': 'x'}</span>
+
+<span class="sd">    Raises a ``ValidationError`` when no node, or more than one, wraps the callable.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolved_src</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">src</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">src</span>
+        <span class="n">wrapping</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">func_nodes</span> <span class="k">if</span> <span class="n">_wraps_func</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">src</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrapping</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">src_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s2">"__name__"</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">src</span><span class="p">))</span>
+            <span class="n">which</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">"no func node"</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">wrapping</span>
+                <span class="k">else</span> <span class="sa">f</span><span class="s2">"several func nodes (</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">wrapping</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> binds </span><span class="si">{</span><span class="n">param</span><span class="si">!r}</span><span class="s2"> to the function </span><span class="si">{</span><span class="n">src_name</span><span class="si">}</span><span class="s2">, which "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">which</span><span class="si">}</span><span class="s2"> of the DAG wrap(s); bind </span><span class="si">{</span><span class="n">param</span><span class="si">!r}</span><span class="s2"> to the out of the node "</span>
+                <span class="s2">"you mean instead."</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">wrapping</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">out</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolved</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
+            <span class="k">return</span> <span class="n">node</span>
+        <span class="n">bind</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">resolved_src</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">ch_attrs</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">bind</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">resolved</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">]</span></div>
+
+
+
 <span class="nd">@contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_quiet_repeated_names</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""Silence ``RepeatedNamesWarning`` for a dag built internally from nodes the user</span>
@@ -1542,6 +1599,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        A bind value that is the ``out`` of some func node is left alone, even if it is</span>
 <span class="sd">        also the name of another: the var node wins. See i2mint/meshed#19.</span>
+
+<span class="sd">        A bind value that is a callable is resolved to the ``out`` of the (unique) func</span>
+<span class="sd">        node wrapping it: see ``resolve_callable_bindings`` (i2mint/meshed#96).</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">repeated</span> <span class="o">:=</span> <span class="n">repeated_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">):</span>
             <span class="n">details</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> x</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">repeated</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
@@ -1553,6 +1613,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">stacklevel</span><span class="o">=</span><span class="n">_stacklevel_of_first_frame_outside_meshed</span><span class="p">(),</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="o">=</span> <span class="n">mk_nodes_names_unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="o">=</span> <span class="n">resolve_callable_bindings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
         <span class="n">outs</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="o">.</span><span class="n">out</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">}</span>
         <span class="n">out_of_name</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">out</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">outs</span>

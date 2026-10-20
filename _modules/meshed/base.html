@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=cdc10c8d"></script>
+    <script src="../../_static/documentation_options.js?v=69b98894"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.180" />
+  <meta name="docsearch:version" content="0.1.181" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -812,7 +812,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">      * ``func`` should be a callable</span>
 <span class="sd">      * ``name`` and ``out`` should be ``str``</span>
-<span class="sd">      * ``bind`` should be a ``Dict[str, str]``</span>
+<span class="sd">      * ``bind`` should be a ``Dict[str, str]`` (callable values, which a ``DAG``</span>
+<span class="sd">        resolves to the out of the node wrapping them, are left out of the checks</span>
+<span class="sd">        below)</span>
 
 <span class="sd">    * that the names (``.name``, ``.out`` and all ``.bind.values()``):</span>
 
@@ -825,7 +827,8 @@ window.runMermaid = runMermaid;</script>
     <span class="n">_func_node_args_validation</span><span class="p">(</span>
         <span class="n">func</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">func_node</span><span class="o">.</span><span class="n">out</span>
     <span class="p">)</span>
-    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="o">*</span><span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+    <span class="n">bind_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="o">*</span><span class="n">bind_names</span><span class="p">]</span>
 
     <span class="n">names_that_are_not_strings</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)]</span>
     <span class="k">if</span> <span class="n">names_that_are_not_strings</span><span class="p">:</span>
@@ -1123,7 +1126,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        'y=b,c -&gt; h -&gt; d'</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">bind_info</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"values"</span><span class="p">,</span> <span class="s2">"varnodes"</span><span class="p">,</span> <span class="s2">"var_nodes"</span><span class="p">}:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func_id</span><span class="si">}</span><span class="s2"> "</span> <span class="sa">f</span><span class="s2">"-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">_bind_value_str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func_id</span><span class="si">}</span><span class="s2"> "</span> <span class="sa">f</span><span class="s2">"-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">elif</span> <span class="n">bind_info</span> <span class="o">==</span> <span class="s2">"hybrid"</span><span class="p">:</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">():</span>
@@ -1131,7 +1135,7 @@ window.runMermaid = runMermaid;</script>
                     <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
                         <span class="k">yield</span> <span class="n">k</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="k">yield</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">"</span>
+                        <span class="k">yield</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">_bind_value_str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
 
             <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func_id</span><span class="si">}</span><span class="s2"> "</span> <span class="sa">f</span><span class="s2">"-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">elif</span> <span class="n">bind_info</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"keys"</span><span class="p">,</span> <span class="s2">"params"</span><span class="p">}:</span>
@@ -1650,20 +1654,19 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_bind_value_str</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""How a bind value shows in a synopsis: a callable (not resolved yet) by name."""</span>
+    <span class="k">return</span> <span class="n">v</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"&lt;</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="s1">'__name__'</span><span class="p">,</span><span class="w"> </span><span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="si">}</span><span class="s2">&gt;"</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_keys_and_values_are_strings_validation</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Keys must be str. Values must be str, or callables: a callable value stands for</span>
+<span class="sd">    the output of the func node wrapping it, which a ``DAG`` resolves (#96)."""</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Should be a str: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">hint</span> <span class="o">=</span> <span class="s2">""</span>
-            <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-                <span class="n">hint</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">" (to bind </span><span class="si">{</span><span class="n">k</span><span class="si">!r}</span><span class="s2"> to the output of a function, bind it to the out "</span>
-                    <span class="s2">"of that function's FuncNode, e.g. "</span>
-                    <span class="sa">f</span><span class="s2">"bind=</span><span class="se">{{</span><span class="si">{</span><span class="n">k</span><span class="si">!r}</span><span class="s2">: </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="s1">'__name__'</span><span class="p">,</span><span class="w"> </span><span class="s1">'func'</span><span class="p">)</span><span class="si">!r}</span><span class="se">}}</span><span class="s2"> when the "</span>
-                    <span class="s2">"out is the default)"</span>
-                <span class="p">)</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Should be a str: </span><span class="si">{</span><span class="n">v</span><span class="si">}{</span><span class="n">hint</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Should be a str (or a callable): </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_func_node_args_validation</span><span class="p">(</span>
@@ -1677,6 +1680,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    * ``name`` and ``out`` should be ``str``</span>
 
 <span class="sd">    * ``bind`` should be a ``Dict[str, str]``, ``Dict[int, str]`` or ``List[str]``</span>
+<span class="sd">      (values may also be callables, resolved by a ``DAG``: see</span>
+<span class="sd">      ``meshed.dag.resolve_callable_bindings``)</span>
 
 <span class="sd">    * ``out`` should be a str</span>
 <span class="sd">    """</span>

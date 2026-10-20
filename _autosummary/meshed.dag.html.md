@@ -187,6 +187,7 @@ That said it is your responsiblity to use the right policy for your particular c
 | `rename_nodes`([func_nodes, renamer, ...])                                                          | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
 | [`reorder_on_constraints`](#meshed.dag.reorder_on_constraints)(funcnodes, outs)            | Topologically sort `funcnodes` after appending (in place) mock nodes that chain each `outs` element to the next, print the order, and return `(func_nodes, var_nodes)` without the mock nodes.                                                            |
 | [`repeated_names`](#meshed.dag.repeated_names)(func_nodes)                         | `{name: how many func nodes have it}`, for the names that more than one has.                                                                                                                                                                              |
+| [`resolve_callable_bindings`](#meshed.dag.resolve_callable_bindings)(func_nodes)              | `func_nodes` with every bind value that is a callable rewritten into the `out` of the unique func node of `func_nodes` wrapping that callable (#96).                                                                                                      |
 | [`warn_on_duplicate_outs`](#meshed.dag.warn_on_duplicate_outs)(duplicates, \*[, dag_name]) | Emit a `DuplicateOutsWarning` describing `duplicates`.                                                                                                                                                                                                    |
 
 ### Classes
@@ -378,6 +379,9 @@ is made, so that the rewritten binds are the edges of the graph).
 
 A bind value that is the `out` of some func node is left alone, even if it is
 also the name of another: the var node wins. See i2mint/meshed#19.
+
+A bind value that is a callable is resolved to the `out` of the (unique) func
+node wrapping it: see `resolve_callable_bindings` (i2mint/meshed#96).
 
 #### call_on_scope(scope=None)
 
@@ -1232,6 +1236,27 @@ var_nodes)` without the mock nodes.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### meshed.dag.resolve_callable_bindings(func_nodes)
+
+`func_nodes` with every bind value that is a callable rewritten into the
+`out` of the unique func node of `func_nodes` wrapping that callable (#96).
+
+The nodes that change are copies, so a node given to several DAGs resolves its
+callables anew in each.
+
+```pycon
+>>> def foo(a, b): return a + b
+>>> def bar(x, y): return x * y
+>>> nodes = [FuncNode(foo), FuncNode(bar, bind={'y': foo})]
+>>> resolve_callable_bindings(nodes)[1].bind
+{'y': 'foo', 'x': 'x'}
+```
+
+Raises a `ValidationError` when no node, or more than one, wraps the callable.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
 
 ### meshed.dag.warn_on_duplicate_outs(duplicates, , dag_name=None)
 

@@ -37,6 +37,7 @@ meshed.dag
       rename_nodes
       reorder_on_constraints
       repeated_names
+      resolve_callable_bindings
       warn_on_duplicate_outs
    
    .. rubric:: Classes

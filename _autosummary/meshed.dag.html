@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=cdc10c8d"></script>
+    <script src="../_static/documentation_options.js?v=69b98894"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.180" />
+  <meta name="docsearch:version" content="0.1.181" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -645,7 +645,10 @@ That said it is your responsiblity to use the right policy for your particular c
 <tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.repeated_names" title="meshed.dag.repeated_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeated_names</span></code></a>(func_nodes)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">{name:</span> <span class="pre">how</span> <span class="pre">many</span> <span class="pre">func</span> <span class="pre">nodes</span> <span class="pre">have</span> <span class="pre">it}</span></code>, for the names that more than one has.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.warn_on_duplicate_outs" title="meshed.dag.warn_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warn_on_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.resolve_callable_bindings" title="meshed.dag.resolve_callable_bindings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_callable_bindings</span></code></a>(func_nodes)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">func_nodes</span></code> with every bind value that is a callable rewritten into the <code class="docutils literal notranslate"><span class="pre">out</span></code> of the unique func node of <code class="docutils literal notranslate"><span class="pre">func_nodes</span></code> wrapping that callable (#96).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.warn_on_duplicate_outs" title="meshed.dag.warn_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warn_on_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
 <td><p>Emit a <code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code> describing <code class="docutils literal notranslate"><span class="pre">duplicates</span></code>.</p></td>
 </tr>
 </tbody>
@@ -851,6 +854,8 @@ that node’s <code class="docutils literal notranslate"><span class="pre">out</
 is made, so that the rewritten binds are the edges of the graph).</p>
 <p>A bind value that is the <code class="docutils literal notranslate"><span class="pre">out</span></code> of some func node is left alone, even if it is
 also the name of another: the var node wins. See i2mint/meshed#19.</p>
+<p>A bind value that is a callable is resolved to the <code class="docutils literal notranslate"><span class="pre">out</span></code> of the (unique) func
+node wrapping it: see <code class="docutils literal notranslate"><span class="pre">resolve_callable_bindings</span></code> (i2mint/meshed#96).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1807,6 +1812,28 @@ each <code class="docutils literal notranslate"><span class="pre">outs</span></c
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.resolve_callable_bindings">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">resolve_callable_bindings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#resolve_callable_bindings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.resolve_callable_bindings" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">func_nodes</span></code> with every bind value that is a callable rewritten into the
+<code class="docutils literal notranslate"><span class="pre">out</span></code> of the unique func node of <code class="docutils literal notranslate"><span class="pre">func_nodes</span></code> wrapping that callable (#96).</p>
+<p>The nodes that change are copies, so a node given to several DAGs resolves its
+callables anew in each.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span> <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">FuncNode</span><span class="p">(</span><span class="n">foo</span><span class="p">),</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">'y'</span><span class="p">:</span> <span class="n">foo</span><span class="p">})]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_callable_bindings</span><span class="p">(</span><span class="n">nodes</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bind</span>
+<span class="go">{'y': 'foo', 'x': 'x'}</span>
+</pre></div>
+</div>
+<p>Raises a <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code> when no node, or more than one, wraps the callable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.dag.warn_on_duplicate_outs">
 <span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">warn_on_duplicate_outs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duplicates</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dag_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#warn_on_duplicate_outs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.warn_on_duplicate_outs" title="Link to this definition">#</a></dt>
 <dd><p>Emit a <code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code> describing <code class="docutils literal notranslate"><span class="pre">duplicates</span></code>.</p>
@@ -1931,6 +1958,7 @@ strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.raise_on_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">raise_on_duplicate_outs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.reorder_on_constraints"><code class="docutils literal notranslate"><span class="pre">reorder_on_constraints()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.repeated_names"><code class="docutils literal notranslate"><span class="pre">repeated_names()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.resolve_callable_bindings"><code class="docutils literal notranslate"><span class="pre">resolve_callable_bindings()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.warn_on_duplicate_outs"><code class="docutils literal notranslate"><span class="pre">warn_on_duplicate_outs()</span></code></a></li>
 </ul>
   </nav></div>

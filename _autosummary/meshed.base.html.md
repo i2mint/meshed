@@ -259,7 +259,9 @@ Validates:
 * that the `func_node` params are valid, that is, if not `None`:
   * `func` should be a callable
   * `name` and `out` should be `str`
-  * `bind` should be a `Dict[str, str]`
+  * `bind` should be a `Dict[str, str]` (callable values, which a `DAG`
+    resolves to the out of the node wrapping them, are left out of the checks
+    below)
 * that the names (`.name`, `.out` and all `.bind.values()`):
   * are valid python identifiers (alphanumeric or underscore not starting with
     digit)
@@ -315,7 +317,9 @@ Validates:
 * that the `func_node` params are valid, that is, if not `None`:
   * `func` should be a callable
   * `name` and `out` should be `str`
-  * `bind` should be a `Dict[str, str]`
+  * `bind` should be a `Dict[str, str]` (callable values, which a `DAG`
+    resolves to the out of the node wrapping them, are left out of the checks
+    below)
 * that the names (`.name`, `.out` and all `.bind.values()`):
   * are valid python identifiers (alphanumeric or underscore not starting with
     digit)
