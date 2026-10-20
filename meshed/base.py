@@ -559,7 +559,7 @@ def _accept_legacy_name_kwarg(init):
 
     @wraps(init)
     def __init__(self, *args, name=_NOT_GIVEN, **kwargs):
-        if name is not _NOT_GIVEN:
+        if name is not _NOT_GIVEN and name is not None:
             if "func_id" in kwargs or len(args) > 1:
                 raise TypeError("Give only one of `func_id` and its alias `name`")
             kwargs["func_id"] = name
