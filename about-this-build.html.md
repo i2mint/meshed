@@ -2,18 +2,20 @@
 
 # About this build
 
-This documentation was built on **2026-10-20 06:20 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/8a9aa6d91b8b19104d52624bd23a587e3602e52b"><code>8a9aa6d</code></a> on branch <code>master</code>, for **meshed 0.1.174** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-20 07:11 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/d130fbd254de12188c3dfb847b55a26c03f8a0bf"><code>d130fbd</code></a> on branch <code>master</code>, for **meshed 0.1.175** (from <code>setup.cfg</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.1.175) is ahead of the latest release on PyPI (0.1.174): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/8a9aa6d91b8b19104d52624bd23a587e3602e52b"><code>8a9aa6d91b8b19104d52624bd23a587e3602e52b</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/d130fbd254de12188c3dfb847b55a26c03f8a0bf"><code>d130fbd254de12188c3dfb847b55a26c03f8a0bf</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.174</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.175</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -22,9 +24,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39379577725">39379577725</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39384592746">39384592746</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>f52010f603e9fd76d9e03f24abce21b2ac4670d7</code> (in the history of the built commit) |
+| Event commit | <code>8dd99a013480a6a9b9b518e5a51954f4da23e1d3</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -49,13 +51,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.174/">0.1.174</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.174/">0.1.174</a>, older than the documented version (0.1.175).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout 8a9aa6d91b8b19104d52624bd23a587e3602e52b
+git checkout d130fbd254de12188c3dfb847b55a26c03f8a0bf
 pip install "epythet==0.2.18"
 epythet quickstart . --ignore tests/
 ```
