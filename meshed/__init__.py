@@ -29,7 +29,7 @@ from meshed.dag import (
     raise_on_duplicate_outs,
 )
 from meshed.base import FuncNode, compare_signatures
-from meshed.makers import code_to_dag, code_to_fnodes
+from meshed.makers import code_to_dag, code_to_fnodes, dot_to_dag
 from meshed.itools import random_graph, topological_sort
 from meshed.slabs import Slabs
 from meshed.util import (

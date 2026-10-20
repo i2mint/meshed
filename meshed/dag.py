@@ -775,6 +775,22 @@ class DAG:
         if duplicates := duplicate_outs(self.func_nodes):
             self.on_duplicate_outs(duplicates, dag_name=self.name)
 
+    @classmethod
+    def from_dot_digraph(cls, dot, **kwargs):
+        """Make a ``DAG`` from a dot digraph (string or ``graphviz.Digraph``).
+
+        The inverse of ``DAG.dot_digraph``; it also reads the ``a,b -> f -> c``
+        lines of ``DAG.synopsis_string``. See ``meshed.makers.dot_to_dag`` for the
+        ``kwargs`` (``func_src``, ``name``...).
+
+        >>> dag = DAG.from_dot_digraph('a, b -> f -> c')
+        >>> print(dag.synopsis_string())
+        a,b -> f -> c
+        """
+        from meshed.makers import dot_to_dag
+
+        return dot_to_dag(dot, **kwargs)
+
     # TODO: No control of other DAG args (cache_last_scope etc.).
     @classmethod
     def from_funcs(cls, *funcs, **named_funcs):
