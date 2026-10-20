@@ -160,6 +160,8 @@ from typing import (
 )
 from collections.abc import Callable, MutableMapping, Iterable, Mapping
 import sys
+import warnings
+from contextlib import contextmanager
 from warnings import warn
 
 from i2 import double_up_as_factory, MultiFunc
@@ -480,6 +482,15 @@ class RepeatedNamesWarning(UserWarning):
     to each ``FuncNode`` (and ``func_label=`` to control what ``dot_digraph`` prints).
     See i2mint/meshed#17.
     """
+
+
+@contextmanager
+def _quiet_repeated_names():
+    """Silence ``RepeatedNamesWarning`` for a dag built internally from nodes the user
+    already got (or will get) the warning for."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RepeatedNamesWarning)
+        yield
 
 
 def repeated_names(func_nodes) -> dict:
@@ -2073,13 +2084,9 @@ def _validate_func_mapping(func_mapping: FuncMapping, func_nodes: DagAble):
       ...
     TypeError: These values of func_src weren't callable: hello world
     """
-    allowed_identifiers = set(
-        chain.from_iterable(
-            names_and_outs(
-                DAG(func_nodes, on_duplicate_outs=ignore_duplicate_outs).func_nodes
-            )
-        )
-    )
+    with _quiet_repeated_names():
+        internal_dag = DAG(func_nodes, on_duplicate_outs=ignore_duplicate_outs)
+    allowed_identifiers = set(chain.from_iterable(names_and_outs(internal_dag.func_nodes)))
     if not_allowed := (func_mapping.keys() - allowed_identifiers):
         raise KeyError(
             f"These identifiers weren't found in func_nodes: {', '.join(not_allowed)}"
@@ -2195,7 +2202,8 @@ def ch_funcs(
             on_duplicate_outs=ignore_duplicate_outs,
         )
 
-    new_dag = DAG(func_nodes, on_duplicate_outs=ignore_duplicate_outs)
+    with _quiet_repeated_names():
+        new_dag = DAG(func_nodes, on_duplicate_outs=ignore_duplicate_outs)
     for key, func in func_mapping.items():
         new_dag = ch_func(new_dag, key, func)
     return new_dag

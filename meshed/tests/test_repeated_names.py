@@ -37,3 +37,16 @@ def test_repeated_names():
     assert repeated_names([FuncNode(_inc, out="a"), FuncNode(_inc, out="b")]) == {
         "_inc": 2
     }
+
+
+def test_ch_funcs_on_raw_repeated_nodes_warns_once():
+    from meshed import ch_funcs
+
+    nodes = [FuncNode(_inc, out="a"), FuncNode(_inc, out="b")]
+    with pytest.warns(RepeatedNamesWarning) as record:
+        DAG(nodes)
+    assert len(record) == 1
+    with warnings.catch_warnings(record=True) as seen:
+        warnings.simplefilter("always")
+        ch_funcs([FuncNode(_inc, out="c"), FuncNode(_inc, out="d")], func_mapping={})
+    assert not [w for w in seen if issubclass(w.category, RepeatedNamesWarning)]
