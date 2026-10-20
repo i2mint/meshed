@@ -2086,7 +2086,9 @@ def _validate_func_mapping(func_mapping: FuncMapping, func_nodes: DagAble):
     """
     with _quiet_repeated_names():
         internal_dag = DAG(func_nodes, on_duplicate_outs=ignore_duplicate_outs)
-    allowed_identifiers = set(chain.from_iterable(names_and_outs(internal_dag.func_nodes)))
+    allowed_identifiers = set(
+        chain.from_iterable(names_and_outs(internal_dag.func_nodes))
+    )
     if not_allowed := (func_mapping.keys() - allowed_identifiers):
         raise KeyError(
             f"These identifiers weren't found in func_nodes: {', '.join(not_allowed)}"
