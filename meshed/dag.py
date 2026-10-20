@@ -145,7 +145,7 @@ That said it is your responsiblity to use the right policy for your particular c
 """
 
 from functools import partial, wraps, cached_property
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from dataclasses import dataclass, field
 from itertools import chain
@@ -472,6 +472,30 @@ class DuplicateOutsWarning(UserWarning):
     """
 
 
+class RepeatedNamesWarning(UserWarning):
+    """Warns that several ``FuncNode``s of a ``DAG`` share a ``name``.
+
+    The name of a func node is its id within the dag, so the dag renames the repeats
+    (``f``, ``f__2``, ...) and still works. To choose the names yourself, pass ``name=``
+    to each ``FuncNode`` (and ``func_label=`` to control what ``dot_digraph`` prints).
+    See i2mint/meshed#17.
+    """
+
+
+def repeated_names(func_nodes) -> dict:
+    """``{name: how many func nodes have it}``, for the names that more than one has.
+
+    >>> def foo(z): return z
+    >>> nodes = [FuncNode(foo, out='x'), FuncNode(foo, out='y')]
+    >>> repeated_names(nodes)
+    {'foo': 2}
+    >>> repeated_names([FuncNode(foo, name='a', out='x'), FuncNode(foo, name='b', out='y')])
+    {}
+    """
+    counts = Counter(func_node.name for func_node in func_nodes)
+    return {name: count for name, count in counts.items() if count > 1}
+
+
 def duplicate_outs(func_nodes) -> dict:
     """``{out: [names of the func nodes writing to it]}``, for the outs written to by
     more than one func node (the last name is the one whose value is visible).
@@ -697,6 +721,15 @@ class DAG:
         """Make func node names unique and rewrite bind values that name a func node into
         that node's ``out`` (called at the end of ``__post_init__``).
         """
+        if repeated := repeated_names(self.func_nodes):
+            details = ", ".join(f"{name!r} x{n}" for name, n in repeated.items())
+            warn(
+                f"Several func nodes share a name ({details}); the repeats are renamed "
+                "with a '__<i>' suffix. To pick the names, pass name= to each FuncNode "
+                "(and func_label= for what dot_digraph prints).",
+                RepeatedNamesWarning,
+                stacklevel=_stacklevel_of_first_frame_outside_meshed(),
+            )
         self.func_nodes = mk_nodes_names_unique(self.func_nodes)
         funcnodes_names = [node.name for node in self.func_nodes]
         func = lambda v: self._func_node_for[v].out

@@ -20,6 +20,8 @@ from meshed.dag import (
     ch_funcs,
     ch_names,
     DuplicateOutsWarning,
+    RepeatedNamesWarning,
+    repeated_names,
     duplicate_outs,
     warn_on_duplicate_outs,
     ignore_duplicate_outs,
