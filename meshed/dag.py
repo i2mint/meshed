@@ -187,6 +187,8 @@ from meshed.base import (
 )
 
 from meshed.util import (
+    find_first_free_name,
+    mk_func_name as _mk_func_name,
     lambda_name,
     ValidationError,
     NotUniqueError,
@@ -224,21 +226,6 @@ def order_subset_from_list(items, sublist):
     return sorted(sublist, key=lambda x: d[x])
 
 
-def find_first_free_name(prefix, exclude_names=(), start_at=2):
-    """Return ``prefix`` if not in ``exclude_names``, else the first free ``prefix__<i>``
-    with ``i`` counting up from ``start_at``.
-    """
-    if prefix not in exclude_names:
-        return prefix
-    else:
-        i = start_at
-        while True:
-            name = f"{prefix}__{i}"
-            if name not in exclude_names:
-                return name
-            i += 1
-
-
 def mk_mock_funcnode(arg, out):
     """Make a ``FuncNode`` whose no-op function takes the single parameter ``arg`` and
     writes to ``out``, named ``_mock_<arg>_<out>``.
@@ -254,20 +241,9 @@ def mk_mock_funcnode(arg, out):
     return FuncNode(func=func, out=out, name=name)
 
 
-def mk_func_name(func, exclude_names=()):
-    """Derive a name for ``func`` (its ``__name__``, a generated lambda name, or the wrapped function's name for a ``partial``) that is not in ``exclude_names``.
-
-    A ``func`` with no ``__name__`` that is not a ``partial`` raises ``NameValidationError``.
-    """
-    name = getattr(func, "__name__", "")
-    if name == "<lambda>":
-        name = lambda_name()  # make a lambda name that is a unique identifier
-    elif name == "":
-        if isinstance(func, partial):
-            return mk_func_name(func.func, exclude_names)
-        else:
-            raise NameValidationError(f"Can't make a name for func: {func}")
-    return find_first_free_name(name, exclude_names)
+mk_func_name = partial(_mk_func_name, strict=True)
+mk_func_name.__doc__ = """``meshed.util.mk_func_name`` in strict mode: a ``func`` with no usable name
+raises ``NameValidationError`` instead of getting a default name."""
 
 
 def mk_list_names_unique(nodes, exclude_names=()):

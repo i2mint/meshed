@@ -775,12 +775,32 @@ def find_first_free_name(prefix, exclude_names=(), start_at=2):
             i += 1
 
 
-def mk_func_name(func, exclude_names=()):
-    """Makes a function name that doesn't clash with the exclude_names iterable.
-    Tries it's best to not be lazy, but instead extract a name from the function
-    itself.
+def mk_func_name(func, exclude_names=(), *, strict=False, default="func"):
+    """Make a name for ``func`` that doesn't clash with ``exclude_names``.
+
+    Extracts the name from the function itself (unwrapping ``partial``s, and giving
+    lambdas a generated unique name), then makes it free with ``find_first_free_name``.
+    If ``func`` has no name, ``default`` is used, or ``NameValidationError`` is raised
+    when ``strict``.
+
+    >>> mk_func_name(len, exclude_names=('len',))
+    'len__2'
+    >>> from functools import partial
+    >>> mk_func_name(partial(len))
+    'len'
+    >>> mk_func_name(object(), strict=True)  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+      ...
+    NameValidationError: Can't make a name for func
     """
-    name = name_of_obj(func) or "func"
+    inner = func
+    while isinstance(inner, partial):
+        inner = inner.func
+    name = getattr(inner, "__name__", "")
+    if not name:
+        if strict:
+            raise NameValidationError(f"Can't make a name for func: {func}")
+        name = name_of_obj(func) or default
     if name == "<lambda>":
         name = lambda_name()  # make a lambda name that is a unique identifier
     return find_first_free_name(name, exclude_names)
