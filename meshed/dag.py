@@ -2215,7 +2215,12 @@ change_funcs = ch_funcs  # back-compatibility
 # TODO: Include as method of DAG?
 # TODO: extract egress functionality to decorator
 @double_up_as_factory
-def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_renamer):
+def ch_names(
+    func_nodes: DagAble = None,
+    *,
+    renamer: Renamer = numbered_suffix_renamer,
+    include_label_nodes: bool = False,
+):
     """Renames variables and functions of a ``DAG`` or iterable of ``FuncNodes``.
 
     :param func_nodes: A ``DAG`` of iterable of ``FuncNodes``
@@ -2223,6 +2228,10 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
 
         - A dictionary ``{old_name: new_name, ...}`` mapping old names to new ones
         - A string, which will be appended to all identifiers of the ``func_nodes``
+
+    :param include_label_nodes: Whether to also rename the ``func_label`` of each
+        node (the label function nodes are displayed with). By default, only
+        identifiers (``name``, ``out`` and ``bind`` values) are changed.
 
     :return: func_nodes with some or all identifiers changed. If the input ``func_nodes``
         is an iterable of ``FuncNodes``, a list of func_nodes will be returned, and if the
@@ -2294,6 +2303,14 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
     a=alpha -> f -> bravo
     x=alpha -> g -> c
     b=bravo,y=c -> h -> d
+
+    By default, the labels of the function nodes are left alone. Use
+    ``include_label_nodes=True`` to rename them too:
+
+    >>> [fn.func_label for fn in ch_names(dag, renamer='_copy')]
+    ['f', 'g', 'h']
+    >>> [fn.func_label for fn in ch_names(dag, renamer='_copy', include_label_nodes=True)]
+    ['f_copy', 'g_copy', 'h_copy']
     """
     if isinstance(func_nodes, DAG):
         egress = DAG
@@ -2307,17 +2324,25 @@ def ch_names(func_nodes: DagAble = None, *, renamer: Renamer = numbered_suffix_r
         old_to_new_map = dict(renamer)
         renamer = old_to_new_map.get
     assert callable(renamer), f"Could not be resolved into a callable: {renamer}"
-    ktrans = partial(_rename_node, renamer=renamer)
+    ktrans = partial(
+        _rename_node, renamer=renamer, include_label_nodes=include_label_nodes
+    )
     func_node_trans = partial(func_node_transformer, kwargs_transformers=ktrans)
     return egress(map(func_node_trans, func_nodes))
 
 
-def _rename_node(fn_kwargs, renamer: Renamer = numbered_suffix_renamer):
+def _rename_node(
+    fn_kwargs,
+    renamer: Renamer = numbered_suffix_renamer,
+    include_label_nodes: bool = False,
+):
     fn_kwargs = fn_kwargs.copy()
     # decorate renamer so if the original returns None the decorated will return input
     renamer = _if_none_return_input(renamer)
     fn_kwargs["name"] = renamer(fn_kwargs["name"])
     fn_kwargs["out"] = renamer(fn_kwargs["out"])
+    if include_label_nodes and fn_kwargs.get("func_label") is not None:
+        fn_kwargs["func_label"] = renamer(fn_kwargs["func_label"])
     fn_kwargs["bind"] = {
         param: renamer(var_id) for param, var_id in fn_kwargs["bind"].items()
     }
