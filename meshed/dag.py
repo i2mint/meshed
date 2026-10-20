@@ -466,7 +466,7 @@ DagOutput = Any
 
 
 def _name_attr_or_x(x):
-    return getattr(x, "name", x)
+    return getattr(x, "func_id", x) if is_func_node(x) else x
 
 
 def change_value_on_cond(d, cond, func):
@@ -664,14 +664,14 @@ class DAG:
 
     def __post_init__(self):
         self.func_nodes = tuple(ensure_func_nodes(self.func_nodes))
-        self.graph = _func_nodes_to_graph_dict(self.func_nodes)
-        self.nodes = topological_sort(self.graph)
+        self._node_graph = _func_nodes_to_graph_dict(self.func_nodes)
+        self.nodes = topological_sort(self._node_graph)
         # reorder the nodes to fit topological order
         self.func_nodes, self.var_nodes = _separate_func_nodes_and_var_nodes(self.nodes)
         # self.sig = Sig(dict(extract_items(sig.parameters, 'xz')))
         self.__signature__ = Sig(  # make a signature
             sort_params(  # with the sorted params (sorted to satisfy kind/default order)
-                self.src_name_params(root_nodes(self.graph))
+                self.src_name_params(root_nodes(self._node_graph))
             )
         )
 
@@ -680,7 +680,7 @@ class DAG:
         self.roots = tuple(
             self.__signature__.names
         )  # roots in the same order as signature
-        leafs = leaf_nodes(self.graph)
+        leafs = leaf_nodes(self._node_graph)
         # But we want leafs in topological order
         self.leafs = tuple([name for name in self.nodes if name in leafs])
         self.last_scope = None
@@ -953,10 +953,10 @@ class DAG:
     def _subgraph_nodes(self, item):
         ins, outs = self.process_item(item)
         _descendants = set(
-            filter(FuncNode.has_as_instance, set(ins) | descendants(self.graph, ins))
+            filter(FuncNode.has_as_instance, set(ins) | descendants(self._node_graph, ins))
         )
         _ancestors = set(
-            filter(FuncNode.has_as_instance, set(outs) | ancestors(self.graph, outs))
+            filter(FuncNode.has_as_instance, set(outs) | ancestors(self._node_graph, outs))
         )
         subgraph_nodes = _descendants.intersection(_ancestors)
         return subgraph_nodes
@@ -1400,11 +1400,24 @@ class DAG:
                 # ``parameter_merge`` with raise an error.)
                 yield self.parameter_merge(*params_with_name_changed_to_src_name)
 
+    @property
+    def graph(self):
+        """The ``{from_node_id: [to_node_ids]}`` dict representing the graph.
+        Func nodes are identified by their ``func_id`` (not by the ``FuncNode``
+        instance); var nodes by their name. (The instance-keyed graph is ``_node_graph``.)
+
+        >>> from meshed.dag import DAG
+        >>> def add(a, b=1): return a + b
+        >>> DAG([add]).graph
+        {'a': ['add_'], 'b': ['add_'], 'add_': ['add']}
+        """
+        return self.graph_ids
+
     # TODO: Find more representative (and possibly shorter) doctest:
     @property
     def graph_ids(self):
         """The dict representing the ``{from_node: to_nodes}`` graph.
-        Like ``.graph``, but with node ids (names).
+        Same as ``.graph`` (node ids instead of ``FuncNode`` instances).
 
         >>> from meshed.dag import DAG
         >>> def add(a, b=1): return a + b
@@ -1423,7 +1436,7 @@ class DAG:
         """
         return {
             _name_attr_or_x(k): list(map(_name_attr_or_x, v))
-            for k, v in self.graph.items()
+            for k, v in self._node_graph.items()
         }
 
     def _prepare_other_for_addition(self, other):

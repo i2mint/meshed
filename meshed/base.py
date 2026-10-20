@@ -24,6 +24,7 @@ FuncNode(x,y -> add -> total)
 {'x': 1, 'y': 2, 'total': 3}
 """
 
+import sys
 from collections import Counter
 from dataclasses import dataclass, field, fields
 from functools import partial, cached_property, wraps
@@ -152,8 +153,58 @@ def handle_variadics(func):
 # TODO: FuncNode(func_node) gives us FuncNode(scope -> ...). Should we have it be
 #  FuncNode.from_dict(func_node.to_dict()) instead?
 # @dataclass(eq=True, order=True, unsafe_hash=True)
+_NOT_GIVEN = object()
+
+
+def _called_by_dataclasses_replace(depth=3):
+    # frames: this fn <- __init__ wrapper <- caller (dataclasses.replace's helper)
+    try:
+        return sys._getframe(depth - 1).f_globals.get("__name__") == "dataclasses"
+    except ValueError:
+        return False
+
+
+def _accept_legacy_name_kwarg(init):
+    """Let ``FuncNode(..., name=...)`` keep working as an alias of ``func_id=...``.
+
+    Giving both is an error, except when called by ``dataclasses.replace``, which passes
+    the old ``func_id`` along with the new ``name``: then ``name`` wins.
+    """
+    if getattr(init, "_accepts_legacy_name", False):
+        return init
+
+    @wraps(init)
+    def __init__(self, *args, name=_NOT_GIVEN, **kwargs):
+        if name is not _NOT_GIVEN and name is not None:
+            if (
+                len(args) > 1 or "func_id" in kwargs
+            ) and not _called_by_dataclasses_replace():
+                raise TypeError("Give only one of `func_id` and its alias `name`")
+            kwargs["func_id"] = name
+        init(self, *args, **kwargs)
+
+    # Advertise the alias in the signature, so introspection (and ``partial``
+    # with ``name=...``) keeps working
+    params = [p for p in signature(init).parameters.values() if p.name != "name"]
+    alias = Parameter("name", Parameter.KEYWORD_ONLY, default=None)
+    __init__.__signature__ = Signature([*params, alias])
+    __init__._accepts_legacy_name = True
+    return __init__
+
+
+class _LegacyNameMeta(type):
+    """Wraps every ``__init__`` set on a class (including the one ``@dataclass``
+    generates, on ``FuncNode`` and on its dataclass subclasses), so that all of them
+    accept ``name=`` as an alias of ``func_id=``."""
+
+    def __setattr__(cls, attr, value):
+        if attr == "__init__" and callable(value):
+            value = _accept_legacy_name_kwarg(value)
+        super().__setattr__(attr, value)
+
+
 @dataclass(order=True)
-class FuncNode:
+class FuncNode(metaclass=_LegacyNameMeta):
     """A function wrapper that makes the function amenable to operating in a network.
 
     :param func: Function to wrap
@@ -549,31 +600,6 @@ def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
 
 
 # -------------------------------------------------------------------------------------
-
-
-_NOT_GIVEN = object()
-
-
-def _accept_legacy_name_kwarg(init):
-    """Let ``FuncNode(..., name=...)`` keep working as an alias of ``func_id=...``"""
-
-    @wraps(init)
-    def __init__(self, *args, name=_NOT_GIVEN, **kwargs):
-        if name is not _NOT_GIVEN and name is not None:
-            if "func_id" in kwargs or len(args) > 1:
-                raise TypeError("Give only one of `func_id` and its alias `name`")
-            kwargs["func_id"] = name
-        init(self, *args, **kwargs)
-
-    # Advertise the alias in the signature, so introspection (and ``partial``
-    # with ``name=...``) keeps working
-    params = list(signature(init).parameters.values())
-    alias = Parameter("name", Parameter.KEYWORD_ONLY, default=None)
-    __init__.__signature__ = Signature([*params, alias])
-    return __init__
-
-
-FuncNode.__init__ = _accept_legacy_name_kwarg(FuncNode.__init__)
 
 
 @dataclass
