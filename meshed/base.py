@@ -444,8 +444,15 @@ class FuncNode(metaclass=_LegacyNameMeta):
         and space are used, so could possibly encode as int (for __hash__ method)
         in a way that is reverse-decodable and with reasonable int size.
         """
-        return self.synopsis_string(bind_info="hybrid")
-        # return ';'.join(self.bind) + '::' + self.out
+        # A callable bind value shows as ``<name>`` in the synopsis, so two different
+        # callables with one name (two lambdas) would collide: add their identity.
+        callables = sorted(
+            f"{param}={_callable_identity(value)}"
+            for param, value in self.bind.items()
+            if callable(value) and not isinstance(value, str)
+        )
+        synopsis = self.synopsis_string(bind_info="hybrid")
+        return f"{synopsis}|{','.join(callables)}" if callables else synopsis
 
     # TODO: Find a better one. Need to have guidance on hash and eq methods dos-&-donts
     def __hash__(self):
@@ -863,6 +870,13 @@ def rebind_to_func(fnode: FuncNode, new_func: Callable):
 def insert_func_if_compatible(func_comparator: CallableComparator = compare_signatures):
     """Make a ``ch_func_node_func`` variant with ``func_comparator`` fixed."""
     return partial(ch_func_node_func, func_comparator=func_comparator)
+
+
+def _callable_identity(func) -> str:
+    """``module.qualname@id``: tells apart callables that share a ``__name__``."""
+    module = getattr(func, "__module__", None) or ""
+    qualname = getattr(func, "__qualname__", None) or getattr(func, "__name__", "")
+    return f"{module}.{qualname}@{id(func):x}"
 
 
 def _bind_value_str(v):

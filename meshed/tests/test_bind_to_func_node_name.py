@@ -124,3 +124,13 @@ def test_bind_to_bound_method():
     k = K()
     dag = DAG([FuncNode(k.m), FuncNode(bar, bind={"y": k.m})])
     assert dag(a=1, x=3) == 6
+
+
+def test_nodes_binding_different_same_named_callables_differ():
+    """Two lambdas share ``__name__`` ``<lambda>``; the nodes binding them must not be equal (#98)."""
+    first, second = (lambda: 1), (lambda: 2)
+    a, b = FuncNode(bar, bind={"y": first}), FuncNode(bar, bind={"y": second})
+    assert str(a) == str(b)  # the display is unchanged
+    assert a != b and len({a, b}) == 2
+    assert FuncNode(bar, bind={"y": first}) == a  # the same callable: the same node
+    assert hash(FuncNode(bar, bind={"y": "z"})) == hash(FuncNode(bar, bind={"y": "z"}))
