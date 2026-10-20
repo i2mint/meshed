@@ -484,6 +484,25 @@ class RepeatedNamesWarning(UserWarning):
     """
 
 
+class BindToFuncNodeNameWarning(UserWarning):
+    """Warns that a ``FuncNode`` of a ``DAG`` binds a parameter to the *name* of
+    another func node (its id) instead of to a var node (such as that node's ``out``).
+
+    The dag takes it to mean the output of that func node, which is what one usually
+    wants. Bind to the ``out`` instead to silence it. See i2mint/meshed#19.
+    """
+
+
+def bindings_to_func_node_names(bind: dict, out_of_name: Mapping) -> dict:
+    """The ``{param: func_node_name}`` items of ``bind`` whose value is a key of
+    ``out_of_name`` (a ``{func_node_name: out}`` mapping).
+
+    >>> bindings_to_func_node_names({'x': 'x', 'y': 'foo'}, {'foo': '_foo'})
+    {'y': 'foo'}
+    """
+    return {param: src for param, src in bind.items() if src in out_of_name}
+
+
 @contextmanager
 def _quiet_repeated_names():
     """Silence ``RepeatedNamesWarning`` for a dag built internally from nodes the user
@@ -675,6 +694,8 @@ class DAG:
 
     def __post_init__(self):
         self.func_nodes = tuple(ensure_func_nodes(self.func_nodes))
+        # before the graph is made, since names and binds decide its edges
+        self.bindings_cleaner()
         self._node_graph = _func_nodes_to_graph_dict(self.func_nodes)
         self.nodes = topological_sort(self._node_graph)
         # reorder the nodes to fit topological order
@@ -697,7 +718,6 @@ class DAG:
         self.last_scope = None
         self.__name__ = self.name or "DAG"
 
-        self.bindings_cleaner()
         if duplicates := duplicate_outs(self.func_nodes):
             self.on_duplicate_outs(duplicates, dag_name=self.name)
 
@@ -730,7 +750,11 @@ class DAG:
 
     def bindings_cleaner(self):
         """Make func node names unique and rewrite bind values that name a func node into
-        that node's ``out`` (called at the end of ``__post_init__``).
+        that node's ``out`` (called at the start of ``__post_init__``, before the graph
+        is made, so that the rewritten binds are the edges of the graph).
+
+        A bind value that is the ``out`` of some func node is left alone, even if it is
+        also the name of another: the var node wins. See i2mint/meshed#19.
         """
         if repeated := repeated_names(self.func_nodes):
             details = ", ".join(f"{name!r} x{n}" for name, n in repeated.items())
@@ -742,11 +766,25 @@ class DAG:
                 stacklevel=_stacklevel_of_first_frame_outside_meshed(),
             )
         self.func_nodes = mk_nodes_names_unique(self.func_nodes)
-        funcnodes_names = [node.name for node in self.func_nodes]
-        func = lambda v: self._func_node_for[v].out
-        cond = lambda k, v: v in funcnodes_names
+        outs = {node.out for node in self.func_nodes}
+        out_of_name = {
+            node.name: node.out for node in self.func_nodes if node.name not in outs
+        }
         for node in self.func_nodes:
-            node.bind = change_value_on_cond(node.bind, cond, func)
+            if rebinds := bindings_to_func_node_names(node.bind, out_of_name):
+                details = ", ".join(
+                    f"{param}={name!r} -> {out_of_name[name]!r}"
+                    for param, name in rebinds.items()
+                )
+                warn(
+                    f"{node.name} binds to func node name(s), not var node(s): "
+                    f"{details}. They are taken to mean those nodes' outputs; bind to "
+                    "the out to say so (or rename, if you meant an input var).",
+                    BindToFuncNodeNameWarning,
+                    stacklevel=_stacklevel_of_first_frame_outside_meshed(),
+                )
+                for param, name in rebinds.items():
+                    node.bind[param] = out_of_name[name]
 
     def __call__(self, *args, **kwargs):
         """Run the DAG: map the arguments to the root variables (applying defaults),
@@ -1280,11 +1318,11 @@ class DAG:
         >>>
         >>> dag = DAG([
         ...     FuncNode(lambda a, b: a + b, name='f'),
-        ...     FuncNode(lambda y=1, z=2: y * z, name='g', bind={'z': 'f'})
+        ...     FuncNode(lambda y=1, z=2: y * z, name='g', bind={'z': '_f'})
         ... ])
         >>>
         >>> Sig(dag)
-        <Sig (a, b, f=2, y=1)>
+        <Sig (a, b, y=1)>
         >>>
         >>> dag.ch_funcs(g=lambda y=1, z=2: y / z)
         DAG(func_nodes=[FuncNode(a,b -> f -> _f), FuncNode(z=_f,y -> g -> _g)], name=None)

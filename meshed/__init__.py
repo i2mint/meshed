@@ -21,6 +21,7 @@ from meshed.dag import (
     ch_names,
     DuplicateOutsWarning,
     RepeatedNamesWarning,
+    BindToFuncNodeNameWarning,
     repeated_names,
     duplicate_outs,
     warn_on_duplicate_outs,

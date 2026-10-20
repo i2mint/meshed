@@ -866,7 +866,15 @@ def _keys_and_values_are_strings_validation(d: dict):
         if not isinstance(k, str):
             raise ValidationError(f"Should be a str: {k}")
         if not isinstance(v, str):
-            raise ValidationError(f"Should be a str: {v}")
+            hint = ""
+            if callable(v):
+                hint = (
+                    f" (to bind {k!r} to the output of a function, bind it to the out "
+                    "of that function's FuncNode, e.g. "
+                    f"bind={{{k!r}: {getattr(v, '__name__', 'func')!r}}} when the "
+                    "out is the default)"
+                )
+            raise ValidationError(f"Should be a str: {v}{hint}")
 
 
 def _func_node_args_validation(
