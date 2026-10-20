@@ -11,7 +11,8 @@ from meshed.base import FuncNode, func_node_transformer
 from meshed.dag import DAG
 from meshed.util import Renamer, numbered_suffix_renamer, InvalidFunctionParameters
 
-_func_node_fields = {x.name for x in fields(FuncNode)}
+# ``name`` is the legacy alias of ``func_id`` (kept in ``FuncNode.to_dict()``)
+_func_node_fields = {x.name for x in fields(FuncNode)} | {"name"}
 
 # TODO: How to enforce that it only has keys from _func_node_fields?
 FuncNodeKwargs = dict
