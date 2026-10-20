@@ -9,6 +9,7 @@
 - [API reference](api.html.md): | &#96;meshed&#96;   | &#96;meshed&#96; contains a set of tools that allow the developer to provide a collection of ...
 - [meshed](_autosummary/meshed.html.md): &#96;meshed&#96; contains a set of tools that allow the developer to provide a collection
 - [meshed.base](_autosummary/meshed.base.html.md): Define &#96;FuncNode&#96;, the unit of computation that &#96;meshed&#96; assembles into DAGs.
+- [meshed.cached_dag](_autosummary/meshed.cached_dag.html.md): Compute any var node of a DAG from what it depends on, caching what was computed.
 - [meshed.caching](_autosummary/meshed.caching.html.md): Turn functions into cached properties of a class.
 - [meshed.components](_autosummary/meshed.components.html.md): Ready-made extraction components for meshed graphs.
 - [meshed.composition](_autosummary/meshed.composition.html.md): Specific use of FuncNode and DAG
@@ -23,7 +24,7 @@
 - [meshed.makers](_autosummary/meshed.makers.html.md): This module contains tools to make meshed objects in different ways.
 - [meshed.scrap](_autosummary/meshed.scrap.html.md): For scrap only
 - [meshed.scrap.annotations_to_meshes](_autosummary/meshed.scrap.annotations_to_meshes.html.md): Code related to work on the “From annotated functions to meshes” discussion:
-- [meshed.scrap.cached_dag](_autosummary/meshed.scrap.cached_dag.html.md): | &#96;add&#96;(a&#91;, b&#93;)                                                      |                              ...
+- [meshed.scrap.cached_dag](_autosummary/meshed.scrap.cached_dag.html.md): Moved: &#96;CachedDag&#96; now lives in &#96;meshed.cached_dag&#96; (i2mint/meshed#36).
 - [meshed.scrap.collapse_and_expand](_autosummary/meshed.scrap.collapse_and_expand.html.md): Ideas on collapsing and expanding nodes
 - [meshed.scrap.conversion](_autosummary/meshed.scrap.conversion.html.md): Utils to convert graphs from one specification to another
 - [meshed.scrap.dask_graph_language](_autosummary/meshed.scrap.dask_graph_language.html.md): How to make dags from the dask specification
@@ -37,7 +38,7 @@
 - [meshed.util](_autosummary/meshed.util.html.md): Function-wrapping, naming, and small data helpers shared across &#96;meshed&#96;.
 - [meshed.viz](_autosummary/meshed.viz.html.md): Visualization utilities for the meshed package.
 - [For AI agents](ai-agents.html.md): &#96;meshed&#96; ships artifacts for coding agents alongside its code. This page lists
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-20 12:19 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-20 13:25 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
 
 ## Optional
 

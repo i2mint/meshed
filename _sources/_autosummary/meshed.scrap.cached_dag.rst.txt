@@ -11,23 +11,6 @@ meshed.scrap.cached\_dag
       add
       cached_dag_test
       exp
-      func_node_names_and_outs
-      get_first_item_and_assert_unicity
       mult
       subtract
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-   
-      CachedDag
-      NoOverwritesDict
-      NoSuchKey
-   
-   .. rubric:: Exceptions
-
-   .. autosummary::
-   
-      NotAllowed
-      OverWritesNotAllowedError
    

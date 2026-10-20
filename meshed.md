@@ -1,4 +1,4 @@
-> built 2026-10-20 12:19 UTC from be0cb76 (master) · meshed 0.1.181. Details: build_info.json
+> built 2026-10-20 13:25 UTC from 2ec076b (master) · meshed 0.1.182. Details: build_info.json
 
 # index.html.md
 
@@ -941,6 +941,274 @@ That is:
 * are valid dot (graphviz) names (we’ll use str.isidentifier because lazy)
 * All the `func.name` and `func.out` are unique
 * more to come (TODO)…
+
+
+# _autosummary/meshed.cached_dag.html.md
+
+# meshed.cached_dag
+
+Compute any var node of a DAG from what it depends on, caching what was computed.
+
+[`CachedDag`](_autosummary/meshed.cached_dag.html.md#meshed.cached_dag.CachedDag) wraps a [`DAG`](_autosummary/meshed.dag.html.md#meshed.dag.DAG): `cached(k, **inputs)` computes the
+var node `k` from the given inputs, the cache, and the defaults, and keeps every input
+and intermediate value for later calls. [`CachedDag.inject_methods()`](_autosummary/meshed.cached_dag.html.md#meshed.cached_dag.CachedDag.inject_methods) gives an object
+one method per computable var node, whose signature lists just the root inputs that
+node still needs (i2mint/meshed#36).
+
+```pycon
+>>> from meshed import DAG
+>>> def f(a, x=1):
+...     return a + x
+>>> def g(a, y=2):
+...     return a * y
+>>> cached = CachedDag(DAG([f, g]))
+>>> cached('g', a=1), cached('f')
+(2, 2)
+```
+
+### Classes
+
+| [`CachedDag`](_autosummary/meshed.cached_dag.html.md#meshed.cached_dag.CachedDag)(dag[, cache, name])   | Wraps a DAG, using it to compute any of it's var nodes from it's dependents, with the capability of caching intermediate var nodes for later reuse.   |
+|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`NoOverwritesDict`](_autosummary/meshed.cached_dag.html.md#meshed.cached_dag.NoOverwritesDict)                | A dict where you're not allowed to write to a key that already has a value in it.                                                                     |
+
+### Exceptions
+
+| [`NotAllowed`](_autosummary/meshed.cached_dag.html.md#meshed.cached_dag.NotAllowed)                | To use to indicate that something is not allowed              |
+|----------------------------------------------------------------------------|---------------------------------------------------------------|
+| [`OverWritesNotAllowedError`](_autosummary/meshed.cached_dag.html.md#meshed.cached_dag.OverWritesNotAllowedError) | Error to raise when a writes to existing keys are not allowed |
+
+### *class* meshed.cached_dag.CachedDag(dag, cache=True, name=None)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Wraps a DAG, using it to compute any of it’s var nodes from it’s dependents,
+with the capability of caching intermediate var nodes for later reuse.
+
+```pycon
+>>> def add(a, b=1):
+...     return a + b
+>>> def mult(x, y=2):
+...     return x * y
+>>> def subtract(a, b=4):
+...     return a - b
+>>> from meshed import code_to_dag
+>>>
+>>> @code_to_dag(func_src=locals())
+... def dag(w, ww, www):
+...     x = mult(w, ww)
+...     y = add(x, www)
+...     z = subtract(x, y)
+>>> print(dag.dot_digraph_ascii())
+```
+
+```text
+               w
+
+            │
+            │
+            ▼
+          ┌──────────┐
+ww=   ──▶ │   mult   │
+          └──────────┘
+            │
+            │
+            ▼
+
+               x       ─┐
+                        │
+            │           │
+            │           │
+            ▼           │
+          ┌──────────┐  │
+www=  ──▶ │   add    │  │
+          └──────────┘  │
+            │           │
+            │           │
+            ▼           │
+                        │
+               y=       │
+                        │
+            │           │
+            │           │
+            ▼           │
+          ┌──────────┐  │
+          │ subtract │ ◀┘
+          └──────────┘
+            │
+            │
+            ▼
+
+               z
+```
+
+```pycon
+>>> from inspect import signature
+>>> g = CachedDag(dag)
+>>> signature(g)
+<Signature (k, /, **input_kwargs)>
+```
+
+We can get `ww` because it has a default: the dag’s own signature
+(`w, ww, www`) has none, but `ww` feeds `mult`’s `y=2`, and a root takes
+the default of the parameters it binds (when they agree):
+
+```pycon
+>>> g.defaults
+{'ww': 2, 'www': 1}
+>>> g('ww')
+2
+```
+
+But we can’t get `y` because we don’t have what it depends on:
+
+```pycon
+>>> g('y')
+Traceback (most recent call last):
+    ...
+TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'
+```
+
+It needs a `w?`! No, it needs an `x`! But to get an `x` you need a `w`,
+and…
+
+```pycon
+>>> g('x')
+Traceback (most recent call last):
+    ...
+TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'
+```
+
+So let’s give it a w!
+
+```pycon
+>>> g('x', w=3)  # == 3 * 2
+6
+```
+
+And now this works:
+
+```pycon
+>>> g('x')
+6
+```
+
+because
+
+```pycon
+>>> g.cache
+{'x': 6, 'w': 3}
+```
+
+and this will work too:
+
+```pycon
+>>> g('y')
+7
+>>> g.cache
+{'x': 6, 'w': 3, 'y': 7}
+```
+
+An input that contradicts the cache is refused rather than silently ignored:
+
+```pycon
+>>> g('x', w=10)
+Traceback (most recent call last):
+    ...
+ValueError: input_kwargs can't contain keys that are already in cache with a different value! These names were in both: {'w'}
+```
+
+Methods per var node, each asking only for the roots it still needs:
+
+```pycon
+>>> fresh = CachedDag(dag).inject_methods()
+>>> signature(fresh.y)
+<Signature (*, w, ww=2, www=1)>
+>>> fresh.x(w=3)
+6
+>>> signature(fresh.y)  # w is cached now
+<Signature (*, ww=2, www=1)>
+>>> fresh.z()
+-1
+```
+
+#### inject_methods(obj=None)
+
+Give `obj` (default: a new namespace) one method per non-root var node.
+
+`obj.<node>(**roots)` is `self(<node>, **roots)`. Its signature is computed
+when asked, so it always lists the roots `<node>` still needs given the cache
+at that moment, with the defaults the dag (or the nodes it feeds) gives them.
+
+#### roots_for(node)
+
+The set of roots that lead to `node`.
+
+```pycon
+>>> from meshed.makers import code_to_dag
+>>> @code_to_dag
+... def dag():
+...     x = mult(w, ww)
+...     y = add(x, www)
+...     z = subtract(x, y)
+>>> print(dag.synopsis_string())
+w,ww -> mult -> x
+x,www -> add -> y
+x,y -> subtract -> z
+>>> g = CachedDag(dag)
+>>> sorted(g.roots_for('x'))
+['w', 'ww']
+>>> sorted(g.roots_for('y'))
+['w', 'ww', 'www']
+```
+
+### *class* meshed.cached_dag.NoOverwritesDict
+
+Bases: [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+A dict where you’re not allowed to write to a key that already has a value in it.
+
+```pycon
+>>> d = NoOverwritesDict(a=1, b=2)
+>>> d
+{'a': 1, 'b': 2}
+```
+
+Writing is allowed, in new keys
+
+```pycon
+>>> d['c'] = 3
+>>> d
+{'a': 1, 'b': 2, 'c': 3}
+```
+
+It’s also okay to write into an existing key if the value it holds is identical.
+In fact, the write doesn’t even happen.
+
+```pycon
+>>> d['b'] = 2
+```
+
+But if we try to write a different value…
+
+```pycon
+>>> d['b'] = 22
+Traceback (most recent call last):
+    ...
+cached_dag.OverWritesNotAllowedError: The b key already exists and you're not allowed to change its value
+```
+
+### *exception* meshed.cached_dag.NotAllowed
+
+Bases: [`Exception`](https://docs.python.org/3/builtins/exceptions.html#Exception)
+
+To use to indicate that something is not allowed
+
+### *exception* meshed.cached_dag.OverWritesNotAllowedError
+
+Bases: [`NotAllowed`](_autosummary/meshed.cached_dag.html.md#meshed.cached_dag.NotAllowed)
+
+Error to raise when a writes to existing keys are not allowed
 
 
 # _autosummary/meshed.caching.html.md
@@ -2909,21 +3177,22 @@ by an adjacency Mapping.
 
 ### Modules
 
-| [`base`](_autosummary/meshed.base.html.md#module-meshed.base)               | Define `FuncNode`, the unit of computation that `meshed` assembles into DAGs.   |
-|----------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| [`caching`](_autosummary/meshed.caching.html.md#module-meshed.caching)         | Turn functions into cached properties of a class.                               |
-| [`components`](_autosummary/meshed.components.html.md#module-meshed.components)   | Ready-made extraction components for meshed graphs.                             |
-| [`composition`](_autosummary/meshed.composition.html.md#module-meshed.composition) | Specific use of FuncNode and DAG                                                |
-| [`dag`](_autosummary/meshed.dag.html.md#module-meshed.dag)                 | Making DAGs                                                                     |
-| [`examples`](_autosummary/meshed.examples.html.md#module-meshed.examples)       | Examples of using meshed.                                                       |
-| [`ext`](_autosummary/meshed.ext.html.md#module-meshed.ext)                 | vendors                                                                         |
-| [`itools`](_autosummary/meshed.itools.html.md#module-meshed.itools)           | Graph operations over adjacency mappings.                                       |
-| [`makers`](_autosummary/meshed.makers.html.md#module-meshed.makers)           | Makers                                                                          |
-| [`scrap`](_autosummary/meshed.scrap.html.md#module-meshed.scrap)             | For scrap only                                                                  |
-| [`slabs`](_autosummary/meshed.slabs.html.md#module-meshed.slabs)             | Tools to generate slabs.                                                        |
-| [`tools`](_autosummary/meshed.tools.html.md#module-meshed.tools)             | Tools to work with meshed                                                       |
-| [`util`](_autosummary/meshed.util.html.md#module-meshed.util)               | Function-wrapping, naming, and small data helpers shared across `meshed`.       |
-| [`viz`](_autosummary/meshed.viz.html.md#module-meshed.viz)                 | Visualization utilities for the meshed package.                                 |
+| [`base`](_autosummary/meshed.base.html.md#module-meshed.base)               | Define `FuncNode`, the unit of computation that `meshed` assembles into DAGs.     |
+|----------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| [`cached_dag`](_autosummary/meshed.cached_dag.html.md#module-meshed.cached_dag)   | Compute any var node of a DAG from what it depends on, caching what was computed. |
+| [`caching`](_autosummary/meshed.caching.html.md#module-meshed.caching)         | Turn functions into cached properties of a class.                                 |
+| [`components`](_autosummary/meshed.components.html.md#module-meshed.components)   | Ready-made extraction components for meshed graphs.                               |
+| [`composition`](_autosummary/meshed.composition.html.md#module-meshed.composition) | Specific use of FuncNode and DAG                                                  |
+| [`dag`](_autosummary/meshed.dag.html.md#module-meshed.dag)                 | Making DAGs                                                                       |
+| [`examples`](_autosummary/meshed.examples.html.md#module-meshed.examples)       | Examples of using meshed.                                                         |
+| [`ext`](_autosummary/meshed.ext.html.md#module-meshed.ext)                 | vendors                                                                           |
+| [`itools`](_autosummary/meshed.itools.html.md#module-meshed.itools)           | Graph operations over adjacency mappings.                                         |
+| [`makers`](_autosummary/meshed.makers.html.md#module-meshed.makers)           | Makers                                                                            |
+| [`scrap`](_autosummary/meshed.scrap.html.md#module-meshed.scrap)             | For scrap only                                                                    |
+| [`slabs`](_autosummary/meshed.slabs.html.md#module-meshed.slabs)             | Tools to generate slabs.                                                          |
+| [`tools`](_autosummary/meshed.tools.html.md#module-meshed.tools)             | Tools to work with meshed                                                         |
+| [`util`](_autosummary/meshed.util.html.md#module-meshed.util)               | Function-wrapping, naming, and small data helpers shared across `meshed`.         |
+| [`viz`](_autosummary/meshed.viz.html.md#module-meshed.viz)                 | Visualization utilities for the meshed package.                                   |
 
 
 # _autosummary/meshed.itools.html.md
@@ -4012,252 +4281,18 @@ Produces a scaffold class containing the said methods, with given annotations
 
 # meshed.scrap.cached_dag
 
+Moved: `CachedDag` now lives in [`meshed.cached_dag`](_autosummary/meshed.cached_dag.html.md#module-meshed.cached_dag) (i2mint/meshed#36).
+
+This module re-exports it for code that imported it from `meshed.scrap`.
+
 ### Functions
 
 | `add`(a[, b])                                                      |                                                                                                                                                                                       |
 |--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`cached_dag_test`](_autosummary/meshed.scrap.cached_dag.html.md#meshed.scrap.cached_dag.cached_dag_test)() | Covering issue [https://github.com/i2mint/meshed/issues/34](https://github.com/i2mint/meshed/issues/34) about "CachedDag.cache should be populated with inputs that it was called on" |
 | `exp`(mult[, n])                                                   |                                                                                                                                                                                       |
-| `func_node_names_and_outs`(dag)                                    |                                                                                                                                                                                       |
-| `get_first_item_and_assert_unicity`(seq)                           |                                                                                                                                                                                       |
 | `mult`(x[, y])                                                     |                                                                                                                                                                                       |
 | `subtract`(a[, b])                                                 |                                                                                                                                                                                       |
-
-### Classes
-
-| [`CachedDag`](_autosummary/meshed.scrap.cached_dag.html.md#meshed.scrap.cached_dag.CachedDag)(dag[, cache, name])   | Wraps a DAG, using it to compute any of it's var nodes from it's dependents, with the capability of caching intermediate var nodes for later reuse.   |
-|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`NoOverwritesDict`](_autosummary/meshed.scrap.cached_dag.html.md#meshed.scrap.cached_dag.NoOverwritesDict)                | A dict where you're not allowed to write to a key that already has a value in it.                                                                     |
-| `NoSuchKey`()                                                                    |                                                                                                                                                       |
-
-### Exceptions
-
-| [`NotAllowed`](_autosummary/meshed.scrap.cached_dag.html.md#meshed.scrap.cached_dag.NotAllowed)                | To use to indicate that something is not allowed              |
-|----------------------------------------------------------------------------|---------------------------------------------------------------|
-| [`OverWritesNotAllowedError`](_autosummary/meshed.scrap.cached_dag.html.md#meshed.scrap.cached_dag.OverWritesNotAllowedError) | Error to raise when a writes to existing keys are not allowed |
-
-### *class* meshed.scrap.cached_dag.CachedDag(dag, cache=True, name=None)
-
-Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
-
-Wraps a DAG, using it to compute any of it’s var nodes from it’s dependents,
-with the capability of caching intermediate var nodes for later reuse.
-
-```pycon
->>> def add(a, b=1):
-...     return a + b
->>> def mult(x, y=2):
-...     return x * y
->>> def subtract(a, b=4):
-...     return a - b
->>> from meshed import code_to_dag
->>>
->>> @code_to_dag(func_src=locals())
-... def dag(w, ww, www):
-...     x = mult(w, ww)
-...     y = add(x, www)
-...     z = subtract(x, y)
->>> print(dag.dot_digraph_ascii())
-```
-
-```text
-               w
-
-            │
-            │
-            ▼
-          ┌──────────┐
-ww=   ──▶ │   mult   │
-          └──────────┘
-            │
-            │
-            ▼
-
-               x       ─┐
-                        │
-            │           │
-            │           │
-            ▼           │
-          ┌──────────┐  │
-www=  ──▶ │   add    │  │
-          └──────────┘  │
-            │           │
-            │           │
-            ▼           │
-                        │
-               y=       │
-                        │
-            │           │
-            │           │
-            ▼           │
-          ┌──────────┐  │
-          │ subtract │ ◀┘
-          └──────────┘
-            │
-            │
-            ▼
-
-               z
-```
-
-```pycon
->>> from inspect import signature
->>> g = CachedDag(dag)
->>> signature(g)
-<Signature (k, /, **input_kwargs)>
-```
-
-We can get `ww` because it has a default:
-
-(TODO: This (and further tests) stopped working since code_to_dag was enhanced
-with the ability to use the wrapped function’s signature to determine the
-signature of the output dag. Need to fix this.)
-
-```pycon
->>> g('ww')
-2
-```
-
-But we can’t get `y` because we don’t have what it depends on:
-
-```pycon
->>> g('y')
-Traceback (most recent call last):
-    ...
-TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'
-```
-
-It needs a `w?`! No, it needs an `x`! But to get an `x` you need a `w`,
-and…
-
-```pycon
->>> g('x')
-Traceback (most recent call last):
-    ...
-TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'
-```
-
-So let’s give it a w!
-
-```pycon
->>> g('x', w=3)  # == 3 * 2 ==
-6
-```
-
-And now this works:
-
-```pycon
->>> g('x')
-6
-```
-
-because
-
-```pycon
->>> g.cache
-{'x': 6}
-```
-
-and this will work too:
-
-```pycon
->>> g('y')
-7
->>> g.cache
-{'x': 6, 'y': 7}
-```
-
-But this is something we need to handle better!
-
-```pycon
->>> g('x', w=10)
-6
-```
-
-This is happending because there’s already a x in the cache, and it takes precedence.
-This would be okay if consider CachedDag as a low level object that is never
-actually used by a user.
-But we need to protect the user from such effects!
-
-First, we probably should cache inputs too.
-
-Then we can:
-
-- Make computation take precedence over cache, overwriting the existing cache
-  with the new resulting values
-- Allow the user to declare the entire cache, or just some variables in it,
-  as write-once, to avoid creating bugs with the above proposal.
-- Cache multiple paths (lru_cache style) for different input combinations
-
-#### roots_for(node)
-
-The set of roots that lead to `node`.
-
-```pycon
->>> from meshed.makers import code_to_dag
->>> @code_to_dag
-... def dag():
-...     x = mult(w, ww)
-...     y = add(x, www)
-...     z = subtract(x, y)
->>> print(dag.synopsis_string())
-w,ww -> mult -> x
-x,www -> add -> y
-x,y -> subtract -> z
->>> g = CachedDag(dag)
->>> sorted(g.roots_for('x'))
-['w', 'ww']
->>> sorted(g.roots_for('y'))
-['w', 'ww', 'www']
-```
-
-### *class* meshed.scrap.cached_dag.NoOverwritesDict
-
-Bases: [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
-A dict where you’re not allowed to write to a key that already has a value in it.
-
-```pycon
->>> d = NoOverwritesDict(a=1, b=2)
->>> d
-{'a': 1, 'b': 2}
-```
-
-Writing is allowed, in new keys
-
-```pycon
->>> d['c'] = 3
->>> d
-{'a': 1, 'b': 2, 'c': 3}
-```
-
-It’s also okay to write into an existing key if the value it holds is identical.
-In fact, the write doesn’t even happen.
-
-```pycon
->>> d['b'] = 2
-```
-
-But if we try to write a different value…
-
-```pycon
->>> d['b'] = 22
-Traceback (most recent call last):
-    ...
-cached_dag.OverWritesNotAllowedError: The b key already exists and you're not allowed to change its value
-```
-
-### *exception* meshed.scrap.cached_dag.NotAllowed
-
-Bases: [`Exception`](https://docs.python.org/3/builtins/exceptions.html#Exception)
-
-To use to indicate that something is not allowed
-
-### *exception* meshed.scrap.cached_dag.OverWritesNotAllowedError
-
-Bases: [`NotAllowed`](_autosummary/meshed.scrap.cached_dag.html.md#meshed.scrap.cached_dag.NotAllowed)
-
-Error to raise when a writes to existing keys are not allowed
 
 ### meshed.scrap.cached_dag.cached_dag_test()
 
@@ -4515,7 +4550,7 @@ For scrap only
 
 | [`annotations_to_meshes`](_autosummary/meshed.scrap.annotations_to_meshes.html.md#module-meshed.scrap.annotations_to_meshes)   | Code related to work on the "From annotated functions to meshes" discussion:                                                                                                                   |
 |--------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`cached_dag`](_autosummary/meshed.scrap.cached_dag.html.md#module-meshed.scrap.cached_dag)                         |                                                                                                                                                                                                |
+| [`cached_dag`](_autosummary/meshed.scrap.cached_dag.html.md#module-meshed.scrap.cached_dag)                         | Moved: `CachedDag` now lives in [`meshed.cached_dag`](_autosummary/meshed.cached_dag.html.md#module-meshed.cached_dag) (i2mint/meshed#36).                                                |
 | [`collapse_and_expand`](_autosummary/meshed.scrap.collapse_and_expand.html.md#module-meshed.scrap.collapse_and_expand)       | Ideas on collapsing and expanding nodes See "Collapse and expand nodes" discussion: [https://github.com/i2mint/meshed/discussions/54](https://github.com/i2mint/meshed/discussions/54)         |
 | [`conversion`](_autosummary/meshed.scrap.conversion.html.md#module-meshed.scrap.conversion)                         | Utils to convert graphs from one specification to another                                                                                                                                      |
 | [`dask_graph_language`](_autosummary/meshed.scrap.dask_graph_language.html.md#module-meshed.scrap.dask_graph_language)       | How to make dags from the dask specification                                                                                                                                                   |
@@ -6344,20 +6379,20 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
 # About this build
 
-This documentation was built on **2026-10-20 12:19 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/be0cb762ac448d3a93dd45dcae82fb5dd00f8880"><code>be0cb76</code></a> on branch <code>master</code>, for **meshed 0.1.181** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-20 13:25 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/2ec076b255017744c3516e7d9578411d0006e5ca"><code>2ec076b</code></a> on branch <code>master</code>, for **meshed 0.1.182** (from <code>setup.cfg</code>).
 
 #### WARNING
 The documentation and the package may be misaligned:
 
-- The documented version (0.1.181) is ahead of the latest release on PyPI (0.1.180): these docs describe unreleased code.
+- The documented version (0.1.182) is ahead of the latest release on PyPI (0.1.181): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/be0cb762ac448d3a93dd45dcae82fb5dd00f8880"><code>be0cb762ac448d3a93dd45dcae82fb5dd00f8880</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/2ec076b255017744c3516e7d9578411d0006e5ca"><code>2ec076b255017744c3516e7d9578411d0006e5ca</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.181</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.182</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6366,9 +6401,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39421058130">39421058130</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39429858169">39429858169</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>2c3213295c92d3d58c91f5809ae6b56c22048602</code> (in the history of the built commit) |
+| Event commit | <code>9c95228e1ecec4904439f9aee3fc4d34af63aa6b</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6393,13 +6428,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.180/">0.1.180</a>, older than the documented version (0.1.181).
+Latest release: <a href="https://pypi.org/project/meshed/0.1.181/">0.1.181</a>, older than the documented version (0.1.182).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout be0cb762ac448d3a93dd45dcae82fb5dd00f8880
+git checkout 2ec076b255017744c3516e7d9578411d0006e5ca
 pip install "epythet==0.2.20"
 epythet quickstart . --ignore tests/
 ```

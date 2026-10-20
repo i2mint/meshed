@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-20T12:19:36Z",
+  "built_at": "2026-10-20T13:25:35Z",
   "package": {
     "name": "meshed",
-    "version": "0.1.181",
+    "version": "0.1.182",
     "display_name": "meshed",
     "source": "setup.cfg"
   },
   "git": {
     "available": true,
-    "commit": "be0cb762ac448d3a93dd45dcae82fb5dd00f8880",
-    "short_commit": "be0cb76",
+    "commit": "2ec076b255017744c3516e7d9578411d0006e5ca",
+    "short_commit": "2ec076b",
     "branch": "master",
     "tags": [
-      "0.1.181"
+      "0.1.182"
     ],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/meshed",
-    "commit_url": "https://github.com/i2mint/meshed/commit/be0cb762ac448d3a93dd45dcae82fb5dd00f8880",
+    "commit_url": "https://github.com/i2mint/meshed/commit/2ec076b255017744c3516e7d9578411d0006e5ca",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/meshed",
-    "sha": "2c3213295c92d3d58c91f5809ae6b56c22048602",
+    "sha": "9c95228e1ecec4904439f9aee3fc4d34af63aa6b",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "39421058130",
-    "run_url": "https://github.com/i2mint/meshed/actions/runs/39421058130",
+    "run_id": "39429858169",
+    "run_url": "https://github.com/i2mint/meshed/actions/runs/39429858169",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -55,21 +55,21 @@
     "docs_dir": "docsrc"
   },
   "site": {
-    "modules_documented": 29,
-    "objects_documented": 271
+    "modules_documented": 30,
+    "objects_documented": 272
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.180",
+    "latest": "0.1.181",
     "relation": "ahead",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout be0cb762ac448d3a93dd45dcae82fb5dd00f8880\npip install \"epythet==0.2.20\"\nepythet quickstart . --ignore tests/",
+  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 2ec076b255017744c3516e7d9578411d0006e5ca\npip install \"epythet==0.2.20\"\nepythet quickstart . --ignore tests/",
   "warnings": [],
   "alignment": {
     "aligned": false,
     "notes": [
-      "The documented version (0.1.181) is ahead of the latest release on PyPI (0.1.180): these docs describe unreleased code."
+      "The documented version (0.1.182) is ahead of the latest release on PyPI (0.1.181): these docs describe unreleased code."
     ]
   }
 }

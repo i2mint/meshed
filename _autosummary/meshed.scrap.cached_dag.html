@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=69b98894"></script>
+    <script src="../_static/documentation_options.js?v=5e4102fe"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.181" />
+  <meta name="docsearch:version" content="0.1.182" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -321,6 +321,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="meshed.html">meshed</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="meshed.base.html">meshed.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meshed.cached_dag.html">meshed.cached_dag</a></li>
 <li class="toctree-l2"><a class="reference internal" href="meshed.caching.html">meshed.caching</a></li>
 <li class="toctree-l2"><a class="reference internal" href="meshed.components.html">meshed.components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="meshed.composition.html">meshed.composition</a></li>
@@ -424,6 +425,8 @@
                   
   <section id="module-meshed.scrap.cached_dag">
 <span id="meshed-scrap-cached-dag"></span><h1>meshed.scrap.cached_dag<a class="headerlink" href="#module-meshed.scrap.cached_dag" title="Link to this heading">#</a></h1>
+<p>Moved: <code class="xref py py-class docutils literal notranslate"><span class="pre">CachedDag</span></code> now lives in <a class="reference internal" href="meshed.cached_dag.html#module-meshed.cached_dag" title="meshed.cached_dag"><code class="xref py py-mod docutils literal notranslate"><span class="pre">meshed.cached_dag</span></code></a> (i2mint/meshed#36).</p>
+<p>This module re-exports it for code that imported it from <code class="docutils literal notranslate"><span class="pre">meshed.scrap</span></code>.</p>
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
@@ -436,12 +439,6 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">exp</span></code>(mult[, n])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">func_node_names_and_outs</span></code>(dag)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_first_item_and_assert_unicity</span></code>(seq)</p></td>
-<td><p></p></td>
-</tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mult</span></code>(x[, y])</p></td>
 <td><p></p></td>
 </tr>
@@ -451,232 +448,6 @@
 </tbody>
 </table>
 </div>
-<p class="rubric">Classes</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.scrap.cached_dag.CachedDag" title="meshed.scrap.cached_dag.CachedDag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CachedDag</span></code></a>(dag[, cache, name])</p></td>
-<td><p>Wraps a DAG, using it to compute any of it's var nodes from it's dependents, with the capability of caching intermediate var nodes for later reuse.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.scrap.cached_dag.NoOverwritesDict" title="meshed.scrap.cached_dag.NoOverwritesDict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoOverwritesDict</span></code></a></p></td>
-<td><p>A dict where you're not allowed to write to a key that already has a value in it.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoSuchKey</span></code>()</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p class="rubric">Exceptions</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.scrap.cached_dag.NotAllowed" title="meshed.scrap.cached_dag.NotAllowed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotAllowed</span></code></a></p></td>
-<td><p>To use to indicate that something is not allowed</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.scrap.cached_dag.OverWritesNotAllowedError" title="meshed.scrap.cached_dag.OverWritesNotAllowedError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OverWritesNotAllowedError</span></code></a></p></td>
-<td><p>Error to raise when a writes to existing keys are not allowed</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<dl class="py class">
-<dt class="sig sig-object py" id="meshed.scrap.cached_dag.CachedDag">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">CachedDag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/scrap/cached_dag.html#CachedDag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.CachedDag" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Wraps a DAG, using it to compute any of it’s var nodes from it’s dependents,
-with the capability of caching intermediate var nodes for later reuse.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mult</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">code_to_dag</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nd">@code_to_dag</span><span class="p">(</span><span class="n">func_src</span><span class="o">=</span><span class="nb">locals</span><span class="p">())</span>
-<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">dag</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">,</span> <span class="n">www</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">mult</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">www</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">z</span> <span class="o">=</span> <span class="n">subtract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">dot_digraph_ascii</span><span class="p">())</span>
-</pre></div>
-</div>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>               w
-
-            │
-            │
-            ▼
-          ┌──────────┐
-ww=   ──▶ │   mult   │
-          └──────────┘
-            │
-            │
-            ▼
-
-               x       ─┐
-                        │
-            │           │
-            │           │
-            ▼           │
-          ┌──────────┐  │
-www=  ──▶ │   add    │  │
-          └──────────┘  │
-            │           │
-            │           │
-            ▼           │
-                        │
-               y=       │
-                        │
-            │           │
-            │           │
-            ▼           │
-          ┌──────────┐  │
-          │ subtract │ ◀┘
-          └──────────┘
-            │
-            │
-            ▼
-
-               z
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">CachedDag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">signature</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<span class="go">&lt;Signature (k, /, **input_kwargs)&gt;</span>
-</pre></div>
-</div>
-<p>We can get <code class="docutils literal notranslate"><span class="pre">ww</span></code> because it has a default:</p>
-<p>(TODO: This (and further tests) stopped working since code_to_dag was enhanced
-with the ability to use the wrapped function’s signature to determine the
-signature of the output dag. Need to fix this.)</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">'ww'</span><span class="p">)</span>
-<span class="go">2</span>
-</pre></div>
-</div>
-<p>But we can’t get <code class="docutils literal notranslate"><span class="pre">y</span></code> because we don’t have what it depends on:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">'y'</span><span class="p">)</span>
-<span class="gt">Traceback (most recent call last):</span>
-<span class="w">    </span><span class="o">...</span>
-<span class="gr">TypeError</span>: <span class="n">The input_kwargs of a dag call is missing 1 required argument: 'w'</span>
-</pre></div>
-</div>
-<p>It needs a <code class="docutils literal notranslate"><span class="pre">w?</span></code>! No, it needs an <code class="docutils literal notranslate"><span class="pre">x</span></code>! But to get an <code class="docutils literal notranslate"><span class="pre">x</span></code> you need a <code class="docutils literal notranslate"><span class="pre">w</span></code>,
-and…</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">'x'</span><span class="p">)</span>
-<span class="gt">Traceback (most recent call last):</span>
-<span class="w">    </span><span class="o">...</span>
-<span class="gr">TypeError</span>: <span class="n">The input_kwargs of a dag call is missing 1 required argument: 'w'</span>
-</pre></div>
-</div>
-<p>So let’s give it a w!</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># == 3 * 2 ==</span>
-<span class="go">6</span>
-</pre></div>
-</div>
-<p>And now this works:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">'x'</span><span class="p">)</span>
-<span class="go">6</span>
-</pre></div>
-</div>
-<p>because</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">cache</span>
-<span class="go">{'x': 6}</span>
-</pre></div>
-</div>
-<p>and this will work too:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">'y'</span><span class="p">)</span>
-<span class="go">7</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">cache</span>
-<span class="go">{'x': 6, 'y': 7}</span>
-</pre></div>
-</div>
-<p>But this is something we need to handle better!</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="go">6</span>
-</pre></div>
-</div>
-<p>This is happending because there’s already a x in the cache, and it takes precedence.
-This would be okay if consider CachedDag as a low level object that is never
-actually used by a user.
-But we need to protect the user from such effects!</p>
-<p>First, we probably should cache inputs too.</p>
-<p>Then we can:</p>
-<ul class="simple">
-<li><p>Make computation take precedence over cache, overwriting the existing cache
-with the new resulting values</p></li>
-<li><p>Allow the user to declare the entire cache, or just some variables in it,
-as write-once, to avoid creating bugs with the above proposal.</p></li>
-<li><p>Cache multiple paths (lru_cache style) for different input combinations</p></li>
-</ul>
-<dl class="py method">
-<dt class="sig sig-object py" id="meshed.scrap.cached_dag.CachedDag.roots_for">
-<span class="sig-name descname"><span class="pre">roots_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/scrap/cached_dag.html#CachedDag.roots_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.CachedDag.roots_for" title="Link to this definition">#</a></dt>
-<dd><p>The set of roots that lead to <code class="docutils literal notranslate"><span class="pre">node</span></code>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed.makers</span><span class="w"> </span><span class="kn">import</span> <span class="n">code_to_dag</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nd">@code_to_dag</span>
-<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">dag</span><span class="p">():</span>
-<span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">mult</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">ww</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">www</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">z</span> <span class="o">=</span> <span class="n">subtract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
-<span class="go">w,ww -&gt; mult -&gt; x</span>
-<span class="go">x,www -&gt; add -&gt; y</span>
-<span class="go">x,y -&gt; subtract -&gt; z</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">CachedDag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">roots_for</span><span class="p">(</span><span class="s1">'x'</span><span class="p">))</span>
-<span class="go">['w', 'ww']</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">roots_for</span><span class="p">(</span><span class="s1">'y'</span><span class="p">))</span>
-<span class="go">['w', 'ww', 'www']</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="meshed.scrap.cached_dag.NoOverwritesDict">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">NoOverwritesDict</span></span><a class="reference internal" href="../_modules/meshed/scrap/cached_dag.html#NoOverwritesDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.NoOverwritesDict" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
-<p>A dict where you’re not allowed to write to a key that already has a value in it.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">NoOverwritesDict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
-<span class="go">{'a': 1, 'b': 2}</span>
-</pre></div>
-</div>
-<p>Writing is allowed, in new keys</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">'c'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
-<span class="go">{'a': 1, 'b': 2, 'c': 3}</span>
-</pre></div>
-</div>
-<p>It’s also okay to write into an existing key if the value it holds is identical.
-In fact, the write doesn’t even happen.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">'b'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
-</pre></div>
-</div>
-<p>But if we try to write a different value…</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">'b'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">22</span>
-<span class="gt">Traceback (most recent call last):</span>
-<span class="w">    </span><span class="o">...</span>
-<span class="gr">cached_dag.OverWritesNotAllowedError</span>: <span class="n">The b key already exists and you're not allowed to change its value</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="meshed.scrap.cached_dag.NotAllowed">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">NotAllowed</span></span><a class="reference internal" href="../_modules/meshed/scrap/cached_dag.html#NotAllowed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.NotAllowed" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#Exception" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>To use to indicate that something is not allowed</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="meshed.scrap.cached_dag.OverWritesNotAllowedError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">OverWritesNotAllowedError</span></span><a class="reference internal" href="../_modules/meshed/scrap/cached_dag.html#OverWritesNotAllowedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.OverWritesNotAllowedError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#meshed.scrap.cached_dag.NotAllowed" title="meshed.scrap.cached_dag.NotAllowed"><code class="xref py py-class docutils literal notranslate"><span class="pre">NotAllowed</span></code></a></p>
-<p>Error to raise when a writes to existing keys are not allowed</p>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.scrap.cached_dag.cached_dag_test">
 <span class="sig-prename descclassname"><span class="pre">meshed.scrap.cached_dag.</span></span><span class="sig-name descname"><span class="pre">cached_dag_test</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/scrap/cached_dag.html#cached_dag_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.scrap.cached_dag.cached_dag_test" title="Link to this definition">#</a></dt>
@@ -733,13 +504,6 @@ about “CachedDag.cache should be populated with inputs that it was called on�
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.scrap.cached_dag.CachedDag"><code class="docutils literal notranslate"><span class="pre">CachedDag</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.scrap.cached_dag.CachedDag.roots_for"><code class="docutils literal notranslate"><span class="pre">CachedDag.roots_for()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.scrap.cached_dag.NoOverwritesDict"><code class="docutils literal notranslate"><span class="pre">NoOverwritesDict</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.scrap.cached_dag.NotAllowed"><code class="docutils literal notranslate"><span class="pre">NotAllowed</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.scrap.cached_dag.OverWritesNotAllowedError"><code class="docutils literal notranslate"><span class="pre">OverWritesNotAllowedError</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.scrap.cached_dag.cached_dag_test"><code class="docutils literal notranslate"><span class="pre">cached_dag_test()</span></code></a></li>
 </ul>
   </nav></div>

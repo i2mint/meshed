@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="alternate" type="text/markdown" href="cached_dag.html.md">
+<link rel="describedby" href="../../llms.txt" type="text/markdown">
+    <title>meshed.cached_dag &#8212; meshed</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/epythet.css?v=20ed5096" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../_static/documentation_options.js?v=5e4102fe"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fd10adb8"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/meshed/cached_dag';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.182" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">meshed</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/i2mint/meshed" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">meshed.cached_dag</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for meshed.cached_dag</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Compute any var node of a DAG from what it depends on, caching what was computed.</span>
+
+<span class="sd">:class:`CachedDag` wraps a :class:`~meshed.dag.DAG`: ``cached(k, **inputs)`` computes the</span>
+<span class="sd">var node ``k`` from the given inputs, the cache, and the defaults, and keeps every input</span>
+<span class="sd">and intermediate value for later calls. :meth:`CachedDag.inject_methods` gives an object</span>
+<span class="sd">one method per computable var node, whose signature lists just the root inputs that</span>
+<span class="sd">node still needs (i2mint/meshed#36).</span>
+
+<span class="sd">&gt;&gt;&gt; from meshed import DAG</span>
+<span class="sd">&gt;&gt;&gt; def f(a, x=1):</span>
+<span class="sd">...     return a + x</span>
+<span class="sd">&gt;&gt;&gt; def g(a, y=2):</span>
+<span class="sd">...     return a * y</span>
+<span class="sd">&gt;&gt;&gt; cached = CachedDag(DAG([f, g]))</span>
+<span class="sd">&gt;&gt;&gt; cached('g', a=1), cached('f')</span>
+<span class="sd">(2, 2)</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChainMap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Signature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">meshed.itools</span><span class="w"> </span><span class="kn">import</span> <span class="n">edge_reversed_graph</span><span class="p">,</span> <span class="n">descendants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">Param</span><span class="p">,</span> <span class="n">sort_params</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"CachedDag"</span><span class="p">,</span> <span class="s2">"NotAllowed"</span><span class="p">,</span> <span class="s2">"OverWritesNotAllowedError"</span><span class="p">,</span> <span class="s2">"NoOverwritesDict"</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="NotAllowed">
+<a class="viewcode-back" href="../../_autosummary/meshed.cached_dag.html#meshed.cached_dag.NotAllowed">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NotAllowed</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""To use to indicate that something is not allowed"""</span></div>
+
+
+
+<div class="viewcode-block" id="OverWritesNotAllowedError">
+<a class="viewcode-back" href="../../_autosummary/meshed.cached_dag.html#meshed.cached_dag.OverWritesNotAllowedError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OverWritesNotAllowedError</span><span class="p">(</span><span class="n">NotAllowed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Error to raise when a writes to existing keys are not allowed"""</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_first_item_and_assert_unicity</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+    <span class="n">seq_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">seq_length</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">seq_length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"There should be one and one only item in the "</span> <span class="sa">f</span><span class="s2">"sequence: </span><span class="si">{</span><span class="n">seq</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">seq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func_node_names_and_outs</span><span class="p">(</span><span class="n">dag</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">func_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func_node</span><span class="o">.</span><span class="n">out</span>
+
+
+<div class="viewcode-block" id="NoOverwritesDict">
+<a class="viewcode-back" href="../../_autosummary/meshed.cached_dag.html#meshed.cached_dag.NoOverwritesDict">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NoOverwritesDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    A dict where you're not allowed to write to a key that already has a value in it.</span>
+
+<span class="sd">    &gt;&gt;&gt; d = NoOverwritesDict(a=1, b=2)</span>
+<span class="sd">    &gt;&gt;&gt; d</span>
+<span class="sd">    {'a': 1, 'b': 2}</span>
+
+<span class="sd">    Writing is allowed, in new keys</span>
+
+<span class="sd">    &gt;&gt;&gt; d['c'] = 3</span>
+<span class="sd">    &gt;&gt;&gt; d</span>
+<span class="sd">    {'a': 1, 'b': 2, 'c': 3}</span>
+
+<span class="sd">    It's also okay to write into an existing key if the value it holds is identical.</span>
+<span class="sd">    In fact, the write doesn't even happen.</span>
+
+<span class="sd">    &gt;&gt;&gt; d['b'] = 2</span>
+
+<span class="sd">    But if we try to write a different value...</span>
+
+<span class="sd">    &gt;&gt;&gt; d['b'] = 22  # doctest: +IGNORE_EXCEPTION_DETAIL</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    cached_dag.OverWritesNotAllowedError: The b key already exists and you're not allowed to change its value</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">OverWritesNotAllowedError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"The </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> key already exists and you're not allowed to change its "</span>
+                <span class="sa">f</span><span class="s2">"value"</span>
+            <span class="p">)</span></div>
+
+        <span class="c1"># else, don't even write the value since it's the same</span>
+
+
+<span class="n">NoSuchKey</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s2">"NoSuchKey"</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_same_value</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Whether ``a`` and ``b`` are the same value, never raising.</span>
+
+<span class="sd">    Identity counts as sameness (so a ``nan`` object equals itself). Values whose</span>
+<span class="sd">    ``==`` doesn't give a plain truth value (e.g. numpy arrays) are only considered</span>
+<span class="sd">    the same if they are identical.</span>
+
+<span class="sd">    &gt;&gt;&gt; _is_same_value(1, 1), _is_same_value(1, 2)</span>
+<span class="sd">    (True, False)</span>
+<span class="sd">    &gt;&gt;&gt; nan = float('nan')</span>
+<span class="sd">    &gt;&gt;&gt; _is_same_value(nan, nan), _is_same_value(nan, float('nan'))</span>
+<span class="sd">    (True, False)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="n">b</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="c1"># TODO: Cache validation and invalidation</span>
+<span class="c1"># TODO: Continue constructing uppward towards lazyprop-using class (instances are</span>
+<span class="c1">#  varnodes)</span>
+<div class="viewcode-block" id="CachedDag">
+<a class="viewcode-back" href="../../_autosummary/meshed.cached_dag.html#meshed.cached_dag.CachedDag">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CachedDag</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Wraps a DAG, using it to compute any of it's var nodes from it's dependents,</span>
+<span class="sd">    with the capability of caching intermediate var nodes for later reuse.</span>
+
+<span class="sd">    &gt;&gt;&gt; def add(a, b=1):</span>
+<span class="sd">    ...     return a + b</span>
+<span class="sd">    &gt;&gt;&gt; def mult(x, y=2):</span>
+<span class="sd">    ...     return x * y</span>
+<span class="sd">    &gt;&gt;&gt; def subtract(a, b=4):</span>
+<span class="sd">    ...     return a - b</span>
+<span class="sd">    &gt;&gt;&gt; from meshed import code_to_dag</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; @code_to_dag(func_src=locals())</span>
+<span class="sd">    ... def dag(w, ww, www):</span>
+<span class="sd">    ...     x = mult(w, ww)</span>
+<span class="sd">    ...     y = add(x, www)</span>
+<span class="sd">    ...     z = subtract(x, y)</span>
+<span class="sd">    &gt;&gt;&gt; print(dag.dot_digraph_ascii())  # doctest: +SKIP</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">                        w</span>
+
+<span class="sd">                     │</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">                   ┌──────────┐</span>
+<span class="sd">         ww=   ──▶ │   mult   │</span>
+<span class="sd">                   └──────────┘</span>
+<span class="sd">                     │</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+
+<span class="sd">                        x       ─┐</span>
+<span class="sd">                                 │</span>
+<span class="sd">                     │           │</span>
+<span class="sd">                     │           │</span>
+<span class="sd">                     ▼           │</span>
+<span class="sd">                   ┌──────────┐  │</span>
+<span class="sd">         www=  ──▶ │   add    │  │</span>
+<span class="sd">                   └──────────┘  │</span>
+<span class="sd">                     │           │</span>
+<span class="sd">                     │           │</span>
+<span class="sd">                     ▼           │</span>
+<span class="sd">                                 │</span>
+<span class="sd">                        y=       │</span>
+<span class="sd">                                 │</span>
+<span class="sd">                     │           │</span>
+<span class="sd">                     │           │</span>
+<span class="sd">                     ▼           │</span>
+<span class="sd">                   ┌──────────┐  │</span>
+<span class="sd">                   │ subtract │ ◀┘</span>
+<span class="sd">                   └──────────┘</span>
+<span class="sd">                     │</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+
+<span class="sd">                        z</span>
+
+<span class="sd">    &gt;&gt;&gt; from inspect import signature</span>
+<span class="sd">    &gt;&gt;&gt; g = CachedDag(dag)</span>
+<span class="sd">    &gt;&gt;&gt; signature(g)</span>
+<span class="sd">    &lt;Signature (k, /, **input_kwargs)&gt;</span>
+
+<span class="sd">    We can get ``ww`` because it has a default: the dag's own signature</span>
+<span class="sd">    (``w, ww, www``) has none, but ``ww`` feeds ``mult``'s ``y=2``, and a root takes</span>
+<span class="sd">    the default of the parameters it binds (when they agree):</span>
+
+<span class="sd">    &gt;&gt;&gt; g.defaults</span>
+<span class="sd">    {'ww': 2, 'www': 1}</span>
+<span class="sd">    &gt;&gt;&gt; g('ww')</span>
+<span class="sd">    2</span>
+
+<span class="sd">    But we can't get ``y`` because we don't have what it depends on:</span>
+
+<span class="sd">    &gt;&gt;&gt; g('y')</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'</span>
+
+<span class="sd">    It needs a ``w?``! No, it needs an ``x``! But to get an ``x`` you need a ``w``,</span>
+<span class="sd">    and...</span>
+
+<span class="sd">    &gt;&gt;&gt; g('x')</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    TypeError: The input_kwargs of a dag call is missing 1 required argument: 'w'</span>
+
+<span class="sd">    So let's give it a w!</span>
+
+<span class="sd">    &gt;&gt;&gt; g('x', w=3)  # == 3 * 2</span>
+<span class="sd">    6</span>
+
+<span class="sd">    And now this works:</span>
+
+<span class="sd">    &gt;&gt;&gt; g('x')</span>
+<span class="sd">    6</span>
+
+<span class="sd">    because</span>
+
+<span class="sd">    &gt;&gt;&gt; g.cache</span>
+<span class="sd">    {'x': 6, 'w': 3}</span>
+
+<span class="sd">    and this will work too:</span>
+
+<span class="sd">    &gt;&gt;&gt; g('y')</span>
+<span class="sd">    7</span>
+<span class="sd">    &gt;&gt;&gt; g.cache</span>
+<span class="sd">    {'x': 6, 'w': 3, 'y': 7}</span>
+
+<span class="sd">    An input that contradicts the cache is refused rather than silently ignored:</span>
+
+<span class="sd">    &gt;&gt;&gt; g('x', w=10)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    ValueError: input_kwargs can't contain keys that are already in cache with a different value! These names were in both: {'w'}</span>
+
+<span class="sd">    Methods per var node, each asking only for the roots it still needs:</span>
+
+<span class="sd">    &gt;&gt;&gt; fresh = CachedDag(dag).inject_methods()</span>
+<span class="sd">    &gt;&gt;&gt; signature(fresh.y)</span>
+<span class="sd">    &lt;Signature (*, w, ww=2, www=1)&gt;</span>
+<span class="sd">    &gt;&gt;&gt; fresh.x(w=3)</span>
+<span class="sd">    6</span>
+<span class="sd">    &gt;&gt;&gt; signature(fresh.y)  # w is cached now</span>
+<span class="sd">    &lt;Signature (*, ww=2, www=1)&gt;</span>
+<span class="sd">    &gt;&gt;&gt; fresh.z()</span>
+<span class="sd">    -1</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dag</span> <span class="o">=</span> <span class="n">dag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reversed_graph</span> <span class="o">=</span> <span class="n">edge_reversed_graph</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">graph_ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roots</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">roots</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leafs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">leafs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func_node_of_id</span> <span class="o">=</span> <span class="p">{</span><span class="n">fn</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">fn</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_of_func_node_name</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">func_node_names_and_outs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dag_sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">_root_defaults</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="p">),</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_dag_sig</span><span class="o">.</span><span class="n">defaults</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">cache</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">NoOverwritesDict</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s2">"This type of cache is not implemented (must resolve to a Mapping): "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cache</span><span class="si">=}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">cache</span>
+        <span class="c1"># Cached values (computed outputs and inputs the dag was called with) take</span>
+        <span class="c1"># precedence over the dag's defaults.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="n">ChainMap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__name__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed_graph</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">func_node_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+        <span class="n">func_node_name</span> <span class="o">=</span> <span class="n">get_first_item_and_assert_unicity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reversed_graph</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">func_node_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_of_func_node_name</span><span class="p">[</span><span class="n">func_node_name</span><span class="p">]</span>
+
+    <span class="c1"># TODO: Consider having args and kwargs instead of just input_kwargs.</span>
+    <span class="c1">#   or making it (k, /, *args, **kwargs)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">input_kwargs</span><span class="p">):</span>
+        <span class="n">input_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">input_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_inputs_against_cache</span><span class="p">(</span><span class="n">input_kwargs</span><span class="p">)</span>
+        <span class="n">keys_before</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">input_kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="c1"># Roll back the outputs computed during this failed call, so the cache</span>
+            <span class="c1"># stays consistent with its (uncached) inputs and the call can be retried.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span> <span class="o">-</span> <span class="n">keys_before</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover - e.g. a cache without __delitem__</span>
+                <span class="k">pass</span>  <span class="c1"># never mask the original error with a rollback error</span>
+            <span class="k">raise</span>
+        <span class="c1"># Only persist inputs once they led to a successful computation, so that a</span>
+        <span class="c1"># failed (e.g. mistaken) call doesn't pin values in the cache.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_inputs</span><span class="p">(</span><span class="n">input_kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_inputs_against_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Raise a ``ValueError`` if ``input_kwargs`` contradicts the cache.</span>
+
+<span class="sd">        An input contradicts the cache if:</span>
+
+<span class="sd">        - it is already cached with a different value, or</span>
+<span class="sd">        - it is not cached, but cached outputs downstream of it were computed using</span>
+<span class="sd">          its default (or it has no default), and the given value differs from it, or</span>
+<span class="sd">        - it is not cached and not a root, but the cache (and the dag's defaults)</span>
+<span class="sd">          already determine everything it would be computed from.</span>
+
+<span class="sd">        Note that inputs are only validated against the *cache*: values given in the</span>
+<span class="sd">        same call are not checked against each other (``c('h', f=100, a=1)`` is</span>
+<span class="sd">        accepted even if ``f`` wouldn't be computed as ``100`` from ``a=1``).</span>
+
+<span class="sd">        Values are compared with ``_is_same_value``: for values without a plain</span>
+<span class="sd">        ``==`` truth value (e.g. numpy arrays), only the very same object counts as</span>
+<span class="sd">        the same value.</span>
+<span class="sd">        """</span>
+        <span class="n">conflicts</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">name</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">input_kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_same_value</span><span class="p">(</span><span class="n">input_kwargs</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">conflicts</span><span class="p">:</span>
+            <span class="c1"># TODO: Can give the user a more informative/correct message, since the</span>
+            <span class="c1">#  user has more options than just the root nodes: They some combination of</span>
+            <span class="c1">#  intermediates would also satisfy requirements.</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"input_kwargs can't contain keys that are already in cache with a "</span>
+                <span class="sa">f</span><span class="s2">"different value! These names were in both: </span><span class="si">{</span><span class="n">conflicts</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">input_kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">cached_downstream</span> <span class="o">=</span> <span class="n">descendants</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">graph_ids</span><span class="p">,</span> <span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cache</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">cached_downstream</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_is_same_value</span><span class="p">(</span>
+                <span class="n">input_kwargs</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">NoSuchKey</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"The value given for </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> contradicts the cache: "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">cached_downstream</span><span class="p">)</span><span class="si">}</span><span class="s2"> were already computed without it."</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_determined_by_cache</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="n">cached_upstream</span> <span class="o">=</span> <span class="n">descendants</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reversed_graph</span><span class="p">,</span> <span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cache</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> is already determined by the cache "</span>
+                    <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">cached_upstream</span><span class="p">)</span><span class="si">}</span><span class="s2">), so it can't be given as an input."</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_determined_by_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Whether ``k``'s value is already fixed by the cache and the dag's defaults</span>
+<span class="sd">        (that is, whether ``self(k)``, with no inputs, would give a value)."""</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="ow">or</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">func_node_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_node_id</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">func_node_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># a root node with no value in sight</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">func_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_node_of_id</span><span class="p">[</span><span class="n">func_node_id</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_is_determined_by_cache</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">input_kwargs</span><span class="p">):</span>
+        <span class="n">_cache</span> <span class="o">=</span> <span class="n">ChainMap</span><span class="p">(</span><span class="n">input_kwargs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_cache</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">func_node_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_node_id</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">func_node_id</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">output</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">func_node_id</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">output</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">func_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_node_of_id</span><span class="p">[</span><span class="n">func_node_id</span><span class="p">]</span>
+                <span class="n">input_sources</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">src</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">input_kwargs</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="p">}</span>
+                <span class="c1"># TODO: do we need to include **self.defaults in the middle?</span>
+                <span class="n">inputs</span> <span class="o">=</span> <span class="n">ChainMap</span><span class="p">(</span><span class="n">_cache</span><span class="p">,</span> <span class="n">input_sources</span><span class="p">)</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">call_on_scope</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">write_output_into_scope</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">func_node_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+                <span class="k">return</span> <span class="n">output</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># k is a root node</span>
+            <span class="k">assert</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Was expecting this to be a root node: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">ChainMap</span><span class="p">(</span><span class="n">input_kwargs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">output</span> <span class="o">:=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">NoSuchKey</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NoSuchKey</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">output</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"The input_kwargs of a </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> call is missing 1 required "</span>
+                    <span class="sa">f</span><span class="s2">"argument: '</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cache_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Persist the (explicitly given) values of the dag's var nodes in the cache,</span>
+<span class="sd">        so later calls can reuse them (see https://github.com/i2mint/meshed/issues/34).</span>
+<span class="sd">        Keys that are not var nodes of the dag, or that are already cached (and were</span>
+<span class="sd">        validated to hold the same value), are not written."""</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">input_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CachedDag.roots_for">
+<a class="viewcode-back" href="../../_autosummary/meshed.cached_dag.html#meshed.cached_dag.CachedDag.roots_for">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">roots_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        The set of roots that lead to ``node``.</span>
+
+<span class="sd">        &gt;&gt;&gt; from meshed.makers import code_to_dag</span>
+<span class="sd">        &gt;&gt;&gt; @code_to_dag</span>
+<span class="sd">        ... def dag():</span>
+<span class="sd">        ...     x = mult(w, ww)</span>
+<span class="sd">        ...     y = add(x, www)</span>
+<span class="sd">        ...     z = subtract(x, y)</span>
+<span class="sd">        &gt;&gt;&gt; print(dag.synopsis_string())</span>
+<span class="sd">        w,ww -&gt; mult -&gt; x</span>
+<span class="sd">        x,www -&gt; add -&gt; y</span>
+<span class="sd">        x,y -&gt; subtract -&gt; z</span>
+<span class="sd">        &gt;&gt;&gt; g = CachedDag(dag)</span>
+<span class="sd">        &gt;&gt;&gt; sorted(g.roots_for('x'))</span>
+<span class="sd">        ['w', 'ww']</span>
+<span class="sd">        &gt;&gt;&gt; sorted(g.roots_for('y'))</span>
+<span class="sd">        ['w', 'ww', 'www']</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="nb">filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">,</span> <span class="n">descendants</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reversed_graph</span><span class="p">,</span> <span class="n">node</span><span class="p">))</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_signature_for_node_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The keyword-only roots ``node`` still needs (not cached), with their defaults."""</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dag_sig</span><span class="o">.</span><span class="n">names</span><span class="p">)}</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">():</span>
+            <span class="n">needed</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots_for</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">if</span> <span class="n">r</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">),</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)),</span> <span class="n">name</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">needed</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">Param</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">kind</span><span class="o">=</span><span class="n">Param</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span><span class="p">,</span>
+                    <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">Param</span><span class="o">.</span><span class="n">empty</span><span class="p">),</span>
+                    <span class="n">annotation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dag_sig</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">Param</span><span class="o">.</span><span class="n">empty</span><span class="p">),</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Sig</span><span class="p">(</span><span class="n">sort_params</span><span class="p">(</span><span class="n">gen</span><span class="p">()))</span>
+
+<div class="viewcode-block" id="CachedDag.inject_methods">
+<a class="viewcode-back" href="../../_autosummary/meshed.cached_dag.html#meshed.cached_dag.CachedDag.inject_methods">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inject_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Give ``obj`` (default: a new namespace) one method per non-root var node.</span>
+
+<span class="sd">        ``obj.&lt;node&gt;(**roots)`` is ``self(&lt;node&gt;, **roots)``. Its signature is computed</span>
+<span class="sd">        when asked, so it always lists the roots ``&lt;node&gt;`` still needs given the cache</span>
+<span class="sd">        at that moment, with the defaults the dag (or the nodes it feeds) gives them.</span>
+<span class="sd">        """</span>
+        <span class="n">non_root_var_nodes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_nodes</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleNamespace</span>
+
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">var_node</span> <span class="ow">in</span> <span class="n">non_root_var_nodes</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">var_node</span><span class="p">,</span> <span class="n">_NodeMethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var_node</span><span class="p">))</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_NodeMethod</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``cached_dag(node, **kwargs)`` as a callable whose signature follows the cache."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cached_dag</span><span class="p">:</span> <span class="n">CachedDag</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_dag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span> <span class="o">=</span> <span class="n">cached_dag</span><span class="p">,</span> <span class="n">node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__qualname__</span> <span class="o">=</span> <span class="n">node</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__signature__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Signature</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cached_dag</span><span class="o">.</span><span class="n">_signature_for_node_method</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">)</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_dag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span><span class="si">}</span><span class="s2">&gt;"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_root_defaults</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Defaults roots take from the function parameters they bind to, when those agree.</span>
+
+<span class="sd">    A root bound to parameters with different defaults (or one without) gets none: no</span>
+<span class="sd">    choice between them would be right.</span>
+<span class="sd">    """</span>
+    <span class="n">roots</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">roots</span><span class="p">)</span>
+    <span class="n">seen</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">func_node</span> <span class="ow">in</span> <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">:</span>
+        <span class="n">defaults</span> <span class="o">=</span> <span class="n">func_node</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">defaults</span>
+        <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">func_node</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">roots</span><span class="p">:</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">NoSuchKey</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="n">var</span><span class="p">:</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">seen</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NoSuchKey</span>
+        <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">_is_same_value</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="p">}</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
