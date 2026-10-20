@@ -18,9 +18,6 @@ Misc utils
 
 Output mermaid code with nodes packed into a single node.
 
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
-
 ```pycon
 >>> mermaid_code = '''
 ... graph TD
@@ -41,3 +38,6 @@ A -->BCE
 A --> D
 D -->BCE
 ```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)

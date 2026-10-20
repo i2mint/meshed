@@ -134,7 +134,7 @@ Determine how the network will be executed.
   **method** – If “parallel”, execute graph operations concurrently
   using a threadpool.
 
-### *class* meshed.ext.gk.Operation(name='None', needs=None, provides=None, params=<factory>)
+### *class* meshed.ext.gk.Operation(name='None', needs=None, provides=None, params=dict())
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 

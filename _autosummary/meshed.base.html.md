@@ -52,11 +52,11 @@ FuncNode(x,y -> add -> total)
 
 ### Classes
 
-| [`FuncNode`](#meshed.base.FuncNode)(func[, name, bind, out, ...])   | A function wrapper that makes the function amenable to operating in a network.                               |
-|-------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| [`Mesh`](#meshed.base.Mesh)(func_nodes)                         | Hold a collection of `FuncNode` objects, with no wiring or execution logic (for that, use `meshed.dag.DAG`). |
+| [`FuncNode`](#meshed.base.FuncNode)(func[, func_id, bind, out, ...])   | A function wrapper that makes the function amenable to operating in a network.                               |
+|----------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| [`Mesh`](#meshed.base.Mesh)(func_nodes)                            | Hold a collection of `FuncNode` objects, with no wiring or execution logic (for that, use `meshed.dag.DAG`). |
 
-### *class* meshed.base.FuncNode(func, name=None, bind=<factory>, out=None, func_label=None, names_maker=<function underscore_func_node_names_maker>, node_validator=<function basic_node_validator>)
+### *class* meshed.base.FuncNode(func, func_id=None, bind=dict(), out=None, func_label=None, names_maker=<function underscore_func_node_names_maker>, node_validator=<function basic_node_validator>, \*, name=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -64,7 +64,8 @@ A function wrapper that makes the function amenable to operating in a network.
 
 * **Parameters:**
   * **func** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)) – Function to wrap
-  * **name** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – The name to associate to the function
+  * **func_id** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – The identifier of the node in a network (also accepted as the
+    legacy keyword `name`; `.name` remains a back-compat alias of `.func_id`)
   * **bind** ([`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)) – The {func_argname: external_name,…} mapping that defines where
     the node will source the data to call the function.
     This only has to be used if the external names are different from the names
@@ -231,6 +232,10 @@ True
 False
 ```
 
+#### *property* name *: [str](https://docs.python.org/3/builtins/stdtypes.html#str)*
+
+Back-compat alias of `func_id`.
+
 #### names_maker(name=None, out=None)
 
 This name maker will resolve names in the following fashion:
@@ -355,7 +360,7 @@ comparator requires the two signatures to match exactly; the default
 `alternative` raises a `ValueError`.
 
 * **Parameters:**
-  * **func_comparator** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], [`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`Comparison`)]) – Called as `func_comparator(fn.func, func)`; a truthy result
+  * **func_comparator** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], `Comparison`]) – Called as `func_comparator(fn.func, func)`; a truthy result
     allows the swap.
   * **ch_func_node** – How to build the new node once the swap is allowed; called as
     `ch_func_node(fn, func=func)`.
@@ -456,9 +461,6 @@ from…
 
 … a single space-separated string
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[`Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)), `Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str))]
-
 ```pycon
 >>> identifier_mapping('x a_b yz')  #
 {'x': 'x', 'a_b': 'a_b', 'yz': 'yz'}
@@ -478,6 +480,9 @@ from…
 {'x': 'y', 'a': 'b'}
 ```
 
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[`Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)), `Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str))]
+
 ### meshed.base.insert_func_if_compatible(func_comparator=<function compare_signatures>)
 
 Make a `ch_func_node_func` variant with `func_comparator` fixed.
@@ -486,9 +491,6 @@ Make a `ch_func_node_func` variant with `func_comparator` fixed.
 
 Whether `obj` is a `FuncNode` (checked by class name, so it survives reloads).
 
-* **Return type:**
-  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
-
 ```pycon
 >>> is_func_node(FuncNode(lambda x: x))
 True
@@ -496,12 +498,12 @@ True
 False
 ```
 
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
+
 ### meshed.base.is_not_func_node(obj)
 
 Whether `obj` is not a `FuncNode`.
-
-* **Return type:**
-  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
 ```pycon
 >>> is_not_func_node(FuncNode(lambda x: x))
@@ -509,6 +511,9 @@ False
 >>> is_not_func_node("I am not a FuncNode: I'm a string")
 True
 ```
+
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
 ### meshed.base.param_to_dot_definition(p, shape='none')
 

@@ -18,9 +18,6 @@ Code related to work on the “From annotated functions to meshes” discussion:
 
 Produces a signature from a Callable type annotation
 
-* **Return type:**
-  [`Signature`](https://docs.python.org/3/library/inspect.html#inspect.Signature)
-
 ```pycon
 >>> from typing import Callable, NewType
 >>> MyType = NewType('MyType', str)
@@ -33,6 +30,9 @@ True
 >>> sig.parameters['arg_01'].annotation
 <class 'str'>
 ```
+
+* **Return type:**
+  [`Signature`](https://docs.python.org/3/library/inspect.html#inspect.Signature)
 
 ### meshed.scrap.annotations_to_meshes.func_types_to_protocol(func_types, name=None, \*, mk_argname=<function try_annotation_name>)
 

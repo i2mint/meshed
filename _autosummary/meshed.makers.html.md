@@ -257,9 +257,6 @@ Make some components (kwargs) based on the `.out` and `.func` of the
 
 Example use: To get from `DAG` to `Slabs`.
 
-* **Return type:**
-  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
-
 ```pycon
 >>> from meshed import DAG, FuncNode
 >>> dag = DAG([
@@ -286,6 +283,9 @@ The inverse of this function is `named_funcs_to_func_nodes`.
 >>> dag2 = DAG(func_nodes)
 >>> assert dag2(x=3) == dag(x=3) == 24
 ```
+
+* **Return type:**
+  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
 
 ### meshed.makers.is_from_ast_module(o)
 
@@ -334,9 +334,6 @@ Make `FuncNode` objects from keyword arguments, using the key as the `.out` of t
 
 Example use: To get from `Slabs` to `DAG`.
 
-* **Return type:**
-  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]
-
 ```pycon
 >>> from meshed import DAG
 >>> func_nodes = list(named_funcs_to_func_nodes(dict(
@@ -356,6 +353,9 @@ The inverse of this function is `func_nodes_to_named_funcs`.
 >>> dag2 = DAG(named_funcs_to_func_nodes(named_funcs))
 >>> assert dag2(x=3) == dag(x=3) == 24
 ```
+
+* **Return type:**
+  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]
 
 ### meshed.makers.node_kwargs_to_func_node_factory(node_kwargs)
 
@@ -518,9 +518,6 @@ Note how the python identifiers are extracted (on the basis of “an unbroken
 sequence of alphanumerical (and underscore) characters”, ignoring all other
 characters).
 
-* **Return type:**
-  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]
-
 ```pycon
 >>> from meshed import DAG
 >>> dag = DAG(
@@ -536,3 +533,6 @@ alpha__bravo -> alpha__0 -> alpha
 alpha__bravo -> bravo__1 -> bravo
 alpha,echo -> golf -> foxtrot
 ```
+
+* **Return type:**
+  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)]

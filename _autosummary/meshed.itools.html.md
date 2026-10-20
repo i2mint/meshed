@@ -126,9 +126,6 @@ set()
 
 Invert the from/to direction of the edges of the graph.
 
-* **Return type:**
-  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`), [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`)]]
-
 ```pycon
 >>> g = dict(a='c', b='cd', c='abd', e='')
 >>> assert edge_reversed_graph(g) == {
@@ -144,6 +141,9 @@ Testing border cases
 >>> assert edge_reversed_graph(dict(e='', a='e')) == {'e': ['a'], 'a': []}
 >>> assert edge_reversed_graph(dict(a='e', e='')) == {'e': ['a'], 'a': []}
 ```
+
+* **Return type:**
+  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[`N`, [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[`N`]]
 
 ### meshed.itools.edges(g)
 
@@ -188,26 +188,24 @@ Makes a graphviz graph using the links specified by dict d
 ### meshed.itools.has_cycle(g)
 
 > Returns a list representing a cycle in the graph if any. An empty list indicates no cycle.
-* **Parameters:**
-  **g** ([`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`), [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`)]]) – 
 
-  The graph to check for cycles, represented as a dictionary where keys are nodes
-  : and values are lists of nodes pointing to the key node (parents of the key node).
+> * **param g:**
+>   The graph to check for cycles, represented as a dictionary where keys are nodes
+>   and values are lists of nodes pointing to the key node (parents of the key node).
 
-  Example usage:
-  ```pycon
-  >>> g = dict(e=['c', 'd'], c=['b'], d=['b'], b=['a'])
-  >>> has_cycle(g)
-  []
-  ```
+> Example usage:
 
-  ```pycon
-  >>> g['a'] = ['e']  # Introducing a cycle
-  >>> has_cycle(g)
-  ['e', 'c', 'b', 'a', 'e']
-  ```
-* **Return type:**
-  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`)]
+> ```pycon
+> >>> g = dict(e=['c', 'd'], c=['b'], d=['b'], b=['a'])
+> >>> has_cycle(g)
+> []
+> ```
+
+> ```pycon
+> >>> g['a'] = ['e']  # Introducing a cycle
+> >>> has_cycle(g)
+> ['e', 'c', 'b', 'a', 'e']
+> ```
 
 Design notes:
 
@@ -231,6 +229,9 @@ being solved, but which doesn’t follow the usual representation of a graph.
 - **Efficient Backtracking**: After exploring a node’s children, the function
   backtracks by removing the node from the recursion stack and the current path,
   ensuring accurate path tracking for subsequent explorations.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[`N`]
 
 ### meshed.itools.has_node(g, node, check_adjacencies=True)
 

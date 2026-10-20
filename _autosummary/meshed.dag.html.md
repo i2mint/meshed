@@ -973,9 +973,6 @@ Print the step number, func node and scope, then return `output` unchanged
 `{out: [names of the func nodes writing to it]}`, for the outs written to by
 more than one func node (the last name is the one whose value is visible).
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
 ```pycon
 >>> def foo(a): return a
 >>> nodes = [FuncNode(foo, name='x1', out='x'), FuncNode(foo, name='x2', out='x')]
@@ -984,6 +981,9 @@ more than one func node (the last name is the one whose value is visible).
 >>> duplicate_outs([FuncNode(foo, name='x1', out='x')])
 {}
 ```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### meshed.dag.duplicate_outs_string(duplicates, , dag_name=None)
 

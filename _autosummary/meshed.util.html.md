@@ -678,9 +678,6 @@ Return `param`, but with no default if its default is `i2`’s `NotSet`.
 not a real default. A DAG treats such a param as required, so that it keeps its
 positional order and merges with same-named params that have no default.
 
-* **Return type:**
-  [`Parameter`](https://docs.python.org/3/library/inspect.html#inspect.Parameter)
-
 ```pycon
 >>> from i2.deco import NotSet
 >>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=NotSet))
@@ -688,6 +685,9 @@ positional order and merges with same-named params that have no default.
 >>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=3))
 <Parameter "x=3">
 ```
+
+* **Return type:**
+  [`Parameter`](https://docs.python.org/3/library/inspect.html#inspect.Parameter)
 
 ### meshed.util.numbered_suffix_renamer(name, sep='_')
 
@@ -755,9 +755,6 @@ True
 Returns a triple (a-b, a&b, b-a) for two iterables a and b.
 The operations are performed as if a and b were sets, but the order in a is conserved.
 
-* **Return type:**
-  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)]
-
 ```pycon
 >>> ordered_set_operations([1, 2, 3, 4], [3, 4, 5, 6])
 ([1, 2], [3, 4], [5, 6])
@@ -772,6 +769,9 @@ The operations are performed as if a and b were sets, but the order in a is cons
 >>> ordered_set_operations([1, 2, 2, 3], [2, 3, 3, 4])
 ([1], [2, 3], [4])
 ```
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)]
 
 ### meshed.util.pairs(xs)
 
@@ -827,9 +827,6 @@ Decorator to assign `var_names` to a `_provides` attribute of function.
 This is meant to be used to indicate to a mesh what var nodes a function can source
 values for.
 
-* **Return type:**
-  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
-
 ```pycon
 >>> @provides('a', 'b')
 ... def f(x):
@@ -858,6 +855,9 @@ for that position:
 >>> h._provides
 ('b', 'h')
 ```
+
+* **Return type:**
+  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
 
 ### meshed.util.replace_item_in_iterable(iterable, condition, replacement, , egress=None)
 

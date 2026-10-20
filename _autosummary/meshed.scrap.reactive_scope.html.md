@@ -7,11 +7,11 @@ propagates information through the scope.
 
 ### Classes
 
-| [`ReactiveFuncNode`](#meshed.scrap.reactive_scope.ReactiveFuncNode)(func[, name, bind, out, ...])   | A `FuncNode` that computes on a scope only if the scope has what it takes                                                                                                  |
-|---------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`ReactiveScope`](#meshed.scrap.reactive_scope.ReactiveScope)([func_nodes, scope_factory])       | A scope that reacts to writes by computing associated functions, themselves writing in the scope, creating a chain reaction that propagates information through the scope. |
+| [`ReactiveFuncNode`](#meshed.scrap.reactive_scope.ReactiveFuncNode)(func[, func_id, bind, out, ...])   | A `FuncNode` that computes on a scope only if the scope has what it takes                                                                                                  |
+|------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`ReactiveScope`](#meshed.scrap.reactive_scope.ReactiveScope)([func_nodes, scope_factory])          | A scope that reacts to writes by computing associated functions, themselves writing in the scope, creating a chain reaction that propagates information through the scope. |
 
-### *class* meshed.scrap.reactive_scope.ReactiveFuncNode(func, name=None, bind=<factory>, out=None, func_label=None, names_maker=<function underscore_func_node_names_maker>, node_validator=<function basic_node_validator>)
+### *class* meshed.scrap.reactive_scope.ReactiveFuncNode(func, func_id=None, bind=dict(), out=None, func_label=None, names_maker=<function underscore_func_node_names_maker>, node_validator=<function basic_node_validator>, \*, name=None)
 
 Bases: [`FuncNode`](meshed.base.html.md#meshed.base.FuncNode)
 

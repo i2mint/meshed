@@ -1,4 +1,4 @@
-> built 2026-09-22 18:56 UTC from f82b64b (master) · meshed 0.1.172. Details: build_info.json
+> built 2026-10-20 05:46 UTC from 125f83b (master) · meshed 0.1.173. Details: build_info.json
 
 # index.html.md
 
@@ -427,11 +427,11 @@ FuncNode(x,y -> add -> total)
 
 ### Classes
 
-| [`FuncNode`](_autosummary/meshed.base.html.md#meshed.base.FuncNode)(func[, name, bind, out, ...])   | A function wrapper that makes the function amenable to operating in a network.                               |
-|-------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| [`Mesh`](_autosummary/meshed.base.html.md#meshed.base.Mesh)(func_nodes)                         | Hold a collection of `FuncNode` objects, with no wiring or execution logic (for that, use `meshed.dag.DAG`). |
+| [`FuncNode`](_autosummary/meshed.base.html.md#meshed.base.FuncNode)(func[, func_id, bind, out, ...])   | A function wrapper that makes the function amenable to operating in a network.                               |
+|----------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| [`Mesh`](_autosummary/meshed.base.html.md#meshed.base.Mesh)(func_nodes)                            | Hold a collection of `FuncNode` objects, with no wiring or execution logic (for that, use `meshed.dag.DAG`). |
 
-### *class* meshed.base.FuncNode(func, name=None, bind=<factory>, out=None, func_label=None, names_maker=<function underscore_func_node_names_maker>, node_validator=<function basic_node_validator>)
+### *class* meshed.base.FuncNode(func, func_id=None, bind=dict(), out=None, func_label=None, names_maker=<function underscore_func_node_names_maker>, node_validator=<function basic_node_validator>, \*, name=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -439,7 +439,8 @@ A function wrapper that makes the function amenable to operating in a network.
 
 * **Parameters:**
   * **func** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)) – Function to wrap
-  * **name** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – The name to associate to the function
+  * **func_id** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – The identifier of the node in a network (also accepted as the
+    legacy keyword `name`; `.name` remains a back-compat alias of `.func_id`)
   * **bind** ([`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)) – The {func_argname: external_name,…} mapping that defines where
     the node will source the data to call the function.
     This only has to be used if the external names are different from the names
@@ -606,6 +607,10 @@ True
 False
 ```
 
+#### *property* name *: [str](https://docs.python.org/3/builtins/stdtypes.html#str)*
+
+Back-compat alias of `func_id`.
+
 #### names_maker(name=None, out=None)
 
 This name maker will resolve names in the following fashion:
@@ -730,7 +735,7 @@ comparator requires the two signatures to match exactly; the default
 `alternative` raises a `ValueError`.
 
 * **Parameters:**
-  * **func_comparator** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], [`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`Comparison`)]) – Called as `func_comparator(fn.func, func)`; a truthy result
+  * **func_comparator** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], `Comparison`]) – Called as `func_comparator(fn.func, func)`; a truthy result
     allows the swap.
   * **ch_func_node** – How to build the new node once the swap is allowed; called as
     `ch_func_node(fn, func=func)`.
@@ -831,9 +836,6 @@ from…
 
 … a single space-separated string
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[`Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)), `Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str))]
-
 ```pycon
 >>> identifier_mapping('x a_b yz')  #
 {'x': 'x', 'a_b': 'a_b', 'yz': 'yz'}
@@ -853,6 +855,9 @@ from…
 {'x': 'y', 'a': 'b'}
 ```
 
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[`Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)), `Identifier` ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str))]
+
 ### meshed.base.insert_func_if_compatible(func_comparator=<function compare_signatures>)
 
 Make a `ch_func_node_func` variant with `func_comparator` fixed.
@@ -861,9 +866,6 @@ Make a `ch_func_node_func` variant with `func_comparator` fixed.
 
 Whether `obj` is a `FuncNode` (checked by class name, so it survives reloads).
 
-* **Return type:**
-  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
-
 ```pycon
 >>> is_func_node(FuncNode(lambda x: x))
 True
@@ -871,12 +873,12 @@ True
 False
 ```
 
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
+
 ### meshed.base.is_not_func_node(obj)
 
 Whether `obj` is not a `FuncNode`.
-
-* **Return type:**
-  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
 ```pycon
 >>> is_not_func_node(FuncNode(lambda x: x))
@@ -884,6 +886,9 @@ False
 >>> is_not_func_node("I am not a FuncNode: I'm a string")
 True
 ```
+
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
 ### meshed.base.param_to_dot_definition(p, shape='none')
 
@@ -2137,9 +2142,6 @@ Print the step number, func node and scope, then return `output` unchanged
 `{out: [names of the func nodes writing to it]}`, for the outs written to by
 more than one func node (the last name is the one whose value is visible).
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
 ```pycon
 >>> def foo(a): return a
 >>> nodes = [FuncNode(foo, name='x1', out='x'), FuncNode(foo, name='x2', out='x')]
@@ -2148,6 +2150,9 @@ more than one func node (the last name is the one whose value is visible).
 >>> duplicate_outs([FuncNode(foo, name='x1', out='x')])
 {}
 ```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### meshed.dag.duplicate_outs_string(duplicates, , dag_name=None)
 
@@ -2645,7 +2650,7 @@ Determine how the network will be executed.
   **method** – If “parallel”, execute graph operations concurrently
   using a threadpool.
 
-### *class* meshed.ext.gk.Operation(name='None', needs=None, provides=None, params=<factory>)
+### *class* meshed.ext.gk.Operation(name='None', needs=None, provides=None, params=dict())
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -2964,9 +2969,6 @@ set()
 
 Invert the from/to direction of the edges of the graph.
 
-* **Return type:**
-  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`), [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`)]]
-
 ```pycon
 >>> g = dict(a='c', b='cd', c='abd', e='')
 >>> assert edge_reversed_graph(g) == {
@@ -2982,6 +2984,9 @@ Testing border cases
 >>> assert edge_reversed_graph(dict(e='', a='e')) == {'e': ['a'], 'a': []}
 >>> assert edge_reversed_graph(dict(a='e', e='')) == {'e': ['a'], 'a': []}
 ```
+
+* **Return type:**
+  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[`N`, [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[`N`]]
 
 ### meshed.itools.edges(g)
 
@@ -3026,26 +3031,24 @@ Makes a graphviz graph using the links specified by dict d
 ### meshed.itools.has_cycle(g)
 
 > Returns a list representing a cycle in the graph if any. An empty list indicates no cycle.
-* **Parameters:**
-  **g** ([`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`), [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`)]]) – 
 
-  The graph to check for cycles, represented as a dictionary where keys are nodes
-  : and values are lists of nodes pointing to the key node (parents of the key node).
+> * **param g:**
+>   The graph to check for cycles, represented as a dictionary where keys are nodes
+>   and values are lists of nodes pointing to the key node (parents of the key node).
 
-  Example usage:
-  ```pycon
-  >>> g = dict(e=['c', 'd'], c=['b'], d=['b'], b=['a'])
-  >>> has_cycle(g)
-  []
-  ```
+> Example usage:
 
-  ```pycon
-  >>> g['a'] = ['e']  # Introducing a cycle
-  >>> has_cycle(g)
-  ['e', 'c', 'b', 'a', 'e']
-  ```
-* **Return type:**
-  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`N`)]
+> ```pycon
+> >>> g = dict(e=['c', 'd'], c=['b'], d=['b'], b=['a'])
+> >>> has_cycle(g)
+> []
+> ```
+
+> ```pycon
+> >>> g['a'] = ['e']  # Introducing a cycle
+> >>> has_cycle(g)
+> ['e', 'c', 'b', 'a', 'e']
+> ```
 
 Design notes:
 
@@ -3069,6 +3072,9 @@ being solved, but which doesn’t follow the usual representation of a graph.
 - **Efficient Backtracking**: After exploring a node’s children, the function
   backtracks by removing the node from the recursion stack and the current path,
   ensuring accurate path tracking for subsequent explorations.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[`N`]
 
 ### meshed.itools.has_node(g, node, check_adjacencies=True)
 
@@ -3580,9 +3586,6 @@ Make some components (kwargs) based on the `.out` and `.func` of the
 
 Example use: To get from `DAG` to `Slabs`.
 
-* **Return type:**
-  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
-
 ```pycon
 >>> from meshed import DAG, FuncNode
 >>> dag = DAG([
@@ -3609,6 +3612,9 @@ The inverse of this function is `named_funcs_to_func_nodes`.
 >>> dag2 = DAG(func_nodes)
 >>> assert dag2(x=3) == dag(x=3) == 24
 ```
+
+* **Return type:**
+  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
 
 ### meshed.makers.is_from_ast_module(o)
 
@@ -3657,9 +3663,6 @@ Make `FuncNode` objects from keyword arguments, using the key as the `.out` of t
 
 Example use: To get from `Slabs` to `DAG`.
 
-* **Return type:**
-  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](_autosummary/meshed.base.html.md#meshed.base.FuncNode)]
-
 ```pycon
 >>> from meshed import DAG
 >>> func_nodes = list(named_funcs_to_func_nodes(dict(
@@ -3679,6 +3682,9 @@ The inverse of this function is `func_nodes_to_named_funcs`.
 >>> dag2 = DAG(named_funcs_to_func_nodes(named_funcs))
 >>> assert dag2(x=3) == dag(x=3) == 24
 ```
+
+* **Return type:**
+  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](_autosummary/meshed.base.html.md#meshed.base.FuncNode)]
 
 ### meshed.makers.node_kwargs_to_func_node_factory(node_kwargs)
 
@@ -3841,9 +3847,6 @@ Note how the python identifiers are extracted (on the basis of “an unbroken
 sequence of alphanumerical (and underscore) characters”, ignoring all other
 characters).
 
-* **Return type:**
-  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](_autosummary/meshed.base.html.md#meshed.base.FuncNode)]
-
 ```pycon
 >>> from meshed import DAG
 >>> dag = DAG(
@@ -3859,6 +3862,9 @@ alpha__bravo -> alpha__0 -> alpha
 alpha__bravo -> bravo__1 -> bravo
 alpha,echo -> golf -> foxtrot
 ```
+
+* **Return type:**
+  [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`FuncNode`](_autosummary/meshed.base.html.md#meshed.base.FuncNode)]
 
 
 # _autosummary/meshed.scrap.annotations_to_meshes.html.md
@@ -3883,9 +3889,6 @@ Code related to work on the “From annotated functions to meshes” discussion:
 
 Produces a signature from a Callable type annotation
 
-* **Return type:**
-  [`Signature`](https://docs.python.org/3/library/inspect.html#inspect.Signature)
-
 ```pycon
 >>> from typing import Callable, NewType
 >>> MyType = NewType('MyType', str)
@@ -3898,6 +3901,9 @@ True
 >>> sig.parameters['arg_01'].annotation
 <class 'str'>
 ```
+
+* **Return type:**
+  [`Signature`](https://docs.python.org/3/library/inspect.html#inspect.Signature)
 
 ### meshed.scrap.annotations_to_meshes.func_types_to_protocol(func_types, name=None, \*, mk_argname=<function try_annotation_name>)
 
@@ -4231,9 +4237,6 @@ Remove the code corresponding to decorators from a source code string.
 If decorator_names is None, will remove all decorators.
 If decorator_names is an iterable of strings, will remove the decorators with those names.
 
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
-
 ### Examples
 
 ```pycon
@@ -4259,6 +4262,9 @@ def func():
 def func():
     pass
 ```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 
 # _autosummary/meshed.scrap.conversion.html.md
@@ -4328,7 +4334,7 @@ Determine how the network will be executed.
   **method** – If “parallel”, execute graph operations concurrently
   using a threadpool.
 
-### *class* meshed.scrap.gk_with_networkx.Operation(name='None', needs=None, provides=None, params=<factory>)
+### *class* meshed.scrap.gk_with_networkx.Operation(name='None', needs=None, provides=None, params=dict())
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
@@ -4455,9 +4461,6 @@ Misc utils
 
 Output mermaid code with nodes packed into a single node.
 
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
-
 ```pycon
 >>> mermaid_code = '''
 ... graph TD
@@ -4479,6 +4482,9 @@ A --> D
 D -->BCE
 ```
 
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
 
 # _autosummary/meshed.scrap.reactive_scope.html.md
 
@@ -4491,11 +4497,11 @@ propagates information through the scope.
 
 ### Classes
 
-| [`ReactiveFuncNode`](_autosummary/meshed.scrap.reactive_scope.html.md#meshed.scrap.reactive_scope.ReactiveFuncNode)(func[, name, bind, out, ...])   | A `FuncNode` that computes on a scope only if the scope has what it takes                                                                                                  |
-|---------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`ReactiveScope`](_autosummary/meshed.scrap.reactive_scope.html.md#meshed.scrap.reactive_scope.ReactiveScope)([func_nodes, scope_factory])       | A scope that reacts to writes by computing associated functions, themselves writing in the scope, creating a chain reaction that propagates information through the scope. |
+| [`ReactiveFuncNode`](_autosummary/meshed.scrap.reactive_scope.html.md#meshed.scrap.reactive_scope.ReactiveFuncNode)(func[, func_id, bind, out, ...])   | A `FuncNode` that computes on a scope only if the scope has what it takes                                                                                                  |
+|------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`ReactiveScope`](_autosummary/meshed.scrap.reactive_scope.html.md#meshed.scrap.reactive_scope.ReactiveScope)([func_nodes, scope_factory])          | A scope that reacts to writes by computing associated functions, themselves writing in the scope, creating a chain reaction that propagates information through the scope. |
 
-### *class* meshed.scrap.reactive_scope.ReactiveFuncNode(func, name=None, bind=<factory>, out=None, func_label=None, names_maker=<function underscore_func_node_names_maker>, node_validator=<function basic_node_validator>)
+### *class* meshed.scrap.reactive_scope.ReactiveFuncNode(func, func_id=None, bind=dict(), out=None, func_label=None, names_maker=<function underscore_func_node_names_maker>, node_validator=<function basic_node_validator>, \*, name=None)
 
 Bases: [`FuncNode`](_autosummary/meshed.base.html.md#meshed.base.FuncNode)
 
@@ -5797,9 +5803,6 @@ Return `param`, but with no default if its default is `i2`’s `NotSet`.
 not a real default. A DAG treats such a param as required, so that it keeps its
 positional order and merges with same-named params that have no default.
 
-* **Return type:**
-  [`Parameter`](https://docs.python.org/3/library/inspect.html#inspect.Parameter)
-
 ```pycon
 >>> from i2.deco import NotSet
 >>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=NotSet))
@@ -5807,6 +5810,9 @@ positional order and merges with same-named params that have no default.
 >>> not_set_to_empty(Parameter('x', Parameter.KEYWORD_ONLY, default=3))
 <Parameter "x=3">
 ```
+
+* **Return type:**
+  [`Parameter`](https://docs.python.org/3/library/inspect.html#inspect.Parameter)
 
 ### meshed.util.numbered_suffix_renamer(name, sep='_')
 
@@ -5874,9 +5880,6 @@ True
 Returns a triple (a-b, a&b, b-a) for two iterables a and b.
 The operations are performed as if a and b were sets, but the order in a is conserved.
 
-* **Return type:**
-  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)]
-
 ```pycon
 >>> ordered_set_operations([1, 2, 3, 4], [3, 4, 5, 6])
 ([1, 2], [3, 4], [5, 6])
@@ -5891,6 +5894,9 @@ The operations are performed as if a and b were sets, but the order in a is cons
 >>> ordered_set_operations([1, 2, 2, 3], [2, 3, 3, 4])
 ([1], [2, 3], [4])
 ```
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)]
 
 ### meshed.util.pairs(xs)
 
@@ -5946,9 +5952,6 @@ Decorator to assign `var_names` to a `_provides` attribute of function.
 This is meant to be used to indicate to a mesh what var nodes a function can source
 values for.
 
-* **Return type:**
-  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
-
 ```pycon
 >>> @provides('a', 'b')
 ... def f(x):
@@ -5977,6 +5980,9 @@ for that position:
 >>> h._provides
 ('b', 'h')
 ```
+
+* **Return type:**
+  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)], [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
 
 ### meshed.util.replace_item_in_iterable(iterable, condition, replacement, , egress=None)
 
@@ -6236,18 +6242,20 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
 # About this build
 
-This documentation was built on **2026-09-22 18:56 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/f82b64b6e1e74a72f42f8cb631a3e7eeebe57d5b"><code>f82b64b</code></a> on branch <code>master</code>, for **meshed 0.1.172** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-20 05:46 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/125f83ba92e454dca8e5cf711e1ba5c43771fe6b"><code>125f83b</code></a> on branch <code>master</code>, for **meshed 0.1.173** (from <code>setup.cfg</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.1.173) is ahead of the latest release on PyPI (0.1.172): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/f82b64b6e1e74a72f42f8cb631a3e7eeebe57d5b"><code>f82b64b6e1e74a72f42f8cb631a3e7eeebe57d5b</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/125f83ba92e454dca8e5cf711e1ba5c43771fe6b"><code>125f83ba92e454dca8e5cf711e1ba5c43771fe6b</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.172</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.173</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6256,18 +6264,18 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/35770223279">35770223279</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39376438078">39376438078</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>e52a06cd5853c488cbf332ffc183482e99c99c58</code> (in the history of the built commit) |
+| Event commit | <code>e3a6d22478a6592f22b73333de9203e8a013f004</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.12  |
-| Sphinx   | 9.1.0   |
+| epythet  | 0.2.18  |
+| Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
-| Python   | 3.12.14 |
+| Python   | 3.12.15 |
 
 ## Configuration as resolved
 
@@ -6283,14 +6291,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.172/">0.1.172</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.172/">0.1.172</a>, older than the documented version (0.1.173).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout f82b64b6e1e74a72f42f8cb631a3e7eeebe57d5b
-pip install "epythet==0.2.12"
+git checkout 125f83ba92e454dca8e5cf711e1ba5c43771fe6b
+pip install "epythet==0.2.18"
 epythet quickstart . --ignore tests/
 ```
 

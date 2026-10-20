@@ -55,9 +55,6 @@ Remove the code corresponding to decorators from a source code string.
 If decorator_names is None, will remove all decorators.
 If decorator_names is an iterable of strings, will remove the decorators with those names.
 
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
-
 ### Examples
 
 ```pycon
@@ -83,3 +80,6 @@ def func():
 def func():
     pass
 ```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
