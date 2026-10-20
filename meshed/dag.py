@@ -507,9 +507,11 @@ def _wraps_func(node, func) -> bool:
     """Whether ``node`` wraps ``func`` (directly, or via the wrapper FuncNode puts on
     functions with variadics)."""
     # ``==`` too, since a bound method is a new object at each attribute access
-    return node.func is func or node.func == func or getattr(
-        node.func, "__wrapped__", None
-    ) is func
+    return (
+        node.func is func
+        or node.func == func
+        or getattr(node.func, "__wrapped__", None) is func
+    )
 
 
 def resolve_callable_bindings(func_nodes) -> list:
