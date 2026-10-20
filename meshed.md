@@ -1,4 +1,4 @@
-> built 2026-10-20 11:25 UTC from 30d9c70 (master) · meshed 0.1.179. Details: build_info.json
+> built 2026-10-20 11:57 UTC from 36d309a (master) · meshed 0.1.180. Details: build_info.json
 
 # index.html.md
 
@@ -1329,6 +1329,7 @@ That said it is your responsiblity to use the right policy for your particular c
 | [`arg_names`](_autosummary/meshed.dag.html.md#meshed.dag.arg_names)(func, func_name[, exclude_names])        | List the parameter names of `func`, replacing any found in `exclude_names` with a free `<func_name>__<name>` variant.                                                                                                                                     |
 |-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`attribute_vals`](_autosummary/meshed.dag.html.md#meshed.dag.attribute_vals)(objs, attrs[, egress])              | Extract attributes from an iterable of objects                                                                                                                                                                                                            |
+| [`bindings_to_func_node_names`](_autosummary/meshed.dag.html.md#meshed.dag.bindings_to_func_node_names)(bind, out_of_name)     | The `{param: func_node_name}` items of `bind` whose value is a key of `out_of_name` (a `{func_node_name: out}` mapping).                                                                                                                                  |
 | [`call_func`](_autosummary/meshed.dag.html.md#meshed.dag.call_func)(func, kwargs)                            | Re-key `kwargs` by each key's `__name__` and pass the resulting dict to `Sig(func).source_kwargs`.                                                                                                                                                        |
 | `ch_funcs`([func_nodes, func_mapping, ...])                                                         | Copy a DAG (or iterable of func nodes) with some of its node functions replaced.                                                                                                                                                                          |
 | `ch_names`([func_nodes, renamer, ...])                                                              | Renames variables and functions of a `DAG` or iterable of `FuncNodes`.                                                                                                                                                                                    |
@@ -1364,9 +1365,20 @@ That said it is your responsiblity to use the right policy for your particular c
 
 ### Exceptions
 
-| [`DuplicateOutsWarning`](_autosummary/meshed.dag.html.md#meshed.dag.DuplicateOutsWarning)   | Warns that several `FuncNode``s of a ``DAG` write to the same var node.   |
-|-------------------------------------------------------------------------|---------------------------------------------------------------------------|
-| [`RepeatedNamesWarning`](_autosummary/meshed.dag.html.md#meshed.dag.RepeatedNamesWarning)   | Warns that several `FuncNode``s of a ``DAG` share a `name`.               |
+| [`BindToFuncNodeNameWarning`](_autosummary/meshed.dag.html.md#meshed.dag.BindToFuncNodeNameWarning)   | Warns that a `FuncNode` of a `DAG` binds a parameter to the *name* of another func node (its id) instead of to a var node (such as that node's `out`).   |
+|------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`DuplicateOutsWarning`](_autosummary/meshed.dag.html.md#meshed.dag.DuplicateOutsWarning)        | Warns that several `FuncNode``s of a ``DAG` write to the same var node.                                                                                  |
+| [`RepeatedNamesWarning`](_autosummary/meshed.dag.html.md#meshed.dag.RepeatedNamesWarning)        | Warns that several `FuncNode``s of a ``DAG` share a `name`.                                                                                              |
+
+### *exception* meshed.dag.BindToFuncNodeNameWarning
+
+Bases: [`UserWarning`](https://docs.python.org/3/builtins/exceptions.html#UserWarning)
+
+Warns that a `FuncNode` of a `DAG` binds a parameter to the *name* of
+another func node (its id) instead of to a var node (such as that node’s `out`).
+
+The dag takes it to mean the output of that func node, which is what one usually
+wants. Bind to the `out` instead to silence it. See i2mint/meshed#19.
 
 ### *class* meshed.dag.DAG(func_nodes=(), cache_last_scope=True, parameter_merge=functools.partial(<function parameter_merger>, same_kind=True, same_default=True, same_annotation=True), new_scope=<class 'dict'>, name=None, extract_output_from_scope=<function extract_values>, on_duplicate_outs=<function warn_on_duplicate_outs>)
 
@@ -1530,7 +1542,11 @@ Adds multiple edges by applying `DAG.add_edge` multiple times.
 #### bindings_cleaner()
 
 Make func node names unique and rewrite bind values that name a func node into
-that node’s `out` (called at the end of `__post_init__`).
+that node’s `out` (called at the start of `__post_init__`, before the graph
+is made, so that the rewritten binds are the edges of the graph).
+
+A bind value that is the `out` of some func node is left alone, even if it is
+also the name of another: the var node wins. See i2mint/meshed#19.
 
 #### call_on_scope(scope=None)
 
@@ -1599,11 +1615,11 @@ You can reference the `FuncNode` you want to change through its `.name` or
 >>>
 >>> dag = DAG([
 ...     FuncNode(lambda a, b: a + b, name='f'),
-...     FuncNode(lambda y=1, z=2: y * z, name='g', bind={'z': 'f'})
+...     FuncNode(lambda y=1, z=2: y * z, name='g', bind={'z': '_f'})
 ... ])
 >>>
 >>> Sig(dag)
-<Sig (a, b, f=2, y=1)>
+<Sig (a, b, y=1)>
 >>>
 >>> dag.ch_funcs(g=lambda y=1, z=2: y / z)
 DAG(func_nodes=[FuncNode(a,b -> f -> _f), FuncNode(z=_f,y -> g -> _g)], name=None)
@@ -2097,6 +2113,19 @@ Extract attributes from an iterable of objects
 >>> list(attribute_vals([print, map], attrs=['__name__', '__module__']))
 [('print', 'builtins'), ('map', 'builtins')]
 ```
+
+### meshed.dag.bindings_to_func_node_names(bind, out_of_name)
+
+The `{param: func_node_name}` items of `bind` whose value is a key of
+`out_of_name` (a `{func_node_name: out}` mapping).
+
+```pycon
+>>> bindings_to_func_node_names({'x': 'x', 'y': 'foo'}, {'foo': '_foo'})
+{'y': 'foo'}
+```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### meshed.dag.call_func(func, kwargs)
 
@@ -6286,7 +6315,7 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
 # About this build
 
-This documentation was built on **2026-10-20 11:25 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/30d9c701de668ae8aa015f504c196f5dfd87fb07"><code>30d9c70</code></a> on branch <code>master</code>, for **meshed 0.1.179** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-20 11:57 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/36d309a4f64e049701c18f3dc05b19420407e2fe"><code>36d309a</code></a> on branch <code>master</code>, for **meshed 0.1.180** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -6295,9 +6324,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/30d9c701de668ae8aa015f504c196f5dfd87fb07"><code>30d9c701de668ae8aa015f504c196f5dfd87fb07</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/36d309a4f64e049701c18f3dc05b19420407e2fe"><code>36d309a4f64e049701c18f3dc05b19420407e2fe</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.179</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.180</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6306,9 +6335,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39414475814">39414475814</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39418309989">39418309989</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>f9243a3214007bc82115bb4c4e14945802df2f62</code> (in the history of the built commit) |
+| Event commit | <code>a0d317ceaeb3054dccb8cc2aac3150605c222777</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6333,13 +6362,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.179/">0.1.179</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.180/">0.1.180</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout 30d9c701de668ae8aa015f504c196f5dfd87fb07
+git checkout 36d309a4f64e049701c18f3dc05b19420407e2fe
 pip install "epythet==0.2.19"
 epythet quickstart . --ignore tests/
 ```

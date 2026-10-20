@@ -10,6 +10,7 @@ meshed.dag
    
       arg_names
       attribute_vals
+      bindings_to_func_node_names
       call_func
       ch_funcs
       ch_names
@@ -48,6 +49,7 @@ meshed.dag
 
    .. autosummary::
    
+      BindToFuncNodeNameWarning
       DuplicateOutsWarning
       RepeatedNamesWarning
    

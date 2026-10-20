@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=3fa802a4"></script>
+    <script src="../../_static/documentation_options.js?v=cdc10c8d"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.179" />
+  <meta name="docsearch:version" content="0.1.180" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -1237,6 +1237,31 @@ window.runMermaid = runMermaid;</script>
 
 
 
+<div class="viewcode-block" id="BindToFuncNodeNameWarning">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.BindToFuncNodeNameWarning">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BindToFuncNodeNameWarning</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Warns that a ``FuncNode`` of a ``DAG`` binds a parameter to the *name* of</span>
+<span class="sd">    another func node (its id) instead of to a var node (such as that node's ``out``).</span>
+
+<span class="sd">    The dag takes it to mean the output of that func node, which is what one usually</span>
+<span class="sd">    wants. Bind to the ``out`` instead to silence it. See i2mint/meshed#19.</span>
+<span class="sd">    """</span></div>
+
+
+
+<div class="viewcode-block" id="bindings_to_func_node_names">
+<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.bindings_to_func_node_names">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">bindings_to_func_node_names</span><span class="p">(</span><span class="n">bind</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">out_of_name</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The ``{param: func_node_name}`` items of ``bind`` whose value is a key of</span>
+<span class="sd">    ``out_of_name`` (a ``{func_node_name: out}`` mapping).</span>
+
+<span class="sd">    &gt;&gt;&gt; bindings_to_func_node_names({'x': 'x', 'y': 'foo'}, {'foo': '_foo'})</span>
+<span class="sd">    {'y': 'foo'}</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">param</span><span class="p">:</span> <span class="n">src</span> <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">out_of_name</span><span class="p">}</span></div>
+
+
+
 <span class="nd">@contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_quiet_repeated_names</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""Silence ``RepeatedNamesWarning`` for a dag built internally from nodes the user</span>
@@ -1451,6 +1476,8 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ensure_func_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">))</span>
+        <span class="c1"># before the graph is made, since names and binds decide its edges</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bindings_cleaner</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_node_graph</span> <span class="o">=</span> <span class="n">_func_nodes_to_graph_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">topological_sort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node_graph</span><span class="p">)</span>
         <span class="c1"># reorder the nodes to fit topological order</span>
@@ -1473,7 +1500,6 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_scope</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">"DAG"</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">bindings_cleaner</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">duplicates</span> <span class="o">:=</span> <span class="n">duplicate_outs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">on_duplicate_outs</span><span class="p">(</span><span class="n">duplicates</span><span class="p">,</span> <span class="n">dag_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
@@ -1511,7 +1537,11 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.DAG.bindings_cleaner">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">bindings_cleaner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Make func node names unique and rewrite bind values that name a func node into</span>
-<span class="sd">        that node's ``out`` (called at the end of ``__post_init__``).</span>
+<span class="sd">        that node's ``out`` (called at the start of ``__post_init__``, before the graph</span>
+<span class="sd">        is made, so that the rewritten binds are the edges of the graph).</span>
+
+<span class="sd">        A bind value that is the ``out`` of some func node is left alone, even if it is</span>
+<span class="sd">        also the name of another: the var node wins. See i2mint/meshed#19.</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">repeated</span> <span class="o">:=</span> <span class="n">repeated_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">):</span>
             <span class="n">details</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> x</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">repeated</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
@@ -1523,11 +1553,25 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">stacklevel</span><span class="o">=</span><span class="n">_stacklevel_of_first_frame_outside_meshed</span><span class="p">(),</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="o">=</span> <span class="n">mk_nodes_names_unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">)</span>
-        <span class="n">funcnodes_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">]</span>
-        <span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_func_node_for</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">out</span>
-        <span class="n">cond</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">funcnodes_names</span>
+        <span class="n">outs</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="o">.</span><span class="n">out</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">}</span>
+        <span class="n">out_of_name</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">out</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span> <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">outs</span>
+        <span class="p">}</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">:</span>
-            <span class="n">node</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">change_value_on_cond</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">rebinds</span> <span class="o">:=</span> <span class="n">bindings_to_func_node_names</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">bind</span><span class="p">,</span> <span class="n">out_of_name</span><span class="p">):</span>
+                <span class="n">details</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">out_of_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">!r}</span><span class="s2">"</span>
+                    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rebinds</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">)</span>
+                <span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> binds to func node name(s), not var node(s): "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">details</span><span class="si">}</span><span class="s2">. They are taken to mean those nodes' outputs; bind to "</span>
+                    <span class="s2">"the out to say so (or rename, if you meant an input var)."</span><span class="p">,</span>
+                    <span class="n">BindToFuncNodeNameWarning</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="n">_stacklevel_of_first_frame_outside_meshed</span><span class="p">(),</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rebinds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">node</span><span class="o">.</span><span class="n">bind</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_of_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -2082,11 +2126,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; dag = DAG([</span>
 <span class="sd">        ...     FuncNode(lambda a, b: a + b, name='f'),</span>
-<span class="sd">        ...     FuncNode(lambda y=1, z=2: y * z, name='g', bind={'z': 'f'})</span>
+<span class="sd">        ...     FuncNode(lambda y=1, z=2: y * z, name='g', bind={'z': '_f'})</span>
 <span class="sd">        ... ])</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; Sig(dag)</span>
-<span class="sd">        &lt;Sig (a, b, f=2, y=1)&gt;</span>
+<span class="sd">        &lt;Sig (a, b, y=1)&gt;</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; dag.ch_funcs(g=lambda y=1, z=2: y / z)</span>
 <span class="sd">        DAG(func_nodes=[FuncNode(a,b -&gt; f -&gt; _f), FuncNode(z=_f,y -&gt; g -&gt; _g)], name=None)</span>

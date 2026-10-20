@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=3fa802a4"></script>
+    <script src="../_static/documentation_options.js?v=cdc10c8d"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.179" />
+  <meta name="docsearch:version" content="0.1.180" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -564,85 +564,88 @@ That said it is your responsiblity to use the right policy for your particular c
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.attribute_vals" title="meshed.dag.attribute_vals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">attribute_vals</span></code></a>(objs, attrs[, egress])</p></td>
 <td><p>Extract attributes from an iterable of objects</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.call_func" title="meshed.dag.call_func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call_func</span></code></a>(func, kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.bindings_to_func_node_names" title="meshed.dag.bindings_to_func_node_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bindings_to_func_node_names</span></code></a>(bind, out_of_name)</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">{param:</span> <span class="pre">func_node_name}</span></code> items of <code class="docutils literal notranslate"><span class="pre">bind</span></code> whose value is a key of <code class="docutils literal notranslate"><span class="pre">out_of_name</span></code> (a <code class="docutils literal notranslate"><span class="pre">{func_node_name:</span> <span class="pre">out}</span></code> mapping).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.call_func" title="meshed.dag.call_func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call_func</span></code></a>(func, kwargs)</p></td>
 <td><p>Re-key <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> by each key's <code class="docutils literal notranslate"><span class="pre">__name__</span></code> and pass the resulting dict to <code class="docutils literal notranslate"><span class="pre">Sig(func).source_kwargs</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ch_funcs</span></code>([func_nodes, func_mapping, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ch_funcs</span></code>([func_nodes, func_mapping, ...])</p></td>
 <td><p>Copy a DAG (or iterable of func nodes) with some of its node functions replaced.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ch_names</span></code>([func_nodes, renamer, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ch_names</span></code>([func_nodes, renamer, ...])</p></td>
 <td><p>Renames variables and functions of a <code class="docutils literal notranslate"><span class="pre">DAG</span></code> or iterable of <code class="docutils literal notranslate"><span class="pre">FuncNodes</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_funcs</span></code>([func_nodes, func_mapping, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_funcs</span></code>([func_nodes, func_mapping, ...])</p></td>
 <td><p>Copy a DAG (or iterable of func nodes) with some of its node functions replaced.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.change_value_on_cond" title="meshed.dag.change_value_on_cond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_value_on_cond</span></code></a>(d, cond, func)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.change_value_on_cond" title="meshed.dag.change_value_on_cond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_value_on_cond</span></code></a>(d, cond, func)</p></td>
 <td><p>Replace, in place, each value <code class="docutils literal notranslate"><span class="pre">v</span></code> of <code class="docutils literal notranslate"><span class="pre">d</span></code> where <code class="docutils literal notranslate"><span class="pre">cond(k,</span> <span class="pre">v)</span></code> holds with <code class="docutils literal notranslate"><span class="pre">func(v)</span></code>, and return <code class="docutils literal notranslate"><span class="pre">d</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.dag_to_code" title="meshed.dag.dag_to_code"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dag_to_code</span></code></a>(dag)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.dag_to_code" title="meshed.dag.dag_to_code"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dag_to_code</span></code></a>(dag)</p></td>
 <td><p>Convert a DAG to code.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.dflt_debugger_feedback" title="meshed.dag.dflt_debugger_feedback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dflt_debugger_feedback</span></code></a>(func_node, scope, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.dflt_debugger_feedback" title="meshed.dag.dflt_debugger_feedback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dflt_debugger_feedback</span></code></a>(func_node, scope, ...)</p></td>
 <td><p>Print the step number, func node and scope, then return <code class="docutils literal notranslate"><span class="pre">output</span></code> unchanged (default feedback of <code class="docutils literal notranslate"><span class="pre">DAG.debugger</span></code>).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.duplicate_outs" title="meshed.dag.duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate_outs</span></code></a>(func_nodes)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.duplicate_outs" title="meshed.dag.duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate_outs</span></code></a>(func_nodes)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">{out:</span> <span class="pre">[names</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">func</span> <span class="pre">nodes</span> <span class="pre">writing</span> <span class="pre">to</span> <span class="pre">it]}</span></code>, for the outs written to by more than one func node (the last name is the one whose value is visible).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.duplicate_outs_string" title="meshed.dag.duplicate_outs_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate_outs_string</span></code></a>(duplicates, *[, dag_name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.duplicate_outs_string" title="meshed.dag.duplicate_outs_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duplicate_outs_string</span></code></a>(duplicates, *[, dag_name])</p></td>
 <td><p>Human readable description of a <code class="docutils literal notranslate"><span class="pre">duplicate_outs</span></code> mapping.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.funcnodes_from_pairs" title="meshed.dag.funcnodes_from_pairs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcnodes_from_pairs</span></code></a>(pairs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.funcnodes_from_pairs" title="meshed.dag.funcnodes_from_pairs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcnodes_from_pairs</span></code></a>(pairs)</p></td>
 <td><p>Make one mock func node per <code class="docutils literal notranslate"><span class="pre">(arg,</span> <span class="pre">out)</span></code> pair (see <code class="docutils literal notranslate"><span class="pre">mk_mock_funcnode</span></code>).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.hook_up" title="meshed.dag.hook_up"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hook_up</span></code></a>(func, variables[, output_name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.hook_up" title="meshed.dag.hook_up"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hook_up</span></code></a>(func, variables[, output_name])</p></td>
 <td><p>Source inputs and write outputs to given variables mapping.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.ignore_duplicate_outs" title="meshed.dag.ignore_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ignore_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.ignore_duplicate_outs" title="meshed.dag.ignore_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ignore_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy that says nothing about duplicate outs.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.mk_list_names_unique" title="meshed.dag.mk_list_names_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_list_names_unique</span></code></a>(nodes[, exclude_names])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.mk_list_names_unique" title="meshed.dag.mk_list_names_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_list_names_unique</span></code></a>(nodes[, exclude_names])</p></td>
 <td><p>List the <code class="docutils literal notranslate"><span class="pre">.name</span></code> of each node, suffixing repeats (and names in <code class="docutils literal notranslate"><span class="pre">exclude_names</span></code>) with <code class="docutils literal notranslate"><span class="pre">__&lt;i&gt;</span></code> so all are distinct.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.mk_mock_funcnode" title="meshed.dag.mk_mock_funcnode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_mock_funcnode</span></code></a>(arg, out)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.mk_mock_funcnode" title="meshed.dag.mk_mock_funcnode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_mock_funcnode</span></code></a>(arg, out)</p></td>
 <td><p>Make a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> whose no-op function takes the single parameter <code class="docutils literal notranslate"><span class="pre">arg</span></code> and writes to <code class="docutils literal notranslate"><span class="pre">out</span></code>, named <code class="docutils literal notranslate"><span class="pre">_mock_&lt;arg&gt;_&lt;out&gt;</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.mk_nodes_names_unique" title="meshed.dag.mk_nodes_names_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_nodes_names_unique</span></code></a>(nodes)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.mk_nodes_names_unique" title="meshed.dag.mk_nodes_names_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_nodes_names_unique</span></code></a>(nodes)</p></td>
 <td><p>Set each node's <code class="docutils literal notranslate"><span class="pre">.name</span></code> in place to the unique names of <code class="docutils literal notranslate"><span class="pre">mk_list_names_unique</span></code> and return <code class="docutils literal notranslate"><span class="pre">nodes</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.modified_func_node" title="meshed.dag.modified_func_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modified_func_node</span></code></a>(func_node, **modifications)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.modified_func_node" title="meshed.dag.modified_func_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modified_func_node</span></code></a>(func_node, **modifications)</p></td>
 <td><p>Make a new <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> from <code class="docutils literal notranslate"><span class="pre">func_node</span></code> with some of <code class="docutils literal notranslate"><span class="pre">func</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">bind</span></code> and <code class="docutils literal notranslate"><span class="pre">out</span></code> replaced by <code class="docutils literal notranslate"><span class="pre">modifications</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.named_partial" title="meshed.dag.named_partial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_partial</span></code></a>(func, *args[, __name__])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.named_partial" title="meshed.dag.named_partial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_partial</span></code></a>(func, *args[, __name__])</p></td>
 <td><p>functools.partial, but with a __name__</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.only_new_duplicate_outs" title="meshed.dag.only_new_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">only_new_duplicate_outs</span></code></a>(strategy, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.only_new_duplicate_outs" title="meshed.dag.only_new_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">only_new_duplicate_outs</span></code></a>(strategy, ...)</p></td>
 <td><p>Wrap an <code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy so that it is only called for duplications that are NOT already those of <code class="docutils literal notranslate"><span class="pre">known_duplicate_outs</span></code> (the duplications of the dag(s) a new dag is derived from, which were already dealt with when those dags were made).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.order_subset_from_list" title="meshed.dag.order_subset_from_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">order_subset_from_list</span></code></a>(items, sublist)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.order_subset_from_list" title="meshed.dag.order_subset_from_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">order_subset_from_list</span></code></a>(items, sublist)</p></td>
 <td><p>Sort <code class="docutils literal notranslate"><span class="pre">sublist</span></code> by the position its elements have in <code class="docutils literal notranslate"><span class="pre">items</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.parametrized_dag_factory" title="meshed.dag.parametrized_dag_factory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parametrized_dag_factory</span></code></a>(dag, param_var_nodes)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.parametrized_dag_factory" title="meshed.dag.parametrized_dag_factory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parametrized_dag_factory</span></code></a>(dag, param_var_nodes)</p></td>
 <td><p>Constructs a factory for sub-DAGs derived from the input DAG, with values of specific 'parameter' variable nodes precomputed and fixed.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.partialized_funcnodes" title="meshed.dag.partialized_funcnodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partialized_funcnodes</span></code></a>(func_nodes, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.partialized_funcnodes" title="meshed.dag.partialized_funcnodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">partialized_funcnodes</span></code></a>(func_nodes, ...)</p></td>
 <td><p>Yield the func nodes, replacing the function of any node whose parameters include a <code class="docutils literal notranslate"><span class="pre">keyword_defaults</span></code> name with a partial where those parameters are defaulted and moved last; other nodes are yielded as is.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.print_dag_string" title="meshed.dag.print_dag_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_dag_string</span></code></a>(dag[, bind_info])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.print_dag_string" title="meshed.dag.print_dag_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_dag_string</span></code></a>(dag[, bind_info])</p></td>
 <td><p>Print <code class="docutils literal notranslate"><span class="pre">dag.synopsis_string(bind_info)</span></code>; the default shows an input as <code class="docutils literal notranslate"><span class="pre">param=var</span></code> only where the two names differ.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.raise_on_duplicate_outs" title="meshed.dag.raise_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_on_duplicate_outs</span></code></a>(duplicates, *[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.raise_on_duplicate_outs" title="meshed.dag.raise_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_on_duplicate_outs</span></code></a>(duplicates, *[, ...])</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">on_duplicate_outs</span></code> strategy that raises a <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rename_nodes</span></code>([func_nodes, renamer, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rename_nodes</span></code>([func_nodes, renamer, ...])</p></td>
 <td><p>Renames variables and functions of a <code class="docutils literal notranslate"><span class="pre">DAG</span></code> or iterable of <code class="docutils literal notranslate"><span class="pre">FuncNodes</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.reorder_on_constraints" title="meshed.dag.reorder_on_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reorder_on_constraints</span></code></a>(funcnodes, outs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.reorder_on_constraints" title="meshed.dag.reorder_on_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reorder_on_constraints</span></code></a>(funcnodes, outs)</p></td>
 <td><p>Topologically sort <code class="docutils literal notranslate"><span class="pre">funcnodes</span></code> after appending (in place) mock nodes that chain each <code class="docutils literal notranslate"><span class="pre">outs</span></code> element to the next, print the order, and return <code class="docutils literal notranslate"><span class="pre">(func_nodes,</span> <span class="pre">var_nodes)</span></code> without the mock nodes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.repeated_names" title="meshed.dag.repeated_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeated_names</span></code></a>(func_nodes)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.repeated_names" title="meshed.dag.repeated_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeated_names</span></code></a>(func_nodes)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">{name:</span> <span class="pre">how</span> <span class="pre">many</span> <span class="pre">func</span> <span class="pre">nodes</span> <span class="pre">have</span> <span class="pre">it}</span></code>, for the names that more than one has.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.warn_on_duplicate_outs" title="meshed.dag.warn_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warn_on_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.warn_on_duplicate_outs" title="meshed.dag.warn_on_duplicate_outs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warn_on_duplicate_outs</span></code></a>(duplicates, *[, dag_name])</p></td>
 <td><p>Emit a <code class="docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code> describing <code class="docutils literal notranslate"><span class="pre">duplicates</span></code>.</p></td>
 </tr>
 </tbody>
@@ -660,10 +663,13 @@ That said it is your responsiblity to use the right policy for your particular c
 <p class="rubric">Exceptions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.DuplicateOutsWarning" title="meshed.dag.DuplicateOutsWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.BindToFuncNodeNameWarning" title="meshed.dag.BindToFuncNodeNameWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BindToFuncNodeNameWarning</span></code></a></p></td>
+<td><p>Warns that a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> of a <code class="docutils literal notranslate"><span class="pre">DAG</span></code> binds a parameter to the <em>name</em> of another func node (its id) instead of to a var node (such as that node's <code class="docutils literal notranslate"><span class="pre">out</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.DuplicateOutsWarning" title="meshed.dag.DuplicateOutsWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DuplicateOutsWarning</span></code></a></p></td>
 <td><p>Warns that several <code class="docutils literal notranslate"><span class="pre">FuncNode``s</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">``DAG</span></code> write to the same var node.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#meshed.dag.RepeatedNamesWarning" title="meshed.dag.RepeatedNamesWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RepeatedNamesWarning</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.dag.RepeatedNamesWarning" title="meshed.dag.RepeatedNamesWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RepeatedNamesWarning</span></code></a></p></td>
 <td><p>Warns that several <code class="docutils literal notranslate"><span class="pre">FuncNode``s</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">``DAG</span></code> share a <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></td>
 </tr>
 </tbody>
@@ -671,6 +677,16 @@ That said it is your responsiblity to use the right policy for your particular c
 </div>
 </section>
 </section>
+<dl class="py exception">
+<dt class="sig sig-object py" id="meshed.dag.BindToFuncNodeNameWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">BindToFuncNodeNameWarning</span></span><a class="reference internal" href="../_modules/meshed/dag.html#BindToFuncNodeNameWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.BindToFuncNodeNameWarning" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#UserWarning" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></a></p>
+<p>Warns that a <code class="docutils literal notranslate"><span class="pre">FuncNode</span></code> of a <code class="docutils literal notranslate"><span class="pre">DAG</span></code> binds a parameter to the <em>name</em> of
+another func node (its id) instead of to a var node (such as that node’s <code class="docutils literal notranslate"><span class="pre">out</span></code>).</p>
+<p>The dag takes it to mean the output of that func node, which is what one usually
+wants. Bind to the <code class="docutils literal notranslate"><span class="pre">out</span></code> instead to silence it. See i2mint/meshed#19.</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="meshed.dag.DAG">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">DAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_last_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_merge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">functools.partial(&lt;function</span> <span class="pre">parameter_merger&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">same_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_output_from_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">extract_values&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_duplicate_outs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">warn_on_duplicate_outs&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#DAG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.DAG" title="Link to this definition">#</a></dt>
@@ -831,7 +847,10 @@ parameters <code class="docutils literal notranslate"><span class="pre">a</span>
 <dt class="sig sig-object py" id="meshed.dag.DAG.bindings_cleaner">
 <span class="sig-name descname"><span class="pre">bindings_cleaner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#DAG.bindings_cleaner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.DAG.bindings_cleaner" title="Link to this definition">#</a></dt>
 <dd><p>Make func node names unique and rewrite bind values that name a func node into
-that node’s <code class="docutils literal notranslate"><span class="pre">out</span></code> (called at the end of <code class="docutils literal notranslate"><span class="pre">__post_init__</span></code>).</p>
+that node’s <code class="docutils literal notranslate"><span class="pre">out</span></code> (called at the start of <code class="docutils literal notranslate"><span class="pre">__post_init__</span></code>, before the graph
+is made, so that the rewritten binds are the edges of the graph).</p>
+<p>A bind value that is the <code class="docutils literal notranslate"><span class="pre">out</span></code> of some func node is left alone, even if it is
+also the name of another: the var node wins. See i2mint/meshed#19.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -906,11 +925,11 @@ function you want to change it by.</p>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">([</span>
 <span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'f'</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span> <span class="n">y</span> <span class="o">*</span> <span class="n">z</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'g'</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">'z'</span><span class="p">:</span> <span class="s1">'f'</span><span class="p">})</span>
+<span class="gp">... </span>    <span class="n">FuncNode</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span> <span class="n">y</span> <span class="o">*</span> <span class="n">z</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'g'</span><span class="p">,</span> <span class="n">bind</span><span class="o">=</span><span class="p">{</span><span class="s1">'z'</span><span class="p">:</span> <span class="s1">'_f'</span><span class="p">})</span>
 <span class="gp">... </span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Sig</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
-<span class="go">&lt;Sig (a, b, f=2, y=1)&gt;</span>
+<span class="go">&lt;Sig (a, b, y=1)&gt;</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span><span class="o">.</span><span class="n">ch_funcs</span><span class="p">(</span><span class="n">g</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span> <span class="n">y</span> <span class="o">/</span> <span class="n">z</span><span class="p">)</span>
 <span class="go">DAG(func_nodes=[FuncNode(a,b -&gt; f -&gt; _f), FuncNode(z=_f,y -&gt; g -&gt; _g)], name=None)</span>
@@ -1449,6 +1468,22 @@ a free <code class="docutils literal notranslate"><span class="pre">&lt;func_nam
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="meshed.dag.bindings_to_func_node_names">
+<span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">bindings_to_func_node_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_of_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#bindings_to_func_node_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.bindings_to_func_node_names" title="Link to this definition">#</a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">{param:</span> <span class="pre">func_node_name}</span></code> items of <code class="docutils literal notranslate"><span class="pre">bind</span></code> whose value is a key of
+<code class="docutils literal notranslate"><span class="pre">out_of_name</span></code> (a <code class="docutils literal notranslate"><span class="pre">{func_node_name:</span> <span class="pre">out}</span></code> mapping).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bindings_to_func_node_names</span><span class="p">({</span><span class="s1">'x'</span><span class="p">:</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">:</span> <span class="s1">'foo'</span><span class="p">},</span> <span class="p">{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="s1">'_foo'</span><span class="p">})</span>
+<span class="go">{'y': 'foo'}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="meshed.dag.call_func">
 <span class="sig-prename descclassname"><span class="pre">meshed.dag.</span></span><span class="sig-name descname"><span class="pre">call_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#call_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.call_func" title="Link to this definition">#</a></dt>
 <dd><p>Re-key <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> by each key’s <code class="docutils literal notranslate"><span class="pre">__name__</span></code> and pass the resulting dict to
@@ -1836,6 +1871,7 @@ strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dags-and-pipelines">DAGs and Pipelines</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.BindToFuncNodeNameWarning"><code class="docutils literal notranslate"><span class="pre">BindToFuncNodeNameWarning</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG"><code class="docutils literal notranslate"><span class="pre">DAG</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.add_edge"><code class="docutils literal notranslate"><span class="pre">DAG.add_edge()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.add_edges"><code class="docutils literal notranslate"><span class="pre">DAG.add_edges()</span></code></a></li>
@@ -1871,6 +1907,7 @@ strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.RepeatedNamesWarning"><code class="docutils literal notranslate"><span class="pre">RepeatedNamesWarning</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.arg_names"><code class="docutils literal notranslate"><span class="pre">arg_names()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.attribute_vals"><code class="docutils literal notranslate"><span class="pre">attribute_vals()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.bindings_to_func_node_names"><code class="docutils literal notranslate"><span class="pre">bindings_to_func_node_names()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.call_func"><code class="docutils literal notranslate"><span class="pre">call_func()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.change_value_on_cond"><code class="docutils literal notranslate"><span class="pre">change_value_on_cond()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.dag_to_code"><code class="docutils literal notranslate"><span class="pre">dag_to_code()</span></code></a></li>
