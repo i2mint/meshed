@@ -106,3 +106,21 @@ def test_bind_to_function_with_variadics():
 def test_bind_value_neither_str_nor_callable_raises():
     with pytest.raises(ValidationError, match="Should be a str"):
         FuncNode(bar, bind={"y": 3})
+
+
+def test_bind_to_function_node_shared_by_two_dags():
+    fb = FuncNode(bar, bind={"y": foo})
+    assert DAG([FuncNode(foo), fb])(1, 2, 3) == 9
+    dag = DAG([FuncNode(foo, name="F", out="s"), fb])
+    assert str(Sig(dag)) == "(a, b, x)"
+    assert fb.bind["y"] is foo  # the user's node is left as given
+
+
+def test_bind_to_bound_method():
+    class K:
+        def m(self, a):
+            return a + 1
+
+    k = K()
+    dag = DAG([FuncNode(k.m), FuncNode(bar, bind={"y": k.m})])
+    assert dag(a=1, x=3) == 6

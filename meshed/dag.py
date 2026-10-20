@@ -506,40 +506,53 @@ def bindings_to_func_node_names(bind: dict, out_of_name: Mapping) -> dict:
 def _wraps_func(node, func) -> bool:
     """Whether ``node`` wraps ``func`` (directly, or via the wrapper FuncNode puts on
     functions with variadics)."""
-    return node.func is func or getattr(node.func, "__wrapped__", None) is func
+    # ``==`` too, since a bound method is a new object at each attribute access
+    return node.func is func or node.func == func or getattr(
+        node.func, "__wrapped__", None
+    ) is func
 
 
-def resolve_callable_bindings(func_nodes) -> None:
-    """Rewrite, in place, every bind value that is a callable into the ``out`` of the
-    unique func node of ``func_nodes`` wrapping that callable (#96).
+def resolve_callable_bindings(func_nodes) -> list:
+    """``func_nodes`` with every bind value that is a callable rewritten into the
+    ``out`` of the unique func node of ``func_nodes`` wrapping that callable (#96).
+
+    The nodes that change are copies, so a node given to several DAGs resolves its
+    callables anew in each.
 
     >>> def foo(a, b): return a + b
     >>> def bar(x, y): return x * y
     >>> nodes = [FuncNode(foo), FuncNode(bar, bind={'y': foo})]
-    >>> resolve_callable_bindings(nodes)
-    >>> nodes[1].bind
+    >>> resolve_callable_bindings(nodes)[1].bind
     {'y': 'foo', 'x': 'x'}
 
     Raises a ``ValidationError`` when no node, or more than one, wraps the callable.
     """
-    for node in func_nodes:
-        for param, src in node.bind.items():
-            if not callable(src):
-                continue
-            wrapping = [n for n in func_nodes if _wraps_func(n, src)]
+
+    def resolved_src(node, param, src):
+        if not callable(src):
+            return src
+        wrapping = [n for n in func_nodes if _wraps_func(n, src)]
+        if len(wrapping) != 1:
             src_name = getattr(src, "__name__", repr(src))
-            if len(wrapping) != 1:
-                which = (
-                    "no func node"
-                    if not wrapping
-                    else f"several func nodes ({', '.join(n.name for n in wrapping)})"
-                )
-                raise ValidationError(
-                    f"{node.name} binds {param!r} to the function {src_name}, which "
-                    f"{which} of the DAG wrap(s); bind {param!r} to the out of the node "
-                    "you mean instead."
-                )
-            node.bind[param] = wrapping[0].out
+            which = (
+                "no func node"
+                if not wrapping
+                else f"several func nodes ({', '.join(n.name for n in wrapping)})"
+            )
+            raise ValidationError(
+                f"{node.name} binds {param!r} to the function {src_name}, which "
+                f"{which} of the DAG wrap(s); bind {param!r} to the out of the node "
+                "you mean instead."
+            )
+        return wrapping[0].out
+
+    def resolved(node):
+        if not any(map(callable, node.bind.values())):
+            return node
+        bind = {p: resolved_src(node, p, src) for p, src in node.bind.items()}
+        return node.ch_attrs(bind=bind)
+
+    return [resolved(node) for node in func_nodes]
 
 
 @contextmanager
@@ -808,7 +821,7 @@ class DAG:
                 stacklevel=_stacklevel_of_first_frame_outside_meshed(),
             )
         self.func_nodes = mk_nodes_names_unique(self.func_nodes)
-        resolve_callable_bindings(self.func_nodes)
+        self.func_nodes = resolve_callable_bindings(self.func_nodes)
         outs = {node.out for node in self.func_nodes}
         out_of_name = {
             node.name: node.out for node in self.func_nodes if node.name not in outs
