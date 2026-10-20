@@ -503,6 +503,45 @@ def bindings_to_func_node_names(bind: dict, out_of_name: Mapping) -> dict:
     return {param: src for param, src in bind.items() if src in out_of_name}
 
 
+def _wraps_func(node, func) -> bool:
+    """Whether ``node`` wraps ``func`` (directly, or via the wrapper FuncNode puts on
+    functions with variadics)."""
+    return node.func is func or getattr(node.func, "__wrapped__", None) is func
+
+
+def resolve_callable_bindings(func_nodes) -> None:
+    """Rewrite, in place, every bind value that is a callable into the ``out`` of the
+    unique func node of ``func_nodes`` wrapping that callable (#96).
+
+    >>> def foo(a, b): return a + b
+    >>> def bar(x, y): return x * y
+    >>> nodes = [FuncNode(foo), FuncNode(bar, bind={'y': foo})]
+    >>> resolve_callable_bindings(nodes)
+    >>> nodes[1].bind
+    {'y': 'foo', 'x': 'x'}
+
+    Raises a ``ValidationError`` when no node, or more than one, wraps the callable.
+    """
+    for node in func_nodes:
+        for param, src in node.bind.items():
+            if not callable(src):
+                continue
+            wrapping = [n for n in func_nodes if _wraps_func(n, src)]
+            src_name = getattr(src, "__name__", repr(src))
+            if len(wrapping) != 1:
+                which = (
+                    "no func node"
+                    if not wrapping
+                    else f"several func nodes ({', '.join(n.name for n in wrapping)})"
+                )
+                raise ValidationError(
+                    f"{node.name} binds {param!r} to the function {src_name}, which "
+                    f"{which} of the DAG wrap(s); bind {param!r} to the out of the node "
+                    "you mean instead."
+                )
+            node.bind[param] = wrapping[0].out
+
+
 @contextmanager
 def _quiet_repeated_names():
     """Silence ``RepeatedNamesWarning`` for a dag built internally from nodes the user
@@ -755,6 +794,9 @@ class DAG:
 
         A bind value that is the ``out`` of some func node is left alone, even if it is
         also the name of another: the var node wins. See i2mint/meshed#19.
+
+        A bind value that is a callable is resolved to the ``out`` of the (unique) func
+        node wrapping it: see ``resolve_callable_bindings`` (i2mint/meshed#96).
         """
         if repeated := repeated_names(self.func_nodes):
             details = ", ".join(f"{name!r} x{n}" for name, n in repeated.items())
@@ -766,6 +808,7 @@ class DAG:
                 stacklevel=_stacklevel_of_first_frame_outside_meshed(),
             )
         self.func_nodes = mk_nodes_names_unique(self.func_nodes)
+        resolve_callable_bindings(self.func_nodes)
         outs = {node.out for node in self.func_nodes}
         out_of_name = {
             node.name: node.out for node in self.func_nodes if node.name not in outs
