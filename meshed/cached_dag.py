@@ -460,7 +460,9 @@ class CachedDag:
         when asked, so it always lists the roots ``<node>`` still needs given the cache
         at that moment, with the defaults the dag (or the nodes it feeds) gives them.
         """
-        non_root_var_nodes = sorted(filter(lambda x: x not in self.roots, self.var_nodes))
+        non_root_var_nodes = sorted(
+            filter(lambda x: x not in self.roots, self.var_nodes)
+        )
         if obj is None:
             from types import SimpleNamespace
 
