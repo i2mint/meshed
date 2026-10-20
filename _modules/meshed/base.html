@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=5e4102fe"></script>
+    <script src="../../_static/documentation_options.js?v=fa3986e7"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.182" />
+  <meta name="docsearch:version" content="0.1.183" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -1175,8 +1175,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        and space are used, so could possibly encode as int (for __hash__ method)</span>
 <span class="sd">        in a way that is reverse-decodable and with reasonable int size.</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="s2">"hybrid"</span><span class="p">)</span>
-        <span class="c1"># return ';'.join(self.bind) + '::' + self.out</span>
+        <span class="c1"># A callable bind value shows as ``&lt;name&gt;`` in the synopsis, so two different</span>
+        <span class="c1"># callables with one name (two lambdas) would collide: add their identity.</span>
+        <span class="n">callables</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">_callable_identity</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">synopsis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="s2">"hybrid"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">synopsis</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">callables</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">callables</span> <span class="k">else</span> <span class="n">synopsis</span>
 
     <span class="c1"># TODO: Find a better one. Need to have guidance on hash and eq methods dos-&amp;-donts</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1652,6 +1659,13 @@ window.runMermaid = runMermaid;</script>
 <span class="w">    </span><span class="sd">"""Make a ``ch_func_node_func`` variant with ``func_comparator`` fixed."""</span>
     <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">ch_func_node_func</span><span class="p">,</span> <span class="n">func_comparator</span><span class="o">=</span><span class="n">func_comparator</span><span class="p">)</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_callable_identity</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``module.qualname@id``: tells apart callables that share a ``__name__``."""</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">"__module__"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span>
+    <span class="n">qualname</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">"__qualname__"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">"__name__"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">qualname</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span><span class="s2">"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_bind_value_str</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
