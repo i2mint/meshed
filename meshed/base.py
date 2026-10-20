@@ -26,7 +26,8 @@ FuncNode(x,y -> add -> total)
 
 from collections import Counter
 from dataclasses import dataclass, field, fields
-from functools import partial, cached_property
+from functools import partial, cached_property, wraps
+from inspect import Parameter, Signature, signature
 from typing import Union, Literal
 from collections.abc import Callable, MutableMapping, Iterable, Sized, Sequence
 
@@ -156,7 +157,8 @@ class FuncNode:
     """A function wrapper that makes the function amenable to operating in a network.
 
     :param func: Function to wrap
-    :param name: The name to associate to the function
+    :param func_id: The identifier of the node in a network (also accepted as the
+        legacy keyword ``name``; ``.name`` remains a back-compat alias of ``.func_id``)
     :param bind: The {func_argname: external_name,...} mapping that defines where
         the node will source the data to call the function.
         This only has to be used if the external names are different from the names
@@ -253,13 +255,22 @@ class FuncNode:
     # TODO: Make everything but func keyword-only (check for non-keyword usage before)
     # Using __init__ for now, but when 3.10, use field func with kw_only=True
     func: Callable
-    name: str = field(default=None)
+    func_id: str = field(default=None)
     bind: dict = field(default_factory=dict)
     out: str = field(default=None)
     func_label: str = field(default=None)  # TODO: Integrate more
     # write_output_into_scope: bool = True  # TODO: Do we really want to allow False?
     names_maker: Callable = underscore_func_node_names_maker
     node_validator: Callable = basic_node_validator
+
+    @property
+    def name(self) -> str:
+        """Back-compat alias of ``func_id``."""
+        return self.func_id
+
+    @name.setter
+    def name(self, value: str):
+        self.func_id = value
 
     # def __init__(
     #     self,
@@ -287,9 +298,9 @@ class FuncNode:
         if self.bind is None:
             self.bind = dict()
         self.func = handle_variadics(self.func)
-        _func_node_args_validation(func=self.func, name=self.name, out=self.out)
-        self.name, self.out = self.names_maker(self.func, self.name, self.out)
-        self.__name__ = self.name
+        _func_node_args_validation(func=self.func, name=self.func_id, out=self.out)
+        self.func_id, self.out = self.names_maker(self.func, self.func_id, self.out)
+        self.__name__ = self.func_id
         # self.__name__ = self.name
         # The wrapped function's signature will be useful
         # when interfacing with it and the scope.
@@ -304,7 +315,7 @@ class FuncNode:
         self.extractor = partial(_mapped_extraction, to_extract=self.bind)
 
         if self.func_label is None:
-            self.func_label = self.name
+            self.func_label = self.func_id
 
         self.node_validator(self)
 
@@ -334,7 +345,7 @@ class FuncNode:
         'y=b,c -> h -> d'
         """
         if bind_info in {"values", "varnodes", "var_nodes"}:
-            return f"{','.join(self.bind.values())} -> {self.name} " f"-> {self.out}"
+            return f"{','.join(self.bind.values())} -> {self.func_id} " f"-> {self.out}"
         elif bind_info == "hybrid":
 
             def gen():
@@ -344,9 +355,9 @@ class FuncNode:
                     else:
                         yield f"{k}={v}"
 
-            return f"{','.join(gen())} -> {self.name} " f"-> {self.out}"
+            return f"{','.join(gen())} -> {self.func_id} " f"-> {self.out}"
         elif bind_info in {"keys", "params"}:
-            return f"{','.join(self.bind.keys())} -> {self.name} " f"-> {self.out}"
+            return f"{','.join(self.bind.keys())} -> {self.func_id} " f"-> {self.out}"
         else:
             raise ValueError(f"Unknown bind_info: {bind_info}")
 
@@ -398,7 +409,11 @@ class FuncNode:
 
     def to_dict(self):
         """The inverse of from_dict: FuncNode.from_dict(fn.to_dict()) == fn"""
-        return {x.name: getattr(self, x.name) for x in fields(self)}
+        d = {x.name: getattr(self, x.name) for x in fields(self)}
+        # Keep the legacy ``name`` key (what kwargs transformers and serialized
+        # dicts use); ``FuncNode(**d)`` accepts it as an alias of ``func_id``.
+        d["name"] = d.pop("func_id")
+        return d
 
     @classmethod
     def from_dict(cls, dictionary: dict):
@@ -451,7 +466,7 @@ class FuncNode:
 
         out = self.out
 
-        func_id = self.name
+        func_id = self.func_id
         func_label = getattr(self, "func_label", func_id)
         if out == func_id:  # though forbidden in default FuncNode validation
             func_id = "_" + func_id
@@ -536,6 +551,31 @@ def param_to_dot_definition(p: Parameter, shape=dflt_configs["vnode_shape"]):
 # -------------------------------------------------------------------------------------
 
 
+_NOT_GIVEN = object()
+
+
+def _accept_legacy_name_kwarg(init):
+    """Let ``FuncNode(..., name=...)`` keep working as an alias of ``func_id=...``"""
+
+    @wraps(init)
+    def __init__(self, *args, name=_NOT_GIVEN, **kwargs):
+        if name is not _NOT_GIVEN and name is not None:
+            if "func_id" in kwargs or len(args) > 1:
+                raise TypeError("Give only one of `func_id` and its alias `name`")
+            kwargs["func_id"] = name
+        init(self, *args, **kwargs)
+
+    # Advertise the alias in the signature, so introspection (and ``partial``
+    # with ``name=...``) keeps working
+    params = list(signature(init).parameters.values())
+    alias = Parameter("name", Parameter.KEYWORD_ONLY, default=None)
+    __init__.__signature__ = Signature([*params, alias])
+    return __init__
+
+
+FuncNode.__init__ = _accept_legacy_name_kwarg(FuncNode.__init__)
+
+
 @dataclass
 class Mesh:
     """Hold a collection of ``FuncNode`` objects, with no wiring or execution logic
@@ -560,7 +600,7 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
     * more to come (TODO)...
     """
     func_nodes = list(func_nodes)
-    node_names = [x.name for x in func_nodes]
+    node_names = [x.func_id for x in func_nodes]
     outs = [x.out for x in func_nodes]
     assert all(
         map(str.isidentifier, node_names)
@@ -673,6 +713,9 @@ def ch_func_node_attrs(fn: FuncNode, **new_attrs_values):
     >>> newer_fn.synopsis_string() == 'a,b -> sub -> difference'
     True
     """
+    if "name" in new_attrs_values:  # legacy alias of ``func_id``
+        new_attrs_values = dict(new_attrs_values)
+        new_attrs_values["func_id"] = new_attrs_values.pop("name")
     init_params = get_init_params_of_instance(fn)
     if params_that_are_not_init_params := (new_attrs_values.keys() - init_params):
         raise ValueError(

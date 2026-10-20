@@ -45,3 +45,23 @@ def test_synopsis_string():
         "f_out,g_out -> h_ -> h"
     )
     assert last_fnode.synopsis_string(bind_info="params") == ("ff,gg -> h_ -> h")
+
+
+def test_func_node_func_id_and_legacy_name_alias():
+    import pytest
+    from meshed import FuncNode
+
+    def f(x):
+        return x
+
+    fn = FuncNode(f, func_id="a")
+    assert fn.func_id == fn.name == "a"
+    assert FuncNode(f, name="a") == fn
+    assert FuncNode(f, "a") == fn
+    fn.name = "b"
+    assert fn.func_id == "b"
+    assert fn.to_dict()["name"] == "b"
+    assert FuncNode.from_dict(fn.to_dict()) == fn
+    assert fn.ch_attrs(name="c").func_id == "c"
+    with pytest.raises(TypeError):
+        FuncNode(f, func_id="a", name="b")
