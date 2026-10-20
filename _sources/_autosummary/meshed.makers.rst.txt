@@ -14,6 +14,7 @@ meshed.makers
       code_to_fnodes
       dag_to_jdict
       dlft_factory_to_func
+      dot_to_dag
       fnode_to_jdict
       func_nodes_to_named_funcs
       is_from_ast_module
@@ -27,6 +28,7 @@ meshed.makers
       parse_assignment
       parse_assignment_steps
       parse_body
+      parse_dot_digraph
       parse_steps
       parsed_to_node_kwargs
       robust_ast_parse

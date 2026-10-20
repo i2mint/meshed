@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=fa3986e7"></script>
+    <script src="../_static/documentation_options.js?v=31b0162a"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.183" />
+  <meta name="docsearch:version" content="0.1.184" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -1207,6 +1207,20 @@ when <code class="docutils literal notranslate"><span class="pre">filt</span></c
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="meshed.dag.DAG.from_dot_digraph">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_dot_digraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dot</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#DAG.from_dot_digraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.DAG.from_dot_digraph" title="Link to this definition">#</a></dt>
+<dd><p>Make a <code class="docutils literal notranslate"><span class="pre">DAG</span></code> from a dot digraph (string or <code class="docutils literal notranslate"><span class="pre">graphviz.Digraph</span></code>).</p>
+<p>The inverse of <code class="docutils literal notranslate"><span class="pre">DAG.dot_digraph</span></code>; it also reads the <code class="docutils literal notranslate"><span class="pre">a,b</span> <span class="pre">-&gt;</span> <span class="pre">f</span> <span class="pre">-&gt;</span> <span class="pre">c</span></code>
+lines of <code class="docutils literal notranslate"><span class="pre">DAG.synopsis_string</span></code>. See <code class="docutils literal notranslate"><span class="pre">meshed.makers.dot_to_dag</span></code> for the
+<code class="docutils literal notranslate"><span class="pre">kwargs</span></code> (<code class="docutils literal notranslate"><span class="pre">func_src</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>…).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="o">.</span><span class="n">from_dot_digraph</span><span class="p">(</span><span class="s1">'a, b -&gt; f -&gt; c'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dag</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">())</span>
+<span class="go">a,b -&gt; f -&gt; c</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="meshed.dag.DAG.from_funcs">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_funcs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">funcs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">named_funcs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/dag.html#DAG.from_funcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.dag.DAG.from_funcs" title="Link to this definition">#</a></dt>
 <dd><dl class="field-list simple">
@@ -1915,6 +1929,7 @@ strategy needs to be picklable for the dag to be (so: no lambdas if you pickle).
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.extract_output_from_scope"><code class="docutils literal notranslate"><span class="pre">DAG.extract_output_from_scope()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.find_func_node"><code class="docutils literal notranslate"><span class="pre">DAG.find_func_node()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.find_funcs"><code class="docutils literal notranslate"><span class="pre">DAG.find_funcs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.from_dot_digraph"><code class="docutils literal notranslate"><span class="pre">DAG.from_dot_digraph()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.from_funcs"><code class="docutils literal notranslate"><span class="pre">DAG.from_funcs()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.get_node_matching"><code class="docutils literal notranslate"><span class="pre">DAG.get_node_matching()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.dag.DAG.graph"><code class="docutils literal notranslate"><span class="pre">DAG.graph</span></code></a></li>

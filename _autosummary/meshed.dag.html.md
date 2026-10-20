@@ -721,6 +721,20 @@ when `filt` is `None`).
 * **Return type:**
   [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)]
 
+#### *classmethod* from_dot_digraph(dot, \*\*kwargs)
+
+Make a `DAG` from a dot digraph (string or `graphviz.Digraph`).
+
+The inverse of `DAG.dot_digraph`; it also reads the `a,b -> f -> c`
+lines of `DAG.synopsis_string`. See `meshed.makers.dot_to_dag` for the
+`kwargs` (`func_src`, `name`…).
+
+```pycon
+>>> dag = DAG.from_dot_digraph('a, b -> f -> c')
+>>> print(dag.synopsis_string())
+a,b -> f -> c
+```
+
 #### *classmethod* from_funcs(\*funcs, \*\*named_funcs)
 
 * **Parameters:**

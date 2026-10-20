@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=fa3986e7"></script>
+    <script src="../../_static/documentation_options.js?v=31b0162a"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.183" />
+  <meta name="docsearch:version" content="0.1.184" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -867,6 +867,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">keyword</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">itemgetter</span><span class="p">,</span> <span class="n">attrgetter</span>
@@ -1507,6 +1508,421 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">simple_code_to_digraph</span> <span class="o">=</span> <span class="n">code_to_digraph</span>  <span class="c1"># back-compatability alias</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------------------</span>
+<span class="c1"># Making a DAG from a dot digraph (i2mint/meshed#46)</span>
+
+<span class="n">DFLT_DOT_FUNC_SHAPES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"box"</span><span class="p">,</span> <span class="s2">"rect"</span><span class="p">,</span> <span class="s2">"rectangle"</span><span class="p">,</span> <span class="s2">"square"</span><span class="p">)</span>
+
+<span class="n">_dot_token</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">    (?P&lt;ws&gt;[ \t\r\f]+)</span>
+<span class="sd">  | (?P&lt;nl&gt;\n)</span>
+<span class="sd">  | (?P&lt;comment&gt;//[^\n]*|/\*.*?\*/|\#[^\n]*)</span>
+<span class="sd">  | (?P&lt;str&gt;"(?:[^"\\]|\\.)*")</span>
+<span class="sd">  | (?P&lt;arrow&gt;-&gt;|--)</span>
+<span class="sd">  | (?P&lt;num&gt;-?(?:\.\d+|\d+(?:\.\d*)?))</span>
+<span class="sd">  | (?P&lt;id&gt;[A-Za-z_\u0080-￿][\w\u0080-￿]*)</span>
+<span class="sd">  | (?P&lt;punct&gt;[{}\[\];,=:])</span>
+<span class="sd">  | (?P&lt;html&gt;&lt;)</span>
+<span class="sd">    """</span><span class="p">,</span>
+    <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_dot_tokens</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Tokenize dot ``text`` into ``(kind, value)`` pairs (kinds: id, nl, arrow, or</span>
+<span class="sd">    the punctuation itself). Quoted strings, numerals and HTML strings are ids</span>
+<span class="sd">    (marked quoted, so that they are never keywords); comments are dropped."""</span>
+    <span class="n">tokens</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="p">[],</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">_dot_token</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Can't read dot at </span><span class="si">{</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">20</span><span class="p">]</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">lastgroup</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"html"</span><span class="p">:</span>  <span class="c1"># &lt;...&gt; with nested &lt;...&gt;, as one (quoted) id</span>
+            <span class="n">depth</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span>
+            <span class="k">while</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+                <span class="n">depth</span> <span class="o">+=</span> <span class="p">{</span><span class="s2">"&lt;"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"&gt;"</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unclosed HTML string in dot at </span><span class="si">{</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">20</span><span class="p">]</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">"qid"</span><span class="p">,</span> <span class="n">text</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]))</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">j</span>
+            <span class="k">continue</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"str"</span><span class="p">:</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">"qid"</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'</span><span class="se">\\</span><span class="s1">(["</span><span class="se">\\</span><span class="s1">])'</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\1"</span><span class="p">,</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"num"</span><span class="p">:</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">"qid"</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"id"</span><span class="p">:</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">"id"</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"nl"</span><span class="p">,</span> <span class="s2">"arrow"</span><span class="p">):</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">kind</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"punct"</span><span class="p">:</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">value</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">tokens</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_dot_source</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The dot text of ``dot``: a string, or an object with a ``source`` (``graphviz.Digraph``)."""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dot</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">dot</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">dot</span><span class="p">,</span> <span class="s2">"source"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">source</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected a dot string or a graphviz.Digraph, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="parse_dot_digraph">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.parse_dot_digraph">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_dot_digraph</span><span class="p">(</span><span class="n">dot</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Parse the nodes and edges of a dot digraph.</span>
+
+<span class="sd">    Reads the dot language's statements (node, edge, attribute, subgraph), as far as</span>
+<span class="sd">    they describe a graph's wiring, and the ``a,b -&gt; f -&gt; c`` lines of</span>
+<span class="sd">    ``DAG.synopsis_string`` (comma-separated nodes on a side, ``param=var`` items,</span>
+<span class="sd">    and an empty first side for a node with no inputs). In synopsis-style input, a</span>
+<span class="sd">    newline ends a statement (outside of ``[...]``).</span>
+
+<span class="sd">    Returns ``(node_attrs, edges)``: a ``{node: {attr: value}}`` dict in order of</span>
+<span class="sd">    appearance (``node [...]`` defaults included), and the list of</span>
+<span class="sd">    ``(src, dst, param)`` edges in order, where ``param`` is the name ``dst`` binds</span>
+<span class="sd">    ``src`` to (``src`` itself, unless a ``param=src`` item said otherwise). A node</span>
+<span class="sd">    that starts a chain with an empty side gets ``{'shape': 'box'}`` (a function).</span>
+
+<span class="sd">    &gt;&gt;&gt; nodes, edges = parse_dot_digraph('''</span>
+<span class="sd">    ... digraph {</span>
+<span class="sd">    ...     f [label="f;{g}" shape="box"]</span>
+<span class="sd">    ...     a -&gt; f; b -&gt; f  // a comment</span>
+<span class="sd">    ...     f -&gt; c</span>
+<span class="sd">    ... }''')</span>
+<span class="sd">    &gt;&gt;&gt; nodes</span>
+<span class="sd">    {'f': {'label': 'f;{g}', 'shape': 'box'}, 'a': {}, 'b': {}, 'c': {}}</span>
+<span class="sd">    &gt;&gt;&gt; edges</span>
+<span class="sd">    [('a', 'f', 'a'), ('b', 'f', 'b'), ('f', 'c', 'f')]</span>
+<span class="sd">    &gt;&gt;&gt; parse_dot_digraph(' -&gt; x_ -&gt; x')</span>
+<span class="sd">    ({'x_': {'shape': 'box'}, 'x': {}}, [('x_', 'x', 'x_')])</span>
+<span class="sd">    &gt;&gt;&gt; parse_dot_digraph('y=b,c -&gt; h -&gt; d')[1]</span>
+<span class="sd">    [('b', 'h', 'y'), ('c', 'h', 'c'), ('h', 'd', 'h')]</span>
+<span class="sd">    """</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">_dot_tokens</span><span class="p">(</span><span class="n">_dot_source</span><span class="p">(</span><span class="n">dot</span><span class="p">))</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">node_attrs</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">node_defaults</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">[],</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">peek</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">offset</span>
+        <span class="k">return</span> <span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">take</span><span class="p">(</span><span class="o">*</span><span class="n">kinds</span><span class="p">):</span>
+        <span class="k">nonlocal</span> <span class="n">pos</span>
+        <span class="n">kind</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">peek</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">kinds</span> <span class="ow">and</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected </span><span class="si">{</span><span class="s1">' or '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kinds</span><span class="p">)</span><span class="si">}</span><span class="s2"> in dot, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">skip</span><span class="p">(</span><span class="o">*</span><span class="n">kinds</span><span class="p">):</span>
+        <span class="k">while</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">:</span>
+            <span class="n">take</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_keyword</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">kind</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">peek</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"id"</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">word</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">()):</span>
+        <span class="n">node_attrs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">node_defaults</span><span class="p">))</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">attr_list</span><span class="p">():</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">while</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"["</span><span class="p">:</span>
+            <span class="n">take</span><span class="p">(</span><span class="s2">"["</span><span class="p">)</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">skip</span><span class="p">(</span><span class="s2">"nl"</span><span class="p">,</span> <span class="s2">","</span><span class="p">,</span> <span class="s2">";"</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"]"</span><span class="p">:</span>
+                    <span class="n">take</span><span class="p">(</span><span class="s2">"]"</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">take</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">)</span>
+                <span class="n">skip</span><span class="p">(</span><span class="s2">"nl"</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"="</span><span class="p">:</span>
+                    <span class="n">take</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span>
+                    <span class="n">skip</span><span class="p">(</span><span class="s2">"nl"</span><span class="p">)</span>
+                    <span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">take</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"true"</span>
+        <span class="k">return</span> <span class="n">attrs</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">node_id</span><span class="p">():</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">take</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">":"</span><span class="p">:</span>  <span class="c1"># a port: ignored</span>
+            <span class="n">take</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
+            <span class="n">take</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">operand</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">"""The ``[(node, param), ...]`` of one side of an edge statement."""</span>
+        <span class="n">skip</span><span class="p">(</span><span class="s2">"nl"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"{"</span> <span class="ow">or</span> <span class="n">is_keyword</span><span class="p">(</span><span class="s2">"subgraph"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[(</span><span class="n">node</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">subgraph</span><span class="p">()]</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">peek</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"="</span><span class="p">:</span>  <span class="c1"># param=var</span>
+                <span class="n">param</span> <span class="o">=</span> <span class="n">take</span><span class="p">()</span>
+                <span class="n">take</span><span class="p">(</span><span class="s2">"="</span><span class="p">)</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">node_id</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">param</span> <span class="o">=</span> <span class="n">node</span> <span class="o">=</span> <span class="n">node_id</span><span class="p">()</span>
+            <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">node</span><span class="p">,</span> <span class="n">param</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">","</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">items</span>
+            <span class="n">take</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span>
+            <span class="n">skip</span><span class="p">(</span><span class="s2">"nl"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">subgraph</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">is_keyword</span><span class="p">(</span><span class="s2">"subgraph"</span><span class="p">):</span>
+            <span class="n">take</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">):</span>
+                <span class="n">take</span><span class="p">()</span>
+        <span class="n">take</span><span class="p">(</span><span class="s2">"{"</span><span class="p">)</span>
+        <span class="n">before</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_attrs</span><span class="p">)</span>
+        <span class="n">mentioned</span> <span class="o">=</span> <span class="n">statements</span><span class="p">(</span><span class="n">until</span><span class="o">=</span><span class="s2">"}"</span><span class="p">)</span>
+        <span class="n">take</span><span class="p">(</span><span class="s2">"}"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mentioned</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">(</span><span class="n">node_attrs</span><span class="p">)[</span><span class="n">before</span><span class="p">:]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">statement</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">"""Parse one statement; return the nodes it mentions."""</span>
+        <span class="k">nonlocal</span> <span class="n">node_defaults</span>
+        <span class="n">kind</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">peek</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">is_keyword</span><span class="p">(</span><span class="s2">"strict"</span><span class="p">):</span>
+            <span class="n">take</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">is_keyword</span><span class="p">(</span><span class="s2">"digraph"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_keyword</span><span class="p">(</span><span class="s2">"graph"</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">peek</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"{"</span> <span class="ow">or</span> <span class="p">(</span><span class="n">peek</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">peek</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"{"</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">take</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">):</span>
+                <span class="n">take</span><span class="p">()</span>
+            <span class="n">take</span><span class="p">(</span><span class="s2">"{"</span><span class="p">)</span>
+            <span class="n">statements</span><span class="p">(</span><span class="n">until</span><span class="o">=</span><span class="s2">"}"</span><span class="p">)</span>
+            <span class="n">take</span><span class="p">(</span><span class="s2">"}"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"graph"</span><span class="p">,</span> <span class="s2">"node"</span><span class="p">,</span> <span class="s2">"edge"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">is_keyword</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="ow">and</span> <span class="n">peek</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"["</span><span class="p">:</span>
+                <span class="n">take</span><span class="p">()</span>
+                <span class="n">attrs</span> <span class="o">=</span> <span class="n">attr_list</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">word</span> <span class="o">==</span> <span class="s2">"node"</span><span class="p">:</span>
+                    <span class="n">node_defaults</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">node_defaults</span><span class="p">,</span> <span class="o">**</span><span class="n">attrs</span><span class="p">}</span>
+                <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">peek</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"="</span>
+            <span class="ow">and</span> <span class="n">peek</span><span class="p">(</span><span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">"arrow"</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">take</span><span class="p">(),</span> <span class="n">take</span><span class="p">(</span><span class="s2">"="</span><span class="p">),</span> <span class="n">take</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"qid"</span><span class="p">)</span>  <span class="c1"># a graph attribute</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">sides</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">"arrow"</span><span class="p">:</span>  <span class="c1"># " -&gt; f -&gt; out": f is a function with no inputs</span>
+            <span class="n">sides</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sides</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">operand</span><span class="p">())</span>
+        <span class="k">while</span> <span class="n">peek</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"arrow"</span><span class="p">:</span>
+            <span class="n">take</span><span class="p">(</span><span class="s2">"arrow"</span><span class="p">)</span>
+            <span class="n">sides</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">operand</span><span class="p">())</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">attr_list</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">sides</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">attrs_of_first</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"shape"</span><span class="p">:</span> <span class="s2">"box"</span><span class="p">}</span>
+            <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">sides</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">node_attrs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">node_defaults</span><span class="p">))</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+                    <span class="s2">"shape"</span><span class="p">,</span> <span class="n">attrs_of_first</span><span class="p">[</span><span class="s2">"shape"</span><span class="p">]</span>
+                <span class="p">)</span>
+        <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="n">sides</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">side</span><span class="p">:</span>
+                <span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">attrs</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sides</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">())</span>
+        <span class="k">for</span> <span class="n">srcs</span><span class="p">,</span> <span class="n">dsts</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sides</span><span class="p">,</span> <span class="n">sides</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">srcs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">dst</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dsts</span><span class="p">:</span>
+                    <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">param</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">node</span> <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="n">sides</span> <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">side</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">statements</span><span class="p">(</span><span class="n">until</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">mentioned</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">skip</span><span class="p">(</span><span class="s2">"nl"</span><span class="p">,</span> <span class="s2">";"</span><span class="p">)</span>
+            <span class="n">kind</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">peek</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">kind</span> <span class="o">==</span> <span class="n">until</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">mentioned</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">pos</span>
+            <span class="n">mentioned</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">statement</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">pos</span> <span class="o">==</span> <span class="n">start</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected </span><span class="si">{</span><span class="n">peek</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="si">!r}</span><span class="s2"> in dot"</span><span class="p">)</span>
+
+    <span class="n">statements</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">node_attrs</span><span class="p">,</span> <span class="n">edges</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_dot_func_nodes</span><span class="p">(</span><span class="n">node_attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">edges</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">func_shapes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Tell function nodes from variable nodes in a bipartite var/func digraph.</span>
+
+<span class="sd">    If some node has one of the ``func_shapes``, the nodes with a shape are functions</span>
+<span class="sd">    exactly when it is one of them (otherwise shapes are ignored). The other nodes</span>
+<span class="sd">    get their role by alternation along edges, from those nodes and from the nodes</span>
+<span class="sd">    with no inputs (variables).</span>
+<span class="sd">    """</span>
+    <span class="n">func_shapes</span> <span class="o">=</span> <span class="p">{</span><span class="n">shape</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">func_shapes</span><span class="p">}</span>
+    <span class="n">shapes</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">node</span><span class="p">:</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"shape"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">attrs</span> <span class="ow">in</span> <span class="n">node_attrs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">is_func</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">shape</span> <span class="ow">in</span> <span class="n">func_shapes</span> <span class="k">for</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">shapes</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="c1"># shapes tell the roles of the nodes that have one</span>
+        <span class="n">is_func</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">node</span><span class="p">:</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">func_shapes</span> <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">shape</span> <span class="ow">in</span> <span class="n">shapes</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">shape</span>
+        <span class="p">}</span>
+    <span class="n">has_input</span> <span class="o">=</span> <span class="p">{</span><span class="n">dst</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">node_attrs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">is_func</span> <span class="ow">and</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">has_input</span><span class="p">:</span>
+            <span class="n">is_func</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># an input</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">node_attrs</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+        <span class="n">neighbors</span><span class="p">[</span><span class="n">src</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+        <span class="n">neighbors</span><span class="p">[</span><span class="n">dst</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">is_func</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>  <span class="c1"># roles alternate along edges</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">other</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">is_func</span><span class="p">:</span>
+                <span class="n">is_func</span><span class="p">[</span><span class="n">other</span><span class="p">]</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">is_func</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+                <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_func</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="o">==</span> <span class="n">is_func</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dst</span><span class="p">):</span>
+            <span class="n">kind</span> <span class="o">=</span> <span class="s2">"function"</span> <span class="k">if</span> <span class="n">is_func</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"variable"</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Edge </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2"> links two </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2"> nodes: a DAG's edges go from "</span>
+                <span class="sa">f</span><span class="s2">"variables to functions and from functions to variables. Give the "</span>
+                <span class="sa">f</span><span class="s2">"function nodes one of the func_shapes (</span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">func_shapes</span><span class="p">)</span><span class="si">}</span><span class="s2">) to "</span>
+                <span class="sa">f</span><span class="s2">"disambiguate."</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">node</span> <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">is_func</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">func</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_dot_func_src_key</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">func_src</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The ``func_src`` key for a function node not found by its id: its ``label``,</span>
+<span class="sd">    or its id without the ``_`` that ``FuncNode`` adds when a name equals its out."""</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"label"</span><span class="p">),</span> <span class="n">node</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">func_src</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="dot_to_dag">
+<a class="viewcode-back" href="../../_autosummary/meshed.makers.html#meshed.makers.dot_to_dag">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_to_dag</span><span class="p">(</span>
+    <span class="n">dot</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">func_src</span><span class="p">:</span> <span class="n">FuncSource</span> <span class="o">=</span> <span class="n">dlft_factory_to_func</span><span class="p">,</span>
+    <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">func_shapes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DFLT_DOT_FUNC_SHAPES</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Build a ``DAG`` from a dot digraph of variable and function nodes.</span>
+
+<span class="sd">    ``dot`` is a dot-language string (or a ``graphviz.Digraph``, e.g. what</span>
+<span class="sd">    ``DAG.dot_digraph`` makes), or the ``a,b -&gt; f -&gt; c`` lines of</span>
+<span class="sd">    ``DAG.synopsis_string`` (any ``bind_info``). Function nodes are the nodes with</span>
+<span class="sd">    one of the ``func_shapes`` (the box-like shapes ``DAG.dot_digraph`` gives them);</span>
+<span class="sd">    if no node has one, roles are inferred: nodes with no inputs are variables, and</span>
+<span class="sd">    nodes alternate between variables and functions along the edges. Each function</span>
+<span class="sd">    node needs exactly one output variable; its inputs, in the order of their edges,</span>
+<span class="sd">    are its arguments. The functions come from ``func_src``, as in ``code_to_dag``</span>
+<span class="sd">    (by default, placeholders describing the call); a mapping ``func_src`` is looked</span>
+<span class="sd">    up by node id, then by the node's ``label``, then by the id without the ``_``</span>
+<span class="sd">    suffix ``FuncNode`` adds to a name that equals its ``out``. The dot does not carry defaults:</span>
+<span class="sd">    every input of the ``DAG`` is required.</span>
+
+<span class="sd">    &gt;&gt;&gt; dag = dot_to_dag('''</span>
+<span class="sd">    ... a, b -&gt; f -&gt; c</span>
+<span class="sd">    ... c, a -&gt; g -&gt; e</span>
+<span class="sd">    ... ''')</span>
+<span class="sd">    &gt;&gt;&gt; print(dag.synopsis_string())</span>
+<span class="sd">    a,b -&gt; f -&gt; c</span>
+<span class="sd">    c,a -&gt; g -&gt; e</span>
+<span class="sd">    &gt;&gt;&gt; dag(1, 2)</span>
+<span class="sd">    'g(c=f(a=1, b=2), a=1)'</span>
+
+<span class="sd">    It round-trips with ``DAG.dot_digraph`` (here, its text), and takes real</span>
+<span class="sd">    functions through ``func_src``:</span>
+
+<span class="sd">    &gt;&gt;&gt; body = '\\n'.join(dag.dot_digraph_body())</span>
+<span class="sd">    &gt;&gt;&gt; dag2 = dot_to_dag(</span>
+<span class="sd">    ...     f'digraph {{ {body} }}',</span>
+<span class="sd">    ...     func_src={'f': lambda a, b: a + b, 'g': lambda c, a: c * a},</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; print(dag2.synopsis_string())</span>
+<span class="sd">    a,b -&gt; f -&gt; c</span>
+<span class="sd">    c,a -&gt; g -&gt; e</span>
+<span class="sd">    &gt;&gt;&gt; dag2(1, 2)</span>
+<span class="sd">    3</span>
+
+<span class="sd">    :raises ValueError: If the dot can't be read, has no function node, an edge</span>
+<span class="sd">        links two nodes of the same kind, a function node has no or several outputs,</span>
+<span class="sd">        or a node id is not a usable Python name.</span>
+<span class="sd">    """</span>
+    <span class="n">node_attrs</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">parse_dot_digraph</span><span class="p">(</span><span class="n">dot</span><span class="p">)</span>
+    <span class="n">func_nodes</span> <span class="o">=</span> <span class="n">_dot_func_nodes</span><span class="p">(</span><span class="n">node_attrs</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">func_shapes</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">func_nodes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No function nodes found in the dot digraph"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_src</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="n">func_src</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="n">node</span><span class="p">:</span> <span class="n">func_src</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">func_nodes</span>
+                <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">func_src</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">key</span> <span class="o">:=</span> <span class="n">_dot_func_src_key</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">node_attrs</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="n">func_src</span><span class="p">))</span>
+            <span class="p">},</span>
+            <span class="o">**</span><span class="n">func_src</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_name</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">()</span> <span class="ow">or</span> <span class="n">keyword</span><span class="o">.</span><span class="n">iskeyword</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Node id </span><span class="si">{</span><span class="n">node</span><span class="si">!r}</span><span class="s2"> is not a usable Python name"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">lines</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="p">(</span><span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">node_attrs</span> <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">):</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">src</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span> <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">edges</span> <span class="k">if</span> <span class="n">dst</span> <span class="o">==</span> <span class="n">func</span><span class="p">]</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">dst</span> <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">edges</span> <span class="k">if</span> <span class="n">src</span> <span class="o">==</span> <span class="n">func</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Function node </span><span class="si">{</span><span class="n">func</span><span class="si">!r}</span><span class="s2"> must have exactly one output variable, "</span>
+                    <span class="sa">f</span><span class="s2">"has </span><span class="si">{</span><span class="n">outputs</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="c1"># positional args up to the first renamed one, keyword args from there</span>
+            <span class="n">renamed</span> <span class="o">=</span> <span class="p">[</span><span class="n">src</span> <span class="o">!=</span> <span class="n">param</span> <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]</span>
+            <span class="n">first_kw</span> <span class="o">=</span> <span class="n">renamed</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">renamed</span><span class="p">)</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="n">check_name</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">first_kw</span>
+                    <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">check_name</span><span class="p">(</span><span class="n">param</span><span class="p">)</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">check_name</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">"    </span><span class="si">{</span><span class="n">check_name</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">check_name</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)"</span>
+
+    <span class="n">dag_name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="s2">"dag_from_dot"</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"def </span><span class="si">{</span><span class="n">dag_name</span><span class="si">}</span><span class="s2">():</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">())</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
+    <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span>
+        <span class="n">src</span><span class="p">,</span>
+        <span class="n">func_src</span><span class="o">=</span><span class="n">func_src</span><span class="p">,</span>
+        <span class="n">use_place_holder_fallback</span><span class="o">=</span><span class="n">use_place_holder_fallback</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">dag_name</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
 
 <span class="c1"># import re</span>
 <span class="c1"># from typing import Tuple, Iterable, Iterator</span>

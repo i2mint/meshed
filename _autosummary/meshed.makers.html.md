@@ -184,6 +184,7 @@ But see below that the dag is now using the functions we specified:
 | `code_to_fnodes`([src, func_src, ...])                                                          | Parse `out = func(args...)` code into a tuple of `FuncNode` objects.                                                                          |
 | [`dag_to_jdict`](#meshed.makers.dag_to_jdict)(dag, \*[, func_to_jdict])         | Will produce a json-serializable dictionary from a dag.                                                                                       |
 | [`dlft_factory_to_func`](#meshed.makers.dlft_factory_to_func)(factory[, ...])           | Get a function for the given factory, looking its `func_label` up in `name_to_func_map`.                                                      |
+| [`dot_to_dag`](#meshed.makers.dot_to_dag)(dot, \*[, func_src, ...])           | Build a `DAG` from a dot digraph of variable and function nodes.                                                                              |
 | [`fnode_to_jdict`](#meshed.makers.fnode_to_jdict)(fnode, \*[, func_to_jdict])     | Serialize a `FuncNode` to a dict of its `name`, `func_label`, `bind` and `out`.                                                               |
 | [`func_nodes_to_named_funcs`](#meshed.makers.func_nodes_to_named_funcs)(func_nodes)          | Make some components (kwargs) based on the `.out` and `.func` of the `FuncNode` objects.                                                      |
 | [`is_from_ast_module`](#meshed.makers.is_from_ast_module)(o)                          | Tell whether the class of `o` reports `_ast` as its module.                                                                                   |
@@ -197,6 +198,7 @@ But see below that the dag is now using the functions we specified:
 | [`parse_assignment`](#meshed.makers.parse_assignment)(body[, info])                 | Split an assignment statement into its `(target, call)` ast nodes.                                                                            |
 | [`parse_assignment_steps`](#meshed.makers.parse_assignment_steps)(src)                    | Parse source code and generate tuples of information about it.                                                                                |
 | [`parse_body`](#meshed.makers.parse_body)(body, \*[, body_index])             | Turn one body statement into a `(target, call)` pair of ast nodes, or `None`.                                                                 |
+| [`parse_dot_digraph`](#meshed.makers.parse_dot_digraph)(dot)                         | Parse the nodes and edges of a dot digraph.                                                                                                   |
 | [`parse_steps`](#meshed.makers.parse_steps)(src)                               | Parse source code and generate tuples of information about it.                                                                                |
 | [`parsed_to_node_kwargs`](#meshed.makers.parsed_to_node_kwargs)(target_value)            | Extract FuncNode kwargs (name, out, and bind) from ast (target,value) pairs                                                                   |
 | [`robust_ast_parse`](#meshed.makers.robust_ast_parse)(src)                          | Parse `src` with `ast.parse`, retrying with the common leading indent stripped on `IndentationError`.                                         |
@@ -238,6 +240,58 @@ Mapping view of `dlft_factory_to_func`: `m[factory]` is `dlft_factory_to_func(fa
 
 Only `__getitem__` is defined, so a subclass must add `__iter__` and
 `__len__` before it can be instantiated.
+
+### meshed.makers.dot_to_dag(dot, \*, func_src=<function dlft_factory_to_func>, use_place_holder_fallback=False, name=None, func_shapes=('box', 'rect', 'rectangle', 'square'))
+
+Build a `DAG` from a dot digraph of variable and function nodes.
+
+`dot` is a dot-language string (or a `graphviz.Digraph`, e.g. what
+`DAG.dot_digraph` makes), or the `a,b -> f -> c` lines of
+`DAG.synopsis_string` (any `bind_info`). Function nodes are the nodes with
+one of the `func_shapes` (the box-like shapes `DAG.dot_digraph` gives them);
+if no node has one, roles are inferred: nodes with no inputs are variables, and
+nodes alternate between variables and functions along the edges. Each function
+node needs exactly one output variable; its inputs, in the order of their edges,
+are its arguments. The functions come from `func_src`, as in `code_to_dag`
+(by default, placeholders describing the call); a mapping `func_src` is looked
+up by node id, then by the node’s `label`, then by the id without the `_`
+suffix `FuncNode` adds to a name that equals its `out`. The dot does not carry defaults:
+every input of the `DAG` is required.
+
+```pycon
+>>> dag = dot_to_dag('''
+... a, b -> f -> c
+... c, a -> g -> e
+... ''')
+>>> print(dag.synopsis_string())
+a,b -> f -> c
+c,a -> g -> e
+>>> dag(1, 2)
+'g(c=f(a=1, b=2), a=1)'
+```
+
+It round-trips with `DAG.dot_digraph` (here, its text), and takes real
+functions through `func_src`:
+
+```pycon
+>>> body = '\n'.join(dag.dot_digraph_body())
+>>> dag2 = dot_to_dag(
+...     f'digraph {{ {body} }}',
+...     func_src={'f': lambda a, b: a + b, 'g': lambda c, a: c * a},
+... )
+>>> print(dag2.synopsis_string())
+a,b -> f -> c
+c,a -> g -> e
+>>> dag2(1, 2)
+3
+```
+
+* **Raises:**
+  [**ValueError**](https://docs.python.org/3/builtins/exceptions.html#ValueError) – If the dot can’t be read, has no function node, an edge
+  links two nodes of the same kind, a function node has no or several outputs,
+  or a node id is not a usable Python name.
+* **Return type:**
+  [`DAG`](meshed.dag.html.md#meshed.dag.DAG)
 
 ### meshed.makers.extract_tokens(string, pos=0, endpos=9223372036854775807)
 
@@ -422,6 +476,39 @@ Turn one body statement into a `(target, call)` pair of ast nodes, or `None`.
 Assignments go through `parse_assignment`; a bare call gets the dummy target
 `_{body_index}`; `return` statements and string constants (docstrings) give
 `None` (skipped); anything else raises `ValueError`.
+
+### meshed.makers.parse_dot_digraph(dot)
+
+Parse the nodes and edges of a dot digraph.
+
+Reads the dot language’s statements (node, edge, attribute, subgraph), as far as
+they describe a graph’s wiring, and the `a,b -> f -> c` lines of
+`DAG.synopsis_string` (comma-separated nodes on a side, `param=var` items,
+and an empty first side for a node with no inputs). In synopsis-style input, a
+newline ends a statement (outside of `[...]`).
+
+Returns `(node_attrs, edges)`: a `{node: {attr: value}}` dict in order of
+appearance (`node [...]` defaults included), and the list of
+`(src, dst, param)` edges in order, where `param` is the name `dst` binds
+`src` to (`src` itself, unless a `param=src` item said otherwise). A node
+that starts a chain with an empty side gets `{'shape': 'box'}` (a function).
+
+```pycon
+>>> nodes, edges = parse_dot_digraph('''
+... digraph {
+...     f [label="f;{g}" shape="box"]
+...     a -> f; b -> f  // a comment
+...     f -> c
+... }''')
+>>> nodes
+{'f': {'label': 'f;{g}', 'shape': 'box'}, 'a': {}, 'b': {}, 'c': {}}
+>>> edges
+[('a', 'f', 'a'), ('b', 'f', 'b'), ('f', 'c', 'f')]
+>>> parse_dot_digraph(' -> x_ -> x')
+({'x_': {'shape': 'box'}, 'x': {}}, [('x_', 'x', 'x_')])
+>>> parse_dot_digraph('y=b,c -> h -> d')[1]
+[('b', 'h', 'y'), ('c', 'h', 'c'), ('h', 'd', 'h')]
+```
 
 ### meshed.makers.parse_steps(src)
 
