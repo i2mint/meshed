@@ -1143,9 +1143,11 @@ def dot_to_dag(
             renamed = [src != param for src, param in inputs]
             first_kw = renamed.index(True) if any(renamed) else len(inputs)
             args = ", ".join(
-                check_name(src)
-                if i < first_kw
-                else f"{check_name(param)}={check_name(src)}"
+                (
+                    check_name(src)
+                    if i < first_kw
+                    else f"{check_name(param)}={check_name(src)}"
+                )
                 for i, (src, param) in enumerate(inputs)
             )
             yield f"    {check_name(outputs[0])} = {check_name(func)}({args})"
