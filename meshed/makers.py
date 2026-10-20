@@ -153,6 +153,7 @@ But see below that the dag is now using the functions we specified:
 """
 
 import ast
+import keyword
 import re
 import inspect
 from operator import itemgetter, attrgetter
@@ -756,13 +757,59 @@ simple_code_to_digraph = code_to_digraph  # back-compatability alias
 # ---------------------------------------------------------------------------------------
 # Making a DAG from a dot digraph (i2mint/meshed#46)
 
-_dot_func_shapes = frozenset({"box", "rect", "rectangle", "square"})
-_dot_skip_statement = re.compile(
-    r"^\s*((strict\s+)?(di)?graph\b.*|subgraph\b.*|[{}]|(graph|node|edge)\s*\[.*|\w+\s*=.*)?\s*$",
-    re.IGNORECASE,
+DFLT_DOT_FUNC_SHAPES = ("box", "rect", "rectangle", "square")
+
+_dot_token = re.compile(
+    r"""
+    (?P<ws>[ \t\r\f]+)
+  | (?P<nl>\n)
+  | (?P<comment>//[^\n]*|/\*.*?\*/|\#[^\n]*)
+  | (?P<str>"(?:[^"\\]|\\.)*")
+  | (?P<arrow>->|--)
+  | (?P<num>-?(?:\.\d+|\d+(?:\.\d*)?))
+  | (?P<id>[A-Za-z_\u0080-￿][\w\u0080-￿]*)
+  | (?P<punct>[{}\[\];,=:])
+  | (?P<html><)
+    """,
+    re.VERBOSE | re.DOTALL,
 )
-_dot_attrs = re.compile(r'(\w+)\s*=\s*("(?:[^"\\]|\\.)*"|[^\s,;\]]+)')
-_dot_id = re.compile(r'^"((?:[^"\\]|\\.)*)"$|^([^\s"]+)$')
+
+
+def _dot_tokens(text: str) -> list:
+    """Tokenize dot ``text`` into ``(kind, value)`` pairs (kinds: id, nl, arrow, or
+    the punctuation itself). Quoted strings, numerals and HTML strings are ids
+    (marked quoted, so that they are never keywords); comments are dropped."""
+    tokens, i = [], 0
+    while i < len(text):
+        m = _dot_token.match(text, i)
+        if m is None:
+            raise ValueError(f"Can't read dot at {text[i : i + 20]!r}")
+        kind = m.lastgroup
+        if kind == "html":  # <...> with nested <...>, as one (quoted) id
+            depth, j = 0, i
+            while j < len(text):
+                depth += {"<": 1, ">": -1}.get(text[j], 0)
+                j += 1
+                if depth == 0:
+                    break
+            else:
+                raise ValueError(f"Unclosed HTML string in dot at {text[i : i + 20]!r}")
+            tokens.append(("qid", text[i + 1 : j - 1]))
+            i = j
+            continue
+        value = m.group()
+        if kind == "str":
+            tokens.append(("qid", re.sub(r'\\(["\\])', r"\1", value[1:-1])))
+        elif kind == "num":
+            tokens.append(("qid", value))
+        elif kind == "id":
+            tokens.append(("id", value))
+        elif kind in ("nl", "arrow"):
+            tokens.append((kind, value))
+        elif kind == "punct":
+            tokens.append((value, value))
+        i = m.end()
+    return tokens
 
 
 def _dot_source(dot) -> str:
@@ -775,118 +822,241 @@ def _dot_source(dot) -> str:
     raise TypeError(f"Expected a dot string or a graphviz.Digraph, not {type(dot)}")
 
 
-def _dot_statements(text: str):
-    """Yield the statements of dot ``text``, comments and graph-level lines removed."""
-    text = re.sub(r"/\*.*?\*/", "", text, flags=re.DOTALL)
-    for line in text.splitlines():
-        line = re.sub(r"(^|\s)(//|#).*$", "", line)
-        # a body line may hold several ;-separated statements, and the graph's
-        # opening/closing braces may share a line with one
-        for statement in line.replace("{", "\n{\n").replace("}", "\n}\n").split(";"):
-            for part in statement.splitlines():
-                if not _dot_skip_statement.match(part):
-                    yield part.strip()
-
-
-def _dot_ids(part: str) -> list:
-    """The node ids of one side of an edge statement (``a``, ``a, b``, ``"a b"``)."""
-    ids = []
-    for token in filter(None, (t.strip() for t in part.split(","))):
-        m = _dot_id.match(token)
-        if not m:
-            raise ValueError(f"Can't read a node id from {token!r}")
-        ids.append(m.group(1) if m.group(1) is not None else m.group(2))
-    return ids
-
-
 def parse_dot_digraph(dot):
     """Parse the nodes and edges of a dot digraph.
 
-    Reads the subset of the dot language that describes a graph's wiring: node
-    statements (``f [shape=box]``), edge chains (``a -> f -> c``) and their
-    attributes. Also reads the ``a,b -> f -> c`` lines of ``DAG.synopsis_string``
-    (several comma-separated nodes on a side, and an empty first side for a node
-    with no inputs). Graph-level attributes, subgraphs and comments are ignored.
+    Reads the dot language's statements (node, edge, attribute, subgraph), as far as
+    they describe a graph's wiring, and the ``a,b -> f -> c`` lines of
+    ``DAG.synopsis_string`` (comma-separated nodes on a side, ``param=var`` items,
+    and an empty first side for a node with no inputs). In synopsis-style input, a
+    newline ends a statement (outside of ``[...]``).
 
     Returns ``(node_attrs, edges)``: a ``{node: {attr: value}}`` dict in order of
-    appearance, and the list of ``(src, dst)`` edges in order. A node that starts an
-    edge chain with an empty side gets ``{'shape': 'box'}`` (a function).
+    appearance (``node [...]`` defaults included), and the list of
+    ``(src, dst, param)`` edges in order, where ``param`` is the name ``dst`` binds
+    ``src`` to (``src`` itself, unless a ``param=src`` item said otherwise). A node
+    that starts a chain with an empty side gets ``{'shape': 'box'}`` (a function).
 
     >>> nodes, edges = parse_dot_digraph('''
     ... digraph {
-    ...     f [label="f" shape="box"]
-    ...     a -> f; b -> f
+    ...     f [label="f;{g}" shape="box"]
+    ...     a -> f; b -> f  // a comment
     ...     f -> c
     ... }''')
     >>> nodes
-    {'f': {'label': 'f', 'shape': 'box'}, 'a': {}, 'b': {}, 'c': {}}
+    {'f': {'label': 'f;{g}', 'shape': 'box'}, 'a': {}, 'b': {}, 'c': {}}
     >>> edges
-    [('a', 'f'), ('b', 'f'), ('f', 'c')]
+    [('a', 'f', 'a'), ('b', 'f', 'b'), ('f', 'c', 'f')]
     >>> parse_dot_digraph(' -> x_ -> x')
-    ({'x_': {'shape': 'box'}, 'x': {}}, [('x_', 'x')])
+    ({'x_': {'shape': 'box'}, 'x': {}}, [('x_', 'x', 'x_')])
+    >>> parse_dot_digraph('y=b,c -> h -> d')[1]
+    [('b', 'h', 'y'), ('c', 'h', 'c'), ('h', 'd', 'h')]
     """
-    node_attrs = {}
-    edges = []
-    for statement in _dot_statements(_dot_source(dot)):
+    tokens = _dot_tokens(_dot_source(dot))
+    pos = 0
+    node_attrs, edges, node_defaults = {}, [], {}
+
+    def peek(offset=0):
+        i = pos + offset
+        return tokens[i] if i < len(tokens) else (None, None)
+
+    def take(*kinds):
+        nonlocal pos
+        kind, value = peek()
+        if kinds and kind not in kinds:
+            raise ValueError(f"Expected {' or '.join(kinds)} in dot, got {value!r}")
+        pos += 1
+        return value
+
+    def skip(*kinds):
+        while peek()[0] in kinds:
+            take()
+
+    def is_keyword(word, offset=0):
+        kind, value = peek(offset)
+        return kind == "id" and value.lower() == word
+
+    def add_node(node, attrs=()):
+        node_attrs.setdefault(node, dict(node_defaults)).update(attrs)
+
+    def attr_list():
         attrs = {}
-        if (bracket := statement.find("[")) >= 0:
-            attrs = {
-                k: v[1:-1] if v.startswith('"') else v
-                for k, v in _dot_attrs.findall(statement[bracket:])
-            }
-            statement = statement[:bracket]
-        sides = [_dot_ids(side) for side in statement.split("->")]
-        if len(sides) == 1:  # a node statement
-            for node in sides[0]:
-                node_attrs.setdefault(node, {}).update(attrs)
-            continue
-        if not sides[0]:  # " -> f -> out": f is a function with no inputs
-            sides = sides[1:]
-            for node in sides[0]:
-                node_attrs.setdefault(node, {}).setdefault("shape", "box")
+        while peek()[0] == "[":
+            take("[")
+            while True:
+                skip("nl", ",", ";")
+                if peek()[0] == "]":
+                    take("]")
+                    break
+                key = take("id", "qid")
+                skip("nl")
+                if peek()[0] == "=":
+                    take("=")
+                    skip("nl")
+                    attrs[key] = take("id", "qid")
+                else:
+                    attrs[key] = "true"
+        return attrs
+
+    def node_id():
+        node = take("id", "qid")
+        while peek()[0] == ":":  # a port: ignored
+            take(":")
+            take("id", "qid")
+        return node
+
+    def operand():
+        """The ``[(node, param), ...]`` of one side of an edge statement."""
+        skip("nl")
+        if peek()[0] == "{" or is_keyword("subgraph"):
+            return [(node, node) for node in subgraph()]
+        items = []
+        while True:
+            if peek()[0] in ("id", "qid") and peek(1)[0] == "=":  # param=var
+                param = take()
+                take("=")
+                node = node_id()
+            else:
+                param = node = node_id()
+            items.append((node, param))
+            if peek()[0] != ",":
+                return items
+            take(",")
+            skip("nl")
+
+    def subgraph():
+        if is_keyword("subgraph"):
+            take()
+            if peek()[0] in ("id", "qid"):
+                take()
+        take("{")
+        before = len(node_attrs)
+        mentioned = statements(until="}")
+        take("}")
+        return mentioned or list(node_attrs)[before:]
+
+    def statement():
+        """Parse one statement; return the nodes it mentions."""
+        nonlocal node_defaults
+        kind, _ = peek()
+        if is_keyword("strict"):
+            take()
+        if (is_keyword("digraph") or is_keyword("graph")) and (
+            peek(1)[0] == "{" or (peek(1)[0] in ("id", "qid") and peek(2)[0] == "{")
+        ):
+            take()
+            if peek()[0] in ("id", "qid"):
+                take()
+            take("{")
+            statements(until="}")
+            take("}")
+            return []
+        for word in ("graph", "node", "edge"):
+            if is_keyword(word) and peek(1)[0] == "[":
+                take()
+                attrs = attr_list()
+                if word == "node":
+                    node_defaults = {**node_defaults, **attrs}
+                return []
+        if (
+            kind in ("id", "qid")
+            and peek(1)[0] == "="
+            and peek(3)[0] not in (",", "arrow", ":")
+        ):
+            take(), take("="), take("id", "qid")  # a graph attribute
+            return []
+        sides = []
+        if kind == "arrow":  # " -> f -> out": f is a function with no inputs
+            sides.append([])
+        else:
+            sides.append(operand())
+        while peek()[0] == "arrow":
+            take("arrow")
+            sides.append(operand())
+        attrs = attr_list()
+        if not sides[0] and len(sides) > 1:
+            attrs_of_first = {"shape": "box"}
+            for node, _ in sides[1]:
+                node_attrs.setdefault(node, dict(node_defaults)).setdefault(
+                    "shape", attrs_of_first["shape"]
+                )
         for side in sides:
-            for node in side:
-                node_attrs.setdefault(node, {})
+            for node, _ in side:
+                add_node(node, attrs if len(sides) == 1 else ())
         for srcs, dsts in zip(sides, sides[1:]):
-            edges.extend((s, d) for s in srcs for d in dsts)
+            for src, param in srcs:
+                for dst, _ in dsts:
+                    edges.append((src, dst, param))
+        return [node for side in sides for node, _ in side]
+
+    def statements(until=None):
+        mentioned = []
+        while True:
+            skip("nl", ";")
+            kind, _ = peek()
+            if kind is None or kind == until:
+                return mentioned
+            start = pos
+            mentioned.extend(statement())
+            if pos == start:
+                raise ValueError(f"Unexpected {peek()[1]!r} in dot")
+
+    statements()
     return node_attrs, edges
 
 
-def _dot_func_nodes(node_attrs: dict, edges: list) -> set:
+def _dot_func_nodes(node_attrs: dict, edges: list, func_shapes) -> set:
     """Tell function nodes from variable nodes in a bipartite var/func digraph.
 
-    Nodes with a box-like ``shape`` are functions, nodes with another shape are
-    variables; the rest are inferred by alternation along edges, starting from the
-    nodes with no inputs (variables, unless their shape says otherwise).
+    If some node has one of the ``func_shapes``, the nodes with a shape are functions
+    exactly when it is one of them (otherwise shapes are ignored). The other nodes
+    get their role by alternation along edges, from those nodes and from the nodes
+    with no inputs (variables).
     """
+    func_shapes = {shape.lower() for shape in func_shapes}
+    shapes = {
+        node: attrs.get("shape", "").lower() for node, attrs in node_attrs.items()
+    }
     is_func = {}
-    for node, attrs in node_attrs.items():
-        if "shape" in attrs:
-            is_func[node] = attrs["shape"].lower() in _dot_func_shapes
-    has_input = {dst for _, dst in edges}
+    if any(shape in func_shapes for shape in shapes.values()):
+        # shapes tell the roles of the nodes that have one
+        is_func = {
+            node: shape in func_shapes for node, shape in shapes.items() if shape
+        }
+    has_input = {dst for _, dst, _ in edges}
     for node in node_attrs:
         if node not in is_func and node not in has_input:
-            is_func[node] = False
+            is_func[node] = False  # an input
     neighbors = {node: [] for node in node_attrs}
-    for src, dst in edges:
+    for src, dst, _ in edges:
         neighbors[src].append(dst)
         neighbors[dst].append(src)
     stack = list(is_func)
-    while stack:
+    while stack:  # roles alternate along edges
         node = stack.pop()
         for other in neighbors[node]:
             if other not in is_func:
                 is_func[other] = not is_func[node]
                 stack.append(other)
-    for src, dst in edges:
+    for src, dst, _ in edges:
         if is_func.get(src) == is_func.get(dst):
             kind = "function" if is_func.get(src) else "variable"
             raise ValueError(
                 f"Edge {src} -> {dst} links two {kind} nodes: a DAG's edges go from "
                 f"variables to functions and from functions to variables. Give the "
-                f"function nodes shape=box to disambiguate."
+                f"function nodes one of the func_shapes ({sorted(func_shapes)}) to "
+                f"disambiguate."
             )
     return {node for node, func in is_func.items() if func}
+
+
+def _dot_func_src_key(node, attrs, func_src):
+    """The ``func_src`` key for a function node not found by its id: its ``label``,
+    or its id without the ``_`` that ``FuncNode`` adds when a name equals its out."""
+    for key in (attrs.get("label"), node[:-1] if node.endswith("_") else None):
+        if key is not None and key in func_src:
+            return key
+    return None
 
 
 def dot_to_dag(
@@ -895,17 +1065,22 @@ def dot_to_dag(
     func_src: FuncSource = dlft_factory_to_func,
     use_place_holder_fallback=False,
     name: str = None,
+    func_shapes: Iterable[str] = DFLT_DOT_FUNC_SHAPES,
 ) -> DAG:
     """Build a ``DAG`` from a dot digraph of variable and function nodes.
 
     ``dot`` is a dot-language string (or a ``graphviz.Digraph``, e.g. what
     ``DAG.dot_digraph`` makes), or the ``a,b -> f -> c`` lines of
-    ``DAG.synopsis_string``. Function nodes are those with a box-like ``shape``;
-    without shapes, they are inferred: nodes with no inputs are variables, and
+    ``DAG.synopsis_string`` (any ``bind_info``). Function nodes are the nodes with
+    one of the ``func_shapes`` (the box-like shapes ``DAG.dot_digraph`` gives them);
+    if no node has one, roles are inferred: nodes with no inputs are variables, and
     nodes alternate between variables and functions along the edges. Each function
-    node needs exactly one output variable; its inputs, in the order their edges
-    appear, are its arguments. The functions come from ``func_src``, as in
-    ``code_to_dag`` (by default, placeholders describing the call).
+    node needs exactly one output variable; its inputs, in the order of their edges,
+    are its arguments. The functions come from ``func_src``, as in ``code_to_dag``
+    (by default, placeholders describing the call); a mapping ``func_src`` is looked
+    up by node id, then by the node's ``label``, then by the id without the ``_``
+    suffix ``FuncNode`` adds to a name that equals its ``out``. The dot does not carry defaults:
+    every input of the ``DAG`` is required.
 
     >>> dag = dot_to_dag('''
     ... a, b -> f -> c
@@ -931,25 +1106,49 @@ def dot_to_dag(
     >>> dag2(1, 2)
     3
 
-    :raises ValueError: If an edge links two nodes of the same kind, a function node
-        has no or several outputs, or a node id is not a Python identifier.
+    :raises ValueError: If the dot can't be read, has no function node, an edge
+        links two nodes of the same kind, a function node has no or several outputs,
+        or a node id is not a usable Python name.
     """
     node_attrs, edges = parse_dot_digraph(dot)
-    func_nodes = _dot_func_nodes(node_attrs, edges)
+    func_nodes = _dot_func_nodes(node_attrs, edges, func_shapes)
+    if not func_nodes:
+        raise ValueError("No function nodes found in the dot digraph")
+    if isinstance(func_src, Mapping):
+        func_src = {
+            **{
+                node: func_src[key]
+                for node in func_nodes
+                if node not in func_src
+                and (key := _dot_func_src_key(node, node_attrs[node], func_src))
+            },
+            **func_src,
+        }
+
+    def check_name(node):
+        if not node.isidentifier() or keyword.iskeyword(node):
+            raise ValueError(f"Node id {node!r} is not a usable Python name")
+        return node
 
     def lines():
         for func in (node for node in node_attrs if node in func_nodes):
-            inputs = [src for src, dst in edges if dst == func]
-            outputs = [dst for src, dst in edges if src == func]
+            inputs = [(src, param) for src, dst, param in edges if dst == func]
+            outputs = [dst for src, dst, _ in edges if src == func]
             if len(outputs) != 1:
                 raise ValueError(
                     f"Function node {func!r} must have exactly one output variable, "
                     f"has {outputs}"
                 )
-            for node in (func, *inputs, *outputs):
-                if not node.isidentifier():
-                    raise ValueError(f"Node id {node!r} is not a Python identifier")
-            yield f"    {outputs[0]} = {func}({', '.join(inputs)})"
+            # positional args up to the first renamed one, keyword args from there
+            renamed = [src != param for src, param in inputs]
+            first_kw = renamed.index(True) if any(renamed) else len(inputs)
+            args = ", ".join(
+                check_name(src)
+                if i < first_kw
+                else f"{check_name(param)}={check_name(src)}"
+                for i, (src, param) in enumerate(inputs)
+            )
+            yield f"    {check_name(outputs[0])} = {check_name(func)}({args})"
 
     dag_name = name or "dag_from_dot"
     src = f"def {dag_name}():\n" + "\n".join(lines()) + "\n"
