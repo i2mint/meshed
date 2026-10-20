@@ -188,3 +188,53 @@ def test_input_not_determined_by_cache_is_allowed():
     c = CachedDag(DAG([u, v]))
     c("u", t=1)  # caches t, u -- but ``v`` also needs ``s``, so it isn't determined
     assert c("v", v=10) == 10
+
+
+# --------------------------------------------- promoted API (i2mint/meshed#36)
+
+
+def test_cached_dag_is_promoted_and_the_scrap_path_still_works():
+    import meshed
+    from meshed.cached_dag import CachedDag as promoted
+    from meshed.scrap.cached_dag import CachedDag as legacy
+
+    assert meshed.CachedDag is promoted is legacy
+
+
+def test_roots_take_defaults_from_the_parameters_they_bind_only_when_they_agree():
+    from types import SimpleNamespace as NS
+
+    from meshed.cached_dag import _root_defaults
+
+    def node(defaults, bind):
+        return NS(sig=NS(defaults=defaults), bind=bind)
+
+    # DAG itself refuses conflicting defaults, so the rule is checked on a stub.
+    dag = NS(
+        roots=["a", "b", "c", "d"],
+        func_nodes=[
+            node({"y": 1, "z": 5}, {"x": "a", "y": "b", "z": "c"}),
+            node({"y": 2, "z": 5, "w": 0}, {"y": "b", "z": "c", "w": "d", "v": "out"}),
+        ],
+    )
+    assert _root_defaults(dag) == {"c": 5, "d": 0}  # a: none, b: 1 vs 2
+
+
+def test_injected_methods_ask_for_the_roots_still_needed_as_the_cache_fills():
+    from inspect import signature
+
+    ns = _cached_dag().inject_methods()
+    assert sorted(vars(ns)) == ["_cache", "f", "g"]
+    assert str(signature(ns.g)) == "(*, a, y=2)"
+    assert ns.g(a=3) == 6
+    assert str(signature(ns.g)) == "(*, y=2)" and str(signature(ns.f)) == "(*, x=1)"
+    assert ns.f() == 4
+    assert ns._cache is ns.g._cached_dag.cache
+
+
+def test_inject_methods_onto_an_existing_object():
+    class Holder:
+        pass
+
+    h = _cached_dag().inject_methods(Holder())
+    assert h.f(a=1) == 2 and h.g() == 2
