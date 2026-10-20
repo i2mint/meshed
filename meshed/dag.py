@@ -919,7 +919,23 @@ class DAG:
         i -> k_ -> k
         i,j -> l_ -> l
 
-        >>>
+        The sub-dag keeps the original dag's own order of function nodes, whatever the
+        order you name the outputs in, and (like any ``DAG``) it returns the values of
+        its last function nodes only: asking for an intermediate output such as ``b``
+        along with ``d`` does not return ``b`` as well. To see every value, use
+        ``cache_last_scope=True`` and read ``last_scope`` (meshed#22):
+
+        >>> def b(a): return a + 1
+        >>> def c(a): return a * 10
+        >>> def d(b, c): return b + c
+        >>> dag = DAG([b, c, d], cache_last_scope=True)
+        >>> dag[:'b c'](1), dag[:'c b'](1)  # same sub-dag; both leaves are returned
+        ((2, 10), (2, 10))
+        >>> sub = dag[:'b d']
+        >>> sub(1)
+        12
+        >>> sub.last_scope['b'], sub.last_scope['d']
+        (2, 12)
 
         """
         return self._getitem(item)
