@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=d7b2a166"></script>
+    <script src="../../_static/documentation_options.js?v=73ca257f"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.176" />
+  <meta name="docsearch:version" content="0.1.177" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -901,6 +901,8 @@ window.runMermaid = runMermaid;</script>
 <span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">meshed.util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">find_first_free_name</span><span class="p">,</span>
+    <span class="n">mk_func_name</span> <span class="k">as</span> <span class="n">_mk_func_name</span><span class="p">,</span>
     <span class="n">lambda_name</span><span class="p">,</span>
     <span class="n">ValidationError</span><span class="p">,</span>
     <span class="n">NotUniqueError</span><span class="p">,</span>
@@ -941,24 +943,6 @@ window.runMermaid = runMermaid;</script>
 
 
 
-<div class="viewcode-block" id="find_first_free_name">
-<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.find_first_free_name">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">find_first_free_name</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">(),</span> <span class="n">start_at</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Return ``prefix`` if not in ``exclude_names``, else the first free ``prefix__&lt;i&gt;``</span>
-<span class="sd">    with ``i`` counting up from ``start_at``.</span>
-<span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">prefix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">prefix</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="n">start_at</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_names</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">name</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span></div>
-
-
-
 <div class="viewcode-block" id="mk_mock_funcnode">
 <a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.mk_mock_funcnode">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">mk_mock_funcnode</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">out</span><span class="p">):</span>
@@ -977,23 +961,9 @@ window.runMermaid = runMermaid;</script>
 
 
 
-<div class="viewcode-block" id="mk_func_name">
-<a class="viewcode-back" href="../../_autosummary/meshed.dag.html#meshed.dag.mk_func_name">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="o">=</span><span class="p">()):</span>
-<span class="w">    </span><span class="sd">"""Derive a name for ``func`` (its ``__name__``, a generated lambda name, or the wrapped function's name for a ``partial``) that is not in ``exclude_names``.</span>
-
-<span class="sd">    A ``func`` with no ``__name__`` that is not a ``partial`` raises ``NameValidationError``.</span>
-<span class="sd">    """</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">"__name__"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"&lt;lambda&gt;"</span><span class="p">:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">lambda_name</span><span class="p">()</span>  <span class="c1"># make a lambda name that is a unique identifier</span>
-    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">mk_func_name</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NameValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Can't make a name for func: </span><span class="si">{</span><span class="n">func</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">find_first_free_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">exclude_names</span><span class="p">)</span></div>
-
+<span class="n">mk_func_name</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_mk_func_name</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">mk_func_name</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">"""``meshed.util.mk_func_name`` in strict mode: a ``func`` with no usable name</span>
+<span class="s2">raises ``NameValidationError`` instead of getting a default name."""</span>
 
 
 <div class="viewcode-block" id="mk_list_names_unique">

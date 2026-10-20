@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-20T07:35:12Z",
+  "built_at": "2026-10-20T09:49:28Z",
   "package": {
     "name": "meshed",
-    "version": "0.1.176",
+    "version": "0.1.177",
     "display_name": "meshed",
     "source": "setup.cfg"
   },
   "git": {
     "available": true,
-    "commit": "41a477065ed576bf355f698fac6ba85b85d199c7",
-    "short_commit": "41a4770",
+    "commit": "baed882bb5350b53cfec06608706f5ed7d6d30eb",
+    "short_commit": "baed882",
     "branch": "master",
     "tags": [
-      "0.1.176"
+      "0.1.177"
     ],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/meshed",
-    "commit_url": "https://github.com/i2mint/meshed/commit/41a477065ed576bf355f698fac6ba85b85d199c7",
+    "commit_url": "https://github.com/i2mint/meshed/commit/baed882bb5350b53cfec06608706f5ed7d6d30eb",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/meshed",
-    "sha": "a43d7b933c5de7ed01387ff5aa37dd3d686584c0",
+    "sha": "3d2644b3454430c2a9b54435c3d58c7b0de9c309",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "39387146159",
-    "run_url": "https://github.com/i2mint/meshed/actions/runs/39387146159",
+    "run_id": "39403100718",
+    "run_url": "https://github.com/i2mint/meshed/actions/runs/39403100718",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -56,15 +56,15 @@
   },
   "site": {
     "modules_documented": 29,
-    "objects_documented": 268
+    "objects_documented": 266
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.176",
+    "latest": "0.1.177",
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 41a477065ed576bf355f698fac6ba85b85d199c7\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/",
+  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout baed882bb5350b53cfec06608706f5ed7d6d30eb\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/",
   "warnings": [],
   "alignment": {
     "aligned": true,

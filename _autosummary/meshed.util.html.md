@@ -55,7 +55,7 @@ Main entry points:
 | [`inverse_dict_asserting_losslessness`](#meshed.util.inverse_dict_asserting_losslessness)(d)            | Invert `d` (values become keys), asserting that no values are duplicated.                                                                                               |
 | [`iterize`](#meshed.util.iterize)(func[, name])                             | From an Input->Output function, makes a Iterator[Input]->Iterator[Output] Some call this "vectorization", but it's not really a vector, but an iterable, thus the name. |
 | `lambda_name`()                                                                                    |                                                                                                                                                                         |
-| [`mk_func_name`](#meshed.util.mk_func_name)(func[, exclude_names])               | Makes a function name that doesn't clash with the exclude_names iterable.                                                                                               |
+| [`mk_func_name`](#meshed.util.mk_func_name)(func[, exclude_names, strict, ...])  | Make a name for `func` that doesn't clash with `exclude_names`.                                                                                                         |
 | [`mk_place_holder_func`](#meshed.util.mk_place_holder_func)(arg_names_or_sig[, ...])     | Make (working and picklable) function with a specific signature.                                                                                                        |
 | [`my_isinstance`](#meshed.util.my_isinstance)(obj, class_or_tuple)                | Same as builtin instance, but without position only constraint.                                                                                                         |
 | [`mywraps`](#meshed.util.mywraps)(func[, name, doc_prefix])                 | Make a decorator applying `functools.wraps(func)` then `extra_wraps` to a callable.                                                                                     |
@@ -593,11 +593,26 @@ or [array programming](https://en.wikipedia.org/wiki/Array_programming).)
 ['hello 2', 'hello 4', 'hello 6']
 ```
 
-### meshed.util.mk_func_name(func, exclude_names=())
+### meshed.util.mk_func_name(func, exclude_names=(), , strict=False, default='func')
 
-Makes a function name that doesn’t clash with the exclude_names iterable.
-Tries it’s best to not be lazy, but instead extract a name from the function
-itself.
+Make a name for `func` that doesn’t clash with `exclude_names`.
+
+Extracts the name from the function itself (unwrapping `partial``s, and giving
+lambdas a generated unique name), then makes it free with ``find_first_free_name`.
+If `func` has no name, `default` is used, or `NameValidationError` is raised
+when `strict`.
+
+```pycon
+>>> mk_func_name(len, exclude_names=('len',))
+'len__2'
+>>> from functools import partial
+>>> mk_func_name(partial(len))
+'len'
+>>> mk_func_name(object(), strict=True)
+Traceback (most recent call last):
+  ...
+NameValidationError: Can't make a name for func
+```
 
 ### meshed.util.mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=())
 

@@ -169,11 +169,9 @@ That said it is your responsiblity to use the right policy for your particular c
 | [`dflt_debugger_feedback`](#meshed.dag.dflt_debugger_feedback)(func_node, scope, ...)      | Print the step number, func node and scope, then return `output` unchanged (default feedback of `DAG.debugger`).                                                                                                                                          |
 | [`duplicate_outs`](#meshed.dag.duplicate_outs)(func_nodes)                         | `{out: [names of the func nodes writing to it]}`, for the outs written to by more than one func node (the last name is the one whose value is visible).                                                                                                   |
 | [`duplicate_outs_string`](#meshed.dag.duplicate_outs_string)(duplicates, \*[, dag_name])  | Human readable description of a `duplicate_outs` mapping.                                                                                                                                                                                                 |
-| [`find_first_free_name`](#meshed.dag.find_first_free_name)(prefix[, ...])                | Return `prefix` if not in `exclude_names`, else the first free `prefix__<i>` with `i` counting up from `start_at`.                                                                                                                                        |
 | [`funcnodes_from_pairs`](#meshed.dag.funcnodes_from_pairs)(pairs)                        | Make one mock func node per `(arg, out)` pair (see `mk_mock_funcnode`).                                                                                                                                                                                   |
 | [`hook_up`](#meshed.dag.hook_up)(func, variables[, output_name])            | Source inputs and write outputs to given variables mapping.                                                                                                                                                                                               |
 | [`ignore_duplicate_outs`](#meshed.dag.ignore_duplicate_outs)(duplicates, \*[, dag_name])  | `on_duplicate_outs` strategy that says nothing about duplicate outs.                                                                                                                                                                                      |
-| [`mk_func_name`](#meshed.dag.mk_func_name)(func[, exclude_names])                | Derive a name for `func` (its `__name__`, a generated lambda name, or the wrapped function's name for a `partial`) that is not in `exclude_names`.                                                                                                        |
 | [`mk_list_names_unique`](#meshed.dag.mk_list_names_unique)(nodes[, exclude_names])       | List the `.name` of each node, suffixing repeats (and names in `exclude_names`) with `__<i>` so all are distinct.                                                                                                                                         |
 | [`mk_mock_funcnode`](#meshed.dag.mk_mock_funcnode)(arg, out)                         | Make a `FuncNode` whose no-op function takes the single parameter `arg` and writes to `out`, named `_mock_<arg>_<out>`.                                                                                                                                   |
 | [`mk_nodes_names_unique`](#meshed.dag.mk_nodes_names_unique)(nodes)                       | Set each node's `.name` in place to the unique names of `mk_list_names_unique` and return `nodes`.                                                                                                                                                        |
@@ -1005,11 +1003,6 @@ Human readable description of a `duplicate_outs` mapping.
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
-### meshed.dag.find_first_free_name(prefix, exclude_names=(), start_at=2)
-
-Return `prefix` if not in `exclude_names`, else the first free `prefix__<i>`
-with `i` counting up from `start_at`.
-
 ### meshed.dag.funcnodes_from_pairs(pairs)
 
 Make one mock func node per `(arg, out)` pair (see `mk_mock_funcnode`).
@@ -1063,12 +1056,6 @@ Again…
 ### meshed.dag.ignore_duplicate_outs(duplicates, , dag_name=None)
 
 `on_duplicate_outs` strategy that says nothing about duplicate outs.
-
-### meshed.dag.mk_func_name(func, exclude_names=())
-
-Derive a name for `func` (its `__name__`, a generated lambda name, or the wrapped function’s name for a `partial`) that is not in `exclude_names`.
-
-A `func` with no `__name__` that is not a `partial` raises `NameValidationError`.
 
 ### meshed.dag.mk_list_names_unique(nodes, exclude_names=())
 

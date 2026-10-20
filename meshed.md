@@ -1,4 +1,4 @@
-> built 2026-10-20 07:35 UTC from 41a4770 (master) · meshed 0.1.176. Details: build_info.json
+> built 2026-10-20 09:49 UTC from baed882 (master) · meshed 0.1.177. Details: build_info.json
 
 # index.html.md
 
@@ -1338,11 +1338,9 @@ That said it is your responsiblity to use the right policy for your particular c
 | [`dflt_debugger_feedback`](_autosummary/meshed.dag.html.md#meshed.dag.dflt_debugger_feedback)(func_node, scope, ...)      | Print the step number, func node and scope, then return `output` unchanged (default feedback of `DAG.debugger`).                                                                                                                                          |
 | [`duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.duplicate_outs)(func_nodes)                         | `{out: [names of the func nodes writing to it]}`, for the outs written to by more than one func node (the last name is the one whose value is visible).                                                                                                   |
 | [`duplicate_outs_string`](_autosummary/meshed.dag.html.md#meshed.dag.duplicate_outs_string)(duplicates, \*[, dag_name])  | Human readable description of a `duplicate_outs` mapping.                                                                                                                                                                                                 |
-| [`find_first_free_name`](_autosummary/meshed.dag.html.md#meshed.dag.find_first_free_name)(prefix[, ...])                | Return `prefix` if not in `exclude_names`, else the first free `prefix__<i>` with `i` counting up from `start_at`.                                                                                                                                        |
 | [`funcnodes_from_pairs`](_autosummary/meshed.dag.html.md#meshed.dag.funcnodes_from_pairs)(pairs)                        | Make one mock func node per `(arg, out)` pair (see `mk_mock_funcnode`).                                                                                                                                                                                   |
 | [`hook_up`](_autosummary/meshed.dag.html.md#meshed.dag.hook_up)(func, variables[, output_name])            | Source inputs and write outputs to given variables mapping.                                                                                                                                                                                               |
 | [`ignore_duplicate_outs`](_autosummary/meshed.dag.html.md#meshed.dag.ignore_duplicate_outs)(duplicates, \*[, dag_name])  | `on_duplicate_outs` strategy that says nothing about duplicate outs.                                                                                                                                                                                      |
-| [`mk_func_name`](_autosummary/meshed.dag.html.md#meshed.dag.mk_func_name)(func[, exclude_names])                | Derive a name for `func` (its `__name__`, a generated lambda name, or the wrapped function's name for a `partial`) that is not in `exclude_names`.                                                                                                        |
 | [`mk_list_names_unique`](_autosummary/meshed.dag.html.md#meshed.dag.mk_list_names_unique)(nodes[, exclude_names])       | List the `.name` of each node, suffixing repeats (and names in `exclude_names`) with `__<i>` so all are distinct.                                                                                                                                         |
 | [`mk_mock_funcnode`](_autosummary/meshed.dag.html.md#meshed.dag.mk_mock_funcnode)(arg, out)                         | Make a `FuncNode` whose no-op function takes the single parameter `arg` and writes to `out`, named `_mock_<arg>_<out>`.                                                                                                                                   |
 | [`mk_nodes_names_unique`](_autosummary/meshed.dag.html.md#meshed.dag.mk_nodes_names_unique)(nodes)                       | Set each node's `.name` in place to the unique names of `mk_list_names_unique` and return `nodes`.                                                                                                                                                        |
@@ -2174,11 +2172,6 @@ Human readable description of a `duplicate_outs` mapping.
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
-### meshed.dag.find_first_free_name(prefix, exclude_names=(), start_at=2)
-
-Return `prefix` if not in `exclude_names`, else the first free `prefix__<i>`
-with `i` counting up from `start_at`.
-
 ### meshed.dag.funcnodes_from_pairs(pairs)
 
 Make one mock func node per `(arg, out)` pair (see `mk_mock_funcnode`).
@@ -2232,12 +2225,6 @@ Again…
 ### meshed.dag.ignore_duplicate_outs(duplicates, , dag_name=None)
 
 `on_duplicate_outs` strategy that says nothing about duplicate outs.
-
-### meshed.dag.mk_func_name(func, exclude_names=())
-
-Derive a name for `func` (its `__name__`, a generated lambda name, or the wrapped function’s name for a `partial`) that is not in `exclude_names`.
-
-A `func` with no `__name__` that is not a `partial` raises `NameValidationError`.
 
 ### meshed.dag.mk_list_names_unique(nodes, exclude_names=())
 
@@ -5193,7 +5180,7 @@ Main entry points:
 | [`inverse_dict_asserting_losslessness`](_autosummary/meshed.util.html.md#meshed.util.inverse_dict_asserting_losslessness)(d)            | Invert `d` (values become keys), asserting that no values are duplicated.                                                                                               |
 | [`iterize`](_autosummary/meshed.util.html.md#meshed.util.iterize)(func[, name])                             | From an Input->Output function, makes a Iterator[Input]->Iterator[Output] Some call this "vectorization", but it's not really a vector, but an iterable, thus the name. |
 | `lambda_name`()                                                                                    |                                                                                                                                                                         |
-| [`mk_func_name`](_autosummary/meshed.util.html.md#meshed.util.mk_func_name)(func[, exclude_names])               | Makes a function name that doesn't clash with the exclude_names iterable.                                                                                               |
+| [`mk_func_name`](_autosummary/meshed.util.html.md#meshed.util.mk_func_name)(func[, exclude_names, strict, ...])  | Make a name for `func` that doesn't clash with `exclude_names`.                                                                                                         |
 | [`mk_place_holder_func`](_autosummary/meshed.util.html.md#meshed.util.mk_place_holder_func)(arg_names_or_sig[, ...])     | Make (working and picklable) function with a specific signature.                                                                                                        |
 | [`my_isinstance`](_autosummary/meshed.util.html.md#meshed.util.my_isinstance)(obj, class_or_tuple)                | Same as builtin instance, but without position only constraint.                                                                                                         |
 | [`mywraps`](_autosummary/meshed.util.html.md#meshed.util.mywraps)(func[, name, doc_prefix])                 | Make a decorator applying `functools.wraps(func)` then `extra_wraps` to a callable.                                                                                     |
@@ -5731,11 +5718,26 @@ or [array programming](https://en.wikipedia.org/wiki/Array_programming).)
 ['hello 2', 'hello 4', 'hello 6']
 ```
 
-### meshed.util.mk_func_name(func, exclude_names=())
+### meshed.util.mk_func_name(func, exclude_names=(), , strict=False, default='func')
 
-Makes a function name that doesn’t clash with the exclude_names iterable.
-Tries it’s best to not be lazy, but instead extract a name from the function
-itself.
+Make a name for `func` that doesn’t clash with `exclude_names`.
+
+Extracts the name from the function itself (unwrapping `partial``s, and giving
+lambdas a generated unique name), then makes it free with ``find_first_free_name`.
+If `func` has no name, `default` is used, or `NameValidationError` is raised
+when `strict`.
+
+```pycon
+>>> mk_func_name(len, exclude_names=('len',))
+'len__2'
+>>> from functools import partial
+>>> mk_func_name(partial(len))
+'len'
+>>> mk_func_name(object(), strict=True)
+Traceback (most recent call last):
+  ...
+NameValidationError: Can't make a name for func
+```
 
 ### meshed.util.mk_place_holder_func(arg_names_or_sig, name=None, defaults=(), annotations=())
 
@@ -6255,7 +6257,7 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
 # About this build
 
-This documentation was built on **2026-10-20 07:35 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/41a477065ed576bf355f698fac6ba85b85d199c7"><code>41a4770</code></a> on branch <code>master</code>, for **meshed 0.1.176** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-20 09:49 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/baed882bb5350b53cfec06608706f5ed7d6d30eb"><code>baed882</code></a> on branch <code>master</code>, for **meshed 0.1.177** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -6264,9 +6266,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/41a477065ed576bf355f698fac6ba85b85d199c7"><code>41a477065ed576bf355f698fac6ba85b85d199c7</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/baed882bb5350b53cfec06608706f5ed7d6d30eb"><code>baed882bb5350b53cfec06608706f5ed7d6d30eb</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.176</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.177</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6275,9 +6277,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39387146159">39387146159</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39403100718">39403100718</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>a43d7b933c5de7ed01387ff5aa37dd3d686584c0</code> (in the history of the built commit) |
+| Event commit | <code>3d2644b3454430c2a9b54435c3d58c7b0de9c309</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6302,13 +6304,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.176/">0.1.176</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.177/">0.1.177</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout 41a477065ed576bf355f698fac6ba85b85d199c7
+git checkout baed882bb5350b53cfec06608706f5ed7d6d30eb
 pip install "epythet==0.2.18"
 epythet quickstart . --ignore tests/
 ```

@@ -19,11 +19,9 @@ meshed.dag
       dflt_debugger_feedback
       duplicate_outs
       duplicate_outs_string
-      find_first_free_name
       funcnodes_from_pairs
       hook_up
       ignore_duplicate_outs
-      mk_func_name
       mk_list_names_unique
       mk_mock_funcnode
       mk_nodes_names_unique
