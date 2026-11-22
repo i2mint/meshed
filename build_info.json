@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-22T22:26:58Z",
+  "built_at": "2026-11-22T23:00:33Z",
   "package": {
     "name": "meshed",
     "version": "0.1.186",
@@ -9,24 +9,24 @@
   },
   "git": {
     "available": true,
-    "commit": "300c6307360965f87ed6f3e6d3a4bdc0cc662621",
-    "short_commit": "300c630",
+    "commit": "9e22ea15b8791e450fa143bf9d5f578d3eebac43",
+    "short_commit": "9e22ea1",
     "branch": "master",
     "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/meshed",
-    "commit_url": "https://github.com/i2mint/meshed/commit/300c6307360965f87ed6f3e6d3a4bdc0cc662621",
+    "commit_url": "https://github.com/i2mint/meshed/commit/9e22ea15b8791e450fa143bf9d5f578d3eebac43",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/meshed",
-    "sha": "300c6307360965f87ed6f3e6d3a4bdc0cc662621",
+    "sha": "9e22ea15b8791e450fa143bf9d5f578d3eebac43",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "45077658251",
-    "run_url": "https://github.com/i2mint/meshed/actions/runs/45077658251",
+    "run_id": "45080707275",
+    "run_url": "https://github.com/i2mint/meshed/actions/runs/45080707275",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -60,14 +60,16 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.186",
-    "relation": "same",
+    "latest": "0.1.187",
+    "relation": "behind",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 300c6307360965f87ed6f3e6d3a4bdc0cc662621\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 9e22ea15b8791e450fa143bf9d5f578d3eebac43\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
-    "aligned": true,
-    "notes": []
+    "aligned": false,
+    "notes": [
+      "The documented version (0.1.186) is behind the latest release on PyPI (0.1.187): `pip install meshed` gives newer code than these docs describe."
+    ]
   }
 }
