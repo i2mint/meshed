@@ -59,6 +59,7 @@ class Extractor:
         name: str = "extractor",
         input_name: str = "x",
     ):
+        """Store the extractor factory and its params; see the class docstring."""
         self.extractor_factory = extractor_factory
         self.extractor_params = extractor_params
         self.name = name
@@ -66,11 +67,13 @@ class Extractor:
         self.__post_init__()
 
     def __post_init__(self):
+        """Set the name and signature, and build the extractor from ``extractor_factory(extractor_params)``."""
         self.__name__ = self.name
         self.__signature__ = Sig(f"({self.input_name}, /)")
         self._call = self.extractor_factory(self.extractor_params)
 
     def __call__(self, x):
+        """Apply the extractor to ``x``."""
         return self._call(x)
 
 

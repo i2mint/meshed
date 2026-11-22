@@ -22,6 +22,7 @@ OPENAPI_URL = urljoin(API_URL, "openapi")
 
 
 def find_funcs(dag, func_outs):
+    """Return the func nodes of ``dag`` whose output name is in ``func_outs``."""
     return list(dag.find_funcs(lambda x: x.out in func_outs))
 
 
@@ -66,6 +67,8 @@ def launch_webservice(funcs_to_cloudify, wait_after_start_seconds=10):
 
 
 class CloudFunctions:
+    """Map the names of ``funcs`` to Python functions calling the web service."""
+
     def __init__(self, funcs: list[Callable], openapi_url=OPENAPI_URL, logger=print):
         """Creates a Python dictionary-like object that maps the web service functions to Python functions.
 
@@ -82,6 +85,7 @@ class CloudFunctions:
 
     @cached_property
     def http_client(self):
+        """The HTTP client of the web service; if the first connection fails, wait 10 seconds and retry once."""
         from http2py import HttpClient
 
         try:
@@ -95,6 +99,7 @@ class CloudFunctions:
 
     @cached_property
     def func_names(self):
+        """The names of the functions, as a ``frozenset``."""
         return frozenset(f.__name__ for f in self.funcs)
 
     def __getitem__(self, key):
@@ -113,18 +118,23 @@ class CloudFunctions:
         return ws_func
 
     def __contains__(self, key):
+        """Whether ``key`` is the name of one of the functions."""
         return key in self.func_names
 
     def __len__(self):
+        """Number of functions."""
         return len(self.func_names)
 
     def keys(self):
+        """The names of the functions."""
         return self.func_names
 
     def values(self):
+        """Iterate over the web service functions (see ``__getitem__``)."""
         return (self[k] for k in self.keys())
 
     def items(self):
+        """Iterate over ``(name, web service function)`` pairs."""
         return ((k, self[k]) for k in self.keys())
 
 

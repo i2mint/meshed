@@ -552,6 +552,7 @@ class dlft_factory_to_func_mapping(Mapping):
     """
 
     def __getitem__(self, item):
+        """Return ``dlft_factory_to_func(item)``."""
         return dlft_factory_to_func(item)
 
 

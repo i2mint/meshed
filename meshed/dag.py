@@ -747,6 +747,7 @@ class DAG:
     )
 
     def __post_init__(self):
+        """Normalize the func nodes, clean the bindings and build the node graph."""
         self.func_nodes = tuple(ensure_func_nodes(self.func_nodes))
         # before the graph is made, since names and binds decide its edges
         self.bindings_cleaner()

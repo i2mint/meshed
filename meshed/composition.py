@@ -28,6 +28,7 @@ def is_func_node_kwargs_trans(func: Callable) -> bool:
 
 
 def func_node_kwargs_trans(func: Callable) -> FuncNodeKwargsTrans:
+    """Return ``func`` if it is a ``FuncNodeKwargsTrans``, else raise ``InvalidFunctionParameters``."""
     if is_func_node_kwargs_trans(func):
         return func
     else:
@@ -74,6 +75,10 @@ def suffix_ids(
     *,
     also_apply_to_func_label: bool = False,
 ):
+    """Rename the func nodes with ``renamer`` (a callable, or a suffix string) and return a ``DAG`` if given one, else a list.
+
+    Note: a callable ``renamer`` currently trips on the ``assert callable(suffix)``
+    line, which only defines ``suffix`` when ``renamer`` is a string."""
     if isinstance(func_nodes, DAG):
         egress = DAG
     else:

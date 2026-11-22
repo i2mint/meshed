@@ -131,6 +131,7 @@ def _parameters_and_names_from_sig(
 
 
 def visualize_graph(graph):
+    """Display ``graph`` (a networkx graph) as a graphviz ``Digraph`` in a notebook."""
     import graphviz
     from IPython.display import display
 
@@ -150,6 +151,7 @@ def visualize_graph(graph):
 
 
 def visualize_graph_interactive(graph):
+    """Display ``graph`` (a networkx graph) in a notebook with ipywidgets controls (needs graphviz, networkx, ipywidgets)."""
     import graphviz
 
     import networkx as nx

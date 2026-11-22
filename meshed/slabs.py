@@ -108,6 +108,7 @@ class ExceptionHandler(Protocol):
     """
 
     def __call__(self) -> ExceptionHandlerOutput:
+        """Handle the exception; see the protocol docstring."""
         pass
 
 
@@ -388,6 +389,7 @@ class Slabs:
         scope_factory: Callable[[], MutableMapping] = dict,
         **components,
     ):
+        """Validate and store the ``components``, and set up handled exceptions, scope factory and contexts."""
         _validate_components(components)
         self.components = components
         self.handle_exceptions = _get_handle_exceptions(handle_exceptions)

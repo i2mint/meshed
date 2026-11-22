@@ -94,6 +94,7 @@ class LazyProps:
     """
 
     def __init_subclass__(cls, **kwargs):
+        """Replace ``Literal`` attributes by their value and cache the one-argument callables as cached properties."""
         super().__init_subclass__(**kwargs)
 
         for attr_name in (a for a in dir(cls) if not a.startswith("__")):
