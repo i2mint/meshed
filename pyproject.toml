@@ -144,8 +144,6 @@ exclude_paths = [
     "scrap",
     "meshed/scrap",
     "docsrc",
-
-    "docsrc",
     "misc",
 ]
 test_on_windows = true
