@@ -1,4 +1,4 @@
-> built 2026-10-20 15:06 UTC from 742e25c (master) · meshed 0.1.184. Details: build_info.json
+> built 2026-11-22 14:11 UTC from 6897853 (master) · meshed 0.1.185. Details: build_info.json
 
 # index.html.md
 
@@ -1132,6 +1132,10 @@ Methods per var node, each asking only for the roots it still needs:
 -1
 ```
 
+#### func_node_id(k)
+
+Return the id of the (unique) func node that outputs `k`, or `None` if `k` is a root.
+
 #### inject_methods(obj=None)
 
 Give `obj` (default: a new namespace) one method per non-root var node.
@@ -1391,13 +1395,20 @@ Specific use of FuncNode and DAG
 
 ### Functions
 
-| `func_node_kwargs_trans`(func)                                                               |                                                                             |
-|----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| [`func_node_name_trans`](_autosummary/meshed.composition.html.md#meshed.composition.func_node_name_trans)(name_trans, \*[, ...]) |                                                                             |
-| [`get_param`](_autosummary/meshed.composition.html.md#meshed.composition.get_param)(func)                             | Find the name of the parameter of a function with exactly one parameter.    |
-| [`is_func_node_kwargs_trans`](_autosummary/meshed.composition.html.md#meshed.composition.is_func_node_kwargs_trans)(func)             | Returns True iff the only required params of func are FuncNode field names. |
-| [`line_with_dag`](_autosummary/meshed.composition.html.md#meshed.composition.line_with_dag)(\*steps)                      | Emulate a Line object with a DAG                                            |
-| `suffix_ids`(func_nodes[, renamer, ...])                                                     |                                                                             |
+| [`func_node_kwargs_trans`](_autosummary/meshed.composition.html.md#meshed.composition.func_node_kwargs_trans)(func)                | Return `func` if it is a `FuncNodeKwargsTrans`, else raise `InvalidFunctionParameters`.                             |
+|----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| [`func_node_name_trans`](_autosummary/meshed.composition.html.md#meshed.composition.func_node_name_trans)(name_trans, \*[, ...]) |                                                                                                                     |
+| [`get_param`](_autosummary/meshed.composition.html.md#meshed.composition.get_param)(func)                             | Find the name of the parameter of a function with exactly one parameter.                                            |
+| [`is_func_node_kwargs_trans`](_autosummary/meshed.composition.html.md#meshed.composition.is_func_node_kwargs_trans)(func)             | Returns True iff the only required params of func are FuncNode field names.                                         |
+| [`line_with_dag`](_autosummary/meshed.composition.html.md#meshed.composition.line_with_dag)(\*steps)                      | Emulate a Line object with a DAG                                                                                    |
+| [`suffix_ids`](_autosummary/meshed.composition.html.md#meshed.composition.suffix_ids)(func_nodes[, renamer, ...])      | Rename the func nodes with `renamer` (a callable, or a suffix string) and return a `DAG` if given one, else a list. |
+
+### meshed.composition.func_node_kwargs_trans(func)
+
+Return `func` if it is a `FuncNodeKwargsTrans`, else raise `InvalidFunctionParameters`.
+
+* **Return type:**
+  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)], [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
 
 ### meshed.composition.func_node_name_trans(name_trans, , also_apply_to_func_label=False)
 
@@ -1435,6 +1446,14 @@ Emulate a Line object with a DAG
   and the output of each step is fed into the next
 * **Returns:**
   a DAG instance computing the composition of all the functions in steps, in the provided order
+
+### meshed.composition.suffix_ids(func_nodes, renamer=<function numbered_suffix_renamer>, \*, also_apply_to_func_label=False)
+
+Rename the func nodes with `renamer` (a callable, or a suffix string) and return a `DAG` if given one, else a list.
+
+#### NOTE
+a callable `renamer` currently trips on the `assert callable(suffix)`
+line, which only defines `suffix` when `renamer` is a string.
 
 
 # _autosummary/meshed.dag.html.md
@@ -5296,7 +5315,7 @@ Tools to work with meshed
 
 ### Functions
 
-| `find_funcs`(dag, func_outs)                                                                 |                                                                             |
+| [`find_funcs`](_autosummary/meshed.tools.html.md#meshed.tools.find_funcs)(dag, func_outs)                  | Return the func nodes of `dag` whose output name is in `func_outs`.         |
 |----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
 | [`launch_funcs_webservice`](_autosummary/meshed.tools.html.md#meshed.tools.launch_funcs_webservice)(funcs)              | Launches a web service application with the specified functions.            |
 | [`launch_webservice`](_autosummary/meshed.tools.html.md#meshed.tools.launch_webservice)(funcs_to_cloudify[, ...]) | Context manager to launch a web service application in a separate process.  |
@@ -5305,8 +5324,38 @@ Tools to work with meshed
 
 ### Classes
 
-| `CloudFunctions`(funcs[, openapi_url, logger])   |    |
-|--------------------------------------------------|----|
+| [`CloudFunctions`](_autosummary/meshed.tools.html.md#meshed.tools.CloudFunctions)(funcs[, openapi_url, logger])   | Map the names of `funcs` to Python functions calling the web service.   |
+|-------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+
+### *class* meshed.tools.CloudFunctions(funcs, openapi_url='http://localhost:3030/openapi', logger=<built-in function print>)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Map the names of `funcs` to Python functions calling the web service.
+
+#### *property* func_names
+
+The names of the functions, as a `frozenset`.
+
+#### *property* http_client
+
+The HTTP client of the web service; if the first connection fails, wait 10 seconds and retry once.
+
+#### items()
+
+Iterate over `(name, web service function)` pairs.
+
+#### keys()
+
+The names of the functions.
+
+#### values()
+
+Iterate over the web service functions (see `__getitem__`).
+
+### meshed.tools.find_funcs(dag, func_outs)
+
+Return the func nodes of `dag` whose output name is in `func_outs`.
 
 ### meshed.tools.launch_funcs_webservice(funcs)
 
@@ -6286,12 +6335,12 @@ Visualization utilities for the meshed package.
 
 ### Functions
 
-| [`add_new_line_if_none`](_autosummary/meshed.viz.html.md#meshed.viz.add_new_line_if_none)(s)                           | Since graphviz 0.18, need to have a newline in body lines.   |
-|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
-| [`dot_lines_of_func_nodes`](_autosummary/meshed.viz.html.md#meshed.viz.dot_lines_of_func_nodes)(objs[, start_lines, ...]) | Get lines generator for the graphviz.DiGraph(body=list(...)) |
-| [`dot_lines_of_objs`](_autosummary/meshed.viz.html.md#meshed.viz.dot_lines_of_objs)(objs[, start_lines, end_lines]) | Get lines generator for the graphviz.DiGraph(body=list(...)) |
-| `visualize_graph`(graph)                                                                           |                                                              |
-| `visualize_graph_interactive`(graph)                                                               |                                                              |
+| [`add_new_line_if_none`](_autosummary/meshed.viz.html.md#meshed.viz.add_new_line_if_none)(s)                           | Since graphviz 0.18, need to have a newline in body lines.                                                        |
+|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| [`dot_lines_of_func_nodes`](_autosummary/meshed.viz.html.md#meshed.viz.dot_lines_of_func_nodes)(objs[, start_lines, ...]) | Get lines generator for the graphviz.DiGraph(body=list(...))                                                      |
+| [`dot_lines_of_objs`](_autosummary/meshed.viz.html.md#meshed.viz.dot_lines_of_objs)(objs[, start_lines, end_lines]) | Get lines generator for the graphviz.DiGraph(body=list(...))                                                      |
+| [`visualize_graph`](_autosummary/meshed.viz.html.md#meshed.viz.visualize_graph)(graph)                            | Display `graph` (a networkx graph) as a graphviz `Digraph` in a notebook.                                         |
+| [`visualize_graph_interactive`](_autosummary/meshed.viz.html.md#meshed.viz.visualize_graph_interactive)(graph)                | Display `graph` (a networkx graph) in a notebook with ipywidgets controls (needs graphviz, networkx, ipywidgets). |
 
 ### meshed.viz.add_new_line_if_none(s)
 
@@ -6473,6 +6522,14 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
                exp
 ```
 
+### meshed.viz.visualize_graph(graph)
+
+Display `graph` (a networkx graph) as a graphviz `Digraph` in a notebook.
+
+### meshed.viz.visualize_graph_interactive(graph)
+
+Display `graph` (a networkx graph) in a notebook with ipywidgets controls (needs graphviz, networkx, ipywidgets).
+
 
 # about-this-build.html.md
 
@@ -6480,7 +6537,7 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
 # About this build
 
-This documentation was built on **2026-10-20 15:06 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/742e25c34db06c6fff471b86c3d28e033f143662"><code>742e25c</code></a> on branch <code>master</code>, for **meshed 0.1.184** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-22 14:11 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/689785328598d35607842949f682ec01f93f577a"><code>6897853</code></a> on branch <code>master</code>, for **meshed 0.1.185** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -6489,9 +6546,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/742e25c34db06c6fff471b86c3d28e033f143662"><code>742e25c34db06c6fff471b86c3d28e033f143662</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/689785328598d35607842949f682ec01f93f577a"><code>689785328598d35607842949f682ec01f93f577a</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.184</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.185</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6500,18 +6557,18 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/39444913588">39444913588</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/45031154457">45031154457</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>848b6f3bbac1108996d23c45c16321d850fe93b5</code> (in the history of the built commit) |
+| Event commit | <code>7b7cd69e96f051ff5b96cd70dc3a7f991b1670a2</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.21  |
+| epythet  | 0.2.23  |
 | Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
-| Python   | 3.12.15 |
+| Python   | 3.12.16 |
 
 ## Configuration as resolved
 
@@ -6527,14 +6584,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.184/">0.1.184</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.185/">0.1.185</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout 742e25c34db06c6fff471b86c3d28e033f143662
-pip install "epythet==0.2.21"
+git checkout 689785328598d35607842949f682ec01f93f577a
+pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/
 ```
 

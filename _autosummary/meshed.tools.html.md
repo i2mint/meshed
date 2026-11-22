@@ -4,7 +4,7 @@ Tools to work with meshed
 
 ### Functions
 
-| `find_funcs`(dag, func_outs)                                                                 |                                                                             |
+| [`find_funcs`](#meshed.tools.find_funcs)(dag, func_outs)                  | Return the func nodes of `dag` whose output name is in `func_outs`.         |
 |----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
 | [`launch_funcs_webservice`](#meshed.tools.launch_funcs_webservice)(funcs)              | Launches a web service application with the specified functions.            |
 | [`launch_webservice`](#meshed.tools.launch_webservice)(funcs_to_cloudify[, ...]) | Context manager to launch a web service application in a separate process.  |
@@ -13,8 +13,38 @@ Tools to work with meshed
 
 ### Classes
 
-| `CloudFunctions`(funcs[, openapi_url, logger])   |    |
-|--------------------------------------------------|----|
+| [`CloudFunctions`](#meshed.tools.CloudFunctions)(funcs[, openapi_url, logger])   | Map the names of `funcs` to Python functions calling the web service.   |
+|-------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+
+### *class* meshed.tools.CloudFunctions(funcs, openapi_url='http://localhost:3030/openapi', logger=<built-in function print>)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Map the names of `funcs` to Python functions calling the web service.
+
+#### *property* func_names
+
+The names of the functions, as a `frozenset`.
+
+#### *property* http_client
+
+The HTTP client of the web service; if the first connection fails, wait 10 seconds and retry once.
+
+#### items()
+
+Iterate over `(name, web service function)` pairs.
+
+#### keys()
+
+The names of the functions.
+
+#### values()
+
+Iterate over the web service functions (see `__getitem__`).
+
+### meshed.tools.find_funcs(dag, func_outs)
+
+Return the func nodes of `dag` whose output name is in `func_outs`.
 
 ### meshed.tools.launch_funcs_webservice(funcs)
 

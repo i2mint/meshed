@@ -4,12 +4,12 @@ Visualization utilities for the meshed package.
 
 ### Functions
 
-| [`add_new_line_if_none`](#meshed.viz.add_new_line_if_none)(s)                           | Since graphviz 0.18, need to have a newline in body lines.   |
-|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
-| [`dot_lines_of_func_nodes`](#meshed.viz.dot_lines_of_func_nodes)(objs[, start_lines, ...]) | Get lines generator for the graphviz.DiGraph(body=list(...)) |
-| [`dot_lines_of_objs`](#meshed.viz.dot_lines_of_objs)(objs[, start_lines, end_lines]) | Get lines generator for the graphviz.DiGraph(body=list(...)) |
-| `visualize_graph`(graph)                                                                           |                                                              |
-| `visualize_graph_interactive`(graph)                                                               |                                                              |
+| [`add_new_line_if_none`](#meshed.viz.add_new_line_if_none)(s)                           | Since graphviz 0.18, need to have a newline in body lines.                                                        |
+|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| [`dot_lines_of_func_nodes`](#meshed.viz.dot_lines_of_func_nodes)(objs[, start_lines, ...]) | Get lines generator for the graphviz.DiGraph(body=list(...))                                                      |
+| [`dot_lines_of_objs`](#meshed.viz.dot_lines_of_objs)(objs[, start_lines, end_lines]) | Get lines generator for the graphviz.DiGraph(body=list(...))                                                      |
+| [`visualize_graph`](#meshed.viz.visualize_graph)(graph)                            | Display `graph` (a networkx graph) as a graphviz `Digraph` in a notebook.                                         |
+| [`visualize_graph_interactive`](#meshed.viz.visualize_graph_interactive)(graph)                | Display `graph` (a networkx graph) in a notebook with ipywidgets controls (needs graphviz, networkx, ipywidgets). |
 
 ### meshed.viz.add_new_line_if_none(s)
 
@@ -190,3 +190,11 @@ Get lines generator for the graphviz.DiGraph(body=list(…))
 
                exp
 ```
+
+### meshed.viz.visualize_graph(graph)
+
+Display `graph` (a networkx graph) as a graphviz `Digraph` in a notebook.
+
+### meshed.viz.visualize_graph_interactive(graph)
+
+Display `graph` (a networkx graph) in a notebook with ipywidgets controls (needs graphviz, networkx, ipywidgets).

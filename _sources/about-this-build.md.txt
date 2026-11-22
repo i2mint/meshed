@@ -5,7 +5,7 @@ orphan: true
 
 # About this build
 
-This documentation was built on **2026-10-20 15:06 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/742e25c34db06c6fff471b86c3d28e033f143662"><code>742e25c</code></a> on branch <code>master</code>, for **meshed 0.1.184** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-22 14:11 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/689785328598d35607842949f682ec01f93f577a"><code>6897853</code></a> on branch <code>master</code>, for **meshed 0.1.185** (from <code>setup.cfg</code>).
 
 :::{note}
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -15,9 +15,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 | | |
 |---|---|
-| Commit | <a href="https://github.com/i2mint/meshed/commit/742e25c34db06c6fff471b86c3d28e033f143662"><code>742e25c34db06c6fff471b86c3d28e033f143662</code></a> |
+| Commit | <a href="https://github.com/i2mint/meshed/commit/689785328598d35607842949f682ec01f93f577a"><code>689785328598d35607842949f682ec01f93f577a</code></a> |
 | Branch | <code>master</code> |
-| Tags at this commit | <code>0.1.184</code> |
+| Tags at this commit | <code>0.1.185</code> |
 | Working tree | clean |
 | Remote | <code>https://github.com/i2mint/meshed</code> |
 
@@ -26,18 +26,18 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 | | |
 |---|---|
 | Repository | <code>i2mint/meshed</code> |
-| Run | <a href="https://github.com/i2mint/meshed/actions/runs/39444913588">39444913588</a> |
+| Run | <a href="https://github.com/i2mint/meshed/actions/runs/45031154457">45031154457</a> |
 | Ref | <code>refs/heads/master</code> |
-| Event commit | <code>848b6f3bbac1108996d23c45c16321d850fe93b5</code> (in the history of the built commit) |
+| Event commit | <code>7b7cd69e96f051ff5b96cd70dc3a7f991b1670a2</code> (in the history of the built commit) |
 
 ## Tools
 
 | | |
 |---|---|
-| epythet | 0.2.21 |
+| epythet | 0.2.23 |
 | Sphinx | 9.1.1 |
 | docutils | 0.22.4 |
-| Python | 3.12.15 |
+| Python | 3.12.16 |
 
 ## Configuration as resolved
 
@@ -53,14 +53,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.184/">0.1.184</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.185/">0.1.185</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout 742e25c34db06c6fff471b86c3d28e033f143662
-pip install "epythet==0.2.21"
+git checkout 689785328598d35607842949f682ec01f93f577a
+pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/
 ```
 

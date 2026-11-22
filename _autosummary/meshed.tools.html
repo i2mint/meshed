@@ -30,8 +30,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -39,12 +39,12 @@
     <link rel="stylesheet" type="text/css" href="../_static/epythet.css?v=20ed5096" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../_static/documentation_options.js?v=31b0162a"></script>
+    <script src="../_static/documentation_options.js?v=95c89233"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.184" />
+  <meta name="docsearch:version" content="0.1.185" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -106,7 +106,7 @@
   
     <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -176,14 +176,14 @@
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
   <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
-    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
   </ul>
 </div></div>
       
@@ -218,7 +218,7 @@
   
 
   
-    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
       <span class="fa-solid fa-outdent"></span>
     </button>
   
@@ -232,7 +232,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
@@ -275,14 +275,14 @@
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
   <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
-    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
   </ul>
 </div></div>
         
@@ -394,7 +394,7 @@
     
     <li class="breadcrumb-item breadcrumb-home">
       <a href="../index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
+        <i class="fa-solid fa-house"></i>
       </a>
     </li>
     
@@ -426,8 +426,8 @@
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_funcs</span></code>(dag, func_outs)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.tools.find_funcs" title="meshed.tools.find_funcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_funcs</span></code></a>(dag, func_outs)</p></td>
+<td><p>Return the func nodes of <code class="docutils literal notranslate"><span class="pre">dag</span></code> whose output name is in <code class="docutils literal notranslate"><span class="pre">func_outs</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#meshed.tools.launch_funcs_webservice" title="meshed.tools.launch_funcs_webservice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">launch_funcs_webservice</span></code></a>(funcs)</p></td>
 <td><p>Launches a web service application with the specified functions.</p></td>
@@ -447,12 +447,57 @@
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloudFunctions</span></code>(funcs[, openapi_url, logger])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#meshed.tools.CloudFunctions" title="meshed.tools.CloudFunctions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloudFunctions</span></code></a>(funcs[, openapi_url, logger])</p></td>
+<td><p>Map the names of <code class="docutils literal notranslate"><span class="pre">funcs</span></code> to Python functions calling the web service.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="meshed.tools.CloudFunctions">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">meshed.tools.</span></span><span class="sig-name descname"><span class="pre">CloudFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">openapi_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'http://localhost:3030/openapi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;built-in</span> <span class="pre">function</span> <span class="pre">print&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/tools.html#CloudFunctions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.tools.CloudFunctions" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Map the names of <code class="docutils literal notranslate"><span class="pre">funcs</span></code> to Python functions calling the web service.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="meshed.tools.CloudFunctions.func_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">func_names</span></span><a class="headerlink" href="#meshed.tools.CloudFunctions.func_names" title="Link to this definition">#</a></dt>
+<dd><p>The names of the functions, as a <code class="docutils literal notranslate"><span class="pre">frozenset</span></code>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="meshed.tools.CloudFunctions.http_client">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">http_client</span></span><a class="headerlink" href="#meshed.tools.CloudFunctions.http_client" title="Link to this definition">#</a></dt>
+<dd><p>The HTTP client of the web service; if the first connection fails, wait 10 seconds and retry once.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.tools.CloudFunctions.items">
+<span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/tools.html#CloudFunctions.items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.tools.CloudFunctions.items" title="Link to this definition">#</a></dt>
+<dd><p>Iterate over <code class="docutils literal notranslate"><span class="pre">(name,</span> <span class="pre">web</span> <span class="pre">service</span> <span class="pre">function)</span></code> pairs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.tools.CloudFunctions.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/tools.html#CloudFunctions.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.tools.CloudFunctions.keys" title="Link to this definition">#</a></dt>
+<dd><p>The names of the functions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meshed.tools.CloudFunctions.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/tools.html#CloudFunctions.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.tools.CloudFunctions.values" title="Link to this definition">#</a></dt>
+<dd><p>Iterate over the web service functions (see <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meshed.tools.find_funcs">
+<span class="sig-prename descclassname"><span class="pre">meshed.tools.</span></span><span class="sig-name descname"><span class="pre">find_funcs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_outs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/tools.html#find_funcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.tools.find_funcs" title="Link to this definition">#</a></dt>
+<dd><p>Return the func nodes of <code class="docutils literal notranslate"><span class="pre">dag</span></code> whose output name is in <code class="docutils literal notranslate"><span class="pre">func_outs</span></code>.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="meshed.tools.launch_funcs_webservice">
 <span class="sig-prename descclassname"><span class="pre">meshed.tools.</span></span><span class="sig-name descname"><span class="pre">launch_funcs_webservice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">funcs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/tools.html#launch_funcs_webservice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.tools.launch_funcs_webservice" title="Link to this definition">#</a></dt>
@@ -547,7 +592,7 @@
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
@@ -559,6 +604,15 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.CloudFunctions"><code class="docutils literal notranslate"><span class="pre">CloudFunctions</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.CloudFunctions.func_names"><code class="docutils literal notranslate"><span class="pre">CloudFunctions.func_names</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.CloudFunctions.http_client"><code class="docutils literal notranslate"><span class="pre">CloudFunctions.http_client</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.CloudFunctions.items"><code class="docutils literal notranslate"><span class="pre">CloudFunctions.items()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.CloudFunctions.keys"><code class="docutils literal notranslate"><span class="pre">CloudFunctions.keys()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.CloudFunctions.values"><code class="docutils literal notranslate"><span class="pre">CloudFunctions.values()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.find_funcs"><code class="docutils literal notranslate"><span class="pre">find_funcs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.launch_funcs_webservice"><code class="docutils literal notranslate"><span class="pre">launch_funcs_webservice()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.launch_webservice"><code class="docutils literal notranslate"><span class="pre">launch_webservice()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meshed.tools.mk_dag_with_ws_funcs"><code class="docutils literal notranslate"><span class="pre">mk_dag_with_ws_funcs()</span></code></a></li>
@@ -588,8 +642,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -601,7 +655,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
 </p></div>
       
     </div>

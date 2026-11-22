@@ -30,8 +30,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
@@ -39,12 +39,12 @@
     <link rel="stylesheet" type="text/css" href="_static/epythet.css?v=20ed5096" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <script defer src="_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=31b0162a"></script>
+    <script src="_static/documentation_options.js?v=95c89233"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -56,7 +56,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.184" />
+  <meta name="docsearch:version" content="0.1.185" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -104,7 +104,7 @@
   
     <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -174,14 +174,14 @@
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
   <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
-    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
   </ul>
 </div></div>
       
@@ -216,7 +216,7 @@
   
 
   
-    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
       <span class="fa-solid fa-outdent"></span>
     </button>
   
@@ -232,7 +232,7 @@
       
         
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
         
 
@@ -275,14 +275,14 @@
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
   <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
-    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
   </ul>
 </div></div>
         
@@ -337,7 +337,7 @@
     
     <li class="breadcrumb-item breadcrumb-home">
       <a href="index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
+        <i class="fa-solid fa-house"></i>
       </a>
     </li>
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">About this build</span></li>
@@ -360,7 +360,7 @@
   <!-- generated by epythet -->
 <section id="about-this-build">
 <h1>About this build<a class="headerlink" href="#about-this-build" title="Link to this heading">#</a></h1>
-<p>This documentation was built on <strong>2026-10-20 15:06 UTC</strong> from commit <a href="https://github.com/i2mint/meshed/commit/742e25c34db06c6fff471b86c3d28e033f143662"><code>742e25c</code></a> on branch <code>master</code>, for <strong>meshed 0.1.184</strong> (from <code>setup.cfg</code>).</p>
+<p>This documentation was built on <strong>2026-11-22 14:11 UTC</strong> from commit <a href="https://github.com/i2mint/meshed/commit/689785328598d35607842949f682ec01f93f577a"><code>6897853</code></a> on branch <code>master</code>, for <strong>meshed 0.1.185</strong> (from <code>setup.cfg</code>).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.</p>
@@ -375,13 +375,13 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Commit</p></td>
-<td><p><a href="https://github.com/i2mint/meshed/commit/742e25c34db06c6fff471b86c3d28e033f143662"><code>742e25c34db06c6fff471b86c3d28e033f143662</code></a></p></td>
+<td><p><a href="https://github.com/i2mint/meshed/commit/689785328598d35607842949f682ec01f93f577a"><code>689785328598d35607842949f682ec01f93f577a</code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Branch</p></td>
 <td><p><code>master</code></p></td>
 </tr>
 <tr class="row-even"><td><p>Tags at this commit</p></td>
-<td><p><code>0.1.184</code></p></td>
+<td><p><code>0.1.185</code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Working tree</p></td>
 <td><p>clean</p></td>
@@ -406,13 +406,13 @@
 <td><p><code>i2mint/meshed</code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Run</p></td>
-<td><p><a href="https://github.com/i2mint/meshed/actions/runs/39444913588">39444913588</a></p></td>
+<td><p><a href="https://github.com/i2mint/meshed/actions/runs/45031154457">45031154457</a></p></td>
 </tr>
 <tr class="row-even"><td><p>Ref</p></td>
 <td><p><code>refs/heads/master</code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Event commit</p></td>
-<td><p><code>848b6f3bbac1108996d23c45c16321d850fe93b5</code> (in the history of the built commit)</p></td>
+<td><p><code>7b7cd69e96f051ff5b96cd70dc3a7f991b1670a2</code> (in the history of the built commit)</p></td>
 </tr>
 </tbody>
 </table>
@@ -428,7 +428,7 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>epythet</p></td>
-<td><p>0.2.21</p></td>
+<td><p>0.2.23</p></td>
 </tr>
 <tr class="row-odd"><td><p>Sphinx</p></td>
 <td><p>9.1.1</p></td>
@@ -437,7 +437,7 @@
 <td><p>0.22.4</p></td>
 </tr>
 <tr class="row-odd"><td><p>Python</p></td>
-<td><p>3.12.15</p></td>
+<td><p>3.12.16</p></td>
 </tr>
 </tbody>
 </table>
@@ -479,14 +479,14 @@
 </section>
 <section id="package-on-pypi">
 <h2>Package on PyPI<a class="headerlink" href="#package-on-pypi" title="Link to this heading">#</a></h2>
-<p>Latest release: <a href="https://pypi.org/project/meshed/0.1.184/">0.1.184</a>, the same as the documented version.</p>
+<p>Latest release: <a href="https://pypi.org/project/meshed/0.1.185/">0.1.185</a>, the same as the documented version.</p>
 </section>
-<section id="site"><h2>Site</h2><table class="docutils align-default"><tbody><tr><td><p>Modules documented</p></td><td><p>30</p></td></tr><tr><td><p>Objects documented</p></td><td><p>275</p></td></tr></tbody></table></section>
+<section id="site"><h2>Site</h2><table class="docutils align-default"><tbody><tr><td><p>Modules documented</p></td><td><p>30</p></td></tr><tr><td><p>Objects documented</p></td><td><p>287</p></td></tr></tbody></table></section>
 <section id="reproduce">
 <h2>Reproduce<a class="headerlink" href="#reproduce" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/i2mint/meshed<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>meshed
-git<span class="w"> </span>checkout<span class="w"> </span>742e25c34db06c6fff471b86c3d28e033f143662
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"epythet==0.2.21"</span>
+git<span class="w"> </span>checkout<span class="w"> </span>689785328598d35607842949f682ec01f93f577a
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"epythet==0.2.23"</span>
 epythet<span class="w"> </span>quickstart<span class="w"> </span>.<span class="w"> </span>--ignore<span class="w"> </span>tests/
 </pre></div>
 </div>
@@ -511,7 +511,7 @@ epythet<span class="w"> </span>quickstart<span class="w"> </span>.<span class="w
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
@@ -554,8 +554,8 @@ epythet<span class="w"> </span>quickstart<span class="w"> </span>.<span class="w
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -567,7 +567,7 @@ epythet<span class="w"> </span>quickstart<span class="w"> </span>.<span class="w
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
 </p></div>
       
     </div>

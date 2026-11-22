@@ -185,6 +185,10 @@ Methods per var node, each asking only for the roots it still needs:
 -1
 ```
 
+#### func_node_id(k)
+
+Return the id of the (unique) func node that outputs `k`, or `None` if `k` is a root.
+
 #### inject_methods(obj=None)
 
 Give `obj` (default: a new namespace) one method per non-root var node.

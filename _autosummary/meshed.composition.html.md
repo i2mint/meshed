@@ -4,13 +4,20 @@ Specific use of FuncNode and DAG
 
 ### Functions
 
-| `func_node_kwargs_trans`(func)                                                               |                                                                             |
-|----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| [`func_node_name_trans`](#meshed.composition.func_node_name_trans)(name_trans, \*[, ...]) |                                                                             |
-| [`get_param`](#meshed.composition.get_param)(func)                             | Find the name of the parameter of a function with exactly one parameter.    |
-| [`is_func_node_kwargs_trans`](#meshed.composition.is_func_node_kwargs_trans)(func)             | Returns True iff the only required params of func are FuncNode field names. |
-| [`line_with_dag`](#meshed.composition.line_with_dag)(\*steps)                      | Emulate a Line object with a DAG                                            |
-| `suffix_ids`(func_nodes[, renamer, ...])                                                     |                                                                             |
+| [`func_node_kwargs_trans`](#meshed.composition.func_node_kwargs_trans)(func)                | Return `func` if it is a `FuncNodeKwargsTrans`, else raise `InvalidFunctionParameters`.                             |
+|----------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| [`func_node_name_trans`](#meshed.composition.func_node_name_trans)(name_trans, \*[, ...]) |                                                                                                                     |
+| [`get_param`](#meshed.composition.get_param)(func)                             | Find the name of the parameter of a function with exactly one parameter.                                            |
+| [`is_func_node_kwargs_trans`](#meshed.composition.is_func_node_kwargs_trans)(func)             | Returns True iff the only required params of func are FuncNode field names.                                         |
+| [`line_with_dag`](#meshed.composition.line_with_dag)(\*steps)                      | Emulate a Line object with a DAG                                                                                    |
+| [`suffix_ids`](#meshed.composition.suffix_ids)(func_nodes[, renamer, ...])      | Rename the func nodes with `renamer` (a callable, or a suffix string) and return a `DAG` if given one, else a list. |
+
+### meshed.composition.func_node_kwargs_trans(func)
+
+Return `func` if it is a `FuncNodeKwargsTrans`, else raise `InvalidFunctionParameters`.
+
+* **Return type:**
+  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)], [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
 
 ### meshed.composition.func_node_name_trans(name_trans, , also_apply_to_func_label=False)
 
@@ -48,3 +55,11 @@ Emulate a Line object with a DAG
   and the output of each step is fed into the next
 * **Returns:**
   a DAG instance computing the composition of all the functions in steps, in the provided order
+
+### meshed.composition.suffix_ids(func_nodes, renamer=<function numbered_suffix_renamer>, \*, also_apply_to_func_label=False)
+
+Rename the func nodes with `renamer` (a callable, or a suffix string) and return a `DAG` if given one, else a list.
+
+#### NOTE
+a callable `renamer` currently trips on the `assert callable(suffix)`
+line, which only defines `suffix` when `renamer` is a string.
