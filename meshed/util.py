@@ -535,6 +535,7 @@ class ConditionalIterize:
         self.__signature__ = self._new_sig()
 
     def __call__(self, *args, **kwargs):
+        """Call ``func`` or its iterized version, depending on ``iterize_condition(first_arg)``."""
         _kwargs = self.sig.map_arguments(
             args, kwargs, apply_defaults=True, allow_partial=True
         )
@@ -545,6 +546,7 @@ class ConditionalIterize:
             return self.func(*args, **kwargs)
 
     def __repr__(self):
+        """Return a short ``<ConditionalIterize name(signature)>`` representation."""
         return f"<ConditionalIterize {name_of_obj(self)}{Sig(self)}>"
 
     def _new_sig(self):
@@ -584,9 +586,11 @@ class ModuleNotFoundIgnore:
     """
 
     def __enter__(self):
+        """Enter the context (does nothing)."""
         pass
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        """Return ``True``, so that any exception raised in the block is suppressed."""
         if exc_type is ModuleNotFoundError:
             pass
         return True

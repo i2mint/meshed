@@ -349,6 +349,7 @@ class FuncNode(metaclass=_LegacyNameMeta):
     #     self.__post_init__()
 
     def __post_init__(self):
+        """Default ``bind`` to ``{}``, handle variadic arguments and validate the arguments."""
         if self.bind is None:
             self.bind = dict()
         self.func = handle_variadics(self.func)
@@ -417,6 +418,7 @@ class FuncNode(metaclass=_LegacyNameMeta):
             raise ValueError(f"Unknown bind_info: {bind_info}")
 
     def __repr__(self):
+        """Return a ``FuncNode(...)`` string showing the synopsis, with a hybrid bind info."""
         return f'FuncNode({self.synopsis_string(bind_info="hybrid")})'
 
     def call_on_scope(self, scope: MutableMapping, write_output_into_scope=True):
@@ -456,10 +458,14 @@ class FuncNode(metaclass=_LegacyNameMeta):
 
     # TODO: Find a better one. Need to have guidance on hash and eq methods dos-&-donts
     def __hash__(self):
+        """Hash of the node, computed from its string identity (see ``_hash_str``)."""
         return hash(self._hash_str())
+        """Hash of the node, computed from its string identity (see ``_hash_str``)."""
 
     def __eq__(self, other):
+        """Two nodes are equal when their hashes are equal."""
         return hash(self) == hash(other)
+        """Two nodes are equal when their hashes are equal."""
 
     def __call__(self, scope):
         """Deprecated: Don't use. Might be a normal function with a signature"""

@@ -77,6 +77,7 @@ class NoOverwritesDict(dict):
     """
 
     def __setitem__(self, key, value):
+        """Set ``key`` to ``value``; raise ``OverWritesNotAllowedError`` if ``key`` exists with a different value."""
         if key not in self:
             super().__setitem__(key, value)
         elif value != self[key]:
@@ -246,6 +247,7 @@ class CachedDag:
     """
 
     def __init__(self, dag, cache=True, name=None):
+        """Build the reverse graph, roots and leafs of ``dag`` and set up the (optional) ``cache``."""
         self.dag = dag
         self.reversed_graph = edge_reversed_graph(dag.graph_ids)
         self.roots = set(self.dag.roots)
@@ -271,12 +273,15 @@ class CachedDag:
 
     @property
     def __name__(self):
+        """The explicit ``name``, if given, else the name of the wrapped dag."""
         return self.name or self.dag.__name__
 
     def __iter__(self):
+        """Iterate over the keys (var node names) of the reversed graph."""
         yield from self.reversed_graph
 
     def func_node_id(self, k):
+        """Return the id of the (unique) func node that outputs ``k``, or ``None`` if ``k`` is a root."""
         func_node_name = get_first_item_and_assert_unicity(self.reversed_graph[k])
         if func_node_name is not None:
             return self.out_of_func_node_name[func_node_name]
@@ -284,6 +289,10 @@ class CachedDag:
     # TODO: Consider having args and kwargs instead of just input_kwargs.
     #   or making it (k, /, *args, **kwargs)
     def __call__(self, k, /, **input_kwargs):
+        """Compute the value of node ``k`` from ``input_kwargs``, reusing cached values.
+
+        If the computation fails, the outputs it cached are rolled back; inputs are
+        cached only after a successful computation."""
         input_kwargs = dict(input_kwargs)
         self._validate_inputs_against_cache(input_kwargs)
         keys_before = set(self.cache)
