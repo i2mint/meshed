@@ -1,5 +1,7 @@
 """Test hybrid dag that uses a web service for some functions."""
 
+import pytest
+
 from meshed import DAG
 from meshed.examples import online_marketing_funcs as funcs
 from meshed.tools import mk_hybrid_dag, launch_webservice
@@ -25,6 +27,8 @@ def test_hybrid_dag(
     :param input_dict: kwargs, defaults to dict( impressions=1000, cost_per_impression=0.02, click_per_impression=0.3, sales_per_click=0.05, revenue_per_sale=100 )
     :type input_dict: dict, optional
     """
+    pytest.importorskip("extrude")
+    pytest.importorskip("http2py")
     # The parameters
     dag = DAG(dag_funcs)
 
