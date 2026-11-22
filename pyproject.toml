@@ -142,6 +142,8 @@ coverage_report_format = [
 exclude_paths = [
     "examples",
     "scrap",
+    "meshed/scrap",
+    "docsrc",
 
     "docsrc",
     "misc",
