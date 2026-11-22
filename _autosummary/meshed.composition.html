@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../_static/documentation_options.js?v=95c89233"></script>
+    <script src="../_static/documentation_options.js?v=a2301859"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.185" />
+  <meta name="docsearch:version" content="0.1.186" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -522,11 +522,6 @@ and the output of each step is fed into the next</p>
 <dt class="sig sig-object py" id="meshed.composition.suffix_ids">
 <span class="sig-prename descclassname"><span class="pre">meshed.composition.</span></span><span class="sig-name descname"><span class="pre">suffix_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renamer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">numbered_suffix_renamer&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">also_apply_to_func_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/meshed/composition.html#suffix_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#meshed.composition.suffix_ids" title="Link to this definition">#</a></dt>
 <dd><p>Rename the func nodes with <code class="docutils literal notranslate"><span class="pre">renamer</span></code> (a callable, or a suffix string) and return a <code class="docutils literal notranslate"><span class="pre">DAG</span></code> if given one, else a list.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>a callable <code class="docutils literal notranslate"><span class="pre">renamer</span></code> currently trips on the <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">callable(suffix)</span></code>
-line, which only defines <code class="docutils literal notranslate"><span class="pre">suffix</span></code> when <code class="docutils literal notranslate"><span class="pre">renamer</span></code> is a string.</p>
-</div>
 <dl class="field-list simple">
 </dl>
 </dd></dl>

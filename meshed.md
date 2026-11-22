@@ -1,4 +1,4 @@
-> built 2026-11-22 14:11 UTC from 6897853 (master) · meshed 0.1.185. Details: build_info.json
+> built 2026-11-22 18:23 UTC from a25648e (master) · meshed 0.1.186. Details: build_info.json
 
 # index.html.md
 
@@ -1450,10 +1450,6 @@ Emulate a Line object with a DAG
 ### meshed.composition.suffix_ids(func_nodes, renamer=<function numbered_suffix_renamer>, \*, also_apply_to_func_label=False)
 
 Rename the func nodes with `renamer` (a callable, or a suffix string) and return a `DAG` if given one, else a list.
-
-#### NOTE
-a callable `renamer` currently trips on the `assert callable(suffix)`
-line, which only defines `suffix` when `renamer` is a string.
 
 
 # _autosummary/meshed.dag.html.md
@@ -6537,18 +6533,20 @@ Display `graph` (a networkx graph) in a notebook with ipywidgets controls (needs
 
 # About this build
 
-This documentation was built on **2026-11-22 14:11 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/689785328598d35607842949f682ec01f93f577a"><code>6897853</code></a> on branch <code>master</code>, for **meshed 0.1.185** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-22 18:23 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/a25648e2e07734ff64bf4eb0f360292177564354"><code>a25648e</code></a> on branch <code>master</code>, for **meshed 0.1.186** (from <code>setup.cfg</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.1.186) is ahead of the latest release on PyPI (0.1.185): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/689785328598d35607842949f682ec01f93f577a"><code>689785328598d35607842949f682ec01f93f577a</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/a25648e2e07734ff64bf4eb0f360292177564354"><code>a25648e2e07734ff64bf4eb0f360292177564354</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.185</code>                                                                                                                                 |
+| Tags at this commit | <code>0.1.186</code>                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/meshed</code>                                                                                                        |
 
@@ -6557,9 +6555,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/45031154457">45031154457</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/45054487718">45054487718</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>7b7cd69e96f051ff5b96cd70dc3a7f991b1670a2</code> (in the history of the built commit) |
+| Event commit | <code>b657a9d1f2e24da83f8ca5154ba6798d0494c2b7</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -6584,13 +6582,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.185/">0.1.185</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/meshed/0.1.185/">0.1.185</a>, older than the documented version (0.1.186).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout 689785328598d35607842949f682ec01f93f577a
+git checkout a25648e2e07734ff64bf4eb0f360292177564354
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/
 ```

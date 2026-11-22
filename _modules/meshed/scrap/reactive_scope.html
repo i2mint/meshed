@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../../_static/documentation_options.js?v=95c89233"></script>
+    <script src="../../../_static/documentation_options.js?v=a2301859"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.185" />
+  <meta name="docsearch:version" content="0.1.186" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -874,8 +874,12 @@ window.runMermaid = runMermaid;</script>
             <span class="n">func_nodes</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span>
         <span class="n">func_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ReactiveFuncNode</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
+        <span class="c1"># ``dag.graph`` maps var nodes to the *names* of the func nodes that consume them</span>
+        <span class="n">func_node_of_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">fn</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">fn</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">func_nodes</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_nodes_for_var_node</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">var_nodes</span>
+            <span class="n">k</span><span class="p">:</span> <span class="p">[</span><span class="n">func_node_of_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">var_nodes</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scope_factory</span> <span class="o">=</span> <span class="n">scope_factory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>

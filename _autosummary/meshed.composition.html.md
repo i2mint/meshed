@@ -59,7 +59,3 @@ Emulate a Line object with a DAG
 ### meshed.composition.suffix_ids(func_nodes, renamer=<function numbered_suffix_renamer>, \*, also_apply_to_func_label=False)
 
 Rename the func nodes with `renamer` (a callable, or a suffix string) and return a `DAG` if given one, else a list.
-
-#### NOTE
-a callable `renamer` currently trips on the `assert callable(suffix)`
-line, which only defines `suffix` when `renamer` is a string.

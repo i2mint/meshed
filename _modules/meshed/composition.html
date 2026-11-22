@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=95c89233"></script>
+    <script src="../../_static/documentation_options.js?v=a2301859"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.185" />
+  <meta name="docsearch:version" content="0.1.186" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -800,10 +800,7 @@ window.runMermaid = runMermaid;</script>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">also_apply_to_func_label</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Rename the func nodes with ``renamer`` (a callable, or a suffix string) and return a ``DAG`` if given one, else a list.</span>
-
-<span class="sd">    Note: a callable ``renamer`` currently trips on the ``assert callable(suffix)``</span>
-<span class="sd">    line, which only defines ``suffix`` when ``renamer`` is a string."""</span>
+<span class="w">    </span><span class="sd">"""Rename the func nodes with ``renamer`` (a callable, or a suffix string) and return a ``DAG`` if given one, else a list."""</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">,</span> <span class="n">DAG</span><span class="p">):</span>
         <span class="n">egress</span> <span class="o">=</span> <span class="n">DAG</span>
     <span class="k">else</span><span class="p">:</span>
@@ -811,7 +808,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">renamer</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">suffix</span> <span class="o">=</span> <span class="n">renamer</span>
         <span class="n">renamer</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">name</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">"</span>
-    <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"suffix needs to be callable"</span>
+    <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">renamer</span><span class="p">),</span> <span class="s2">"renamer needs to be callable (or a suffix string)"</span>
     <span class="n">func_node_trans</span> <span class="o">=</span> <span class="n">func_node_name_trans</span><span class="p">(</span>
         <span class="n">renamer</span><span class="p">,</span>
         <span class="n">also_apply_to_func_label</span><span class="o">=</span><span class="n">also_apply_to_func_label</span><span class="p">,</span>
