@@ -409,7 +409,7 @@ returns the leaf output values.</p>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/127779748-70b47907-e51f-4e64-bc18-9545ee07e632.png"><img alt="https://user-images.githubusercontent.com/1906276/127779748-70b47907-e51f-4e64-bc18-9545ee07e632.png" src="https://user-images.githubusercontent.com/1906276/127779748-70b47907-e51f-4e64-bc18-9545ee07e632.png" width="200" />
 </a>
 <p>You can get a sub-dag by specifying desired input(s) and outputs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag2</span><span class="p">[[</span><span class="s1">'that'</span><span class="p">,</span> <span class="s1">'this'</span><span class="p">],</span> <span class="s1">'combine'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag2</span><span class="p">[[</span><span class="s1">'that'</span><span class="p">,</span> <span class="s1">'this'</span><span class="p">]:</span><span class="s1">'combine'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png"><img alt="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png" src="https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png" width="150" />
@@ -430,7 +430,9 @@ to use someone else’s functions, one would need to specify the relation betwee
 </pre></div>
 </div>
 <p>Say we want the output of f to become the value of the parameter a_plus_b. We can do that by assigning the string ‘a_plus_b’ to the out parameter of a FuncNode representing the function f:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">f_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s2">"a_plus_b"</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">FuncNode</span>
+
+<span class="n">f_node</span> <span class="o">=</span> <span class="n">FuncNode</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s2">"a_plus_b"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We can now create a dag using our f_node instead of f:</p>
@@ -475,20 +477,20 @@ it needs.</p>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154749811-f9892ee6-617c-4fa6-9de9-1ebc509c04ae.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154749811-f9892ee6-617c-4fa6-9de9-1ebc509c04ae.png" width="110" />
 </a>
 <p>Get a subdag from <code class="docutils literal notranslate"><span class="pre">g_</span></code> (indicates the function here) to the end of <code class="docutils literal notranslate"><span class="pre">dag</span></code></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subdag</span> <span class="o">=</span> <span class="n">dag</span><span class="p">[</span><span class="s1">'g_'</span><span class="p">,:]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subdag</span> <span class="o">=</span> <span class="n">dag</span><span class="p">[</span><span class="s1">'g_'</span><span class="p">:]</span>
 <span class="n">subdag</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154749842-c2320d1c-368d-4be8-ac57-9a77f1bb081d.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154749842-c2320d1c-368d-4be8-ac57-9a77f1bb081d.png" width="100" />
 </a>
 <p>From the beginning to <code class="docutils literal notranslate"><span class="pre">h_</span></code></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[:,</span> <span class="s1">'h_'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[:</span><span class="s1">'h_'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154750524-ece7f4b6-a3f3-46c6-a66d-7dc9b8ef254a.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154750524-ece7f4b6-a3f3-46c6-a66d-7dc9b8ef254a.png" width="110" />
 </a>
 <p>From <code class="docutils literal notranslate"><span class="pre">g_</span></code> to <code class="docutils literal notranslate"><span class="pre">h_</span></code> (both inclusive)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'g_'</span><span class="p">,</span> <span class="s1">'h_'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'g_'</span><span class="p">:</span><span class="s1">'h_'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png" width="109" />
@@ -498,16 +500,16 @@ use names of input/output var-nodes. Do note the difference though.
 The nodes you specify to get a sub-dag are INCLUSIVE, but when you
 specify function nodes, you also get the input and output nodes of these
 functions.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">dag['g_',</span> <span class="pre">'h_']</span></code> give us a sub-dag starting at <code class="docutils literal notranslate"><span class="pre">f</span></code> (the input node),
-but when we ask <code class="docutils literal notranslate"><span class="pre">dag['g',</span> <span class="pre">'h_']</span></code> instead, <code class="docutils literal notranslate"><span class="pre">g</span></code> being the output node of
+<p>The <code class="docutils literal notranslate"><span class="pre">dag['g_':'h_']</span></code> give us a sub-dag starting at <code class="docutils literal notranslate"><span class="pre">f</span></code> (the input node),
+but when we ask <code class="docutils literal notranslate"><span class="pre">dag['g':'h_']</span></code> instead, <code class="docutils literal notranslate"><span class="pre">g</span></code> being the output node of
 function node <code class="docutils literal notranslate"><span class="pre">g_</span></code>, we only get <code class="docutils literal notranslate"><span class="pre">g</span> <span class="pre">-&gt;</span> <span class="pre">h_</span> <span class="pre">-&gt;</span> <span class="pre">h</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'g'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'g'</span><span class="p">:</span><span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154750753-737e2705-0ea3-4595-a93a-1567862a6edd.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154750753-737e2705-0ea3-4595-a93a-1567862a6edd.png" width="88" />
 </a>
 <p>If we wanted to include <code class="docutils literal notranslate"><span class="pre">f</span></code> we’d have to specify it:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'f'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'f'</span><span class="p">:</span><span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png" width="109" />
@@ -543,27 +545,27 @@ it needs.</p>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748574-a7026125-659f-465b-9bc3-14a1864d14b2.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748574-a7026125-659f-465b-9bc3-14a1864d14b2.png" width="248" />
 </a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">],</span> <span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">]:</span><span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748685-24e706ce-b68f-429a-b7b8-7bda62ccdf36.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748685-24e706ce-b68f-429a-b7b8-7bda62ccdf36.png" width="190" />
 </a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[</span><span class="s1">'u'</span><span class="p">:</span><span class="s1">'h'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748865-6e729094-976a-4af3-87f0-b6dd3900fb8c.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748865-6e729094-976a-4af3-87f0-b6dd3900fb8c.png" width="183" />
 </a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'h'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">]:[</span><span class="s1">'h'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748905-4eaeccbe-6cca-4492-a7a2-48f7c9937b95.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748905-4eaeccbe-6cca-4492-a7a2-48f7c9937b95.png" width="199" />
 </a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">],</span> <span class="s1">'k'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]:</span><span class="s1">'k'</span><span class="p">]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748937-7a278b25-6f0f-467c-a977-89a175e15abb.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748937-7a278b25-6f0f-467c-a977-89a175e15abb.png" width="133" />
 </a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'l'</span><span class="p">,</span> <span class="s1">'k'</span><span class="p">]]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span><span class="p">[[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">]:[</span><span class="s1">'l'</span><span class="p">,</span> <span class="s1">'k'</span><span class="p">]]</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">()</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="https://user-images.githubusercontent.com/1906276/154748958-135792a6-ce16-4561-9cbe-4662113a1022.png"><img alt="image" src="https://user-images.githubusercontent.com/1906276/154748958-135792a6-ce16-4561-9cbe-4662113a1022.png" width="216" />
@@ -602,6 +604,7 @@ Few languages have builtin support for the graph data structure, but all have th
 its <a class="reference external" href="https://en.wikipedia.org/wiki/Adjacency_list">adjacency list</a>.
 That is, a dictionary-like interface that specifies the graph by specifying for each node
 what nodes it’s adjacent to:</p>
+<!-- wads-docs: skip pseudo-code; graph and source_node are placeholders -->
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">graph</span><span class="p">[</span><span class="n">source_node</span><span class="p">]</span> <span class="o">==</span> <span class="n">set_of_nodes_that_source_node_has_edges_to</span>
 </pre></div>
 </div>
@@ -636,7 +639,7 @@ you can easily create one using one of the many tools of <code class="docutils l
 </div>
 </section>
 
-<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-11-22 22:03 UTC from <a href="https://github.com/i2mint/meshed/commit/b50347502dbf17ba831f3e7db3dc6c3371d5e645">b503475</a> (master) · meshed 0.1.186 · <a href="about-this-build.html">about this build</a></p>
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-11-22 22:26 UTC from <a href="https://github.com/i2mint/meshed/commit/300c6307360965f87ed6f3e6d3a4bdc0cc662621">300c630</a> (master) · meshed 0.1.186 · <a href="about-this-build.html">about this build</a></p>
 
                 </article>
               

@@ -2,7 +2,7 @@
 
 # About this build
 
-This documentation was built on **2026-11-22 22:03 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/b50347502dbf17ba831f3e7db3dc6c3371d5e645"><code>b503475</code></a> on branch <code>master</code>, for **meshed 0.1.186** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-22 22:26 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/300c6307360965f87ed6f3e6d3a4bdc0cc662621"><code>300c630</code></a> on branch <code>master</code>, for **meshed 0.1.186** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -11,7 +11,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/meshed/commit/b50347502dbf17ba831f3e7db3dc6c3371d5e645"><code>b50347502dbf17ba831f3e7db3dc6c3371d5e645</code></a> |
+| Commit              | <a href="https://github.com/i2mint/meshed/commit/300c6307360965f87ed6f3e6d3a4bdc0cc662621"><code>300c6307360965f87ed6f3e6d3a4bdc0cc662621</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
 | Tags at this commit | none                                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
@@ -22,9 +22,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/meshed</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/45075414829">45075414829</a>        |
+| Run          | <a href="https://github.com/i2mint/meshed/actions/runs/45077658251">45077658251</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>b50347502dbf17ba831f3e7db3dc6c3371d5e645</code> (in the history of the built commit) |
+| Event commit | <code>300c6307360965f87ed6f3e6d3a4bdc0cc662621</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -55,7 +55,7 @@ Latest release: <a href="https://pypi.org/project/meshed/0.1.186/">0.1.186</a>, 
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout b50347502dbf17ba831f3e7db3dc6c3371d5e645
+git checkout 300c6307360965f87ed6f3e6d3a4bdc0cc662621
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

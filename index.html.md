@@ -98,7 +98,7 @@ dag2.dot_digraph()
 You can get a sub-dag by specifying desired input(s) and outputs.
 
 ```python
-dag2[['that', 'this'], 'combine'].dot_digraph()
+dag2[['that', 'this']:'combine'].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/127779781-8aac40eb-ed52-4694-b50e-4af896cc30a2.png)
@@ -126,6 +126,8 @@ def g(a_plus_b, d):
 Say we want the output of f to become the value of the parameter a_plus_b. We can do that by assigning the string ‘a_plus_b’ to the out parameter of a FuncNode representing the function f:
 
 ```python
+from meshed import DAG, FuncNode
+
 f_node = FuncNode(func=f, out="a_plus_b")
 ```
 
@@ -181,7 +183,7 @@ dag.dot_digraph()
 Get a subdag from `g_` (indicates the function here) to the end of `dag`
 
 ```python
-subdag = dag['g_',:]
+subdag = dag['g_':]
 subdag.dot_digraph()
 ```
 
@@ -190,7 +192,7 @@ subdag.dot_digraph()
 From the beginning to `h_`
 
 ```python
-dag[:, 'h_'].dot_digraph()
+dag[:'h_'].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/154750524-ece7f4b6-a3f3-46c6-a66d-7dc9b8ef254a.png)
@@ -198,7 +200,7 @@ dag[:, 'h_'].dot_digraph()
 From `g_` to `h_` (both inclusive)
 
 ```python
-dag['g_', 'h_'].dot_digraph()
+dag['g_':'h_'].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png)
@@ -209,12 +211,12 @@ The nodes you specify to get a sub-dag are INCLUSIVE, but when you
 specify function nodes, you also get the input and output nodes of these
 functions.
 
-The `dag['g_', 'h_']` give us a sub-dag starting at `f` (the input node),
-but when we ask `dag['g', 'h_']` instead, `g` being the output node of
+The `dag['g_':'h_']` give us a sub-dag starting at `f` (the input node),
+but when we ask `dag['g':'h_']` instead, `g` being the output node of
 function node `g_`, we only get `g -> h_ -> h`:
 
 ```python
-dag['g', 'h'].dot_digraph()
+dag['g':'h'].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/154750753-737e2705-0ea3-4595-a93a-1567862a6edd.png)
@@ -222,7 +224,7 @@ dag['g', 'h'].dot_digraph()
 If we wanted to include `f` we’d have to specify it:
 
 ```python
-dag['f', 'h'].dot_digraph()
+dag['f':'h'].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png)
@@ -262,27 +264,27 @@ dag.dot_digraph()
 
 ![image](https://user-images.githubusercontent.com/1906276/154748574-a7026125-659f-465b-9bc3-14a1864d14b2.png)
 ```python
-dag[['u', 'f'], 'h'].dot_digraph()
+dag[['u', 'f']:'h'].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/154748685-24e706ce-b68f-429a-b7b8-7bda62ccdf36.png)
 ```python
-dag['u', 'h'].dot_digraph()
+dag['u':'h'].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/154748865-6e729094-976a-4af3-87f0-b6dd3900fb8c.png)
 ```python
-dag[['u', 'f'], ['h', 'g']].dot_digraph()
+dag[['u', 'f']:['h', 'g']].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/154748905-4eaeccbe-6cca-4492-a7a2-48f7c9937b95.png)
 ```python
-dag[['x', 'g'], 'k'].dot_digraph()
+dag[['x', 'g']:'k'].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/154748937-7a278b25-6f0f-467c-a977-89a175e15abb.png)
 ```python
-dag[['x', 'g'], ['l', 'k']].dot_digraph()
+dag[['x', 'g']:['l', 'k']].dot_digraph()
 ```
 
 ![image](https://user-images.githubusercontent.com/1906276/154748958-135792a6-ce16-4561-9cbe-4662113a1022.png)
@@ -332,6 +334,7 @@ its [adjacency list](https://en.wikipedia.org/wiki/Adjacency_list).
 That is, a dictionary-like interface that specifies the graph by specifying for each node
 what nodes it’s adjacent to:
 
+<!-- wads-docs: skip pseudo-code; graph and source_node are placeholders -->
 ```python
 assert graph[source_node] == set_of_nodes_that_source_node_has_edges_to
 ```
