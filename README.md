@@ -1,15 +1,12 @@
 # meshed
 
-Object composition. 
-In particular: Link functions up into callable objects (e.g. pipelines, DAGs, etc.)
+Wire plain Python functions into a DAG by matching parameter names to the names of other functions, then use the DAG as a function: it has a signature built from its inputs, so you can call it, slice it, nest it in another DAG, or hand it to anything that takes a function.
 
-To install: `pip install meshed`
+```
+pip install meshed
+```
 
-[Documentation](https://i2mint.github.io/meshed/)
-
-Note: The initial focus of `meshed` was on DAGs, a versatile and probably most known kind of composition of functions, 
-but `meshed` aims at capturing much more than that. 
-
+One dependency (`i2`). [Documentation](https://i2mint.github.io/meshed/). Coming from Apache Hamilton? The difference is that a meshed DAG is a plain function; see [Compared with Apache Hamilton](https://github.com/i2mint/meshed#compared-with-apache-hamilton).
 
 <!-- epythet:agentic-readme:start -->
 # For AI agents
@@ -37,8 +34,8 @@ dag = DAG((this, that, combine))
 print(dag.synopsis_string())
 ```
 
-    x,b -> that_ -> that
     a,b -> this_ -> this
+    x,b -> that_ -> that
     this,that -> combine_ -> combine
 
 
@@ -51,20 +48,19 @@ from inspect import signature
 signature(dag)
 ```
 
-    <Signature (x, a, b=1)>
+    <Signature (a, x, b=1)>
 
-And when you call it, it executes the dag from the root values you give it and
-returns the leaf output values.
-
-```python
-dag(1, 2, 3)  # (a+b,x*b) == (2+3,1*3) == (5, 3)
-```
-    (5, 3)
+And when you call it, it executes the dag from the root values you give it and returns the leaf output values.
 
 ```python
-dag(1, 2)  # (a+b,x*b) == (2+1,1*1) == (3, 1)
+dag(1, 2, 3)  # a=1, x=2, b=3: (a+b, x*b) == (1+3, 2*3) == (4, 6)
 ```
-    (3, 1)
+    (4, 6)
+
+```python
+dag(1, 2)  # a=1, x=2, b=1: (a+b, x*b) == (1+1, 2*1) == (2, 2)
+```
+    (2, 2)
 
 
 You can see (and save image, or ascii art) the dag:
@@ -97,11 +93,9 @@ dag2[['that', 'this']:'combine'].dot_digraph()
 
 ## Note on flexibility
 
-The above DAG was created straight from the functions, using only the names of the
-functions and their parameters to define how to hook the network up.
+The above DAG was created straight from the functions, using only the names of the functions and their parameters to define how to hook the network up.
 
-But if you didn't write those functions specifically for that purpose, or you want
-to use someone else's functions, one would need to specify the relation between parameters, inputs and outputs.
+But if you didn't write those functions specifically for that purpose, or you want to use someone else's functions, one would need to specify the relation between parameters, inputs and outputs.
 
 For that purpose, functions can be adapted using the class FuncNode. The class allows you to essentially rename each of the parameters and also specify which output should be used as an argument for any other functions.
 
@@ -153,14 +147,19 @@ dag(a=1, b=2)
 
 
 
+# Compared with Apache Hamilton
+
+[Apache Hamilton](https://github.com/apache/hamilton) wires functions the same way, by matching parameter names to function names, and it brings a lot meshed does not: lineage, caching, visualisation, a UI, data-quality checks, and Ray, Dask or Spark execution. The difference is in what you get back. A Hamilton dataflow runs through a `Driver` (`driver.execute(final_vars, inputs)`) and is not itself a callable; meshed's `DAG` is a function, with a signature (defaults and order kept), so it nests as a node in another DAG and goes straight into tools that take functions (`qh`, `py2mcp`). Hamilton also requires type-annotated functions and imports numpy and pandas; meshed takes un-annotated functions as they are and depends only on `i2`.
+
+Use Hamilton when you want lineage, caching or a UI over annotated modules of dataframe code. Use meshed when the composition has to be a plain function. (Compared hands-on with apache-hamilton 1.90.0 on 2026-11-22, in [i2mint/meshed#102](https://github.com/i2mint/meshed/issues/102).)
+
+DAGs are where meshed started; the aim is object composition more generally (pipelines, fan-outs, and other ways of linking functions into callable objects).
+
+
 # Sub-DAGs
 
 
-``dag[input_nodes:output_nodes]`` is the sub-dag made of intersection of all
-descendants of ``input_nodes``
-(inclusive) and ancestors of ``output_nodes`` (inclusive), where additionally,
-when a func node is contained, it takes with it the input and output nodes
-it needs.
+``dag[input_nodes:output_nodes]`` is the sub-dag made of intersection of all descendants of ``input_nodes`` (inclusive) and ancestors of ``output_nodes`` (inclusive), where additionally, when a func node is contained, it takes with it the input and output nodes it needs.
 
 
 ```python
@@ -206,15 +205,9 @@ dag['g_':'h_'].dot_digraph()
 <img width="109" alt="image" src="https://user-images.githubusercontent.com/1906276/154749864-5a33aa13-0949-4aa7-945c-4d3fe7f07e7d.png">
 
 
-Above we used function (node names) to specify what we wanted, but we can also
-use names of input/output var-nodes. Do note the difference though.
-The nodes you specify to get a sub-dag are INCLUSIVE, but when you
-specify function nodes, you also get the input and output nodes of these
-functions.
+Above we used function (node names) to specify what we wanted, but we can also use names of input/output var-nodes. Do note the difference though. The nodes you specify to get a sub-dag are INCLUSIVE, but when you specify function nodes, you also get the input and output nodes of these functions.
 
-The ``dag['g_':'h_']`` give us a sub-dag starting at ``f`` (the input node),
-but when we ask ``dag['g':'h_']`` instead, ``g`` being the output node of
-function node ``g_``, we only get ``g -> h_ -> h``:
+The ``dag['g_':'h_']`` give us a sub-dag starting at ``f`` (the input node), but when we ask ``dag['g':'h_']`` instead, ``g`` being the output node of function node ``g_``, we only get ``g -> h_ -> h``:
 
 ```python
 dag['g':'h'].dot_digraph()
@@ -235,11 +228,7 @@ dag['f':'h'].dot_digraph()
 
 Those were for simple pipelines, but let's now look at a more complex dag.
 
-Note the definition: ``dag[input_nodes:output_nodes]`` is the sub-dag made of intersection of all 
-descendants of ``input_nodes``
-(inclusive) and ancestors of ``output_nodes`` (inclusive), where additionally,
-when a func node is contained, it takes with it the input and output nodes
-it needs.
+Note the definition: ``dag[input_nodes:output_nodes]`` is the sub-dag made of intersection of all descendants of ``input_nodes`` (inclusive) and ancestors of ``output_nodes`` (inclusive), where additionally, when a func node is contained, it takes with it the input and output nodes it needs.
 
 We'll let the following examples self-comment:
 
@@ -311,18 +300,13 @@ Consider a simple train/test ML pipeline that looks like this.
 
 ![image](https://user-images.githubusercontent.com/1906276/135151068-179d958e-9e96-48aa-9188-52ae22919c6e.png)
 
-With this, we might decide we want to give the user control over how to do 
-`train_test_split` and `learner`, so we offer this interface to the user:
+With this, we might decide we want to give the user control over how to do `train_test_split` and `learner`, so we offer this interface to the user:
 
 ![image](https://user-images.githubusercontent.com/1906276/135151094-661850c0-f10c-49d8-ace2-46b3d994de80.png)
 
-With that, the user can just bring its own `train_test_split` and `learner` 
-functions, and as long as it satisfied the 
-expected (and even better; declared and validatable) protocol, things will work. 
+With that, the user can just bring their own `train_test_split` and `learner` functions, and as long as they satisfy the expected (and even better; declared and validatable) protocol, things will work.
 
-In some situations we'd like to fix some of how `train_test_split` and 
-`learner` work, allowing the user to control only some aspects of them. 
-This function would look like this:
+In some situations we'd like to fix some of how `train_test_split` and `learner` work, allowing the user to control only some aspects of them. This function would look like this:
 
 ![image](https://user-images.githubusercontent.com/1906276/135151137-3d9a290f-d5e7-4f24-a418-82f1edb8a46a.png)
 
@@ -330,8 +314,7 @@ And inside, it does:
 
 ![image](https://user-images.githubusercontent.com/1906276/135151114-926b52b8-0536-4565-bd56-95099f21e4ff.png)
 
-`meshed` allows us to easily manipulate such functional structures to 
-adapt them to our needs.
+`meshed` allows us to easily manipulate such functional structures to adapt them to our needs.
 
 
 # itools module
@@ -339,31 +322,21 @@ Tools that enable operations on graphs where graphs are represented by an adjace
 
 Again. 
 
-Graphs: You know them. Networks. 
-Nodes and edges, and the ecosystem descriptive or transformative functions surrounding these.
-Few languages have builtin support for the graph data structure, but all have their libraries to compensate.
+Graphs: You know them. Networks. Nodes and edges, and the ecosystem descriptive or transformative functions surrounding these. Few languages have builtin support for the graph data structure, but all have their libraries to compensate.
 
-The one you're looking at focuses on the representation of a graph as `Mapping` encoding 
-its [adjacency list](https://en.wikipedia.org/wiki/Adjacency_list). 
-That is, a dictionary-like interface that specifies the graph by specifying for each node
-what nodes it's adjacent to:
+The one you're looking at focuses on the representation of a graph as `Mapping` encoding its [adjacency list](https://en.wikipedia.org/wiki/Adjacency_list). That is, a dictionary-like interface that specifies the graph by specifying for each node what nodes it's adjacent to:
 
 <!-- wads-docs: skip pseudo-code; graph and source_node are placeholders -->
 ```python
 assert graph[source_node] == set_of_nodes_that_source_node_has_edges_to
 ```
 
-We emphasize that there is no specific graph instance that you need to squeeze your graph into to
-be able to use the functions of `meshed`. Suffices that your graph's structure is expressed by 
-that dict-like interface 
--- which grown-ups call `Mapping` (see the `collections.abc` or `typing` standard libs for more information).
+We emphasize that there is no specific graph instance that you need to squeeze your graph into to be able to use the functions of `meshed`. Suffices that your graph's structure is expressed by that dict-like interface -- which grown-ups call `Mapping` (see the `collections.abc` or `typing` standard libs for more information).
 
-You'll find a lot of `Mapping`s around pythons. 
-And if the object you want to work with doesn't have that interface, 
-you can easily create one using one of the many tools of `py2store` meant exactly for that purpose.
+You'll find a lot of `Mapping`s around Python. And if the object you want to work with doesn't have that interface, you can easily create one using one of the many tools of `py2store` meant exactly for that purpose.
 
 
-# Examples
+## itools examples
 
 ```python
 >>> from meshed.itools import edges, nodes, isolated_nodes
