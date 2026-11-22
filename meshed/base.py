@@ -401,7 +401,7 @@ class FuncNode(metaclass=_LegacyNameMeta):
         """
         if bind_info in {"values", "varnodes", "var_nodes"}:
             values = map(_bind_value_str, self.bind.values())
-            return f"{','.join(values)} -> {self.func_id} " f"-> {self.out}"
+            return f"{','.join(values)} -> {self.func_id} -> {self.out}"
         elif bind_info == "hybrid":
 
             def gen():
@@ -411,15 +411,15 @@ class FuncNode(metaclass=_LegacyNameMeta):
                     else:
                         yield f"{k}={_bind_value_str(v)}"
 
-            return f"{','.join(gen())} -> {self.func_id} " f"-> {self.out}"
+            return f"{','.join(gen())} -> {self.func_id} -> {self.out}"
         elif bind_info in {"keys", "params"}:
-            return f"{','.join(self.bind.keys())} -> {self.func_id} " f"-> {self.out}"
+            return f"{','.join(self.bind.keys())} -> {self.func_id} -> {self.out}"
         else:
             raise ValueError(f"Unknown bind_info: {bind_info}")
 
     def __repr__(self):
         """Return a ``FuncNode(...)`` string showing the synopsis, with a hybrid bind info."""
-        return f'FuncNode({self.synopsis_string(bind_info="hybrid")})'
+        return f"FuncNode({self.synopsis_string(bind_info='hybrid')})"
 
     def call_on_scope(self, scope: MutableMapping, write_output_into_scope=True):
         """Call the function using the given scope both to source arguments and write
@@ -584,7 +584,7 @@ def dot_lines_of_func_parameters(
             point straight at ``out``.
     """
     assert func_id != out, (
-        f"Your func and output name shouldn't be the " f"same: {out=} {func_id=}"
+        f"Your func and output name shouldn't be the same: {out=} {func_id=}"
     )
     yield f'{out} [label="{out}" shape="{vnode_shape}"]'
     for p in parameters:
@@ -645,12 +645,12 @@ def validate_that_func_node_names_are_sane(func_nodes: Iterable[FuncNode]):
     func_nodes = list(func_nodes)
     node_names = [x.func_id for x in func_nodes]
     outs = [x.out for x in func_nodes]
-    assert all(
-        map(str.isidentifier, node_names)
-    ), f"some node names weren't valid identifiers: {node_names}"
-    assert all(
-        map(str.isidentifier, outs)
-    ), f"some return names weren't valid identifiers: {outs}"
+    assert all(map(str.isidentifier, node_names)), (
+        f"some node names weren't valid identifiers: {node_names}"
+    )
+    assert all(map(str.isidentifier, outs)), (
+        f"some return names weren't valid identifiers: {outs}"
+    )
     if len(set(node_names) | set(outs)) != 2 * len(func_nodes):
         c = Counter(node_names + outs)
         offending_names = [name for name, count in c.items() if count > 1]

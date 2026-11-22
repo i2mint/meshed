@@ -289,13 +289,13 @@ def parse_assignment(body: ast.Assign, info=None) -> tuple:
     assert len(target) == 1, f"Only one target allowed: {info}"
 
     target = target[0]
-    assert isinstance(
-        target, (ast.Name, ast.Tuple)
-    ), f"Should be a ast.Name or ast.Tuple: {info}"
+    assert isinstance(target, (ast.Name, ast.Tuple)), (
+        f"Should be a ast.Name or ast.Tuple: {info}"
+    )
 
     value = body.value
     assert isinstance(value, ast.Call), (
-        f"Only assigned function calls are allowed:" f" {info}"
+        f"Only assigned function calls are allowed: {info}"
     )
 
     return target, value

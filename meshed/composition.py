@@ -105,9 +105,9 @@ def get_param(func):
     """
 
     params = signature(func).parameters.keys()
-    assert (
-        len(params) == 1
-    ), f"Your function has more than 1 parameter! Namely: {', '.join(params)}"
+    assert len(params) == 1, (
+        f"Your function has more than 1 parameter! Namely: {', '.join(params)}"
+    )
     for param in params:
         return param
 

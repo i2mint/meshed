@@ -352,12 +352,10 @@ class Network:
 
         # add Operations evaluation steps, and instructions to free data.
         for i, node in enumerate(ordered_nodes):
-
             if isinstance(node, DataPlaceholderNode):
                 continue
 
             elif isinstance(node, Operation):
-
                 # add layer to list of steps
                 self.steps.append(node)
 
@@ -413,7 +411,6 @@ class Network:
 
         graph = self.graph
         if not outputs:
-
             # If caller requested all outputs, the necessary nodes are all
             # nodes that are reachable from one of the inputs.  Ignore input
             # names that aren't in the graph.
@@ -423,7 +420,6 @@ class Network:
                     necessary_nodes |= gr.descendants(graph, input_name)
 
         else:
-
             # If the caller requested a subset of outputs, find any nodes that
             # are made unecessary because we were provided with an input that's
             # deeper into the network graph.  Ignore input names that aren't
@@ -476,9 +472,9 @@ class Network:
 
         # assert that network has been compiled
         assert self.steps, "network must be compiled before calling compute."
-        assert (
-            isinstance(outputs, (list, tuple)) or outputs is None
-        ), "The outputs argument must be a list"
+        assert isinstance(outputs, (list, tuple)) or outputs is None, (
+            "The outputs argument must be a list"
+        )
 
         # choose a method of execution
         if method == "parallel":
@@ -512,7 +508,6 @@ class Network:
         # scheduled, then schedule them onto a thread pool, then collect their
         # results onto a memory cache for use upon the next iteration.
         while True:
-
             # the upnext list contains a list of operations for scheduling
             # in the current round of scheduling
             upnext = []
@@ -565,9 +560,7 @@ class Network:
 
         self.times = {}
         for step in all_steps:
-
             if isinstance(step, Operation):
-
                 if self._debug:
                     print("-" * 32)
                     print("executing step: %s" % step.name)
@@ -590,7 +583,6 @@ class Network:
             # Process DeleteInstructions by deleting the corresponding data
             # if possible.
             elif isinstance(step, DeleteInstruction):
-
                 if outputs and step not in outputs:
                     # Some DeleteInstruction steps may not exist in the cache
                     # if they come from optional() needs that are not privoded
@@ -837,9 +829,9 @@ class operation(Operation):
         assert kwargs["name"], "operation needs a name"
         assert type(kwargs["needs"]) == list, "no `needs` parameter provided"
         assert type(kwargs["provides"]) == list, "no `provides` parameter provided"
-        assert hasattr(
-            kwargs["fn"], "__call__"
-        ), "operation was not provided with a callable"
+        assert hasattr(kwargs["fn"], "__call__"), (
+            "operation was not provided with a callable"
+        )
 
         if type(kwargs["params"]) is not dict:
             kwargs["params"] = {}

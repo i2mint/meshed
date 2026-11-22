@@ -398,9 +398,9 @@ def modified_func_node(func_node, **modifications) -> FuncNode:
     and ``out`` replaced by ``modifications``.
     """
     modifiable_attrs = {"func", "name", "bind", "out"}
-    assert not modifications.keys().isdisjoint(
-        modifiable_attrs
-    ), f"Can only modify these: {', '.join(modifiable_attrs)}"
+    assert not modifications.keys().isdisjoint(modifiable_attrs), (
+        f"Can only modify these: {', '.join(modifiable_attrs)}"
+    )
     original_func_node_kwargs = {
         "func": func_node.func,
         "name": func_node.name,

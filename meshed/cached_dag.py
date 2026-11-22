@@ -37,7 +37,7 @@ def get_first_item_and_assert_unicity(seq):
     seq_length = len(seq)
     if seq_length:
         assert seq_length == 1, (
-            f"There should be one and one only item in the " f"sequence: {seq}"
+            f"There should be one and one only item in the sequence: {seq}"
         )
         return seq[0]
     else:

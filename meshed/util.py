@@ -1170,7 +1170,7 @@ def inverse_dict_asserting_losslessness(d: dict):
     """
     inv_d = {v: k for k, v in d.items()}
     assert len(inv_d) == len(d), (
-        f"can't invert: You have some duplicate values in this dict: " f"{d}"
+        f"can't invert: You have some duplicate values in this dict: {d}"
     )
     return inv_d
 
