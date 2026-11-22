@@ -152,8 +152,12 @@ class ReactiveScope(MutableMapping):
             func_nodes = dag.func_nodes
         func_nodes = [ReactiveFuncNode.from_dict(fn.to_dict()) for fn in func_nodes]
         self.dag = DAG(func_nodes)
+        # ``dag.graph`` maps var nodes to the *names* of the func nodes that consume them
+        func_node_of_name = {fn.name: fn for fn in self.dag.func_nodes}
         self.func_nodes_for_var_node = {
-            k: v for k, v in self.dag.graph.items() if k in self.dag.var_nodes
+            k: [func_node_of_name[name] for name in names]
+            for k, names in self.dag.graph.items()
+            if k in self.dag.var_nodes
         }
         self.scope_factory = scope_factory
         self.clear()

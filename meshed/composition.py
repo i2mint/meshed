@@ -75,10 +75,7 @@ def suffix_ids(
     *,
     also_apply_to_func_label: bool = False,
 ):
-    """Rename the func nodes with ``renamer`` (a callable, or a suffix string) and return a ``DAG`` if given one, else a list.
-
-    Note: a callable ``renamer`` currently trips on the ``assert callable(suffix)``
-    line, which only defines ``suffix`` when ``renamer`` is a string."""
+    """Rename the func nodes with ``renamer`` (a callable, or a suffix string) and return a ``DAG`` if given one, else a list."""
     if isinstance(func_nodes, DAG):
         egress = DAG
     else:
@@ -86,7 +83,7 @@ def suffix_ids(
     if isinstance(renamer, str):
         suffix = renamer
         renamer = lambda name: f"{name}{suffix}"
-    assert callable(suffix), f"suffix needs to be callable"
+    assert callable(renamer), "renamer needs to be callable (or a suffix string)"
     func_node_trans = func_node_name_trans(
         renamer,
         also_apply_to_func_label=also_apply_to_func_label,
