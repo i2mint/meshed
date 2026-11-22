@@ -16,11 +16,9 @@
    components
    composition
    dag
-   examples
    ext
    itools
    makers
-   scrap
    slabs
    tools
    util

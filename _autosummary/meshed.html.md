@@ -23,11 +23,9 @@ by an adjacency Mapping.
 | [`components`](meshed.components.html.md#module-meshed.components)   | Ready-made extraction components for meshed graphs.                               |
 | [`composition`](meshed.composition.html.md#module-meshed.composition) | Specific use of FuncNode and DAG                                                  |
 | [`dag`](meshed.dag.html.md#module-meshed.dag)                 | Making DAGs                                                                       |
-| [`examples`](meshed.examples.html.md#module-meshed.examples)       | Examples of using meshed.                                                         |
 | [`ext`](meshed.ext.html.md#module-meshed.ext)                 | vendors                                                                           |
 | [`itools`](meshed.itools.html.md#module-meshed.itools)           | Graph operations over adjacency mappings.                                         |
 | [`makers`](meshed.makers.html.md#module-meshed.makers)           | Makers                                                                            |
-| [`scrap`](meshed.scrap.html.md#module-meshed.scrap)             | For scrap only                                                                    |
 | [`slabs`](meshed.slabs.html.md#module-meshed.slabs)             | Tools to generate slabs.                                                          |
 | [`tools`](meshed.tools.html.md#module-meshed.tools)             | Tools to work with meshed                                                         |
 | [`util`](meshed.util.html.md#module-meshed.util)               | Function-wrapping, naming, and small data helpers shared across `meshed`.         |

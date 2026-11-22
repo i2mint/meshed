@@ -5,21 +5,19 @@ orphan: true
 
 # About this build
 
-This documentation was built on **2026-11-22 18:23 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/a25648e2e07734ff64bf4eb0f360292177564354"><code>a25648e</code></a> on branch <code>master</code>, for **meshed 0.1.186** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-22 22:03 UTC** from commit <a href="https://github.com/i2mint/meshed/commit/b50347502dbf17ba831f3e7db3dc6c3371d5e645"><code>b503475</code></a> on branch <code>master</code>, for **meshed 0.1.186** (from <code>pyproject.toml</code>).
 
-:::{warning}
-The documentation and the package may be misaligned:
-
-- The documented version (0.1.186) is ahead of the latest release on PyPI (0.1.185): these docs describe unreleased code.
+:::{note}
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 :::
 
 ## Source
 
 | | |
 |---|---|
-| Commit | <a href="https://github.com/i2mint/meshed/commit/a25648e2e07734ff64bf4eb0f360292177564354"><code>a25648e2e07734ff64bf4eb0f360292177564354</code></a> |
+| Commit | <a href="https://github.com/i2mint/meshed/commit/b50347502dbf17ba831f3e7db3dc6c3371d5e645"><code>b50347502dbf17ba831f3e7db3dc6c3371d5e645</code></a> |
 | Branch | <code>master</code> |
-| Tags at this commit | <code>0.1.186</code> |
+| Tags at this commit | none |
 | Working tree | clean |
 | Remote | <code>https://github.com/i2mint/meshed</code> |
 
@@ -28,9 +26,9 @@ The documentation and the package may be misaligned:
 | | |
 |---|---|
 | Repository | <code>i2mint/meshed</code> |
-| Run | <a href="https://github.com/i2mint/meshed/actions/runs/45054487718">45054487718</a> |
+| Run | <a href="https://github.com/i2mint/meshed/actions/runs/45075414829">45075414829</a> |
 | Ref | <code>refs/heads/master</code> |
-| Event commit | <code>b657a9d1f2e24da83f8ca5154ba6798d0494c2b7</code> (in the history of the built commit) |
+| Event commit | <code>b50347502dbf17ba831f3e7db3dc6c3371d5e645</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -48,22 +46,22 @@ The documentation and the package may be misaligned:
 | theme | <code>auto</code> (Sphinx theme <code>pydata&#95;sphinx&#95;theme</code>) |
 | accent | <code>#486300</code> |
 | api_generator | <code>autosummary</code> |
-| ignore | <code>tests/</code> |
+| ignore | <code>tests/</code>, <code>scrap/</code>, <code>examples/</code> |
 | agent_outputs | <code>true</code> |
 | aggregates | <code>md</code> |
 | ai_artifacts | <code>true</code> |
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/meshed/0.1.185/">0.1.185</a>, older than the documented version (0.1.186).
+Latest release: <a href="https://pypi.org/project/meshed/0.1.186/">0.1.186</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/meshed && cd meshed
-git checkout a25648e2e07734ff64bf4eb0f360292177564354
+git checkout b50347502dbf17ba831f3e7db3dc6c3371d5e645
 pip install "epythet==0.2.23"
-epythet quickstart . --ignore tests/
+epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 
 The same data, for machines: <a href="build_info.json"><code>build_info.json</code></a> (schema version 1).
