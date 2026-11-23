@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=a2301859"></script>
+    <script src="../../_static/documentation_options.js?v=06489c40"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.186" />
+  <meta name="docsearch:version" content="0.1.187" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -776,9 +776,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_func_node_kwargs_trans</span><span class="p">(</span><span class="n">name_trans</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">Sig</span><span class="p">(</span><span class="n">name_trans</span><span class="p">)</span><span class="o">.</span><span class="n">n_required</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">str_trans</span> <span class="o">=</span> <span class="n">name_trans</span>
 
-            <span class="k">def</span><span class="w"> </span><span class="nf">name_trans</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">name_trans</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">name_trans</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>  <span class="c1"># (a renamer's parameter may have any name)</span>
+                <span class="k">return</span> <span class="n">str_trans</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
     <span class="n">kwargs_trans_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name_trans</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">also_apply_to_func_label</span><span class="p">:</span>
@@ -833,9 +834,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    """</span>
 
     <span class="n">params</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="p">(</span>
-        <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s2">"Your function has more than 1 parameter! Namely: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"Your function has more than 1 parameter! Namely: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">param</span></div>
 

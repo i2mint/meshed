@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=a2301859"></script>
+    <script src="../../_static/documentation_options.js?v=06489c40"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.186" />
+  <meta name="docsearch:version" content="0.1.187" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -1128,7 +1128,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">bind_info</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"values"</span><span class="p">,</span> <span class="s2">"varnodes"</span><span class="p">,</span> <span class="s2">"var_nodes"</span><span class="p">}:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">_bind_value_str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func_id</span><span class="si">}</span><span class="s2"> "</span> <span class="sa">f</span><span class="s2">"-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func_id</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">elif</span> <span class="n">bind_info</span> <span class="o">==</span> <span class="s2">"hybrid"</span><span class="p">:</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">():</span>
@@ -1138,16 +1138,16 @@ window.runMermaid = runMermaid;</script>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">yield</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">_bind_value_str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
 
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func_id</span><span class="si">}</span><span class="s2"> "</span> <span class="sa">f</span><span class="s2">"-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func_id</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">elif</span> <span class="n">bind_info</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"keys"</span><span class="p">,</span> <span class="s2">"params"</span><span class="p">}:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func_id</span><span class="si">}</span><span class="s2"> "</span> <span class="sa">f</span><span class="s2">"-&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">func_id</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown bind_info: </span><span class="si">{</span><span class="n">bind_info</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Return a ``FuncNode(...)`` string showing the synopsis, with a hybrid bind info."""</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">'FuncNode(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="s2">"hybrid"</span><span class="p">)</span><span class="si">}</span><span class="s1">)'</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"FuncNode(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">synopsis_string</span><span class="p">(</span><span class="n">bind_info</span><span class="o">=</span><span class="s1">'hybrid'</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span>
 
 <div class="viewcode-block" id="FuncNode.call_on_scope">
 <a class="viewcode-back" href="../../_autosummary/meshed.base.html#meshed.base.FuncNode.call_on_scope">[docs]</a>
@@ -1333,7 +1333,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            point straight at ``out``.</span>
 <span class="sd">    """</span>
     <span class="k">assert</span> <span class="n">func_id</span> <span class="o">!=</span> <span class="n">out</span><span class="p">,</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"Your func and output name shouldn't be the "</span> <span class="sa">f</span><span class="s2">"same: </span><span class="si">{</span><span class="n">out</span><span class="si">=}</span><span class="s2"> </span><span class="si">{</span><span class="n">func_id</span><span class="si">=}</span><span class="s2">"</span>
+        <span class="sa">f</span><span class="s2">"Your func and output name shouldn't be the same: </span><span class="si">{</span><span class="n">out</span><span class="si">=}</span><span class="s2"> </span><span class="si">{</span><span class="n">func_id</span><span class="si">=}</span><span class="s2">"</span>
     <span class="p">)</span>
     <span class="k">yield</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1"> [label="</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">" shape="</span><span class="si">{</span><span class="n">vnode_shape</span><span class="si">}</span><span class="s1">"]'</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
@@ -1406,12 +1406,12 @@ window.runMermaid = runMermaid;</script>
     <span class="n">func_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">)</span>
     <span class="n">node_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">func_id</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">]</span>
     <span class="n">outs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">out</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">func_nodes</span><span class="p">]</span>
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
-        <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">,</span> <span class="n">node_names</span><span class="p">)</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s2">"some node names weren't valid identifiers: </span><span class="si">{</span><span class="n">node_names</span><span class="si">}</span><span class="s2">"</span>
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
-        <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">,</span> <span class="n">outs</span><span class="p">)</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s2">"some return names weren't valid identifiers: </span><span class="si">{</span><span class="n">outs</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">,</span> <span class="n">node_names</span><span class="p">)),</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"some node names weren't valid identifiers: </span><span class="si">{</span><span class="n">node_names</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">,</span> <span class="n">outs</span><span class="p">)),</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"some return names weren't valid identifiers: </span><span class="si">{</span><span class="n">outs</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">node_names</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">outs</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">func_nodes</span><span class="p">):</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">node_names</span> <span class="o">+</span> <span class="n">outs</span><span class="p">)</span>
         <span class="n">offending_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>

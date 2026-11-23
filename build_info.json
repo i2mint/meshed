@@ -1,36 +1,36 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-22T23:00:33Z",
+  "built_at": "2026-11-23T10:16:45Z",
   "package": {
     "name": "meshed",
-    "version": "0.1.186",
+    "version": "0.1.187",
     "display_name": "meshed",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "9e22ea15b8791e450fa143bf9d5f578d3eebac43",
-    "short_commit": "9e22ea1",
+    "commit": "a949df34d0bb66991eda65c12adac4fbdda1cda1",
+    "short_commit": "a949df3",
     "branch": "master",
     "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/meshed",
-    "commit_url": "https://github.com/i2mint/meshed/commit/9e22ea15b8791e450fa143bf9d5f578d3eebac43",
+    "commit_url": "https://github.com/i2mint/meshed/commit/a949df34d0bb66991eda65c12adac4fbdda1cda1",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/meshed",
-    "sha": "9e22ea15b8791e450fa143bf9d5f578d3eebac43",
+    "sha": "a949df34d0bb66991eda65c12adac4fbdda1cda1",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "45080707275",
-    "run_url": "https://github.com/i2mint/meshed/actions/runs/45080707275",
+    "run_id": "45154405429",
+    "run_url": "https://github.com/i2mint/meshed/actions/runs/45154405429",
     "server_url": "https://github.com"
   },
   "tools": {
-    "epythet": "0.2.23",
+    "epythet": "0.2.25",
     "sphinx": "9.1.1",
     "docutils": "0.22.4",
     "python": "3.12.16"
@@ -61,15 +61,13 @@
   "pypi": {
     "checked": true,
     "latest": "0.1.187",
-    "relation": "behind",
+    "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout 9e22ea15b8791e450fa143bf9d5f578d3eebac43\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/i2mint/meshed && cd meshed\ngit checkout a949df34d0bb66991eda65c12adac4fbdda1cda1\npip install \"epythet==0.2.25\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
-    "aligned": false,
-    "notes": [
-      "The documented version (0.1.186) is behind the latest release on PyPI (0.1.187): `pip install meshed` gives newer code than these docs describe."
-    ]
+    "aligned": true,
+    "notes": []
   }
 }
