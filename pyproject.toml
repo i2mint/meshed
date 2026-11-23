@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "meshed"
-version = "0.1.187"
+version = "0.1.188"
 description = "Link functions up into callable objects"
 readme = "README.md"
 requires-python = ">=3.10"
