@@ -32,3 +32,22 @@ def test_reactive_scope_computes_when_inputs_are_written():
     assert "c" not in s
     s["b"] = 2
     assert s["c"] == 3
+
+
+import pytest
+
+
+@pytest.mark.parametrize(
+    "renamer, expected",
+    [(lambda x: x + "_X", "ff_X"), (str.upper, "FF")],
+)
+def test_suffix_ids_with_a_renamer_of_any_parameter_name(renamer, expected):
+    """A callable renamer need not name its parameter ``name`` (issue #111)."""
+    from meshed import FuncNode
+    from meshed.composition import suffix_ids
+
+    def ff(x):
+        return x
+
+    (node,) = suffix_ids([FuncNode(ff, name="ff", out="y")], renamer=renamer)
+    assert node.name == expected

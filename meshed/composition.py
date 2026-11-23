@@ -54,9 +54,10 @@ def func_node_name_trans(
     """
     if not is_func_node_kwargs_trans(name_trans):
         if Sig(name_trans).n_required <= 1:
+            str_trans = name_trans
 
-            def name_trans(name):
-                return name_trans(name)
+            def name_trans(name):  # (a renamer's parameter may have any name)
+                return str_trans(name)
 
     kwargs_trans_kwargs = dict(name=name_trans)
     if also_apply_to_func_label:
